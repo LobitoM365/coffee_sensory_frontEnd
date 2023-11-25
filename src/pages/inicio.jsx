@@ -1,12 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 
 
 export const Inicio = () => {
+    useEffect(()=>{
+        const script = document.createElement('script');
+        script.src = '../../public/js/mainMapa.js';
+        script.async = true;
+        document.body.appendChild(script);
+    },[])
     return (
         <>
-        <div className='' ></div>
-            <iframe style={{ width:  "100%", height : "100%" }} className='iframe' src="src/mapa/mapa.html" frameBorder={0}></iframe>
+        <link rel="stylesheet" href="css/style.css" />
+            <iframe id='iframeMapa' className='iframe' src="src/mapa/mapa.html" frameBorder={0}></iframe>
         </>
     )
 }

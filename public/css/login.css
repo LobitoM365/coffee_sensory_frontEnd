@@ -1,0 +1,130 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+input{
+  background-color: white;
+}
+img{
+  height: 100%;
+  width: 100%;
+}
+.title-login{
+  font-weight: bold;
+  color: rgb(5, 150, 105);
+  font-size: 1.9em;
+  margin-bottom:40px;
+}
+.main-container {
+  background-image: url('../img/login/bg-login-2.png');
+background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.bg-img{
+  backdrop-filter: blur(3px);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.login-container {
+  box-shadow: 0px 0px 16px 0px rgb(88, 88, 88);
+  z-index: 1;
+  background-color: white;
+  padding: 7px 7px 7px 0px;
+  border-radius: 7px;
+  display: grid;
+  grid-template: 550px/ 1fr 1fr;
+  width: 750px;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-image-container {
+  height: 100%;
+  width: 100%;
+}
+
+.login-image {
+  transform: scaleX(-1);
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+}
+
+.login-form-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 85%;
+}
+
+.container-inputs{
+  position: relative;
+}
+
+.container-inputs-span {
+  position: absolute;
+  color: rgb(53, 168, 150);
+  padding: 0px 5px 0px 5px;
+  background-color: white;
+  margin-top: -10px;
+  font-size: 12px;
+  margin-left: 10px;
+  transition: all 0.1s;
+}
+
+.span-input {
+  transition: all 100ms ease-in;
+  color: rgb(172, 172, 172);
+  visibility: hidden;
+  position: absolute;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 11px;
+}
+
+.login-form input {
+  font-size: 0.9em;
+  width:calc(100% - 30px);
+  outline: unset;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.login-form input::placeholder{
+  font-size: 1.1em;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: rgb(155, 155, 155)
+}
+
+.login-form button {
+  font-weight: bolder;
+  font-size: 0.9em;
+  padding: 15px;
+  margin-top: 15px;
+  background-color: green;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.login-form button:hover {
+  box-shadow:  0px 0px 4px 0px rgb(158, 158, 158);
+  background: radial-gradient(rgb(12, 90, 12), rgb(42, 166, 42));
+
+}

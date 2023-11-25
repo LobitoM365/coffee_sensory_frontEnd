@@ -1,0 +1,516 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+
+/* Estilos para general */
+.main-content {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+}
+
+body {
+    background-color: rgb(243,243,244);
+    height: calc(100vh);
+    width: calc(100%);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#root {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: block;
+}
+
+/* Estilos para menu de navegacion */
+
+
+/* Estilos para nav-vertical */
+.nav-horizontal {
+    left: 100%;
+    background-color: rgb(31, 41, 55);
+    padding: 25px 20px;
+    width: 240px;
+    height: calc(100% - 50px);
+    left: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    overflow: hidden;
+}
+
+a {
+    font-weight: 500;
+    text-decoration: none;
+}
+
+
+.nav-horizontal >ul {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.nav-horizontal >ul::-webkit-scrollbar {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    width: 10px;
+}
+
+.nav-horizontal >ul::-webkit-scrollbar-thumb {
+    background-color: rgb(11, 46, 75);
+    border-radius: 4px;
+
+}
+
+.img-logo-nav {
+    width: 30px;
+    border-radius: 4px;
+}
+
+.title-header-nav-horizontal {
+    font-size: 1em;
+}
+
+.header-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 55px;
+    align-items: center;
+}
+
+.nav-horizontal ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nav-horizontal ul li ul li,
+.footer-nav li {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-horizontal ul li ul li:hover,
+.footer-nav li:hover {
+    background-color: rgb(102, 122, 138);
+}
+
+.icon-li-nav-horizontal {
+    width: 25px;
+    fill: white;
+
+}
+
+.title-li {
+    padding: 0px 0px 20px 0px;
+}
+
+.icon-li-dark-mode-nav-horizontal {
+    fill: white;
+    width: 20px;
+}
+
+.toogle-footer-nav-horizontal {
+    width: 44px;
+    height: 18px;
+    border-radius: 100px;
+    padding: 4px;
+    background-color: rgb(38, 85, 126);
+    display: flex;
+    align-items: center;
+}
+
+.footer-nav .li-dark-mode-nav-horizontal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footer-nav .li-dark-mode-nav-horizontal:hover {
+    background-color: unset;
+}
+
+.circle-footer-nav-horizontal {
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 100%;
+    transition: margin 0.5s;
+}
+
+.content-1-footer-nav-horizontal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.icon-moon-li-dark-mode-nav-horizontal {
+    rotate: -10deg;
+    transform: rotate(-10deg);
+}
+
+.link-memu-horizontal {
+    color: white;
+}
+
+.link-memu-horizontal:hover {
+    color: white;
+}
+
+.footer-nav ul {
+    border-top: 1px solid white;
+    padding: 20px 0px 0px 0px;
+}
+.line-nav-li{
+    border-bottom: 1px solid white;
+    padding-bottom: 20px;
+}
+.icon-hamburguer-li-nav-horizontal {
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+}
+
+.icon-hamburguer-li-nav-horizontal:hover {
+    background-color: rgb(102, 122, 138);
+}
+
+.selected-li {
+    background-color: rgb(60, 77, 100);
+}
+
+/* Estilos para nav Horizontal */
+
+.nav-vertical {
+    left: 100%;
+    background-color: rgb(255, 255, 255);
+    left: 0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 10px 100px;
+    border-bottom: 2px solid rgb(227,227,228);
+    color: black;
+}
+
+.contenido {
+    color: black;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    padding: 50px;
+    background-color: rgb(234,241,243);
+}
+
+.component {
+    word-wrap: break-word;
+    word-break: break-all;
+    width: 100%;
+    max-width: 1300px;
+    height: max-content;
+    position: relative;
+}
+
+.seccion-usuario-notificaciones {
+    display: flex;
+    position: relative;
+    gap: 20px;
+}
+
+.div-info-usuario {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.notificaciones {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icono-notificaciones {
+    width: 35px;
+    padding: 8px;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.icono-notificaciones:hover {
+    background-color: rgba(212, 210, 210, 0.235)
+}
+
+.secccion-notificaciones {
+    position: relative;
+}
+
+.cantidad-notificaciones {
+    background-color: orange;
+    padding: 3px;
+    height: 14px;
+    width: 14px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    font-size: 0.8em;
+    border-radius: 100%;
+    top: 2px;
+    left: 8px;
+}
+
+.esquina-notificaciones {
+    position: absolute;
+    border-top: 0px solid transparent;
+    border-bottom: 10px solid white;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    left: 50%;
+    z-index: 10;
+    top: calc(100% - 6px);
+}
+
+.contenido-notificaciones {
+    width: 400px;
+    min-width: max-content;
+    height: max-content;
+    max-height: 420px;
+    background-color: white;
+    position: absolute;
+    right: 0%;
+    border-radius: 8px;
+    border: 1px solid rgb(234, 234, 234);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+    z-index: 9;
+}
+
+.header-notificaciones {
+    padding: 20px 25px;
+    border-bottom: 1px solid rgb(234, 234, 234);
+    display: flex;
+    justify-content: space-between;
+}
+
+.titulo-notififcaciones {
+    font-size: 1em;
+    color: black;
+
+}
+
+.quit-notificaciones {
+    color: black;
+    padding: 8px;
+    width: 10px;
+    height: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.quit-notificaciones:hover {
+    background-color: rgba(3, 3, 3, 0.326);
+}
+
+.contenido-analisis {
+    padding: 25px 20px 25px 15px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.notificacion-analisis {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+.notificacion-analisis:hover{
+    background-color: rgba(170, 170, 170, 0.235);
+    border-radius: 8px;
+}
+.h4-informacion-notificacion-analisis {
+    color: black;
+}
+
+.informacion-analisis {
+    display: flex;
+    gap: 20px;
+}
+
+.asignaciones-notificaciones {
+    overflow: auto;
+    height: 100%;
+    max-width: 320px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 5px;
+}
+
+.asignaciones-notificaciones::-webkit-scrollbar {
+    width: 10px;
+    background-color: rgb(31, 41, 55);
+    border-radius: 8px;
+}
+
+.asignaciones-notificaciones::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 8px;
+}
+
+.img-analisis {
+    width: 60px;
+    border-radius: 8px;
+}
+
+.asignado,
+.pendiente {
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.asignado {
+    background-color: orange;
+}
+
+.pendiente {
+    background-color: gray;
+}
+
+.input-proceder-analisis {
+    width: 60%;
+    padding: 8px 10px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: rgb(51, 67, 87);
+    border: unset;
+    border-radius: 4px;
+}
+
+.input-proceder-analisis:hover {
+    background-color: rgb(26, 33, 45)
+}
+
+.h4-notificaciones-vacias {
+    color: rgb(141, 141, 141);
+    text-align: center;
+}
+
+.section-opciones-usuario {
+    position: relative;
+}
+
+.icon-opciones-usuario {
+    width: 20px;
+    fill: black;
+    padding: 6px;
+    cursor: pointer;
+    position: relative;
+}
+
+.contenido-opciones-usuario {
+    width: max-content;
+    min-width: max-content;
+    height: max-content;
+    background-color: rgb(255, 255, 255);
+    position: absolute;
+    right: 0%;
+    border-radius: 8px;
+    border: 1px solid rgb(234, 234, 234);
+    overflow: hidden;
+    z-index: 99;
+    color: black;
+    top: calc(100% + 9px);
+}
+
+.esquina-opciones-usuario {
+    position: absolute;
+    border-top: 0px solid transparent;
+    border-bottom: 10px solid white;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    left: 50%;
+    z-index: 100;
+    top: calc(100% + 1px);
+}
+
+.opciones-usuario {
+    padding: 10px 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.link-opciones-usuarios {
+    color: black;
+    font-size: 0.8em;
+}
+
+.li-opciones-usuario {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+
+}
+.li-content-usuarios{
+    display: flex;
+    gap: 10px;
+}
+.li-opciones-usuario:hover {
+    background-color: rgb(30, 41, 59);
+}
+.selected-li-perfil{
+    background-color: rgb(30, 41, 59);
+    fill: white;
+}
+.selected-li-perfil .link-opciones-usuarios {
+    color: white;
+    fill: white;
+    display: flex;
+}
+
+.li-opciones-usuario:hover .link-opciones-usuarios,
+.li-opciones-usuario:hover .icon-li-opciones-usuario {
+    color: white;
+    fill: white;
+}
+
+.icon-li-opciones-usuario {
+    width: 20px;
+}
+.nombre-usuario{
+    font-size: 0.8em;
+}
+.rol-usuario{
+    font-size: 0.7em;
+}

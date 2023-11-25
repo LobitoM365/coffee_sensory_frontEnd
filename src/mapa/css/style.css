@@ -1,0 +1,123 @@
+* {
+    padding: 0;
+    margin: 0;
+    image-rendering:auto;
+}
+body{
+    background-color: azure;
+}
+.contenido {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.colombia {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    margin: auto;
+/*     background-color: rgb(179, 238, 238); */
+    transition: transform 1s;
+    image-rendering:auto;
+
+}
+
+.img-colombia {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    zoom: 9%;
+    z-index: 3;
+    left: 0;
+    bottom: 0;
+    transition: bottom 0.5s, left 0.5s;
+}
+
+.plano-cartesiano {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: -4;
+}
+
+.range {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 1px;
+    position: absolute;
+    background-color: rgb(255, 51, 0);
+}
+
+.ejeX {
+    width: 100%;
+}
+
+.ejeY {
+    transform: rotate(90deg);
+}
+
+.range::-webkit-slider-thumb {
+    position: relative;
+    -webkit-appearance: none;
+    width: 1px;
+    background-color: rgb(176, 238, 6);
+    appearance: none;
+    z-index: 1;
+}
+
+.ejeY::-webkit-slider-thumb {
+    height: 750px
+}
+
+.ejeX::-webkit-slider-thumb {
+    height: 900px
+}
+
+
+.svg{
+    width: 100%;
+    height: 100%;
+/*     background-color: aqua; */
+image-rendering: pixelated;
+}
+
+.elemento-mapa{
+    fill: #f5f5f5;
+    cursor: pointer;
+    stroke: black;
+}
+
+.elemento-mapa:hover{
+    fill: rgb(12, 189, 12);
+}
+
+.content-mapa-colombia{
+    width: 663px;
+    height: 900px;
+/*     background-color: aqua; */
+    position: absolute;
+    overflow-x: visible;
+    overflow-y:unset;
+}
+
+
+.departamento:hover{
+    fill: green;
+}
+.fill-departamento{
+    fill: white;
+}
+.fondo{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}

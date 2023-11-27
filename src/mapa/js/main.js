@@ -30,21 +30,28 @@ window.addEventListener("load", function () {
             directionContent = document.body["scroll" + element];
 
         }
-        let zoomDivMapa = (directionContent / divMapa["scroll" + element]) * 100;
-        divMapa.style.zoom = zoomDivMapa + "%"
+        if (document.body.scrollWidth > document.body.scrollHeight) {
+            element = "Height"
+
+        } else {
+            element = "Width"
+        }
+        directionContent = document.body["scroll" + element];
+        zoomDivMapa = (directionContent / divMapa["scroll" + element]) * 100;
+        if (directionContent < contentMapa["scroll" + element] || directionContent <= directionContentInicial) {
+            divMapa.style.zoom = zoomDivMapa + "%"
+        }
         window.addEventListener("resize", function () {
 
             if (document.body.scrollWidth > document.body.scrollHeight) {
                 element = "Height"
 
             } else {
-
-
                 element = "Width"
             }
             directionContent = document.body["scroll" + element];
             zoomDivMapa = (directionContent / divMapa["scroll" + element]) * 100;
-            if (directionContent < contentMapa["scroll" + element] || directionContent <= directionContentInicial) {
+            if ( directionContent <= directionContentInicial ) {
                 divMapa.style.zoom = zoomDivMapa + "%"
             }
         })
@@ -78,23 +85,15 @@ window.addEventListener("load", function () {
 
 
             if (document.body.scrollWidth > document.body.scrollHeight) {
-                if (bboxDepartamento.width > bboxDepartamento.height + (bboxDepartamento.height / 2 )) {
+                if (bboxDepartamento.width > bboxDepartamento.height + (bboxDepartamento.height  )) {
                     scale = ((svgMapa.scrollWidth * (document.body.scrollWidth / contentMapa.scrollWidth)) / bboxDepartamento.width) - 0.5;
                 } else {
-                    scale = ((svgMapa.scrollHeight * (document.body.scrollHeight / contentMapa.scrollHeight)) / bboxDepartamento.height - 1);
+                    scale = ((svgMapa.scrollHeight * (document.body.scrollHeight / contentMapa.scrollHeight)) / bboxDepartamento.height - 0.5);
                 }
             } else if (document.body.scrollHeight > document.body.scrollWidth) {
-                if (bboxDepartamento.width > bboxDepartamento.height  ) {
 
-                    scale = ((svgMapa.scrollWidth * (document.body.scrollWidth / contentMapa.scrollWidth)) / bboxDepartamento.width) - 1;
-                } else if (bboxDepartamento.height > bboxDepartamento.width){
-                    alert( bboxDepartamento.height + "asda" + bboxDepartamento.width)
-    
-
-                    scale = ((svgMapa.scrollHeight * (document.body.scrollHeight / contentMapa.scrollHeight)) / bboxDepartamento.height - 1.7);
-                }else{
-                    scale = ((svgMapa.scrollWidth * (document.body.scrollWidth / contentMapa.scrollWidth)) / bboxDepartamento.width - 1.7);
-                }
+                    scale = ((svgMapa.scrollWidth * (document.body.scrollWidth / contentMapa.scrollWidth)) / bboxDepartamento.width );
+                
             } else {
 
                 scale = scale - 0.2;

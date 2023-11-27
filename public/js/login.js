@@ -1,10 +1,12 @@
 const inputs = document.querySelectorAll('.input-text');
 const spanInputs = document.querySelectorAll('.span-input')
+const credentialError = document.querySelectorAll('.credentials-error')
 
-console.log(spanInputs.length);
 for (let i = 0; i < inputs.length; i++) {
 
     inputs[i].addEventListener('focus', function () {
+        inputs[i].classList.remove('input-error')
+
         inputs[i].style.border = '1px solid green'
         spanInputs[i].classList.add('container-inputs-span')
         spanInputs[i].classList.remove('span-input')
@@ -25,6 +27,7 @@ for (let i = 0; i < inputs.length; i++) {
             spanInputs[i].classList.add('span-input')
 
         }
+
     })
 
 }

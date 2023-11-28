@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Link, Outlet, json } from "react-router-dom"
-import "../../public/css/Menu.css"
+import "../../public/css/menu.css"
 import "../../public/js/menu.js"
 import Api from '../componentes/Api.jsx';
 

@@ -23,8 +23,10 @@ body{
     width: max-content;
     height: max-content;
 }
-
-.elemento-mapa{
+#colombiaMapa path{
+    visibility: hidden;
+}
+.departamento{
     fill: #f5f5f5;
     cursor: pointer;
     stroke: black;
@@ -56,8 +58,11 @@ body{
     position: absolute;
     transition: top 0.5s, left 0.5s;
 }
-.contenido-departamento{
-    fill: transparent;
-    stroke: transparent;
-    visibility: hidden;
+
+#colombiaMapa  .municipio-huila{
+    fill: rgb(224, 15, 15);
 }
+
+/* .departamento{
+    visibility: hidden;
+} */

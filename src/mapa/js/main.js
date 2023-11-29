@@ -199,10 +199,10 @@ window.addEventListener("load", async function () {
 
         function setUbicaciones() {
             for (let x = 0; x < infoGeolocalizacion.length; x++) {
-                let top = 12.75;
-                let bottom = -4.9;
-                let left = -79.1912;
-                let right = -66.515;
+                let top = 12.39667;
+                let bottom = -4.22705;
+                let left = -79.0091831957231;
+                let right =-66.84623797929129;
 
                 let latitudPorcentaje = top - (bottom);
                 let valorLatitudPorcentaje = infoGeolocalizacion[x].latitud - (bottom);
@@ -213,8 +213,8 @@ window.addEventListener("load", async function () {
 
                 let divPunto = document.createElement("div");
 
-                divPunto.style.bottom = "calc(" + porcentajeTotalLaitud + "% - (0.5vw / 2 )";
-                divPunto.style.left = "calc(" + porcentajeTotalLongitud + "% - (0.5vw  / 2) ";
+                divPunto.style.bottom = "calc(" + porcentajeTotalLaitud + "% - (1% / 2 )";
+                divPunto.style.left = "calc(" + porcentajeTotalLongitud + "% - (1%  / 2) ";
 
                 console.log(porcentajeTotalLongitud)
 

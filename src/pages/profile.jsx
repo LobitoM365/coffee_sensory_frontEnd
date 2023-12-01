@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Api from "../componentes/Api"
+import { Menu } from './Menu.jsx'
 
 
 export const Profile = () => {
+    Menu.updateInfoUser()
     const [user, setUser] = useState({"nombre" : ""});
     const [form, changeForm] = useState(0);
     const [errors, setErrors] = useState({});

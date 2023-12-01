@@ -5,6 +5,9 @@ import "../../public/js/menu.js"
 import Api from '../componentes/Api.jsx';
 
 export const Menu = () => {
+    function updateInfoUser() {
+        alert("xd")
+    }
     const [user, setUser] = useState({});
     const [asignaciones, setAsignaciones] = useState([]);
     const [modalNotificaciones, changeModalNotificaciones] = useState(false);
@@ -18,6 +21,8 @@ export const Menu = () => {
     function selectedLi(location) {
         changeSelected(location)
     }
+
+
     async function getAgignaciones() {
 
         try {

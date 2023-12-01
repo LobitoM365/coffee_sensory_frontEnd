@@ -204,7 +204,7 @@ a {
     left: 0;
     display: grid;
     grid-template-columns: 1fr auto;
-    padding: 10px 100px;
+    padding: 10px 50px;
     border-bottom: 2px solid rgb(227,227,228);
     color: black;
 }

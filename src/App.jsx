@@ -6,6 +6,7 @@ import { Home } from './pages/home.jsx';
 import { Inicio } from './pages/inicio.jsx';
 import { Profile } from './pages/profile.jsx';
 import Login from './pages/Login.jsx';
+import Tablas from './componentes/Tablas.jsx';
 
 export default function App() {
   return (
@@ -14,11 +15,12 @@ export default function App() {
         <Route path='/' element={<Inicio />}>
         </Route>
         <Route path='/login' element={<Login />} />
-    
+        <Route path='/tablas' element={<Tablas/>}/>
         <Route path='/dashboard' element={<Menu />}>
           <Route path='' element={<Home />} />
           <Route path='profile' element={<Profile />} />
           <Route path='usuarios/registros' element={<RegistrosUsuarios />} />
+          
         </Route>
       </Routes>
     </>

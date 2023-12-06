@@ -3,11 +3,21 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import Api from "./Api";
 import { useParams } from "react-router-dom";
-import {ResponsiveContainer,BarChart,CartesianGrid,XAxis,YAxis,Tooltip,Legend,Bar}from "recharts";
-import '../../public/css/graficos.css';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Cell
+} from "recharts";
+import "../../public/css/graficos.css";
 
-export const Graficos= ()=>{
-   /*  let {id}=useParams()
+export const Graficos = (datos) => {
+  /* let {id}=useParams()
     const [data,setdatos]=useState([]);
     useEffect(()=>{
         const buscar= async ()=>{
@@ -21,42 +31,81 @@ export const Graficos= ()=>{
         buscar();
     },[]); */
 
+    useEffect(()=>{
 
-    const data =[
-        {nombre:"Enero",calidad:8,color:"yellow"},
-        {nombre:"Febrero",calidad:6},
-        {nombre:"Marzo",calidad:4},
-        {nombre:"Abril",calidad:10},
-        {nombre:"Mayo",calidad:8},
-    ];
-    let color = data.map(item => item.calidad === 8 ? "white" : "black");
+    },[])
     
-    console.log(color)
+    let data = datos.datos
 
-   
-    return(
-        <div className="graphicBox">
-            <ResponsiveContainer width="50%" aspect={2}>
-            <BarChart
-            data={data}
-            width={100}
-            height={500}
-            margin={{
-                top:5,
-                right:30,
-                left:20,
-                bottom:5
-            }}>
-                <CartesianGrid strokeDasharray="4" />
-                <XAxis dataKey="nombre"/>
-                <YAxis/>
+    console.log(data)
+
+ 
+let colors =[];
+data.map((items)=>{
+    if (items.promedio>=9 && items.promedio<=10) {
+        colors.push('rgb(244, 50, 50)')
+    }else if(items.promedio>=8 && items.promedio<9){
+        colors.push(' #4ec74e')
+    }else if(items.promedio>=7 && items.promedio<8){
+        colors.push('rgb(39, 11, 174)')
+    }else if(items.promedio>=6 && items.promedio<7){
+        colors.push('rgb(255, 174, 0)')
+    }else{
+        colors.push('gray')
+    }
+})
+console.log(colors)
+
+return (
+    <div className="graphicBox">
+      <ResponsiveContainer width="50%" aspect={2}>
+        <BarChart
+          data={data}
+          width={100}
+          height={500}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="4" />
+          <XAxis dataKey="nombre" />
+          <YAxis />
+          <Tooltip />
+          <Legend/>
+          <Bar
+            dataKey="promedio"
+           
+            label={{ position: "top" }}
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={colors[index % 20]} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer> 
                 
-                <Legend/>
-                <Bar dataKey="calidad" maxBarSize={30} fill={color[i]}/>
-            </BarChart>
-        </ResponsiveContainer>
-        </div>
-        
-    )
-    
-}
+      <div className="Tablecolors">
+                <div className="BoxOptions">
+                    <div className="colors extraordinario"></div>
+                    <h3>Extraordinario</h3>
+                </div>
+                <div className="BoxOptions">
+                    <div className="colors excelente"></div>
+                    <h3>Excelente</h3>
+                </div>
+                <div className="BoxOptions">
+                    <div className="colors MyBueno"></div>
+                    <h3>Muy Bueno</h3>
+                </div>
+                <div className="BoxOptions">
+                    <div className="colors bueno"></div>
+                    <h3>Bueno</h3>
+                </div>
+
+      </div>
+    </div>
+  );
+};

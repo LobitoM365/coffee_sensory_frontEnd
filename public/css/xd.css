@@ -13,8 +13,8 @@
 
 .modal-content {
     box-shadow: 0px 0px 5px 1px gray;
-    padding: 10px;
-    height: 96%;
+    padding: 20px;
+    height: 92%;
     width: 95%;
     display: grid;
     grid-template-rows: 2.5fr 1fr;
@@ -32,10 +32,12 @@
 }
 
 .content {
+    background-color: white;
     display: grid;
     grid-template-rows: 0.1fr 1fr;
-    padding: 10px;
-    border: 1px solid black;
+    padding: 15px 15px 15px 35px;
+    box-shadow: 0px 0px 5px 2px rgb(205, 205, 205);
+    border-radius: 10px;
 }
 
 /* Contenero de imagen */
@@ -71,5 +73,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rebeccapurple;
+    background-color: rgb(35, 213, 35);
+}
+
+.name-estate{
+    display: flex;
+    gap: 14px;
 }

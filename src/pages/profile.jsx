@@ -4,7 +4,7 @@ import { Menu } from './Menu.jsx'
 
 
 export const Profile = () => {
-    Menu.updateInfoUser()
+
     const [user, setUser] = useState({"nombre" : ""});
     const [form, changeForm] = useState(0);
     const [errors, setErrors] = useState({});
@@ -124,7 +124,7 @@ export const Profile = () => {
         <>
             <link rel="stylesheet" href="../../public/css/profile.css" />
             <div className="header-profile">
-                <img className='img-head-profile' src="../img/fondoProfile.jpg" alt="" />
+                <img className='img-head-profile' src="https://static.vecteezy.com/system/resources/previews/008/277/939/non_2x/background-with-mountains-nature-mountain-in-green-color-free-vector.jpg" alt="" />
                 <div className="contenido-profile">
                     <div className="info-profile head-info-profile">
                         <div className="div-img-perfil-usuario">

@@ -14,9 +14,9 @@ import {
   ResponsiveContainer,
   Cell
 } from "recharts";
-import "../../public/css/graficos.css";
 
-export function Graficos (datos,titulo)  {
+
+export function Graficos (datos)  {
   /* let {id}=useParams()
     const [data,setdatos]=useState([]);
     useEffect(()=>{
@@ -66,11 +66,13 @@ data.map((items)=>{
     }
 })
 console.log(colors)
-console.log (titulo)
+console.log (datos.titulo)
 
 return (
     <div className="graphicBox">
-      <h3>{titulo.mensaje}</h3>
+      <link rel="stylesheet" href="../../public/css/graficos.css" />
+      <h3 className="title-graphic">{datos.titulo}</h3>
+      <div className="contentGraphic">
       <ResponsiveContainer width="70%" aspect={2}>
         <BarChart
           data={data}
@@ -117,6 +119,7 @@ return (
                     <h3>Bueno</h3>
                 </div>
 
+      </div>
       </div>
     </div>
   );

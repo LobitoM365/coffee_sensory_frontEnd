@@ -15,7 +15,7 @@ export const Home = () => {
     return (
         <>
             <h2>Inicio</h2>
-            <Graficos datos={data} titulo={{mensaje:'Promedio Calidad mes a mes'}}/>
+            <Graficos datos={data} titulo={'Promedio Calidad mes a mes'}/>
         </>
     )
 }

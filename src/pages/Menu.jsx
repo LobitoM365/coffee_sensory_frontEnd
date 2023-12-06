@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Link, Outlet, json } from "react-router-dom"
-import "../../public/css/menu.css"
 import "../../public/js/menu.js"
 import Api from '../componentes/Api.jsx';
 
@@ -133,7 +132,8 @@ export const Menu = () => {
     return (
 
         <div className="main-content">
-            <nav id="navHorizontal" className="nav-horizontal" style={{ backgroundColor: !valueDarkMode ? "green" : "" }}>
+            <link rel="stylesheet" href="../../public/css/menu.css" />
+            <nav id="navHorizontal" className="nav-main nav-horizontal" style={{ backgroundColor: !valueDarkMode ? "green" : "" }}>
                 <div className="header-nav hamburguer-centered">
                     <img className="img-logo-nav change-hamburguer-quit" src="../../public/img/logo-coffee-sensory.jpeg" alt="" />
 
@@ -253,7 +253,7 @@ export const Menu = () => {
                     </ul>
                 </div>
             </nav>
-            <nav className="nav-vertical" style={{ backgroundColor: !valueDarkMode ? "green" : "" }}>
+            <nav className="nav-main nav-vertical" style={{ backgroundColor: !valueDarkMode ? "green" : "" }}>
                 <div></div>
                 <div className="seccion-usuario-notificaciones">
                     {Object.keys(user).length > 0 ? user.rol == "catador" && user.cargo == "instructor" ?

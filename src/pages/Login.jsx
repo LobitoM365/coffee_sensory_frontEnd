@@ -1,7 +1,7 @@
 // LoginForm.js
 import Api from "../componentes/Api"
 import React, { useEffect, useState } from 'react';
-import '../../public/css/login.css';
+
 import { useNavigate } from "react-router-dom";
 
 
@@ -47,6 +47,7 @@ const Login = () => {
 
     return (
         <div className="main-container">
+            <link rel="stylesheet" href="../../public/css/login.css" />
             <div className="bg-img">
                 {/* <img className='' src="../img/login/bg-login-2.png" alt="" /> */}
                 {/* <svg id="visual" viewBox="0 0 1000 600" width="900" height="600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><path d="M0 483L30 478.8C60 474.7 120 466.3 180 469.8C240 473.3 300 488.7 360 477.2C420 465.7 480 427.3 540 417.2C600 407 660 425 720 426.2C780 427.3 840 411.7 870 403.8L900 396" fill="none" stroke-linecap="round" stroke-linejoin="miter" stroke="#009473" stroke-width="40"></path></svg>

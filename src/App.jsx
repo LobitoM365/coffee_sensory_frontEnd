@@ -7,6 +7,7 @@ import { Inicio } from './pages/inicio.jsx';
 import { Profile } from './pages/profile.jsx';
 import Login from './pages/Login.jsx';
 
+
 export default function App() {
   return (
     <>

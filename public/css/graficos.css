@@ -17,15 +17,16 @@
     flex-direction: column;    
 }
 .BoxOptions{
+    width:max-content;
     display: flex;
-    
     justify-content: center;
     align-items: center;
 }
 .BoxOptions:hover{
     background-color: rgba(123, 124, 124, 0.542);
     border-radius: 7px;
-    
+    width:max-content;
+    padding: 0px 10px 0px 0px;
 }
 .colors{
     width: 1.5rem;

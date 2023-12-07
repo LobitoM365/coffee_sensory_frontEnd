@@ -1,5 +1,6 @@
-import{ useReactTable} from'@tanstack/react-table';
 import React, { useEffect, useState } from 'react';
+import { useReactTable, getCoreRowModel, flexRender } from '@tanstack/react-table';
+
 import Api from './Api';
 
 function Tablas() {
@@ -9,58 +10,67 @@ function Tablas() {
       try {
         const response=await Api.get("/usuarios/listar");
         setInfo(response.data)
+        /* console.log(response.data) */
       } catch (error) {
         console.error('Se encontro un error al listar el usuario: ',error);
       }
     }
     buscarInfo();
-  })
-  const  columns=[
-    {
-      header:"ID",
-      accessorKey:'id'
-    },
-    { 
-      header:"Nombre",
-      accessorKey:'nombre'
-    },
-    {
-      header:"Apellido",
-      accessorKey:'apellido'
-    },
-    {
-      header:"Numero de documento",
-      accessorKey:'numero_documentos'
-    },
-    {
-      header:"Telefono",
-      accessorKey:'telefono'
-    },
-    {
-      header:"Email",
-      accessorKey:'correo_electronico'
-    },
-    {
-    header:"Tipo de documento",
-    accessorKey:'tipo_documento'
-    },
-    {
-      header:"Rol",
-      accessorKey:'rol'
-    },
-    {
-      header:"Cargo",
-      accessorKey:'cargo'
-    },
-    {
-      header:"Estado",
-      accessorKey:'estado'
-    }
-  ]
-   const table = useReactTable({ Api,columns})
+    const  columns=[
+      {
+        header:"ID",
+        accessor:'id'
+      },
+      { 
+        header:"Nombre",
+        accessor:'nombre'
+      },
+      {
+        header:"Apellido",
+        accessor:'apellido'
+      },
+      {
+        header:"Numero de documento",
+        accessor:'numero_documentos'
+      },
+      {
+        header:"Telefono",
+        accessor:'telefono'
+      },
+      {
+        header:"Email",
+        accessor:'correo_electronico'
+      },
+      {
+      header:"Tipo de documento",
+      accessor:'tipo_documento'
+      },
+      {
+        header:"Rol",
+        accessor:'rol'
+      },
+      {
+        header:"Cargo",
+        accessor:'cargo'
+      },
+      {
+        header:"Estado",
+        accessor:'estado'
+      }
+    ] 
+
+    console.log(info)
+    console.log(columns)
+
+    const table = useReactTable({ columns,data:info,getCoreRowModel:getCoreRowModel()})
+    console.log(table)
+  },[])
+
+   /*  */
   return (
     <div>
-      <table>
+      
+      {/* <table>
         <thead>
           {
             table.getHeaderGroups().map(headerGroup=>(
@@ -77,11 +87,18 @@ function Tablas() {
           }
         </thead>
         <tbody>
-          
+          {
+            table.getRowModel().rows.map(row=>{
+              <tr key={row.id}>
+                {row.getVisibleCells().map(cell=>{
+                  <td>{flexRender(cell.column.columnDef.cell,cell.getContext())}</td>
+                })}
+              </tr>
+            })
+          }
         </tbody>
-      </table>
+      </table> */}
     </div>
   )
 }
-
 export default Tablas

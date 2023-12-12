@@ -1,5 +1,5 @@
 import React from 'react'
-import { Graficos } from '../componentes/graficos'
+import { Graficos } from '../componentes/Graficos';
 
 
 export const Home = () => {

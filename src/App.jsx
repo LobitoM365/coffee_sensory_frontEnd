@@ -6,7 +6,8 @@ import { Home } from './pages/home.jsx';
 import { Inicio } from './pages/inicio.jsx';
 import { Profile } from './pages/profile.jsx';
 import Login from './pages/Login.jsx';
-import { Graficos } from './componentes/graficos.jsx';
+import { RegistroFormatoSca } from './pages/registrosFormatoSCA.jsx';
+import { Fincas } from './pages/fincas.jsx';
 
 
 export default function App() {
@@ -22,7 +23,8 @@ export default function App() {
           <Route path='' element={<Home />} />
           <Route path='profile' element={<Profile />} />
           <Route path='usuarios/registros' element={<RegistrosUsuarios />} />
-          
+          <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
+          <Route path='fincas/registros' element={<Fincas />} />
         </Route>
       </Routes>
     </>

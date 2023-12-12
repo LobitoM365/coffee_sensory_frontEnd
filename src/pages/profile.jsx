@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Api from "../componentes/Api"
+import { Menu } from './Menu.jsx'
 
 
 export const Profile = () => {
+
     const [user, setUser] = useState({"nombre" : ""});
     const [form, changeForm] = useState(0);
     const [errors, setErrors] = useState({});
@@ -13,26 +15,28 @@ export const Profile = () => {
     const apellido = useRef();
     const telefono = useRef();
     const correo_electronico = useRef();
-    const numero_documentos = useRef();
+    const numero_documento = useRef();
     const user_password = useRef();
     const new_password = useRef();
     const confirm_password = useRef();
     const [mensaje, setMensaje] = useState({});
     async function fetchUser() {
+        
+
         try {
-            const response = await Api.get("usuarios/buscar/1");
+            const response = await Api.get("usuarios/perfil");
             changeCount(1)
 
             if (response.data.status == true) {
+                let data = response.data.data
                 setUser(response.data.data)
                 function getInfoInputs() {
                     if (heightForm.current) {
-                        console.log(nombre)
-                        nombre.current.value = response.data.data.nombre.replace(/(?:^|\s)\S/g, match => match.toUpperCase());
-                        apellido.current.value = response.data.data.apellido.replace(/(?:^|\s)\S/g, match => match.toUpperCase());
-                        telefono.current.value = response.data.data.telefono;
-                        correo_electronico.current.value = response.data.data.correo_electronico;
-                        numero_documentos.current.value = response.data.data.numero_documentos;
+                        nombre.current.value = data.nombre.replace(/(?:^|\s)\S/g, match => match.toUpperCase());
+                        apellido.current.value = data.apellido.replace(/(?:^|\s)\S/g, match => match.toUpperCase());
+                        telefono.current.value = data.telefono;
+                        correo_electronico.current.value = data.correo_electronico;
+                        numero_documento.current.value = data.numero_documento;
                     } else {
                         user_password.current.value = "";
                         new_password.current.value = "";
@@ -40,12 +44,17 @@ export const Profile = () => {
                     }
                 }
                 getInfoInputs()
-            } else {
+            } else if(response.errors){
                 console.log(response)
                 setMensaje(response.data.errors)
                 setUser({})
                 changeCount(0)
+            }else{
+                console.log(response)
+            setMensaje({ "find_error": "Error interno del servidor" })
+
             }
+            
         } catch (e) {
             setUser({})
             console.error("Error" + e)
@@ -71,8 +80,9 @@ export const Profile = () => {
                 "apellido": apellido.current.value,
                 "telefono": telefono.current.value,
                 "correo_electronico": correo_electronico.current.value,
-                "numero_documentos": numero_documentos.current.value
+                "numero_documento": numero_documento.current.value
             }
+            console.log(data)
             const response = await Api.put("usuarios/actualizar/1", data);
             if (response.data.status == false && response.data.errors) {
                 setErrors(response.data.errors)
@@ -122,7 +132,7 @@ export const Profile = () => {
         <>
             <link rel="stylesheet" href="../../public/css/profile.css" />
             <div className="header-profile">
-                <img className='img-head-profile' src="../img/fondoProfile.jpg" alt="" />
+                <img className='img-head-profile' src="https://static.vecteezy.com/system/resources/previews/008/277/939/non_2x/background-with-mountains-nature-mountain-in-green-color-free-vector.jpg" alt="" />
                 <div className="contenido-profile">
                     <div className="info-profile head-info-profile">
                         <div className="div-img-perfil-usuario">
@@ -172,9 +182,9 @@ export const Profile = () => {
                                             </div>
                                             <div className='element-form'>
                                                 <label htmlFor="">Numero de documento</label>
-                                                <input ref={numero_documentos} className='input-update-profile' type="text" name="" id="" />
+                                                <input ref={numero_documento} className='input-update-profile' type="text" name="" id="" />
                                                 <div className='div-input-error'>
-                                                    <h5 className='input-error'>{errors.numero_documentos ? errors.numero_documentos : ""}</h5>
+                                                    <h5 className='input-error'>{errors.numero_documento ? errors.numero_documento : ""}</h5>
                                                 </div>
                                             </div>
                                         </div>

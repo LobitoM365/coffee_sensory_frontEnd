@@ -8,7 +8,7 @@ export const Fincas = () => {
     let dataFilterTable = {
         "filter": {
             "where": {
-
+                
             }
         }
     };
@@ -16,7 +16,6 @@ export const Fincas = () => {
     const keys = {
         "id": {
             "referencia": "Id",
-            "typo": ""
         },
         "nombre": {
             "referencia": "Nombre",
@@ -60,17 +59,22 @@ export const Fincas = () => {
         }
     }
     async function getFincas() {
-        console.log(dataFilterTable, "xdxd")
-        const response = await Api.post("finca/listar", dataFilterTable);
-        if (response.data.status == true) {
-            setFincas(response.data.data)
-            console.log(response.data.data)
-        } else if (response.data.find_error) {
-            setFincas(response.data)
-        } else {
-            setFincas(response.data)
+        try {
+            console.log(dataFilterTable, "xdxd")
+            const response = await Api.post("finca/listar", dataFilterTable);
+            console.log(response, "fincaxdddd")
+
+            if (response.data.status == true) {
+                setFincas(response.data.data)
+                console.log(response.data.data)
+            } else if (response.data.find_error) {
+                setFincas(response.data)
+            } else {
+                setFincas(response.data)
+            }
+        } catch (e) {
+            console.log("Error " + e)
         }
-        console.log(response)
     }
     useEffect(() => {
         getFincas()
@@ -89,6 +93,7 @@ export const Fincas = () => {
             } else {
                 console.log("Internal error")
             }
+            console.log(axios)
         } catch (e) {
 
             console.log("Error: " + e)

@@ -5,7 +5,7 @@ import { Menu } from './Menu.jsx'
 
 export const Profile = () => {
 
-    const [user, setUser] = useState({"nombre" : ""});
+    const [user, setUser] = useState({ "nombre": "" });
     const [form, changeForm] = useState(0);
     const [errors, setErrors] = useState({});
     const [countUser, changeCount] = useState(1);
@@ -21,7 +21,7 @@ export const Profile = () => {
     const confirm_password = useRef();
     const [mensaje, setMensaje] = useState({});
     async function fetchUser() {
-        
+
 
         try {
             const response = await Api.get("usuarios/perfil");
@@ -44,17 +44,17 @@ export const Profile = () => {
                     }
                 }
                 getInfoInputs()
-            } else if(response.errors){
+            } else if (response.errors) {
                 console.log(response)
                 setMensaje(response.data.errors)
                 setUser({})
                 changeCount(0)
-            }else{
+            } else {
                 console.log(response)
-            setMensaje({ "find_error": "Error interno del servidor" })
+                setMensaje({ "find_error": "Error interno del servidor" })
 
             }
-            
+
         } catch (e) {
             setUser({})
             console.error("Error" + e)
@@ -136,7 +136,7 @@ export const Profile = () => {
                 <div className="contenido-profile">
                     <div className="info-profile head-info-profile">
                         <div className="div-img-perfil-usuario">
-                            <img className='img-perfil-usuario' src="../img/analisisPrueba.jpg" alt="" />
+                            {Object.keys(user).length > 0 ? user.cargo == "administrador" ? <img className='img-perfil-usuario' src="../img/analisisPrueba.jpg" alt="" /> : user.cargo == "instructor" ? <img className='img-perfil-usuario' src="../img/img_instructor.jpg" alt="" /> : user.cargo == "aprendiz" ? <img className='img-perfil-usuario' src="../img/img_aprendiz.jpg" alt="" /> : user.cargo == "cliente" ? <img className='img-perfil-usuario' src="../img/img_client.jpg" alt="" /> : <img className='img-perfil-usuario' src="../img/analisisPrueba.jpg" alt="" /> : <img className='img-perfil-usuario' src="../img/analisisPrueba.jpg" alt="" />}
                         </div>
                         <div className="opciones-formulario">
                             <button onClick={updateForm} className='button-opcion-formulario' type='button'>{form == 0 ? "Cambiar Contraseña" : "Actualizar Perfil"}</button>
@@ -225,7 +225,7 @@ export const Profile = () => {
                                         <button onClick={() => fecthUpdatePassword()} className='button-update-user' type='button'>Guardar</button>
 
                                     </form>
-                                    : mensaje.find_error ? mensaje.find_error    : "error interno"}
+                                    : mensaje.find_error ? mensaje.find_error : "error interno"}
                             </div>
                         </div>}
                 </div>

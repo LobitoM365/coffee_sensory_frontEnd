@@ -172,7 +172,7 @@ export const Menu = () => {
                                 </svg> <h5 className="change-hamburguer-quit ">Usuarios</h5>
                                 </li>
                             </Link>
-                           
+
                             <li className="hamburguer-centered">
                                 <svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256"  >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -311,6 +311,13 @@ export const Menu = () => {
                         </div> : "" : ""}
                     {Object.keys(user).length > 0 ? (
                         <div className="div-info-usuario">
+                            <div className="div-img-perfil-nav">
+                                {Object.keys(user).length > 0 ? user.cargo == "administrador" ? <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" /> : user.cargo == "instructor" ? <img className='img-perfil-usuario' src="/img/img_instructor.jpg" alt="" /> : user.cargo == "aprendiz" ? <img className='img-perfil-usuario' src="/img/img_aprendiz.jpg" alt="" /> : user.cargo == "cliente" ? <img className='img-perfil-usuario' src="/img/img_client.jpg" alt="" /> : <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" />
+
+                                    :
+                                    <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" />}
+
+                            </div>
                             <div className="info-usuario">
                                 <h4 className="nombre-usuario">{Object.keys(user).length > 0 ? (user.nombre.replace(/(?:^|\s)\S/g, match => match.toUpperCase())) : ""}</h4>
                                 <h4 className="rol-usuario">{Object.keys(user).length > 0 ? (user.rol.replace(/(?:^|\s)\S/g, match => match.toUpperCase())) : ""}</h4>

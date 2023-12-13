@@ -514,3 +514,16 @@ body {
 .nav-main .rol-usuario{
     font-size: 0.7em;
 }
+.div-img-perfil-nav{
+    overflow: hidden;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+}
+.div-img-perfil-nav img{
+    width: 100%;
+    height: 100%;
+}

@@ -1,24 +1,41 @@
-*{
+* {
     padding: 0;
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
+.component{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
 
-.table-component{
+.div-table{
+    width: 100%;
+    max-width: 1450px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.table-component {
     background-color: white;
     border-radius: 8px;
     padding: 20px;
-    width: max-content;
     width: 100%;
-    max-width: 1000px;
     color: gray;
+    font-size: 0.9em;
+    font-weight: lighter;
 }
-.table-component th, .table-component td{
+
+.table-component th,
+.table-component td {
     text-align: left;
-    padding: 10px;
+    padding: 15px 10px;
     border-bottom: 1px solid rgba(103, 103, 103, 0.241);
 }
-.estado-0 ,.estado-1{
+
+.estado-0,
+.estado-1 {
     width: 70px;
     max-width: 100px;
     padding: 10px;
@@ -27,10 +44,148 @@
     color: white;
     cursor: pointer;
 }
-.estado-0{
+
+.estado-0 {
     background-color: red;
+
+}
+
+.estado-1 {
+    background-color: green;
+}
+
+.table-component .table-error {
+    padding: 20px;
+    text-align: center;
+    border-bottom: unset;
+}
+
+.table-attribute-no-registra {
+    color: rgba(156, 156, 156, 0.831);
+}
+.item-options{
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
     
 }
-.estado-1{
-    background-color: green;
+.center-update{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.item-options svg{
+    font-weight: bolder;  
+}
+.item-options:hover{
+    background-color: rgba(209, 209, 209, 0.687);
+}
+.option-update{
+    fill: rgb(48,53, 103);
+}
+
+.div-filters{
+    padding: 20px;
+    background-color: white;
+    width: calc( 100% - 40px);
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    justify-content: center;
+    align-items: center;
+    height: max-content;
+}
+
+.input-search{
+    border: unset;
+    padding: 0px 10px 0px 0px;
+    font-size: 0.8em;
+    background-color: white;
+    height: calc(100%);
+}
+.input-search:focus{
+    outline: none;
+}
+.icon-search{
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.icon-search svg{
+    height: 70%;
+    width: 70%;
+}
+.filters-search{
+    border: 1px solid rgba(122, 122, 122, 0.368);
+    border-radius: 4px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr;
+    width: max-content;
+    height: 100%;
+}
+.content-filters{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    height:max-content;
+    position: relative;
+    height: 32px;
+
+}
+.filter-estado{
+    height: 100%;
+    border: 1px solid rgba(122, 122, 122, 0.368);
+    border-radius: 4px;
+    width: 150px;
+    color: rgba(122, 121, 121, 0.618);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.input-select-estado{
+    height: 100%;
+    padding: 0px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    cursor: pointer;
+
+}
+.icon-chevron-estado{
+    width: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+}
+.opciones{
+    position: absolute;
+    top: 100%;
+    border: 1px solid rgba(122, 122, 122, 0.368);
+    background-color: white;
+    width: calc(100% - 40px);
+    padding: 5px 20px;
+    border-radius: 0px 0px 4px 4px;
+    max-height: 110px;
+    overflow: auto;
+}
+.select-option{
+    border-radius: 4px;
+    padding: 7px 5px;
+    cursor: pointer;
+    font-size: 0.8em;
+}
+.select-option:hover{
+    background-color: rgba(181, 181, 181, 0.477);
 }

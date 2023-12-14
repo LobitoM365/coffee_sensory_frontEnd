@@ -5,23 +5,25 @@ import Api from '../componentes/Api.jsx'
 
 
 export const Fincas = () => {
-    let dataFilterTable = {
+    let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
-                
+
             }
         }
-    };
+    })
+        ;
     const [fincas, setFincas] = useState([])
+    const [countRegisters, setCountRegisters] = useState()
     const keys = {
-        "id": {
+        "fin_id": {
             "referencia": "Id",
         },
         "nombre": {
             "referencia": "Nombre",
             "upper_case": true
         },
-        "usuarios_id": {
+        "numero_documento_usuario": {
             "values": [
                 "numero_documento_usuario",
                 "nombre_completo_usuario"
@@ -60,18 +62,16 @@ export const Fincas = () => {
     }
     async function getFincas() {
         try {
-            console.log(dataFilterTable, "xdxd")
             const response = await Api.post("finca/listar", dataFilterTable);
-            console.log(response, "fincaxdddd")
-
             if (response.data.status == true) {
                 setFincas(response.data.data)
-                console.log(response.data.data)
+                setCountRegisters(response.data.count)
             } else if (response.data.find_error) {
                 setFincas(response.data)
             } else {
                 setFincas(response.data)
             }
+
         } catch (e) {
             console.log("Error " + e)
         }
@@ -80,11 +80,11 @@ export const Fincas = () => {
         getFincas()
         function updateEstado() {
 
-            console.log("xd")
         }
     }, [])
     async function cambiarEstado(id) {
         try {
+            console.log(id)
             const axios = await Api.delete("finca/eliminar/" + id);
             if (axios.data.status == true) {
                 getFincas();
@@ -103,22 +103,39 @@ export const Fincas = () => {
         alert(id)
     }
     async function getFilterEstado(value) {
+        let cloneDataFilterTable = { ...dataFilterTable }
+        console.log(value, "Estadoo")
         if (value !== false) {
-            dataFilterTable.filter.where["fin.estado"] = {
+            cloneDataFilterTable.filter.where["fin.estado"] = {
                 "value": value,
                 "require": "and"
             }
 
         } else {
-            delete dataFilterTable.filter.where["estado"]
+            delete cloneDataFilterTable.filter.where["fin.estado"]
         }
-
-
+        setDataFilterTable(cloneDataFilterTable)
         getFincas(dataFilterTable)
+    }
+    async function getFiltersOrden(filter) {
+        console.log("xdxd", filter)
+        dataFilterTable.filter["order"] = filter
+        getFincas();
+
+    }
+    async function limitRegisters(data) {
+        console.log("dataaaaaaaaaa" , data)
+        dataFilterTable.filter["limit"] = data
+        getFincas()
+
+    }
+    async function updateTable() {
+        console.log("tableUpdateee")
+        getFincas();
     }
     return (
         <>
-            <Tablas data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateEntitie} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} />
+            <Tablas updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} tableReference={"fin"} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateEntitie} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
         </>
     )

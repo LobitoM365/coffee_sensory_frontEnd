@@ -25,7 +25,6 @@ export const Tablas = (array) => {
     let [posicionPaginate, setPosicionPaginate] = useState(0);
 
     let filtersLimitRegister = [
-        "1",
         "5",
         "10",
         "15",
@@ -292,7 +291,7 @@ export const Tablas = (array) => {
                 </div>
                 <div className="div-paginate">
                     <div className="legend">
-                        <h4>Mostrando {positionElementPaginate == paginate ? parseFloat(array.count - ((positionElementPaginate - 1) * limit)): limit} desde {inicio == 0 ? 1 : inicio + 1} a {parseFloat(limit + inicio) < array.count ? parseFloat(limit + inicio): array.count } para {array.count}</h4>
+                        <h4>Mostrando {paginate == 1 ? array.count : positionElementPaginate == paginate ? parseFloat(array.count - ((positionElementPaginate - 1) * limit)): limit} desde {inicio == 0 ? 1 : inicio + 1} a { positionElementPaginate * limit < array.count ? positionElementPaginate * limit: array.count } para {array.count}</h4>
                     </div>
                     <div className='paginate'>
                         {paginate > 5 ? <svg onClick={() => { posicionPaginate != 0 ? changePositionPaginate(-1) : "" }} className='chevron-paginate' style={{ rotate: "180deg", cursor: posicionPaginate == 0 ? "unset" : "", fill: posicionPaginate == 0 ? "rgba(152, 152, 152, 0.438)" : " rgb(0, 97, 227)" }} version="1.1" x="0px" y="0px" viewBox="0 0 256 256"  >

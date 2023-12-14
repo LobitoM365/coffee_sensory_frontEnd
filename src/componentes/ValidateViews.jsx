@@ -1,13 +1,14 @@
 import Api from './Api';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-export const validateViews = () => {
+export const validateViews = (loadValidateViews) => {
+    // const [responseValidate, setResponse] = useState(null);
 
     useEffect(() => {
-        authorized();
+        authorized(loadValidateViews);
     }, []);
 
-    async function authorized() {
+    async function authorized(loadValidateViews) {
         await Api.post('auth/protectViews', {})
             .then((response) => {
                 console.log('ok: ', response.data.authorized);
@@ -20,9 +21,15 @@ export const validateViews = () => {
                         window.history.go(-1)
                     }
                 }
+                loadValidateViews(response)
+                // setResponse(response);
             })
             .catch((error) => {
+                // loadValidateViews()
                 console.log('error: ', error);
+                // setResponse(error);
             })
     }
+
+    // return responseValidate;
 }

@@ -14,7 +14,46 @@ export const Fincas = () => {
     })
         ;
     const [fincas, setFincas] = useState([])
+    const [fincaEdit, setfincaEdit] = useState([])
+    const [updateStatus, setUpdateStatus] = useState(false)
+    const [municipios, setMunicipios] = useState([])
     const [countRegisters, setCountRegisters] = useState()
+    const [errors, setErrors] = useState()
+    let [inputsForm, setInputsForm] = useState(
+        {
+            nombre: {
+                "type": "text",
+                "referencia": "Nombre"
+            },
+            longitud: {
+                "type": "text",
+                "referencia": "Longitud"
+            },
+            latitud: {
+                "type": "text",
+                "referencia": "Latitud"
+            },
+            usuarios_id: {
+                type: "select",
+                referencia: "Usuario",
+                values: ["numero_documento", "nombre"],
+                upper_case: true,
+                key: "id"
+            },
+            municipios_id: {
+                type: "select",
+                referencia: "Municipio",
+                values: ["nombre"],
+                capital_letter: true,
+                key: "id"
+            },
+            nombre_vereda: {
+                "type": "text",
+                "referencia": "Nombre de la vereda"
+            }
+        }
+    )
+
     const keys = {
         "fin_id": {
             "referencia": "Id",
@@ -60,6 +99,11 @@ export const Fincas = () => {
             "value": 0
         }
     }
+    useEffect(() => {
+        getFincas()
+        getMunicipios()
+    }, [])
+    getUsers()
     async function getFincas() {
         try {
             const response = await Api.post("finca/listar", dataFilterTable);
@@ -67,6 +111,7 @@ export const Fincas = () => {
                 setFincas(response.data.data)
                 setCountRegisters(response.data.count)
             } else if (response.data.find_error) {
+                setCountRegisters(0)
                 setFincas(response.data)
             } else {
                 setFincas(response.data)
@@ -76,15 +121,10 @@ export const Fincas = () => {
             console.log("Error " + e)
         }
     }
-    useEffect(() => {
-        getFincas()
-        function updateEstado() {
 
-        }
-    }, [])
+
     async function cambiarEstado(id) {
         try {
-            console.log(id)
             const axios = await Api.delete("finca/eliminar/" + id);
             if (axios.data.status == true) {
                 getFincas();
@@ -99,12 +139,99 @@ export const Fincas = () => {
             console.log("Error: " + e)
         }
     }
-    async function updateEntitie(id) {
-        alert(id)
+    async function setFinca(data) {
+        try {
+            const axios = await Api.post("finca/registrar/", data);
+            if (axios.data.status == true) {
+                getFincas();
+                setErrors({})
+
+            } else if (axios.data.register_error) {
+                setErrors({})
+
+            } else if (axios.data.errors) {
+                setErrors(axios.data.errors)
+            } else {
+                setErrors({})
+
+            }
+            console.log(axios )
+
+
+        } catch (e) {
+
+            console.log("Error: " + e)
+        }
+    }
+
+    async function getUsers() {
+        try {
+            const response = await Api.get("usuarios/listar");
+            if (response.data.status == true) {
+                let users = inputsForm;
+                if (!users["usuarios_id"]) {
+                    users["usuarios_id"] = {}
+                }
+                users["usuarios_id"]["opciones"] = response.data.data
+                setInputsForm(users)
+            } else if (response.data.find_error) {
+
+            } else {
+
+            }
+            console.log(response, "User")
+
+        } catch (e) {
+            console.log("Error " + e)
+        }
+    }
+    async function getMunicipios() {
+        try {
+            const response = await Api.get("municipio/listar");
+            if (response.data.status == true) {
+                let municipios = inputsForm;
+                if (!municipios["municipios_id"]) {
+                    municipios["municipios_id"] = {}
+                }
+                municipios["municipios_id"]["opciones"] = response.data.data
+                setInputsForm(users)
+            } else if (response.data.find_error) {
+
+            } else {
+
+            }
+            console.log(response, "User")
+
+        } catch (e) {
+            console.log("Error " + e)
+        }
+    }
+    async function updateFinca(data,id) {
+
+      try {
+        const axios = await Api.put("finca/actualizar/" + id , data);
+        if (axios.data.status == true) {
+            getFincas();
+            setErrors({})
+        } else if (axios.data.update_error) {
+            setErrors({})
+
+        } else if (axios.data.errors) {
+            setErrors(axios.data.errors)
+        } else {
+            setErrors({})
+
+        }
+        console.log(axios, "Updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+
+
+    } catch (e) {
+
+        console.log("Error: " + e)
+    }
     }
     async function getFilterEstado(value) {
         let cloneDataFilterTable = { ...dataFilterTable }
-        console.log(value, "Estadoo")
         if (value !== false) {
             cloneDataFilterTable.filter.where["fin.estado"] = {
                 "value": value,
@@ -118,24 +245,40 @@ export const Fincas = () => {
         getFincas(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
-        console.log("xdxd", filter)
         dataFilterTable.filter["order"] = filter
         getFincas();
 
     }
     async function limitRegisters(data) {
-        console.log("dataaaaaaaaaa" , data)
         dataFilterTable.filter["limit"] = data
         getFincas()
 
     }
+    async function buscarFinca(id) {
+
+        const response = await Api.get("finca/buscar/" + id);
+        if (response.data.status == true) {
+            setfincaEdit(response.data.data[0])
+        } else if (response.data.find_error) {
+
+        } else {
+
+        }
+        console.log(response, "Fincaaa")
+    }
     async function updateTable() {
-        console.log("tableUpdateee")
         getFincas();
     }
+    async function editarFinca(id) {
+        buscarFinca(id)
+    }
+  
+    useEffect(() => {
+        getUsers()
+    }, [])
     return (
         <>
-            <Tablas updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} tableReference={"fin"} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateEntitie} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
         </>
     )

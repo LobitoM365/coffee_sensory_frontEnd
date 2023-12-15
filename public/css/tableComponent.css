@@ -43,12 +43,15 @@
     border-bottom: 1px solid rgba(103, 103, 103, 0.241);
 
 }
-.table-component th{
+
+.table-component thead {
     position: sticky;
     top: 0;
     padding-top: 20px;
     background-color: white;
+
 }
+
 .table-component .items-header-table {
     display: flex;
     gap: 15px;
@@ -263,7 +266,8 @@
     font-weight: bolder;
     cursor: pointer;
 }
-.item-paginate-focus{
+
+.item-paginate-focus {
     background-color: rgb(0, 97, 227);
     color: white;
 }
@@ -300,29 +304,48 @@
 
 }
 
-.content-table{
+.content-table {
     height: 850px;
     max-height: 70vh;
     overflow: auto;
 }
-.limit-registers{
+
+.limit-registers {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
     gap: 10px;
 }
-.limit-filter{
+
+.limit-filter {
     width: 80px;
 }
-.opciones-limit-filter{
-    
+
+.opciones-limit-filter {
+
     padding-right: 10px;
     padding-left: 10px;
     width: calc(100% - 20px);
 }
-.select-option-limit-filter{
+
+.select-option-limit-filter {
     display: flex;
     justify-content: center;
+}
+
+.div-tittle{
+    display: flex;
+    gap: 20px;
     align-items: center;
+}
+
+.button-register-table{
+    padding: 5px 10px;
+    background-color: rgb(11, 46, 75);
+    border-radius: 4px;
+    color: white;
+    font-size: 1em;
+    font-weight: bolder;
+    cursor: pointer;
 }

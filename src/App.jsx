@@ -5,16 +5,27 @@ import { RegistrosUsuarios } from './pages/registrosUsuarios.jsx';
 import { Home } from './pages/home.jsx';
 import { Inicio } from './pages/inicio.jsx';
 import { Profile } from './pages/profile.jsx';
-import Login from './pages/Login.jsx';
+import { Login } from './pages/Login.jsx';
 import { ModalFinca } from './pages/xd.jsx';
 import { RegistroFormatoSca } from './pages/registrosFormatoSCA.jsx';
 import { Fincas } from './pages/fincas.jsx';
-import { validateViews } from './componentes/ValidateViews.jsx';
-
+import { validateViews, ProtectedRoute } from './componentes/ValidateViews.jsx';
 import { FormRegiser } from './componentes/FormRegister.jsx';
 
+
 export default function App() {
-  validateViews()
+
+  const responseValidateViews = validateViews();
+  let userInfo;
+
+  if (!responseValidateViews) {
+    return <div className="">CARGANDO</div>
+  } else {
+    userInfo = responseValidateViews.data.user;
+    console.log('VALIDATEVIEWS: ', userInfo ? userInfo.rol : null);
+  }
+
+
   return (
     <>
       <Routes>
@@ -29,7 +40,18 @@ export default function App() {
         <Route path='/dashboard' element={<Menu />}>
           <Route path='' element={<Home />} />
           <Route path='profile' element={<Profile />} />
-          <Route path='usuarios/registros' element={<RegistrosUsuarios />} />
+
+          <Route
+            path="usuarios/registros"
+            element={
+              <ProtectedRoute
+                allowRoles={'administrador'}
+                userInfo={userInfo}
+                Element={RegistrosUsuarios}
+              />
+            }
+          />
+
           <Route path='formulario' element={<FormRegiser />} />
           <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
           <Route path='fincas/registros' element={<Fincas />} />

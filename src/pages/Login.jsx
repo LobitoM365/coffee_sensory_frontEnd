@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
 
-const Login = () => {
+export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [validationError, setValidationError] = useState(null);
@@ -32,11 +32,11 @@ const Login = () => {
             .then((response) => {
                 console.log('ok:', response);
                 if (response.data.errors) {
-                    const credentialsError =response.data.errors['credentials_error'];
+                    const credentialsError = response.data.errors['credentials_error'];
                     console.log(response.data.errors['credentials_error']);
                     setValidationError(credentialsError);
                 } else {
-                 navigate('/dashboard')
+                    navigate('/dashboard')
                 }
             })
             .catch((error) => {
@@ -73,7 +73,7 @@ const Login = () => {
                         <div className="container-inputs">
                             <span className='span-input'>Contraseña</span>
                             <input
-                                 className='input-text'
+                                className='input-text'
                                 type="password"
                                 value={password}
                                 placeholder='Contraseña'
@@ -92,4 +92,3 @@ const Login = () => {
     );
 };
 
-export default Login;

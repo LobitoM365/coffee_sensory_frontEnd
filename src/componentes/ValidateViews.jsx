@@ -1,35 +1,43 @@
 import Api from './Api';
 import { useEffect, useState } from 'react';
 
-export const validateViews = (loadValidateViews) => {
-    // const [responseValidate, setResponse] = useState(null);
+export const validateViews = () => {
+    const [responseValidate, setResponse] = useState(null);
 
     useEffect(() => {
-        authorized(loadValidateViews);
-    }, []);
-
-    async function authorized(loadValidateViews) {
-        await Api.post('auth/protectViews', {})
-            .then((response) => {
+        const authorized = async () => {
+            try {
+                const response = await Api.post('auth/protectViews', {});
                 console.log('ok: ', response.data.authorized);
+
                 if (!response.data.authorized) {
-                    if (location.pathname != '/Login') {
-                        location.href = '/Login'
+                    if (location.pathname !== '/' && location.pathname !== '/login') {
+                        window.location.href = '/login';
                     }
                 } else {
-                    if (location.pathname == '/login') {
-                        window.history.go(-1)
+                    if (location.pathname === '/login') {
+                        window.history.go(-1);
                     }
                 }
-                loadValidateViews(response)
-                // setResponse(response);
-            })
-            .catch((error) => {
-                // loadValidateViews()
+                setResponse(response);
+            } catch (error) {
                 console.log('error: ', error);
-                // setResponse(error);
-            })
-    }
+            }
+        };
 
-    // return responseValidate;
+        authorized();
+    }, []);
+
+    return responseValidate;
+}
+
+export const ProtectedRoute = ({ Element, allowRoles, userInfo }) => {
+    const rol = userInfo ? userInfo.rol : null;
+    console.log('ROL: ', allowRoles + ' ---- ' + rol);
+    console.log('Element: ', Element);
+    if (rol && allowRoles.includes(rol)) {
+        return <Element />
+    } else {
+        window.history.go(-1)
+    }
 }

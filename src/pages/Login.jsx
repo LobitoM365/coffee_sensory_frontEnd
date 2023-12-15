@@ -36,7 +36,8 @@ export const Login = () => {
                     console.log(response.data.errors['credentials_error']);
                     setValidationError(credentialsError);
                 } else {
-                    navigate('/dashboard')
+                    // navigate('/dashboard')
+                    location.href = '/dashboard';
                 }
             })
             .catch((error) => {

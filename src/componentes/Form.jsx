@@ -60,7 +60,7 @@ export const Form = (data) => {
                 </div>
                 <div className="div-form">
                     <div className="header-form">
-                        <h3 className="tittle-form-register">Registrar Finca</h3>
+                        <h3 className="tittle-form-register">{!data.updateStatus ? "Registrar Finca" : "Actualizar Finca"} </h3>
                         <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="icon-quit-svg-form">
                             <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                 <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -75,7 +75,7 @@ export const Form = (data) => {
                                     return (
                                         <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email" : ""} input-content-form-register`}>
                                             <label className="label-from-register" htmlFor="">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                            <input defaultValue={data.updateStatus ? elementEdit[key] : ""} name={key} className="input-form" type="text" />
+                                            <input autoComplete="false" defaultValue={data.updateStatus ? elementEdit[key] : data.modalForm ? "" : ""} name={key} className="input-form" type="text" />
                                             <label className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</label>
                                         </div>
                                     );

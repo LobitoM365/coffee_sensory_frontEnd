@@ -311,7 +311,7 @@ export const Tablas = (array) => {
                     </div>
                 </div>
             </div>
-            <Form updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={changeModalForm} modalForm={modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} />
+            <Form  updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={changeModalForm} modalForm={modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} />
         </>
     )
 }

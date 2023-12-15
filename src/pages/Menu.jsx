@@ -3,24 +3,14 @@ import { Link, Outlet, json } from "react-router-dom"
 
 import Api from '../componentes/Api.jsx';
 import { validateViews } from "../componentes/ValidateViews.jsx";
-
+import { useNavigate } from "react-router-dom";
 
 export const Menu = () => {
-    const [responseValidate, setResponse] = useState(null);
 
-
-    function loadValidateViews(response) {
-        console.log('VALIDATEVIEWS: ', response.data.user.rol);
-        setResponse(response);
+    let responseValidate = validateViews();
+    if (responseValidate) {
+        console.log('MENU VALIDATE: ', responseValidate.data);
     }
-    
-    validateViews(loadValidateViews);
-
-    console.log('XD: ' , responseValidate);
-    // if (response) {
-    //     console.log('validateViews: ', response.data);
-    // }
-
 
     const [user, setUser] = useState({});
     const [asignaciones, setAsignaciones] = useState([]);
@@ -121,8 +111,6 @@ export const Menu = () => {
             stateMenu();
         })
         stateMenu();
-
-
     }, [])
 
 
@@ -147,6 +135,21 @@ export const Menu = () => {
         changeModalPerfil(!modalPerfil)
         changeModalNotificaciones(false)
     }
+
+    // Cerrar sesión
+    async function LogoutSesion() {
+        // alert('?xd')
+        // const navigate = useNavigate();
+        try {
+            const response = await Api.post("/auth/close");
+            location.href = '/Login'
+            console.log('LOGOUTSesion: ', response)
+        } catch (e) {
+            console.log("ERROR" + e)
+        }
+
+    };
+
 
     return (
 
@@ -182,8 +185,8 @@ export const Menu = () => {
                     <li className="hamburguer-centered">
                         <h4 className="title-li change-hamburguer-quit">Registros</h4>
                         <ul>
-                            
-                            {responseValidate && responseValidate.data.user.rol == 'catador' && (
+
+                            {responseValidate && responseValidate.data.user.rol == 'administrador' && (
                                 <Link to={"/dashboard/usuarios/registros"} onClick={() => { selectedLi("/dashboard/usuarios/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/usuarios/registros" ? "selected-li" : ""}`}>
                                     <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 256 256"  >
                                         <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -376,13 +379,13 @@ export const Menu = () => {
                                                     </svg>
                                                     <Link className="link-opciones-usuarios ">Configuracion</Link>
                                                 </li>
-                                                <li className="li-opciones-usuario">
+                                                <button onClick={() => LogoutSesion()} className="li-opciones-usuario btn-cerrar-sesion">
                                                     <svg className="icon-li-opciones-usuario" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
                                                         <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                                         <g><g><path d="M175.3,64V24.2c0-6.4-5.2-11.5-11.5-11.5H21.5c-6.3,0-11.5,5.2-11.5,11.5v163c0,4.2,2.5,8.3,6.1,10.2l87.7,45.4c3.9,1.9,8.5-0.8,8.5-5.2v-44.2h51.5c6.4,0,11.5-5.2,11.5-11.5v-63h-23.1v45.8c0,3.3-2.5,5.8-5.8,5.8h-34V72.4c0-4.2-2.5-8.3-6.2-10.2L54.6,35.7h91.9c3.3,0,5.8,2.5,5.8,5.8v22.7h23.1V64L175.3,64z" /><path d="M204.9,45.1l37.5,37.5c4.8,4.8,4.8,11.9,0,16.7l-37.5,37.5c-4.8,4.8-12.1,5-16.9,0.2c-4.6-4.6-4-12.3,0.4-16.9l16.9-16.7h-65.5c-3.3,0-6.5-1.3-8.6-3.9c-5.4-5.8-4-16,2.9-19.8c1.7-1,3.9-1.5,5.8-1.5h65.5c0,0-16.7-16.7-16.9-16.7c-4.4-4.4-5-12.3-0.4-16.7C192.6,40.1,200.1,40.3,204.9,45.1" /></g></g>
                                                     </svg>
-                                                    <Link className="link-opciones-usuarios ">  Cerrar sesión</Link>
-                                                </li>
+                                                    <div className="link-opciones-usuarios">  Cerrar sesión</div>
+                                                </button>
 
                                             </div>
                                         </div>

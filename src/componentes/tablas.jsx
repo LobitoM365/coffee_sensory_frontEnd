@@ -11,6 +11,11 @@ export const Tablas = (array) => {
     let keysFilterEstado = [];
     let filterEstado = [];
     let [filterRotate, changeFilterRotate] = useState({});
+    const [statusSelectDefault, setStatusSelectDefault] = useState(false);
+    const [statusSelect, setStatusSelect] = useState(true);
+    const [statusInputDefault, setStatusInputDefault] = useState(false);
+    const [statusInput, setStatusInput] = useState(true);
+
     const [nameEstadoFocus, changeNameEstadoFocus] = useState("Estado...");
     const [modalEstado, changeModalEstado] = useState(false)
     const [modalFilter, changeModalFilter] = useState(false)
@@ -116,7 +121,7 @@ export const Tablas = (array) => {
                 <div className="div-filters">
                     <div className='div-tittle'>
                         <h2> {array.tittle ? array.tittle : "Tabla de registros"}</h2>
-                        <button onClick={() => { changeModalForm(!modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>
+                        <button onClick={() => { setStatusInput(true);setStatusSelect(true), setStatusSelectDefault(false); changeModalForm(!modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>
                     </div>
 
                     <div className='content-filters'>
@@ -265,7 +270,7 @@ export const Tablas = (array) => {
                                         }
                                         <td className='td-update'>
                                             <div className="center-update">
-                                                <h4 onClick={() =>{  array.editar(data[valuesD]["fin_id"]);array.editarStatus(!array.updateStatus); }} className='item-options option-update'>
+                                                <h4 onClick={() => { setStatusInput(false);setStatusInputDefault(true);setStatusSelectDefault(true); array.editar(data[valuesD]["fin_id"]); array.editarStatus(!array.updateStatus); }} className='item-options option-update'>
                                                     <svg xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 478.000000 522.000000" preserveAspectRatio="xMidYMid meet">
                                                         <metadata>
                                                             Created by potrace 1.16, written by Peter Selinger 2001-2019
@@ -311,7 +316,10 @@ export const Tablas = (array) => {
                     </div>
                 </div>
             </div>
-            <Form  updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={changeModalForm} modalForm={modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} />
+
+
+
+            <Form setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={changeModalForm} modalForm={modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} />
         </>
     )
 }

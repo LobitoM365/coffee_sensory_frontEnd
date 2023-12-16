@@ -22,16 +22,17 @@ export const Fincas = () => {
     let [inputsForm, setInputsForm] = useState(
         {
             nombre: {
-                "type": "text",
-                "referencia": "Nombre"
+                type: "text",
+                referencia: "Nombre",
+                upper_case: true,
             },
             longitud: {
-                "type": "text",
-                "referencia": "Longitud"
+                type: "number",
+                referencia: "Longitud",
             },
             latitud: {
-                "type": "text",
-                "referencia": "Latitud"
+                type: "latitud",
+                referencia: "Latitud"
             },
             usuarios_id: {
                 type: "select",
@@ -44,12 +45,14 @@ export const Fincas = () => {
                 type: "select",
                 referencia: "Municipio",
                 values: ["nombre"],
-                capital_letter: true,
                 key: "id"
             },
             nombre_vereda: {
-                "type": "text",
-                "referencia": "Nombre de la vereda"
+                type: "text",
+                referencia: "Nombre de la vereda",
+                upper_case: true,
+
+
             }
         }
     )

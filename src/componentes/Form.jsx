@@ -1,4 +1,4 @@
-import { object } from "prop-types";
+import { object, string } from "prop-types";
 import React, { useEffect, useState } from "react";
 
 
@@ -12,10 +12,52 @@ export const Form = (data) => {
     const [dataSelect, setDataSelects] = useState({});
     const [modalSelect, changeModalSelect] = useState({});
     const [inputValor, setInputValor] = useState({});
+    const [keyDown, setKeydown] = useState();
+    const handleInputChange = (e, key, type) => {
+        if (type === "text") {
+            e.target.value = e.target.value.replace("  ", " ").replace(/[@!#$%^¨¨.&*()-+=[{}|;:'",_<>/?`~¡¿´´°ç-]/, "").replace(/\d+/g, "").replace("]", "").replace("[", "").trimStart()
+        } else if (type === "number") {
+            e.target.value = e.target.value.replace(/\s/g, "").replace(/[^\w°'".-]/g, "").replace(/--+/g, '-').replace(/\.\.+/g, '.').trim();
+            if (e.target.value.indexOf('-', 1) !== -1) {
+                let primerValor = e.target.value.charAt(0); r
+                let restoCadena = e.target.value.substring(1);
+                restoCadena = restoCadena.replace("-", "")
+                e.target.value = primerValor + restoCadena
+            }
 
-    const handleInputChange = (e, key) => {
+
+        } else if (type === "latitud") {
+            if (!/^(-?\d+(?:\.\d*)?)°?(?:\s?(\d+(?:\.\d*)?)'?(?:\s?(\d+(?:\.\d*)?)")?)?([nsNS](?!\.))?$/i.test(e.target.value)) {
+
+                console.log(keyDown, e.target.value.replace(keyDown, ""))
+                if (typeof keyDown === 'string' && !/^"?\d+"?$/.test(keyDown)) {
+                    if (/[a-zA-Z°'"]\./.test(e.target.value)) {
+                        e.target.value = e.target.value.replace(/[a-zA-Z°'"]\./g, function (match) {
+                            return match.charAt(0) + match.charAt(2);
+                        });
+                    } else {
+                        console.log("xd1223")
+                        e.target.value = e.target.value.replace(keyDown, "").replace("..", ".").replace(/\./, '');
+                    }
+
+                } else if (/^(-?\d+(?:\.\d+)?)°?(?:\s?(\d+(?:\.\d+)?)'?(?:\s?(\d+(?:\.\d+)?)")(\d+)?)?([nsNS])?$/.test(e.target.value)) {
+                    e.target.value = e.target.value.replace(/"\d+/g, '"')
+
+                } else {
+
+                }
+                e.target.value = e.target.value.replace(/[NSns]\d+/g, function (match) {
+                    return match[0];
+                });
+
+
+            }
+
+
+
+
+        }
         let value = "";
-
         let cloneInputValue = { ...inputValor }
         cloneInputValue[key] = e.target.value
         setInputValor(cloneInputValue)
@@ -44,6 +86,9 @@ export const Form = (data) => {
     }
 
     useEffect(() => {
+        document.addEventListener('keydown', function (event) {
+            setKeydown(event.key)
+        })
         Init()
     }, [])
 
@@ -56,7 +101,12 @@ export const Form = (data) => {
         objectSelect.map((key, value) => {
             json[key] = dataSelect[key]
         })
-        console.log(json)
+        let keysJson = Object.keys(json);
+        keysJson.map((key, value) => {
+            json[key] = json[key].toString().trimEnd().toLowerCase()
+        })
+
+        console.log(json, "Infooo")
         if (!data.updateStatus) {
             data.funcionregistrar(json)
         } else {
@@ -84,9 +134,9 @@ export const Form = (data) => {
                     <form onSubmit={chageData} action="" className="form-register">
                         {
                             inputs.map((key, index) => {
-                                if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email") {
+                                if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "longitud" || dataInputs[key]["type"] === "latitud") {
                                     if (data.statusInputDefault) {
-                                        inputValor[key] = elementEdit[key]
+                                        inputValor[key] = dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? ""
                                     } else if (data.statusInput) {
                                         inputValor[key] = ""
 
@@ -95,7 +145,7 @@ export const Form = (data) => {
 
                                         <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email" : ""} input-content-form-register`}>
                                             <label className="label-from-register" htmlFor="">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                            <input autoComplete="false" onChange={(e) => { handleInputChange(e, key); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault ? elementEdit[key] : inputValor[key]} name={key} className="input-form" type="text" />
+                                            <input autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} name={key} className="input-form" type="text" />
                                             <label className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</label>
                                         </div>
                                     );

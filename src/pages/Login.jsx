@@ -41,6 +41,7 @@ export const Login = () => {
                 }
             })
             .catch((error) => {
+                location.href = '/login';
                 console.log('ERROR: ', error);
             })
 

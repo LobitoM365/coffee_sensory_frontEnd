@@ -83,7 +83,7 @@ export const Profile = () => {
                 "numero_documento": numero_documento.current.value
             }
             console.log(data)
-            const response = await Api.put("usuarios/actualizar/1", data);
+            const response = await Api.put("usuarios/actualizarPerfil", data);
             if (response.data.status == false && response.data.errors) {
                 setErrors(response.data.errors)
             } else {

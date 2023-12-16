@@ -5,23 +5,64 @@ import Api from '../componentes/Api.jsx'
 
 
 export const Fincas = () => {
-    let dataFilterTable = {
+    let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
-                
+
             }
         }
-    };
+    })
+        ;
     const [fincas, setFincas] = useState([])
+    const [fincaEdit, setfincaEdit] = useState([])
+    const [updateStatus, setUpdateStatus] = useState(false)
+    const [municipios, setMunicipios] = useState([])
+    const [countRegisters, setCountRegisters] = useState()
+    const [errors, setErrors] = useState()
+    let [inputsForm, setInputsForm] = useState(
+        {
+            nombre: {
+                "type": "text",
+                "referencia": "Nombre"
+            },
+            longitud: {
+                "type": "text",
+                "referencia": "Longitud"
+            },
+            latitud: {
+                "type": "text",
+                "referencia": "Latitud"
+            },
+            usuarios_id: {
+                type: "select",
+                referencia: "Usuario",
+                values: ["numero_documento", "nombre"],
+                upper_case: true,
+                key: "id"
+            },
+            municipios_id: {
+                type: "select",
+                referencia: "Municipio",
+                values: ["nombre"],
+                capital_letter: true,
+                key: "id"
+            },
+            nombre_vereda: {
+                "type": "text",
+                "referencia": "Nombre de la vereda"
+            }
+        }
+    )
+
     const keys = {
-        "id": {
+        "fin_id": {
             "referencia": "Id",
         },
         "nombre": {
             "referencia": "Nombre",
             "upper_case": true
         },
-        "usuarios_id": {
+        "numero_documento_usuario": {
             "values": [
                 "numero_documento_usuario",
                 "nombre_completo_usuario"
@@ -58,31 +99,30 @@ export const Fincas = () => {
             "value": 0
         }
     }
+    useEffect(() => {
+        getFincas()
+        getMunicipios()
+    }, [])
+    getUsers()
     async function getFincas() {
         try {
-            console.log(dataFilterTable, "xdxd")
             const response = await Api.post("finca/listar", dataFilterTable);
-            console.log(response, "fincaxdddd")
-
             if (response.data.status == true) {
                 setFincas(response.data.data)
-                console.log(response.data.data)
+                setCountRegisters(response.data.count)
             } else if (response.data.find_error) {
+                setCountRegisters(0)
                 setFincas(response.data)
             } else {
                 setFincas(response.data)
             }
+
         } catch (e) {
             console.log("Error " + e)
         }
     }
-    useEffect(() => {
-        getFincas()
-        function updateEstado() {
 
-            console.log("xd")
-        }
-    }, [])
+
     async function cambiarEstado(id) {
         try {
             const axios = await Api.delete("finca/eliminar/" + id);
@@ -99,26 +139,146 @@ export const Fincas = () => {
             console.log("Error: " + e)
         }
     }
-    async function updateEntitie(id) {
-        alert(id)
+    async function setFinca(data) {
+        try {
+            const axios = await Api.post("finca/registrar/", data);
+            if (axios.data.status == true) {
+                getFincas();
+                setErrors({})
+
+            } else if (axios.data.register_error) {
+                setErrors({})
+
+            } else if (axios.data.errors) {
+                setErrors(axios.data.errors)
+            } else {
+                setErrors({})
+
+            }
+            console.log(axios )
+
+
+        } catch (e) {
+
+            console.log("Error: " + e)
+        }
+    }
+
+    async function getUsers() {
+        try {
+            const response = await Api.get("usuarios/listar");
+            if (response.data.status == true) {
+                let users = inputsForm;
+                if (!users["usuarios_id"]) {
+                    users["usuarios_id"] = {}
+                }
+                users["usuarios_id"]["opciones"] = response.data.data
+                setInputsForm(users)
+            } else if (response.data.find_error) {
+
+            } else {
+
+            }
+            console.log(response, "User")
+
+        } catch (e) {
+            console.log("Error " + e)
+        }
+    }
+    async function getMunicipios() {
+        try {
+            const response = await Api.get("municipio/listar");
+            if (response.data.status == true) {
+                let municipios = inputsForm;
+                if (!municipios["municipios_id"]) {
+                    municipios["municipios_id"] = {}
+                }
+                municipios["municipios_id"]["opciones"] = response.data.data
+                setInputsForm(users)
+            } else if (response.data.find_error) {
+
+            } else {
+
+            }
+            console.log(response, "User")
+
+        } catch (e) {
+            console.log("Error " + e)
+        }
+    }
+    async function updateFinca(data,id) {
+
+      try {
+        const axios = await Api.put("finca/actualizar/" + id , data);
+        if (axios.data.status == true) {
+            getFincas();
+            setErrors({})
+        } else if (axios.data.update_error) {
+            setErrors({})
+
+        } else if (axios.data.errors) {
+            setErrors(axios.data.errors)
+        } else {
+            setErrors({})
+
+        }
+        console.log(axios, "Updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+
+
+    } catch (e) {
+
+        console.log("Error: " + e)
+    }
     }
     async function getFilterEstado(value) {
+        let cloneDataFilterTable = { ...dataFilterTable }
         if (value !== false) {
-            dataFilterTable.filter.where["fin.estado"] = {
+            cloneDataFilterTable.filter.where["fin.estado"] = {
                 "value": value,
                 "require": "and"
             }
 
         } else {
-            delete dataFilterTable.filter.where["estado"]
+            delete cloneDataFilterTable.filter.where["fin.estado"]
         }
-
-
+        setDataFilterTable(cloneDataFilterTable)
         getFincas(dataFilterTable)
     }
+    async function getFiltersOrden(filter) {
+        dataFilterTable.filter["order"] = filter
+        getFincas();
+
+    }
+    async function limitRegisters(data) {
+        dataFilterTable.filter["limit"] = data
+        getFincas()
+
+    }
+    async function buscarFinca(id) {
+
+        const response = await Api.get("finca/buscar/" + id);
+        if (response.data.status == true) {
+            setfincaEdit(response.data.data[0])
+        } else if (response.data.find_error) {
+
+        } else {
+
+        }
+        console.log(response, "Fincaaa")
+    }
+    async function updateTable() {
+        getFincas();
+    }
+    async function editarFinca(id) {
+        buscarFinca(id)
+    }
+  
+    useEffect(() => {
+        getUsers()
+    }, [])
     return (
         <>
-            <Tablas data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateEntitie} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} />
+            <Tablas updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
         </>
     )

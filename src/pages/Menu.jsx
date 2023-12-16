@@ -39,7 +39,6 @@ export const Menu = () => {
             console.log("ERROR" + e)
         }
     }
-    console.log(location.pathname)
     useEffect(() => {
 
         getAgignaciones();
@@ -57,7 +56,6 @@ export const Menu = () => {
         getUser();
         let hamnuguerMode = 0;
         let iconHamburguer = document.getElementById("iconHamburguer")
-        console.log(iconHamburguer)
         function stateMenu() {
             let linkMenu = document.querySelectorAll(".change-hamburguer-quit");
             let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
@@ -84,7 +82,6 @@ export const Menu = () => {
 
                 }
                 navHorizontal.style.width = "50px";
-                console.log(navHorizontal.clientWidth, "xd")
 
                 hamnuguerMode = 1;
             } else {

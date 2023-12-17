@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Tablas } from "../componentes/tablas.jsx"
 import Api from '../componentes/Api.jsx'
-
+import { Alert } from '../componentes/alert.jsx'
 
 
 export const Fincas = () => {
@@ -19,6 +19,11 @@ export const Fincas = () => {
     const [municipios, setMunicipios] = useState([])
     const [countRegisters, setCountRegisters] = useState()
     const [errors, setErrors] = useState()
+    const [statusAlert, setStatusAlert] = useState(false);
+    const [dataAlert, setdataAlert] = useState({});
+    const [modalForm, changeModalForm] = useState(false);
+    let idFincaCambiarEstado = 0;
+
     let [inputsForm, setInputsForm] = useState(
         {
             nombre: {
@@ -27,11 +32,11 @@ export const Fincas = () => {
                 upper_case: true,
             },
             longitud: {
-                type: "number",
+                type: "ubicacion",
                 referencia: "Longitud",
             },
             latitud: {
-                type: "latitud",
+                type: "ubicacion",
                 referencia: "Latitud"
             },
             usuarios_id: {
@@ -51,7 +56,6 @@ export const Fincas = () => {
                 type: "text",
                 referencia: "Nombre de la vereda",
                 upper_case: true,
-
 
             }
         }
@@ -119,28 +123,48 @@ export const Fincas = () => {
             } else {
                 setFincas(response.data)
             }
-
         } catch (e) {
-            console.log("Error " + e)
+
         }
     }
 
-
-    async function cambiarEstado(id) {
+    async function desactivarFinca(id) {
         try {
-            const axios = await Api.delete("finca/eliminar/" + id);
+            const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
             if (axios.data.status == true) {
                 getFincas();
             } else if (axios.data.delete_error) {
-                console.log(axios)
-            } else {
-                console.log("Internal error")
-            }
-            console.log(axios)
-        } catch (e) {
 
-            console.log("Error: " + e)
+            } else {
+
+            }
+
+        } catch (e) {
         }
+    }
+    async function cambiarEstado(id, estado) {
+        idFincaCambiarEstado = id;
+        let tittle = ""
+        let descripcion = ""
+        if (estado == 0) {
+            tittle = "Activarás las finca " + id
+            descripcion = "Estás apunto de activar la finca, ten encuenta que esta accion no activara las dependencias de la finca, pero si permitira el uso de sus dependencias.";
+        } else if (estado == 1 || estado == 3 || estado == 4) {
+            tittle = "¿Deseas desactivar la finca " + id + " ?";
+            descripcion = "Estás apunto de desactivar la finca, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de esta finca."
+        }
+        setStatusAlert(true)
+        setdataAlert(
+            {
+                status: "warning",
+                description: descripcion,
+                tittle: tittle,
+                continue: {
+                    "function": desactivarFinca,
+                    location: "/"
+                }
+            }
+        )
     }
     async function setFinca(data) {
         try {
@@ -148,22 +172,52 @@ export const Fincas = () => {
             if (axios.data.status == true) {
                 getFincas();
                 setErrors({})
-
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: axios.data.message,
+                        "tittle": "Excelente",
+                        continue: {
+                            "function": procedureTrue,
+                            location: "/"
+                        }
+                    }
+                )
             } else if (axios.data.register_error) {
                 setErrors({})
-
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.register_error,
+                        "tittle": "Intentalo de nuevo"
+                    }
+                )
             } else if (axios.data.errors) {
                 setErrors(axios.data.errors)
             } else {
                 setErrors({})
-
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.register_error,
+                        "tittle": "Error!!!"
+                    }
+                )
             }
-            console.log(axios )
-
+            console.log(axios)
 
         } catch (e) {
-
-            console.log("Error: " + e)
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "warning",
+                    description: "Error interno del servidor",
+                    "tittle": "Intentalo de nuevo"
+                }
+            )
         }
     }
 
@@ -182,10 +236,7 @@ export const Fincas = () => {
             } else {
 
             }
-            console.log(response, "User")
-
         } catch (e) {
-            console.log("Error " + e)
         }
     }
     async function getMunicipios() {
@@ -203,35 +254,66 @@ export const Fincas = () => {
             } else {
 
             }
-            console.log(response, "User")
-
         } catch (e) {
-            console.log("Error " + e)
         }
     }
-    async function updateFinca(data,id) {
 
-      try {
-        const axios = await Api.put("finca/actualizar/" + id , data);
-        if (axios.data.status == true) {
-            getFincas();
-            setErrors({})
-        } else if (axios.data.update_error) {
-            setErrors({})
-
-        } else if (axios.data.errors) {
-            setErrors(axios.data.errors)
-        } else {
-            setErrors({})
-
-        }
-        console.log(axios, "Updateeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-
-
-    } catch (e) {
-
-        console.log("Error: " + e)
+    async function procedureTrue() {
+        changeModalForm(false)
+        setUpdateStatus(false)
     }
+    async function updateFinca(data, id) {
+
+        try {
+            const axios = await Api.put("finca/actualizar/" + id, data);
+            if (axios.data.status == true) {
+                getFincas();
+                setErrors({})
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: axios.data.message,
+                        "tittle": "Excelente",
+                        continue: {
+                            "function": procedureTrue,
+                            location: "/"
+                        }
+                    }
+                )
+            } else if (axios.data.update_error) {
+                setErrors({})
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.update_error,
+                        "tittle": "Intentalo de nuevo"
+                    }
+                )
+            } else if (axios.data.errors) {
+                setErrors(axios.data.errors)
+            } else {
+                setErrors({})
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.update_error,
+                        "tittle": "Intentalo de nuevo"
+                    }
+                )
+            }
+        } catch (e) {
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "warning",
+                    description: "Error interno del servidor",
+                    "tittle": "Intentalo de nuevo"
+                }
+            )
+        }
     }
     async function getFilterEstado(value) {
         let cloneDataFilterTable = { ...dataFilterTable }
@@ -267,7 +349,6 @@ export const Fincas = () => {
         } else {
 
         }
-        console.log(response, "Fincaaa")
     }
     async function updateTable() {
         getFincas();
@@ -275,14 +356,20 @@ export const Fincas = () => {
     async function editarFinca(id) {
         buscarFinca(id)
     }
-  
+    function filterSeacth(search) {
+        let cloneDataFilterTable = { ...dataFilterTable }
+        cloneDataFilterTable.filter["search"] = search
+        setDataFilterTable(cloneDataFilterTable)
+        getFincas(dataFilterTable)
+
+    }
     useEffect(() => {
         getUsers()
     }, [])
     return (
         <>
-            <Tablas updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
-
+            <Tablas changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )
 }

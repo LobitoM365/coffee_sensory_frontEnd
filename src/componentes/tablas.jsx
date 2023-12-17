@@ -15,13 +15,12 @@ export const Tablas = (array) => {
     const [statusSelect, setStatusSelect] = useState(true);
     const [statusInputDefault, setStatusInputDefault] = useState(false);
     const [statusInput, setStatusInput] = useState(true);
-
+    const [valueSearch, setValueSearch] = useState("")
     const [nameEstadoFocus, changeNameEstadoFocus] = useState("Estado...");
     const [modalEstado, changeModalEstado] = useState(false)
     const [modalFilter, changeModalFilter] = useState(false)
     const [nameLimitRegisters, changeNameModalLimitRegisters] = useState(5)
     const [positionElementPaginate, changePositionElementPaginate] = useState(1)
-    const [modalForm, changeModalForm] = useState(false);
     let [limit, setLimit] = useState(5);
     let [inicio, setInicio] = useState(0);
     let [fin, setFin] = useState(limit);
@@ -111,7 +110,6 @@ export const Tablas = (array) => {
         setInicio(limit * (data - 1));
     }
     useEffect(() => {
-        console.log(limit * 0, fin, "Finnn")
         array.limitRegisters({ "inicio": inicio, "fin": limit })
     }, [inicio, limit, posicionPaginate])
     return (
@@ -121,7 +119,7 @@ export const Tablas = (array) => {
                 <div className="div-filters">
                     <div className='div-tittle'>
                         <h2> {array.tittle ? array.tittle : "Tabla de registros"}</h2>
-                        <button onClick={() => { setStatusInput(true);setStatusSelect(true), setStatusSelectDefault(false); changeModalForm(!modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>
+                        <button onClick={() => { array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>
                     </div>
 
                     <div className='content-filters'>
@@ -171,14 +169,14 @@ export const Tablas = (array) => {
                             </div>
                         </div>
                         <div className="filters-search">
-                            <div className="icon-search">
+                            <div className="icon-search" onClick={() => { array.filterSeacth(valueSearch); setPosicionPaginate(0); functionSetLimit(1) }}>
                                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256"     >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                     <g><g><g><path d="M93,10.1c-0.7,0.1-3.3,0.4-5.6,0.7c-28.3,3.5-54.3,22-67.7,48.1c-6.9,13.4-9.8,25.4-9.8,41c0,15.5,2.9,27.6,9.8,41c13.2,25.8,37,43,66.3,48c6.4,1.1,21.1,1.1,27.5,0c14.9-2.5,28.9-8.4,39.6-16.5l2.8-2.1l4.5,4.5l4.6,4.5l-1.1,1.7c-2.5,3.6-2.8,9.8-0.7,13.8c0.8,1.5,8.8,9.9,24.2,25.5c26,26.4,25.5,26,31.8,25.9c5.5,0,6.9-0.9,16.4-10.4c9.5-9.6,10.4-10.9,10.4-16.4c0.1-6,0.3-5.8-25.7-32.1c-25.1-25.4-25-25.3-30.5-25.6c-3.6-0.2-6.2,0.4-8.6,2.1l-1.8,1.2l-4.6-4.6l-4.5-4.5l2-2.6c8-10.5,13.9-24.7,16.4-39.5c1.1-6.4,1.1-21.1,0-27.5c-3.3-18.9-11.2-34.9-23.8-48.2C151,23.3,133.7,14.3,113.8,11C109.5,10.3,95.8,9.6,93,10.1z M109.7,25.9c16.4,2.1,30.9,9.3,42.8,21.2c25.8,25.8,29.2,66.3,8,96.1c-4,5.6-11.7,13.3-17.4,17.4c-22.7,16.1-52,18.4-76.8,6c-7.5-3.7-13.4-8.1-19.4-14c-11.9-11.9-19.1-26.5-21.2-42.8c-3.1-23.4,4.6-46,21.2-62.6C63.7,30.5,86.3,22.8,109.7,25.9z" /><path fill="#000000" d="M52.8,70.1c-5.6,8.6-9,19.6-9,29.5c0,19.7,11.8,38.7,29.4,47.6c9,4.5,15.4,6,25.4,6c7.4,0,11.9-0.7,17.9-2.7c3-1,10.8-4.8,10.8-5.1c0-0.1-2.9-0.1-6.4,0c-18.1,0.7-34.6-5.6-47.6-18.2c-9.7-9.4-15.7-20.4-18.6-33.9c-1-4.9-1.2-19.2-0.3-23.3c0.3-1.4,0.5-2.6,0.4-2.7C54.7,67.3,53.9,68.5,52.8,70.1z" /></g></g></g>
                                 </svg>
                             </div>
                             <div className="div-search">
-                                <input className='input-search' type="text" />
+                                <input id='inputSearch' onInput={(e)=> {setValueSearch(e.target.value)}} className='input-search' type="text" />
                             </div>
                         </div>
                     </div>
@@ -219,9 +217,13 @@ export const Tablas = (array) => {
                                                     } else {
                                                         if (keys == "estado") {
                                                             if (data[valuesD][keys] == 0) {
-                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["fin_id"])} className='estado-0'>Inactivo</h4></td>;
-                                                            } else {
-                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["fin_id"])} className='estado-1'>Activo</h4></td>;
+                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"],data[valuesD][keys])} className='estado-0'>Inactivo</h4></td>;
+                                                            } else if (data[valuesD][keys] == 1) {
+                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"],data[valuesD][keys])} className='estado-1'>Activo</h4></td>;
+                                                            } else if (data[valuesD][keys] == 2) {
+                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"],data[valuesD][keys])} className='estado-2'>Pendiente</h4></td>;
+                                                            } else if (data[valuesD][keys] == 3 || data[valuesD][keys] == 4) {
+                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"],data[valuesD][keys])} className='estado-3'>Aginado</h4></td>;
                                                             }
                                                         } else {
 
@@ -270,7 +272,7 @@ export const Tablas = (array) => {
                                         }
                                         <td className='td-update'>
                                             <div className="center-update">
-                                                <h4 onClick={() => { setStatusInput(false);setStatusInputDefault(true);setStatusSelectDefault(true); array.editar(data[valuesD]["fin_id"]); array.editarStatus(!array.updateStatus); }} className='item-options option-update'>
+                                                <h4 onClick={() => { array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} className='item-options option-update'>
                                                     <svg xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 478.000000 522.000000" preserveAspectRatio="xMidYMid meet">
                                                         <metadata>
                                                             Created by potrace 1.16, written by Peter Selinger 2001-2019
@@ -319,7 +321,7 @@ export const Tablas = (array) => {
 
 
 
-            <Form setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={changeModalForm} modalForm={modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} />
+            <Form setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} />
         </>
     )
 }

@@ -24,38 +24,44 @@ export const Form = (data) => {
                 restoCadena = restoCadena.replace("-", "")
                 e.target.value = primerValor + restoCadena
             }
+        } else if (type === "ubicacion") {
+            if (!/^(-?\d+(?:\.\d*)?)°?(?:\s?(\d+(?:\.\d*)?)'?(?:\s?(\d+(?:\.\d*)?)")?)?([nsNSWEwe](?!\.))?$/i.test(e.target.value)) {
 
-
-        } else if (type === "latitud") {
-            if (!/^(-?\d+(?:\.\d*)?)°?(?:\s?(\d+(?:\.\d*)?)'?(?:\s?(\d+(?:\.\d*)?)")?)?([nsNS](?!\.))?$/i.test(e.target.value)) {
-
-                console.log(keyDown, e.target.value.replace(keyDown, ""))
                 if (typeof keyDown === 'string' && !/^"?\d+"?$/.test(keyDown)) {
+
                     if (/[a-zA-Z°'"]\./.test(e.target.value)) {
                         e.target.value = e.target.value.replace(/[a-zA-Z°'"]\./g, function (match) {
                             return match.charAt(0) + match.charAt(2);
                         });
+
                     } else {
-                        console.log("xd1223")
-                        e.target.value = e.target.value.replace(keyDown, "").replace("..", ".").replace(/\./, '');
+                        alert("auii")
+                        if (keyDown == ".") {
+                            e.target.value = e.target.value.replace(keyDown, ".").replace(/\./, '');
+                        } else {
+                            e.target.value = e.target.value.replace(keyDown, "")
+                        }
+                        e.target.value = e.target.value.replace("..", ".")
                     }
-
                 } else if (/^(-?\d+(?:\.\d+)?)°?(?:\s?(\d+(?:\.\d+)?)'?(?:\s?(\d+(?:\.\d+)?)")(\d+)?)?([nsNS])?$/.test(e.target.value)) {
+
                     e.target.value = e.target.value.replace(/"\d+/g, '"')
-
-                } else {
-
                 }
                 e.target.value = e.target.value.replace(/[NSns]\d+/g, function (match) {
                     return match[0];
                 });
-
-
             }
-
-
-
-
+        } else if (type === "email") {
+            let [beforeAt, afterAt] = e.target.value.split('@');
+            if (afterAt != undefined) {
+                afterAt = afterAt.replace("..", ".")
+                e.target.value = beforeAt + "@" + afterAt
+            } else {
+                afterAt = ""
+            }
+            e.target.value = e.target.value.replace(/@(?=[^@]*@)/g, "").replace(/(@[^@.]*\.[^@.]*\.[^@.]*\.[^@.]*)\./, "$1");
+        } else if (type === "normal") {
+            e.target.value = e.target.value.replace("  ", " ").trimStart()
         }
         let value = "";
         let cloneInputValue = { ...inputValor }
@@ -70,7 +76,6 @@ export const Form = (data) => {
         setDataInputs
         dataInputs = data.data
         elementEdit = data.elementEdit
-        console.log(elementEdit, "xd")
     }
     function Init() {
         let cloneSlectValue = { ...selectsValues }
@@ -86,10 +91,46 @@ export const Form = (data) => {
     }
 
     useEffect(() => {
+        Init()
+
+        let modalForm = document.getElementById("modalForm");
+        let divForm = document.getElementById("divForm");
+        let divFondomodalForm = document.getElementById("divFondomodalForm");
+        let inputContentFromRegister = document.querySelectorAll(".input-content-form-register");
+
         document.addEventListener('keydown', function (event) {
             setKeydown(event.key)
         })
-        Init()
+        window.addEventListener("resize", function () {
+            for (let x = 0; x < inputContentFromRegister.length; x++) {
+                if (inputContentFromRegister[x].scrollHeight > inputContentFromRegister[x].clientHeight) {
+                    inputContentFromRegister[x].style.height = "max-content"
+                }
+            }
+            if (modalForm.scrollHeight > document.body.scrollHeight) {
+                divFondomodalForm.style.height = modalForm.scrollHeight + "px"
+                divFondomodalForm.style.width = modalForm.clientWidth + "px"
+                modalForm.style.alignItems = "unset"
+                modalForm.style.padding = "20px 20px"
+                modalForm.style.height = "calc(100% - 40px)"
+                modalForm.style.width = "calc(100% - 40px)"
+            } else {
+                for (let x = 0; x < inputContentFromRegister.length; x++) {
+                    inputContentFromRegister[x].style.height = ""
+                }
+                divFondomodalForm.style.height = ""
+                divFondomodalForm.style.width = ""
+                modalForm.style.alignItems = ""
+                modalForm.style.padding = ""
+                modalForm.style.height = ""
+                modalForm.style.width = ""
+            }
+            if (modalForm.scrollWidth > document.body.scrollWidth) {
+               
+            }
+
+        })
+
     }, [])
 
 
@@ -106,7 +147,7 @@ export const Form = (data) => {
             json[key] = json[key].toString().trimEnd().toLowerCase()
         })
 
-        console.log(json, "Infooo")
+
         if (!data.updateStatus) {
             data.funcionregistrar(json)
         } else {
@@ -118,10 +159,10 @@ export const Form = (data) => {
         <>
             <link rel="stylesheet" href="../../public/css/form.css" />
 
-            <div style={{ display: (!data.modalForm && !data.updateStatus) ? "none" : "" }} className="modal-form">
-                <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="div-fondo-modal-form">
+            <div style={{ display: (!data.modalForm && !data.updateStatus) ? "none" : "" }} className="modal-form" id="modalForm">
+                <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="div-fondo-modal-form" id="divFondomodalForm">
                 </div>
-                <div className="div-form">
+                <div id="divForm" className="div-form">
                     <div className="header-form">
                         <h3 className="tittle-form-register">{!data.updateStatus ? "Registrar Finca" : "Actualizar Finca"} </h3>
                         <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="icon-quit-svg-form">
@@ -134,7 +175,7 @@ export const Form = (data) => {
                     <form onSubmit={chageData} action="" className="form-register">
                         {
                             inputs.map((key, index) => {
-                                if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "longitud" || dataInputs[key]["type"] === "latitud") {
+                                if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "ubicacion" || dataInputs[key]["type"] === "normal") {
                                     if (data.statusInputDefault) {
                                         inputValor[key] = dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? ""
                                     } else if (data.statusInput) {
@@ -143,10 +184,10 @@ export const Form = (data) => {
                                     }
                                     return (
 
-                                        <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email" : ""} input-content-form-register`}>
-                                            <label className="label-from-register" htmlFor="">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                            <input autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} name={key} className="input-form" type="text" />
-                                            <label className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</label>
+                                        <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email" : ""}input-content-form-register`}>
+                                            <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
+                                            <input   id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} className="input-form" type="text" />
+                                            <h4  className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
                                         </div>
                                     );
 
@@ -158,12 +199,12 @@ export const Form = (data) => {
 
                                     return (
                                         <div key={key} className="input-content-form-register">
-                                            <label className="label-from-register" htmlFor="">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
+                                            <h4 className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</h4>
                                             <div key={key} onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = !modalSelect[key]; changeModalSelect(cloneModalSelect) }} className="filter-estado div-select">
 
                                                 <div key={index} style={{ display: modalSelect[key] == false ? "none" : "" }} className="opciones">
 
-                                                    <h4 onClick={() => { selectsValues[key] = "Seleccione una opción..."; dataSelect[key] = ""; }} className='select-option'>Seleccione una opción...</h4>
+                                                    <h4 onClick={() => { data.setStatusSelect(false); data.setStatusSelectDefault(false); selectsValues[key] = "Seleccione una opción..."; dataSelect[key] = ""; }} className='select-option'>Seleccione una opción...</h4>
 
                                                     {
                                                         dataInputs[key]["opciones"] ? dataInputs[key]["opciones"].map((select, indexSelect) => {
@@ -205,7 +246,7 @@ export const Form = (data) => {
                                                 </div>
                                             </div>
 
-                                            <label className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</label>
+                                            <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
 
                                         </div>
                                     );

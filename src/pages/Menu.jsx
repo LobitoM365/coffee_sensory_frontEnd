@@ -2,8 +2,15 @@ import React, { useEffect, useRef, useState } from "react"
 import { Link, Outlet, json } from "react-router-dom"
 
 import Api from '../componentes/Api.jsx';
+import { validateViews } from "../componentes/ValidateViews.jsx";
+import { useNavigate } from "react-router-dom";
 
 export const Menu = () => {
+
+    let responseValidate = validateViews();
+    if (responseValidate) {
+        console.log('MENU VALIDATE: ', responseValidate.data);
+    }
 
     const [user, setUser] = useState({});
     const [asignaciones, setAsignaciones] = useState([]);
@@ -101,8 +108,6 @@ export const Menu = () => {
             stateMenu();
         })
         stateMenu();
-
-
     }, [])
 
 
@@ -127,6 +132,21 @@ export const Menu = () => {
         changeModalPerfil(!modalPerfil)
         changeModalNotificaciones(false)
     }
+
+    // Cerrar sesión
+    async function LogoutSesion() {
+        // alert('?xd')
+        // const navigate = useNavigate();
+        try {
+            const response = await Api.post("/auth/close");
+            location.href = '/Login'
+            console.log('LOGOUTSesion: ', response)
+        } catch (e) {
+            console.log("ERROR" + e)
+        }
+
+    };
+
 
     return (
 
@@ -162,20 +182,29 @@ export const Menu = () => {
                     <li className="hamburguer-centered">
                         <h4 className="title-li change-hamburguer-quit">Registros</h4>
                         <ul>
-                            <Link to={"/dashboard/usuarios/registros"} onClick={() => { selectedLi("/dashboard/usuarios/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/usuarios/registros" ? "selected-li" : ""}`}>
-                                <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 256 256"  >
-                                    <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                    <g><g><g><path d="M119.1,22c-42.9,3.2-80.9,29.7-98.7,69c-4.6,10.1-7.7,20.7-9.5,32.8c-1.1,7.1-1.1,24.9,0,32.1c4.3,28.4,16.6,51.8,37.6,71.3c3.9,3.6,8.5,7.2,8.8,7c0.1-0.1,0.8-2.9,1.6-6.2c3.6-14.5,6.2-22.3,8.2-24.4c2.3-2.4,14.4-5.9,29.1-8.5c9.5-1.6,9.5-1.6,9.5-2.3c0-0.3,1-1.5,2.2-2.7l2.2-2.1l0-6.1c0-3.3-0.1-7-0.1-8.1l0-2l-3.1-1.4c-4.7-2.2-10.5-6.3-11.8-8.3c-3.2-4.9-6.6-13.4-8.7-22c-0.8-3.1-1.4-6.1-1.4-6.7c0-0.6-0.9-2.1-2.1-3.5c-4.3-5-5.1-12.5-2.2-18.6l1.5-3V95.7c0-9.5,0.2-13.4,0.7-15.6c3.2-13.4,14.9-23.2,34.5-28.7c8.2-2.3,12.7-2.3,20.9,0c18.1,5.1,29.5,14,33.8,26.3c1,2.8,1.1,3.8,1.2,16.8c0.1,13.8,0.1,13.8,1.3,15.5c3.8,5.7,3,15.5-1.8,20.4c-1.3,1.3-1.6,2.3-2.5,6.9c-1.4,6.9-3.8,14.1-6.7,20c-3.2,6.5-5.1,8.3-13.9,12.8l-3.9,2l-0.1,7.9l-0.1,7.8l2.3,2.3c1.3,1.3,2.3,2.5,2.3,2.9c0,0.3,0.7,0.7,1.5,0.8c24.5,4.2,35,7.2,37.8,10.7c1.2,1.5,4.6,11.9,7.1,21.9c1.1,4.4,2.1,8,2.3,8c0.8,0,9.6-7.9,14.4-12.8c36.7-37.9,43.4-96.5,16.3-141.9c-12.6-21.1-31.1-37.6-53.6-47.7C158.9,24.3,137.9,20.6,119.1,22z" /></g></g></g>
-                                </svg> <h5 className="change-hamburguer-quit ">Usuarios</h5>
-                                </li>
-                            </Link>
 
+                            {responseValidate && responseValidate.data.user.rol == 'administrador' && (
+                                <Link to={"/dashboard/usuarios/registros"} onClick={() => { selectedLi("/dashboard/usuarios/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/usuarios/registros" ? "selected-li" : ""}`}>
+                                    <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 256 256"  >
+                                        <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                        <g><g><g><path d="M119.1,22c-42.9,3.2-80.9,29.7-98.7,69c-4.6,10.1-7.7,20.7-9.5,32.8c-1.1,7.1-1.1,24.9,0,32.1c4.3,28.4,16.6,51.8,37.6,71.3c3.9,3.6,8.5,7.2,8.8,7c0.1-0.1,0.8-2.9,1.6-6.2c3.6-14.5,6.2-22.3,8.2-24.4c2.3-2.4,14.4-5.9,29.1-8.5c9.5-1.6,9.5-1.6,9.5-2.3c0-0.3,1-1.5,2.2-2.7l2.2-2.1l0-6.1c0-3.3-0.1-7-0.1-8.1l0-2l-3.1-1.4c-4.7-2.2-10.5-6.3-11.8-8.3c-3.2-4.9-6.6-13.4-8.7-22c-0.8-3.1-1.4-6.1-1.4-6.7c0-0.6-0.9-2.1-2.1-3.5c-4.3-5-5.1-12.5-2.2-18.6l1.5-3V95.7c0-9.5,0.2-13.4,0.7-15.6c3.2-13.4,14.9-23.2,34.5-28.7c8.2-2.3,12.7-2.3,20.9,0c18.1,5.1,29.5,14,33.8,26.3c1,2.8,1.1,3.8,1.2,16.8c0.1,13.8,0.1,13.8,1.3,15.5c3.8,5.7,3,15.5-1.8,20.4c-1.3,1.3-1.6,2.3-2.5,6.9c-1.4,6.9-3.8,14.1-6.7,20c-3.2,6.5-5.1,8.3-13.9,12.8l-3.9,2l-0.1,7.9l-0.1,7.8l2.3,2.3c1.3,1.3,2.3,2.5,2.3,2.9c0,0.3,0.7,0.7,1.5,0.8c24.5,4.2,35,7.2,37.8,10.7c1.2,1.5,4.6,11.9,7.1,21.9c1.1,4.4,2.1,8,2.3,8c0.8,0,9.6-7.9,14.4-12.8c36.7-37.9,43.4-96.5,16.3-141.9c-12.6-21.1-31.1-37.6-53.6-47.7C158.9,24.3,137.9,20.6,119.1,22z" /></g></g></g>
+                                    </svg> <h5 className="change-hamburguer-quit ">Usuarios</h5>
+                                    </li>
+                                </Link>
+                            )}
                             <li className="hamburguer-centered">
                                 <svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256"  >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                     <g><g><path d="M235,24.8H21.1C15,24.8,10,29.7,10,35.8v184.4c0,6.1,5,11.1,11.1,11.1h213.9c6.1,0,11.1-5,11.1-11.1V35.8C246,29.7,241.1,24.8,235,24.8z M98.5,35.8c6.1,0,11.1,5,11.1,11.1c0,6.1-5,11.1-11.1,11.1c-6.1,0-11.1-5-11.1-11.1C87.5,40.8,92.4,35.8,98.5,35.8z M65.3,35.8c6.1,0,11.1,5,11.1,11.1c0,6.1-5,11.1-11.1,11.1c-6.1,0-11.1-5-11.1-11.1C54.3,40.8,59.2,35.8,65.3,35.8z M32.1,35.8c6.1,0,11.1,5,11.1,11.1c0,6.1-5,11.1-11.1,11.1c-6.1,0-11.1-5-11.1-11.1C21.1,40.8,26,35.8,32.1,35.8z M235,220.2H21.1V69h11.1h191.8h11.1L235,220.2L235,220.2z" /><path d="M43.7,103h16.9v16.9H43.7V103L43.7,103z" /><path d="M77.5,103h134.5v16.9H77.5V103L77.5,103z" /><path d="M43.7,136.8h16.9v16.9H43.7V136.8L43.7,136.8z" /><path d="M77.5,136.8h134.5v16.9H77.5V136.8L77.5,136.8z" /><path d="M43.7,169.9h16.9v16.9H43.7V169.9L43.7,169.9z" /><path d="M77.5,169.9h134.5v16.9H77.5V169.9L77.5,169.9z" /></g></g>
                                 </svg>
                                 <Link onClick={() => { selectedLi("formatoSca") }} className={`link-memu-horizontal change-hamburguer-quit change-hamburguer-quit ${liSelected == "formatoSca" ? "selected-li" : ""}`}> Formato SCA</Link>
+                            </li>
+                            <li className="hamburguer-centered">
+                                <svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" xml:space="preserve">
+                                    <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                    <g><g><g><path fill="#ffffff" data-title="Layer 0" xs="0" d="M27.1,10.4c-8.5,1.2-15.5,8.5-16.7,17.4c-0.3,1.9-0.4,35.9-0.3,85.5l0.1,82.3l1,2.6c2.5,6,6.6,10.1,12.3,12.1l3.1,1.1h37.1h37.1v-9.9v-9.9H65.3H29.8v-20.3v-20.3h35.5h35.5V141V131H65.3H29.8v-20.3V90.4h80.9h80.9v5.2v5.2h9.9h9.9V63.9c0-35.6,0-37-0.9-39.9c-2.2-7.1-8.4-12.3-16.1-13.5C190.8,9.8,31.1,9.8,27.1,10.4z M191.6,50.1v20.3h-80.9H29.8V50.1V29.8h80.9h80.9V50.1z" /><path fill="#ffffff" data-title="Layer 1" xs="1" d="M40.2,50.1v9.9h25.1h25.1v-9.9v-9.9H65.3H40.2V50.1z" /><path fill="#ffffff" data-title="Layer 2" xs="2" d="M138.2,40.9c-7.3,2.3-9.2,12-3.4,16.9c6.2,5.2,16.1,0.7,16.1-7.3C150.9,43.7,144.6,38.9,138.2,40.9z" /><path fill="#ffffff" data-title="Layer 3" xs="3" d="M168.7,40.9c-7.5,2-9.6,12-3.7,17c6.2,5.2,16.1,0.7,16.1-7.3C181.2,43.7,175.3,39.1,168.7,40.9z" /><path fill="#ffffff" data-title="Layer 4" xs="4" d="M40.2,110.7v9.9h25.1h25.1v-9.9v-9.9H65.3H40.2V110.7z" /><path fill="#ffffff" data-title="Layer 5" xs="5" d="M164.4,121.6c-11.1,1.8-20.7,6.6-28.5,14.4c-27.1,27.1-15.1,73,21.7,83.7c12,3.5,24.4,2.3,36-3.5l5.7-2.8l16.3,16.3L232,246l7-7l7-7l-16.3-16.3l-16.3-16.3l2.8-5.7c3.1-6.3,4.5-11,5.2-17.7c2.5-24.2-13.8-47.3-37.7-53.3C178.4,121.4,169.2,120.9,164.4,121.6z M178.5,141.9c6,1.5,9.5,3.5,14.1,8c3.4,3.3,4.4,4.7,6,8c2.5,5.3,3.2,8.2,3.1,13.7c0,8.3-2.8,15-8.9,21.1c-7.3,7.3-16.7,10.4-26.6,8.6c-14-2.5-24.2-14.1-25-28.2C140,152.7,158.9,136.9,178.5,141.9z" /><path fill="#ffffff" data-title="Layer 6" xs="6" d="M40.2,171.3v9.9h25.1h25.1v-9.9v-9.9H65.3H40.2V171.3z" /></g></g></g>
+                                </svg>
+                                <Link onClick={() => { selectedLi("formatoSca") }} className={`link-memu-horizontal change-hamburguer-quit change-hamburguer-quit ${liSelected == "formatoSca" ? "selected-li" : ""}`}> Ver Registros</Link>
                             </li>
                             <Link to={"/dashboard/fincas/registros"} onClick={() => { selectedLi("/dashboard/fincas/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/fincas/registros" ? "selected-li" : ""}`}>
                                 <li className="hamburguer-centered">
@@ -347,13 +376,13 @@ export const Menu = () => {
                                                     </svg>
                                                     <Link className="link-opciones-usuarios ">Configuracion</Link>
                                                 </li>
-                                                <li className="li-opciones-usuario">
+                                                <button onClick={() => LogoutSesion()} className="li-opciones-usuario btn-cerrar-sesion">
                                                     <svg className="icon-li-opciones-usuario" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
                                                         <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                                         <g><g><path d="M175.3,64V24.2c0-6.4-5.2-11.5-11.5-11.5H21.5c-6.3,0-11.5,5.2-11.5,11.5v163c0,4.2,2.5,8.3,6.1,10.2l87.7,45.4c3.9,1.9,8.5-0.8,8.5-5.2v-44.2h51.5c6.4,0,11.5-5.2,11.5-11.5v-63h-23.1v45.8c0,3.3-2.5,5.8-5.8,5.8h-34V72.4c0-4.2-2.5-8.3-6.2-10.2L54.6,35.7h91.9c3.3,0,5.8,2.5,5.8,5.8v22.7h23.1V64L175.3,64z" /><path d="M204.9,45.1l37.5,37.5c4.8,4.8,4.8,11.9,0,16.7l-37.5,37.5c-4.8,4.8-12.1,5-16.9,0.2c-4.6-4.6-4-12.3,0.4-16.9l16.9-16.7h-65.5c-3.3,0-6.5-1.3-8.6-3.9c-5.4-5.8-4-16,2.9-19.8c1.7-1,3.9-1.5,5.8-1.5h65.5c0,0-16.7-16.7-16.9-16.7c-4.4-4.4-5-12.3-0.4-16.7C192.6,40.1,200.1,40.3,204.9,45.1" /></g></g>
                                                     </svg>
-                                                    <Link className="link-opciones-usuarios ">  Cerrar sesión</Link>
-                                                </li>
+                                                    <div className="link-opciones-usuarios">  Cerrar sesión</div>
+                                                </button>
 
                                             </div>
                                         </div>

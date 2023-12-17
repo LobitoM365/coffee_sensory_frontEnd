@@ -1,28 +1,43 @@
 import Api from './Api';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export const validateViews = () => {
+    const [responseValidate, setResponse] = useState(null);
 
     useEffect(() => {
+        const authorized = async () => {
+            try {
+                const response = await Api.post('auth/protectViews', {});
+                console.log('ok: ', response.data.authorized);
+
+                if (!response.data.authorized) {
+                    if (location.pathname !== '/' && location.pathname !== '/login') {
+                        window.location.href = '/login';
+                    }
+                } else {
+                    if (location.pathname === '/login') {
+                        window.history.go(-1);
+                    }
+                }
+                setResponse(response);
+            } catch (error) {
+                console.log('error: ', error);
+            }
+        };
+
         authorized();
     }, []);
 
-    async function authorized() {
-        await Api.post('auth/protectViews', {})
-            .then((response) => {
-                console.log('ok: ', response.data.authorized);
-                if (!response.data.authorized) {
-                    if (location.pathname != '/Login') {
-                        location.href = '/Login'
-                    }
-                } else {
-                    if (location.pathname == '/login') {
-                        window.history.go(-1)
-                    }
-                }
-            })
-            .catch((error) => {
-                console.log('error: ', error);
-            })
+    return responseValidate;
+}
+
+export const ProtectedRoute = ({ Element, allowRoles, userInfo }) => {
+    const rol = userInfo ? userInfo.rol : null;
+    console.log('ROL: ', allowRoles + ' ---- ' + rol);
+    console.log('Element: ', Element);
+    if (rol && allowRoles.includes(rol)) {
+        return <Element />
+    } else {
+        window.history.go(-1)
     }
 }

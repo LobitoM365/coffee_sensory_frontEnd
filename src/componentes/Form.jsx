@@ -25,7 +25,7 @@ export const Form = (data) => {
                 e.target.value = primerValor + restoCadena
             }
         } else if (type === "ubicacion") {
-            if (!/^(-?\d+(?:\.\d*)?)°?(?:\s?(\d+(?:\.\d*)?)'?(?:\s?(\d+(?:\.\d*)?)")?)?([nsNSWEwe](?!\.))?$/i.test(e.target.value)) {
+            if (!/^-?(\d+(?:\.\d*)?)°?(?:\s?(\d+(?:\.\d*)?)'?(?:\s?(\d+(?:\.\d*)?)")?)?([nsNSWEwe](?!\.))?$/i.test(e.target.value)) {
 
                 if (typeof keyDown === 'string' && !/^"?\d+"?$/.test(keyDown)) {
 
@@ -35,10 +35,17 @@ export const Form = (data) => {
                         });
 
                     } else {
-                        alert("auii")
+
                         if (keyDown == ".") {
-                            e.target.value = e.target.value.replace(keyDown, ".").replace(/\./, '');
-                        } else {
+                            e.target.value = e.target.value.replace(keyDown, ".").replace(/\./, '')
+                            alert("xd")
+                        } else if (keyDown == "-") {
+                            if(e.target.value != "-"){
+                                e.target.value = e.target.value.replace(/-(?=\D*$)/, "").replace("--", "-").replace(/(?<!^)-/g , "")
+                            }
+                            
+                        }
+                        else {
                             e.target.value = e.target.value.replace(keyDown, "")
                         }
                         e.target.value = e.target.value.replace("..", ".")
@@ -90,6 +97,7 @@ export const Form = (data) => {
         changeModalSelect(cloneModalSelect)
     }
 
+
     useEffect(() => {
         Init()
 
@@ -98,16 +106,26 @@ export const Form = (data) => {
         let divFondomodalForm = document.getElementById("divFondomodalForm");
         let inputContentFromRegister = document.querySelectorAll(".input-content-form-register");
 
+        setTimeout(() => {
+            resizeForm()
+        }, 100);
         document.addEventListener('keydown', function (event) {
             setKeydown(event.key)
         })
-        window.addEventListener("resize", function () {
+        function resizeForm() {
+            let displayNone = false;
+            if (modalForm.style.display == "none") {
+                modalForm.style.display = "block"
+                displayNone = true
+            }
             for (let x = 0; x < inputContentFromRegister.length; x++) {
                 if (inputContentFromRegister[x].scrollHeight > inputContentFromRegister[x].clientHeight) {
                     inputContentFromRegister[x].style.height = "max-content"
                 }
             }
-            if (modalForm.scrollHeight > document.body.scrollHeight) {
+
+            if (modalForm.scrollHeight > document.body.clientHeight) {
+
                 divFondomodalForm.style.height = modalForm.scrollHeight + "px"
                 divFondomodalForm.style.width = modalForm.clientWidth + "px"
                 modalForm.style.alignItems = "unset"
@@ -115,20 +133,24 @@ export const Form = (data) => {
                 modalForm.style.height = "calc(100% - 40px)"
                 modalForm.style.width = "calc(100% - 40px)"
             } else {
+
                 for (let x = 0; x < inputContentFromRegister.length; x++) {
                     inputContentFromRegister[x].style.height = ""
                 }
                 divFondomodalForm.style.height = ""
                 divFondomodalForm.style.width = ""
-                modalForm.style.alignItems = ""
+                modalForm.style.alignItems = "center"
                 modalForm.style.padding = ""
                 modalForm.style.height = ""
                 modalForm.style.width = ""
             }
-            if (modalForm.scrollWidth > document.body.scrollWidth) {
-               
+            if (displayNone) {
+                modalForm.style.display = "none"
             }
-
+        }
+        resizeForm()
+        window.addEventListener("resize", function () {
+            resizeForm()
         })
 
     }, [])
@@ -186,8 +208,8 @@ export const Form = (data) => {
 
                                         <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email" : ""}input-content-form-register`}>
                                             <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                            <input   id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} className="input-form" type="text" />
-                                            <h4  className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
+                                            <input id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} className="input-form" type="text" />
+                                            <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
                                         </div>
                                     );
 

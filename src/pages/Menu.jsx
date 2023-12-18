@@ -42,10 +42,19 @@ export const Menu = () => {
         }
     }
     useEffect(() => {
-
-
-
-
+        let ulContentLi = document.getElementById("ulContentLi")
+        setTimeout(() => {
+            resizeMenuToOverFlowUl()
+        }, 100);
+        function resizeMenuToOverFlowUl() {
+            if (ulContentLi.scrollHeight > ulContentLi.clientHeight) {
+                divHeaderNav.style.width = "calc(100% - 10px)"
+                footerNav.style.width = "calc(100% - 10px)"
+            } else {
+                divHeaderNav.style.width = ""
+                footerNav.style.width = ""
+            }
+        }
         getAgignaciones();
         async function getUser() {
             try {
@@ -63,6 +72,7 @@ export const Menu = () => {
         let iconHamburguer = document.getElementById("iconHamburguer")
         function stateMenu() {
             let linkMenu = document.querySelectorAll(".change-hamburguer-quit");
+            console.log(linkMenu)
             let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
             let navHorizontal = document.getElementById("navHorizontal");
             navHorizontal.style.transition = "width 0.5s";
@@ -86,7 +96,7 @@ export const Menu = () => {
                     }, 100)
 
                 }
-                navHorizontal.style.width = "50px";
+                navHorizontal.style.width = "75px";
 
                 hamnuguerMode = 1;
             } else {
@@ -96,7 +106,7 @@ export const Menu = () => {
                     linkMenu[x].style.opacity = "1"
                     linkMenu[x].style.fontSize = ""
                     setTimeout(() => {
-                        linkMenu[x].style.display = ""
+                        linkMenu[x].style.display = "block"
                     }, 100)
 
                 }
@@ -113,6 +123,9 @@ export const Menu = () => {
             stateMenu();
         })
         stateMenu();
+        window.addEventListener("resize", function(){
+            resizeMenuToOverFlowUl()
+        })
 
 
     }, [])
@@ -165,20 +178,22 @@ export const Menu = () => {
 
 
             <nav id="navHorizontal" className="nav-main nav-horizontal" style={{ backgroundColor: !valueDarkMode ? "green" : "" }}>
-                <div className="header-nav hamburguer-centered">
-                    <img className="img-logo-nav change-hamburguer-quit" src="../../public/img/logo-coffee-sensory.jpeg" alt="" />
+                <div id="divHeaderNav" className="div-header-nav">
+                    <div className="header-nav hamburguer-centered">
+                        <img className="img-logo-nav change-hamburguer-quit" src="../../public/img/logo-coffee-sensory.jpeg" alt="" />
 
-                    <h2 className="title-header-nav-horizontal change-hamburguer-quit">Dashboard</h2>
-                    <svg id="iconHamburguer" className="icon-hamburguer-li-nav-horizontal icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 1024.000000 1024.000000" preserveAspectRatio="xMidYMid meet">
+                        <h2 className="title-header-nav-horizontal change-hamburguer-quit">Dashboard</h2>
+                        <svg id="iconHamburguer" className="icon-hamburguer-li-nav-horizontal icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 1024.000000 1024.000000" preserveAspectRatio="xMidYMid meet">
 
-                        <g transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)" stroke="none">
-                            <path d="M1105 8301 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
-                            <path d="M1105 5741 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
-                            <path d="M1105 3181 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
-                        </g>
-                    </svg>
+                            <g transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)" stroke="none">
+                                <path d="M1105 8301 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
+                                <path d="M1105 5741 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
+                                <path d="M1105 3181 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
+                            </g>
+                        </svg>
+                    </div>
                 </div>
-                <ul>
+                <ul id="ulContentLi">
                     <li className="hamburguer-centered line-nav-li">
                         <h4 className="title-li change-hamburguer-quit">Principal</h4>
                         <ul>
@@ -275,7 +290,7 @@ export const Menu = () => {
                         </ul>
                     </li>
                 </ul>
-                <div className="footer-nav">
+                <div id="footerNav" className="footer-nav">
                     <ul>
 
                         <li onClick={darkMode} className=" hamburguer-centered">

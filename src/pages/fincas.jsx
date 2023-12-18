@@ -128,18 +128,49 @@ export const Fincas = () => {
         }
     }
 
-    async function desactivarFinca(id) {
+    async function desactivarFinca() {
         try {
             const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
             if (axios.data.status == true) {
                 getFincas();
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: axios.data.message,
+                        "tittle": "Excelente",
+                    }
+                )
             } else if (axios.data.delete_error) {
-
-            } else {
-
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.delete_error,
+                        "tittle": "Intentalo de nuevo",
+                    }
+                )
+            } else if(axios.data.permission_error){
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                    }
+                )
             }
+            console.log(axios)
 
         } catch (e) {
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "warning",
+                    description: "Error interno del servidor: " + e,
+                    "tittle": "Intentalo de nuevo"
+                }
+            )
         }
     }
     async function cambiarEstado(id, estado) {
@@ -160,11 +191,11 @@ export const Fincas = () => {
                 description: descripcion,
                 tittle: tittle,
                 continue: {
-                    "function": desactivarFinca,
-                    location: "/"
+                    "function": desactivarFinca
                 }
             }
         )
+        
     }
     async function setFinca(data) {
         try {
@@ -179,8 +210,7 @@ export const Fincas = () => {
                         description: axios.data.message,
                         "tittle": "Excelente",
                         continue: {
-                            "function": procedureTrue,
-                            location: "/"
+                            "function": procedureTrue
                         }
                     }
                 )
@@ -196,7 +226,16 @@ export const Fincas = () => {
                 )
             } else if (axios.data.errors) {
                 setErrors(axios.data.errors)
-            } else {
+            }  else if(axios.data.permission_error){
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                    }
+                )
+            }else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -214,7 +253,7 @@ export const Fincas = () => {
             setdataAlert(
                 {
                     status: "warning",
-                    description: "Error interno del servidor",
+                    description: "Error interno del servidor: " + e,
                     "tittle": "Intentalo de nuevo"
                 }
             )
@@ -309,7 +348,7 @@ export const Fincas = () => {
             setdataAlert(
                 {
                     status: "warning",
-                    description: "Error interno del servidor",
+                    description: "Error interno del servidor: " + e,
                     "tittle": "Intentalo de nuevo"
                 }
             )

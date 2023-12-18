@@ -20,7 +20,7 @@ export default function App() {
   let userInfo;
 
   if (!responseValidateViews) {
-    return <div className="">CARGANDO</div>
+    return <div className=""></div>
   } else {
     userInfo = responseValidateViews.data.user;
     console.log('VALIDATEVIEWS: ', userInfo ? userInfo.rol : null);

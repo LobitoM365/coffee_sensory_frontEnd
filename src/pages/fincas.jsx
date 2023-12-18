@@ -148,7 +148,7 @@ export const Fincas = () => {
         let descripcion = ""
         if (estado == 0) {
             tittle = "Activarás las finca " + id
-            descripcion = "Estás apunto de activar la finca, ten encuenta que esta accion no activara las dependencias de la finca, pero si permitira el uso de sus dependencias.";
+            descripcion = "Estás apunto de activar la finca, ten encuenta que esta accion no activará las dependencias de la finca, pero si permitirá el uso de sus dependencias.";
         } else if (estado == 1 || estado == 3 || estado == 4) {
             tittle = "¿Deseas desactivar la finca " + id + " ?";
             descripcion = "Estás apunto de desactivar la finca, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de esta finca."

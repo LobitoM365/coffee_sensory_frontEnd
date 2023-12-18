@@ -11,6 +11,7 @@ import { RegistroFormatoSca } from './pages/registrosFormatoSCA.jsx';
 import { Fincas } from './pages/fincas.jsx';
 import { validateViews, ProtectedRoute } from './componentes/ValidateViews.jsx';
 import { FormRegiser } from './componentes/FormRegister.jsx';
+import { Loader } from './componentes/loader.jsx';
 
 
 export default function App() {
@@ -29,32 +30,34 @@ export default function App() {
   return (
     <>
       <Routes>
-        <Route path='/modalfinca' element={<ModalFinca />}></Route>
+        <Route element={<Loader/>}>
+          <Route path='/modalfinca' element={<ModalFinca />}></Route>
 
-        <Route path='/' element={<Inicio />}>
-        </Route>
+          <Route path='/' element={<Inicio />}>
+          </Route>
 
-        <Route path='/login' element={<Login />} />
+          <Route path='/login' element={<Login />} />
 
 
-        <Route path='/dashboard' element={<Menu />}>
-          <Route path='' element={<Home />} />
-          <Route path='profile' element={<Profile />} />
+          <Route path='/dashboard' element={<Menu />}>
+            <Route path='' element={<Home />} />
+            <Route path='profile' element={<Profile />} />
 
-          <Route
-            path="usuarios/registros"
-            element={
-              <ProtectedRoute
-                allowRoles={'administrador'}
-                userInfo={userInfo}
-                Element={RegistrosUsuarios}
-              />
-            }
-          />
+            <Route
+              path="usuarios/registros"
+              element={
+                <ProtectedRoute
+                  allowRoles={'administrador'}
+                  userInfo={userInfo}
+                  Element={RegistrosUsuarios}
+                />
+              }
+            />
 
-          <Route path='formulario' element={<FormRegiser />} />
-          <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
-          <Route path='fincas/registros' element={<Fincas />} />
+            <Route path='formulario' element={<FormRegiser />} />
+            <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
+            <Route path='fincas/registros' element={<Fincas />} />
+          </Route>
         </Route>
       </Routes>
     </>

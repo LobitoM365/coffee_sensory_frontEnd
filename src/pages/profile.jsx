@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Api from "../componentes/Api"
 import { Menu } from './Menu.jsx'
-
+import { Loader } from '../componentes/loader.jsx'
 
 export const Profile = () => {
 
@@ -130,6 +130,7 @@ export const Profile = () => {
     }
     return (
         <>
+       
             <link rel="stylesheet" href="../../public/css/profile.css" />
             <div className="header-profile">
                 <img className='img-head-profile' src="https://static.vecteezy.com/system/resources/previews/008/277/939/non_2x/background-with-mountains-nature-mountain-in-green-color-free-vector.jpg" alt="" />

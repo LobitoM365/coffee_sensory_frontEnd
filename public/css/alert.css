@@ -79,6 +79,9 @@
 .input-warning-alert {
     background-color: orange;
 }
+.input-entiendo-alert{
+background-color: rgb(255, 162, 2);
+}
 .div-content-inpunts-alert{
     display: flex;
     justify-content: center;
@@ -86,4 +89,10 @@
 }
 .tittle-warning-alert{
     color: red;
+}
+.interrogative-rotate-alert{
+    transform: rotate(180deg);
+}
+.icon-interrogative-alert{
+    fill: rgb(255, 204, 1);
 }

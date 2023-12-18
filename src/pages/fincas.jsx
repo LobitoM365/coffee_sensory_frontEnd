@@ -230,9 +230,13 @@ export const Fincas = () => {
                 setStatusAlert(true)
                 setdataAlert(
                     {
-                        status: "false",
+                        status: "interrogative",
                         description: axios.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "function": procedureTrue,
+                            location: "/dashboard/fincas/registros"
+                        }
                     }
                 )
             }else {

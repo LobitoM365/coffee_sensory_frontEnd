@@ -1,13 +1,13 @@
 import { object, string } from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 
 
 
-export const Form = (data) => {
+export const Form = forwardRef((data, ref) => {
 
     let elementEdit = [];
     let inputs = []
-    let [dataInputs, setDataInputs] = useState([]);
+    let [dataInputs, setDataInputs] = useState({});
     const [selectsValues, changeSelectsValues] = useState({});
     const [dataSelect, setDataSelects] = useState({});
     const [modalSelect, changeModalSelect] = useState({});
@@ -40,10 +40,10 @@ export const Form = (data) => {
                             e.target.value = e.target.value.replace(keyDown, ".").replace(/\./, '')
                             alert("xd")
                         } else if (keyDown == "-") {
-                            if(e.target.value != "-"){
-                                e.target.value = e.target.value.replace(/-(?=\D*$)/, "").replace("--", "-").replace(/(?<!^)-/g , "")
+                            if (e.target.value != "-") {
+                                e.target.value = e.target.value.replace(/-(?=\D*$)/, "").replace("--", "-").replace(/(?<!^)-/g, "")
                             }
-                            
+
                         }
                         else {
                             e.target.value = e.target.value.replace(keyDown, "")
@@ -77,11 +77,11 @@ export const Form = (data) => {
     };
 
 
-
+   
     if (data.data) {
         inputs = Object.keys(data.data)
-        setDataInputs
         dataInputs = data.data
+        console.log(dataInputs)
         elementEdit = data.elementEdit
     }
     function Init() {
@@ -96,7 +96,44 @@ export const Form = (data) => {
         changeSelectsValues(cloneSlectValue)
         changeModalSelect(cloneModalSelect)
     }
+    function selectSearch(value, key) {
+        let cloneDataSelect = { ...dataSelect }
+        let selectOptions = document.querySelectorAll(".select-option-" + key)
+        let cloneSlectValue = { ...selectsValues }
+        cloneSlectValue[key] = value
+        data.setStatusSelectDefault(false)
+        data.setStatusSelect(false)
+        let cloneModalSelect = { ...modalSelect }
+        cloneModalSelect[key] = true
+        changeModalSelect(cloneModalSelect)
 
+        for (let s = 0; s < selectOptions.length; s++) {
+            if (selectOptions[s].innerHTML.toLocaleLowerCase().includes(value.toLocaleLowerCase())) {
+                selectOptions[s].style.display = ""
+            } else {
+                selectOptions[s].style.display = "none"
+            }
+            if (selectOptions[s].innerHTML.toLocaleLowerCase() == value.toLocaleLowerCase()) {
+                cloneSlectValue[key] = selectOptions[s].innerHTML
+                cloneDataSelect[key] = dataInputs[key]["opciones"][s][dataInputs[key]["key"]]
+                break
+            } else {
+                cloneDataSelect[key] = ""
+            }
+
+        }
+        changeSelectsValues(cloneSlectValue)
+
+        setDataSelects(cloneDataSelect)
+        console.log(cloneDataSelect)
+
+    }
+    function clearElementsClick(){
+        changeModalSelect({})
+    }
+    React.useImperativeHandle(ref, () => ({
+        clearElementsClick
+      }));
 
     useEffect(() => {
         Init()
@@ -108,11 +145,12 @@ export const Form = (data) => {
 
         setTimeout(() => {
             resizeForm()
-        }, 100);
+        }, 200);
         document.addEventListener('keydown', function (event) {
             setKeydown(event.key)
         })
         function resizeForm() {
+
             let displayNone = false;
             if (modalForm.style.display == "none") {
                 modalForm.style.display = "block"
@@ -124,7 +162,7 @@ export const Form = (data) => {
                 }
             }
 
-            if (modalForm.scrollHeight > document.body.clientHeight) {
+            if (divForm.scrollHeight > document.body.clientHeight) {
 
                 divFondomodalForm.style.height = modalForm.scrollHeight + "px"
                 divFondomodalForm.style.width = modalForm.clientWidth + "px"
@@ -141,8 +179,8 @@ export const Form = (data) => {
                 divFondomodalForm.style.width = ""
                 modalForm.style.alignItems = "center"
                 modalForm.style.padding = ""
-                modalForm.style.height = ""
-                modalForm.style.width = ""
+                modalForm.style.height = "100%"
+                modalForm.style.width = "100%"
             }
             if (displayNone) {
                 modalForm.style.display = "none"
@@ -214,6 +252,7 @@ export const Form = (data) => {
                                     );
 
                                 } else if (dataInputs[key]["type"] === "select") {
+                                  
                                     if (data.statusSelect) {
                                         selectsValues[key] = "Seleccione una opción...";
                                         dataSelect[key] = ""
@@ -222,11 +261,11 @@ export const Form = (data) => {
                                     return (
                                         <div key={key} className="input-content-form-register">
                                             <h4 className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</h4>
-                                            <div key={key} onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = !modalSelect[key]; changeModalSelect(cloneModalSelect) }} className="filter-estado div-select">
+                                            <div key={key} className="filter-estado div-select">
 
-                                                <div key={index} style={{ display: modalSelect[key] == false ? "none" : "" }} className="opciones">
+                                                <div key={index} style={{ display: !modalSelect[key] ? "none" : "" }} className="opciones opciones-input-select">
 
-                                                    <h4 onClick={() => { data.setStatusSelect(false); data.setStatusSelectDefault(false); selectsValues[key] = "Seleccione una opción..."; dataSelect[key] = ""; }} className='select-option'>Seleccione una opción...</h4>
+                                                    <h4 onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = false; changeModalSelect(cloneModalSelect); data.setStatusSelect(false); data.setStatusSelectDefault(false); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = "Seleccione una opción..."; changeSelectsValues(cloneSelectsValues); dataSelect[key] = ""; }} className='select-option'>Seleccione una opción...</h4>
 
                                                     {
                                                         dataInputs[key]["opciones"] ? dataInputs[key]["opciones"].map((select, indexSelect) => {
@@ -237,11 +276,6 @@ export const Form = (data) => {
                                                                 })
                                                             }
 
-                                                            if (!data.modalForm && dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] == elementEdit[key] && data.statusSelectDefault) {
-                                                                selectsValues[key] = value;
-                                                                dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
-                                                            }
-
 
 
                                                             if (dataInputs[key]["upper_case"]) {
@@ -249,16 +283,22 @@ export const Form = (data) => {
                                                             } else if (dataInputs[key]["capital_letter"]) {
                                                                 value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
                                                             }
-                                                            return <h4 key={indexSelect} onClick={() => { data.setStatusSelect(false); data.setStatusSelectDefault(false); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]; selectsValues[key] = value }} className="select-option" value="">
+                                                            if (!data.modalForm && dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] == elementEdit[key] && data.statusSelectDefault) {
+                                                                selectsValues[key] = value;
+                                                                dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
+                                                            }
+
+                                                            return <h4 key={indexSelect} onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = false; changeModalSelect(cloneModalSelect); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); data.setStatusSelect(false); data.setStatusSelectDefault(false); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]; }} className={`select-option select-option-${key} ${selectsValues[key] == value ? 'option-focus' : ''}`} value="">
                                                                 {value}
                                                             </h4>
                                                         }) : ""
                                                     }
 
                                                 </div>
-                                                <div className='input-select-estado' name="" id="">
-                                                    <h4 className="label-select">{selectsValues[key]}</h4>
-                                                    <div className="icon-chevron-estado">
+                                                <div className='input-select-estado input-select-search' name="" id="">
+
+                                                    <input type="text" className="input-select" onInput={(e) => { selectSearch(e.target.value, key) }} value={selectsValues[key]} />
+                                                    <div onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = !modalSelect[key]; changeModalSelect(cloneModalSelect) }} className="icon-chevron-estado">
                                                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                                             <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                                             <g><g><path fill="#000000" d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
@@ -285,11 +325,11 @@ export const Form = (data) => {
 
                         }
                         <div className="div-div-input-submit-form">
-                            <button type="submit" className="button-submit-form"> {!data.updateStatus ? "Registrar" : "Actualizar"}</button>
+                            <button onClick={()=>{clearElementsClick()}} type="submit" className="button-submit-form"> {!data.updateStatus ? "Registrar" : "Actualizar"}</button>
                         </div>
                     </form>
                 </div>
             </div>
         </>
     )
-}
+})

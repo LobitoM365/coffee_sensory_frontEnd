@@ -50,7 +50,8 @@ export const Fincas = () => {
                 type: "select",
                 referencia: "Municipio",
                 values: ["nombre"],
-                key: "id"
+                key: "id",
+                upper_case: true
             },
             nombre_vereda: {
                 type: "text",
@@ -147,7 +148,7 @@ export const Fincas = () => {
                     {
                         status: "false",
                         description: axios.data.delete_error,
-                        "tittle": "Intentalo de nuevo",
+                        "tittle": "Inténtalo de nuevo",
                     }
                 )
             } else if(axios.data.permission_error){
@@ -172,7 +173,7 @@ export const Fincas = () => {
                 {
                     status: "warning",
                     description: "Error interno del servidor: " + e,
-                    "tittle": "Intentalo de nuevo"
+                    "tittle": "Inténtalo de nuevo"
                 }
             )
         }
@@ -225,7 +226,7 @@ export const Fincas = () => {
                     {
                         status: "false",
                         description: axios.data.register_error,
-                        "tittle": "Intentalo de nuevo"
+                        "tittle": "Inténtalo de nuevo"
                     }
                 )
             } else if (axios.data.errors) {
@@ -262,7 +263,7 @@ export const Fincas = () => {
                 {
                     status: "warning",
                     description: "Error interno del servidor: " + e,
-                    "tittle": "Intentalo de nuevo"
+                    "tittle": "Inténtalo de nuevo"
                 }
             )
         }
@@ -335,7 +336,7 @@ export const Fincas = () => {
                     {
                         status: "false",
                         description: axios.data.update_error,
-                        "tittle": "Intentalo de nuevo"
+                        "tittle": "Inténtalo de nuevo"
                     }
                 )
             } else if (axios.data.errors) {
@@ -347,7 +348,7 @@ export const Fincas = () => {
                     {
                         status: "false",
                         description: axios.data.update_error,
-                        "tittle": "Intentalo de nuevo"
+                        "tittle": "Inténtalo de nuevo"
                     }
                 )
             }
@@ -357,7 +358,7 @@ export const Fincas = () => {
                 {
                     status: "warning",
                     description: "Error interno del servidor: " + e,
-                    "tittle": "Intentalo de nuevo"
+                    "tittle": "Inténtalo de nuevo"
                 }
             )
         }

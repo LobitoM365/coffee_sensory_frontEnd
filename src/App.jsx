@@ -12,6 +12,7 @@ import { Fincas } from './pages/fincas.jsx';
 import { validateViews, ProtectedRoute } from './componentes/ValidateViews.jsx';
 import { FormRegiser } from './componentes/FormRegister.jsx';
 import { Loader } from './componentes/loader.jsx';
+import { NotFound } from './pages/NotFound.jsx';
 
 
 export default function App() {
@@ -30,13 +31,15 @@ export default function App() {
   return (
     <>
       <Routes>
-        <Route element={<Loader/>}>
+      <Route path='*' element={<NotFound/>} />
+
+        <Route path='/' element={<Loader />}>
           <Route path='/modalfinca' element={<ModalFinca />}></Route>
 
           <Route path='/' element={<Inicio />}>
           </Route>
 
-          <Route path='/login' element={<Login />} />
+          <Route path='login' element={<Login />} />
 
 
           <Route path='/dashboard' element={<Menu />}>

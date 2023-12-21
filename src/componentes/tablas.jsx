@@ -307,13 +307,13 @@ export const Tablas = (array) => {
                         </svg> : "  "}
                         {paginate > 0 ? paginateJson.map((key, index) => (
 
-                            index < 5 ? <div onClick={() => { functionSetLimit(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : ""
+                            index <= 4 ? <div onClick={() => { functionSetLimit(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : ""
                         )) : ""}
-                        {paginate > 5 ?
+                        {paginate >= 5 ?
                             <div className='items-overflow-paginate'>
                                 <div className='div-points-paginate'><div className='points-paginate'></div><div className='points-paginate'></div><div className='points-paginate'></div></div>
                                 <div onClick={() => { functionSetLimit(paginate), changePositionElementPaginate(paginate) }} className={`${positionFocusPaginate == paginate ? "item-paginate-focus" : ""} item-paginate-round`}>{paginate}</div>
-                                <svg onClick={() => { posicionPaginate + 5 < paginate ? changePositionPaginate(1) : "" }} style={{ cursor: posicionPaginate + 5 < paginate ? "" : "unset", fill: posicionPaginate + 5 < paginate ? " rgb(0, 97, 227)" : "rgba(152, 152, 152, 0.438)" }} className='chevron-paginate' version="1.1" x="0px" y="0px" viewBox="0 0 256 256"  >
+                                <svg onClick={() => { posicionPaginate + 5 < paginate ? changePositionPaginate(1) : "" }} style={{ cursor: posicionPaginate + 5 < paginate ? "" : "unset", fill: posicionPaginate + 5 < paginate ? " rgb(0, 97, 227)" : "rgba(152, 152, 152, 0.438)" }} className='chevron-paginate' version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
                                     <g><g><path d="M169.3,130.8L61,233.7L73.3,246l109.5-101.6l12.3-12.3L73.2,10L60.8,22.4L169.3,130.8z" /></g></g>
                                 </svg>
                             </div> : "  "}
@@ -323,7 +323,7 @@ export const Tablas = (array) => {
 
 
 
-            <Form ref={formRef} setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} />
+            <Form imgForm={array.imgForm} ref={formRef} setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} />
         </>
     )
 }

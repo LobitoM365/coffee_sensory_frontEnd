@@ -154,36 +154,36 @@ export const Profile = () => {
                                     <form className='form-update' action="" >
                                         <div className='form-update-profile'>
                                             <div className='element-form'>
-                                                <label htmlFor="">Nombre</label>
-                                                <input ref={nombre} className='input-update-profile' type="text" name="" id="" />
+                                                <label htmlFor="nombre">Nombre</label>
+                                                <input id="nombre" ref={nombre} className='input-update-profile' type="text" name=""  />
                                                 <div className='div-input-error'>
                                                     <h5 className='input-error'>{errors.nombre ? errors.nombre : ""}</h5>
                                                 </div>
                                             </div>
                                             <div className='element-form'>
-                                                <label htmlFor="">Apellido</label>
-                                                <input ref={apellido} className='input-update-profile' type="text" name="" id="" />
+                                                <label htmlFor="apellido">Apellido</label>
+                                                <input ref={apellido} className='input-update-profile' type="text" name="" id="apellido" />
                                                 <div className='div-input-error'>
                                                     <h5 className='input-error'>{errors.apellido ? errors.apellido : ""}</h5>
                                                 </div>
                                             </div>
                                             <div className='element-form'>
-                                                <label htmlFor="">Telefono</label>
-                                                <input ref={telefono} className='input-update-profile' type="text" name="" id="" />
+                                                <label htmlFor="telefono">Telefono</label>
+                                                <input ref={telefono} className='input-update-profile' type="text" name="" id="telefono" />
                                                 <div className='div-input-error'>
                                                     <h5 className='input-error'>{errors.telefono ? errors.telefono : ""}</h5>
                                                 </div>
                                             </div>
                                             <div className='element-form'>
-                                                <label htmlFor="">Correo electronico</label>
-                                                <input ref={correo_electronico} className='input-update-profile' type="text" name="" id="" />
+                                                <label htmlFor="correo_electronico">Correo electronico</label>
+                                                <input ref={correo_electronico} className='input-update-profile' type="text" name="" id="correo_electronico" />
                                                 <div className='div-input-error'>
                                                     <h5 className='input-error'>{errors.correo_electronico ? errors.correo_electronico : ""}</h5>
                                                 </div>
                                             </div>
                                             <div className='element-form'>
-                                                <label htmlFor="">Numero de documento</label>
-                                                <input ref={numero_documento} className='input-update-profile' type="text" name="" id="" />
+                                                <label htmlFor="numero_de_documento">Numero de documento</label>
+                                                <input ref={numero_documento} className='input-update-profile' type="text" name="" id="numero_de_documento" />
                                                 <div className='div-input-error'>
                                                     <h5 className='input-error'>{errors.numero_documento ? errors.numero_documento : ""}</h5>
                                                 </div>
@@ -201,22 +201,22 @@ export const Profile = () => {
                                     <form action="" className='form-update' style={{ height: maxHeightForm > 0 ? maxHeightForm - 40 : "" }}>
                                         <div className='form-update-profile'>
                                             <div className='element-form'>
-                                                <label htmlFor="">Contraseña actual</label>
-                                                <input ref={user_password} className='input-update-profile' type="text" name="" id="" />
+                                                <label htmlFor="contrasena_actual">Contraseña actual</label>
+                                                <input ref={user_password} className='input-update-profile' type="text" name="" id="contrasena_actual" />
                                                 <div className='div-input-error'>
                                                     <h5 className='input-error'>{errors.user_password ? errors.user_password : ""}</h5>
                                                 </div>
                                             </div>
                                             <div className='element-form'>
-                                                <label htmlFor="">Nueva contraseña</label>
-                                                <input ref={new_password} className='input-update-profile' type="text" name="" id="" />
+                                                <label htmlFor="nueva_contrasena">Nueva contraseña</label>
+                                                <input ref={new_password} className='input-update-profile' type="text" name="" id="nueva_contrasena" />
                                                 <div className='div-input-error'>
                                                     <h5 className='input-error'>{errors.new_password ? errors.new_password : errors.confirm_password ? errors.confirm_password : ""}</h5>
                                                 </div>
                                             </div>
                                             <div className='element-form'>
-                                                <label htmlFor="">Confirmar Contraseña</label>
-                                                <input ref={confirm_password} className='input-update-profile' type="text" name="" id="123" />
+                                                <label htmlFor="confirmar_contrasena">Confirmar Contraseña</label>
+                                                <input ref={confirm_password} className='input-update-profile' type="text" name="" id="confirmar_contrasena" />
                                                 <div className='div-input-error'>
                                                     <h5 className='input-error'>{errors.confirm_password ? errors.confirm_password : ""}</h5>
                                                 </div>

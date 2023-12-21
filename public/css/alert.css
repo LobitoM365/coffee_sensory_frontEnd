@@ -18,6 +18,8 @@
     padding: 20px;
     background-color: white;
     border-radius: 8px;
+    max-width: calc(100% - 50px);
+    word-break: break-all;
 }
 
 .div-img-alert,
@@ -62,6 +64,7 @@
     font-size: 1.1em;
     font-weight: bolder;
     cursor: pointer;
+    max-width: calc(100% - 20px);
 }
 
 .inputs-alert{
@@ -95,4 +98,10 @@ background-color: rgb(255, 162, 2);
 }
 .icon-interrogative-alert{
     fill: rgb(255, 204, 1);
+}
+
+@media screen and (max-width: 260px) {
+    .input-alert{
+        width: 100%;
+    }
 }

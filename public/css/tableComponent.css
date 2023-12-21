@@ -307,15 +307,15 @@
 
 .content-table {
     height: 850px;
-    max-height: 70vh;
-    overflow: auto;
+    max-height: 60vh;
+    overflow: auto; 
 }
 
 .limit-registers {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100%;
+    align-items: center; 
+    height: 100%;   
     gap: 10px;
 }
 

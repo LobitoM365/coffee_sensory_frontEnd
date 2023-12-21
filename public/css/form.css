@@ -23,17 +23,19 @@
 }
 
 .div-form {
-    padding: 30px;
     background-color: white;
-    display: grid;
+    display: flex;
     grid-template-columns: 1fr;
     gap: 45px;
-    width: max-content;
-    width: 440px;
+    width: 444px;
     border-radius: 8px;
     position: relative;
     z-index: 999999;
-    height: max-content;
+    
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+
 }
 
 .tittle-form-register {
@@ -44,6 +46,7 @@
 .form-register {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: max-content;
     gap: 15px 20px;
     width: 100%;
 }
@@ -65,7 +68,7 @@
 .input-content-form-register {
     display: flex;
     flex-direction: column;
-    height: 90px;
+    height: max-content;
 }
 
 .input-email {
@@ -103,6 +106,7 @@
 .label-error-submit-form {
     color: red;
     font-size: 0.7em;
+    height: 30px;
 }
 
 .icon-quit-svg-form {
@@ -121,9 +125,11 @@
 }
 
 .header-form {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
+    text-align: center;
+    padding-bottom: 20px;
 }
 
 .div-select {
@@ -148,19 +154,73 @@
     grid-template-columns: 1fr auto;
     padding: 0;
 }
-.input-select:focus{
+
+.input-select:focus {
     outline: none;
 }
-.icon-chevron-estado{
+
+.icon-chevron-estado {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 10px;
 }
-.opciones-input-select{
+
+.opciones-input-select {
     padding-left: 10px;
     width: calc(100% - 30px);
 }
-.option-focus{
+
+.option-focus {
     background-color: rgba(106, 106, 106, 0.129);
+}
+
+.div-content-form {
+    z-index: 99999;
+    background-color: white;
+    border-radius: 4px;
+    width: max-content;
+    /* display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr; */
+    padding: 30px;
+    max-width: calc(100% - 100px);
+    height: max-content;
+}
+
+.div-body-form {
+    width: max-content;
+    max-width: 100%;
+    display: flex;
+    gap: 30px;
+}
+
+.img-form {
+    height: auto;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.div-img-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 420px;
+}
+.head-input{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+@media screen and (max-width : 670px) {
+    .div-img-form {
+        display: none;
+    }
+}
+@media screen and (max-width : 450px) {
+    .form-register { 
+        grid-template-columns: 1fr;
+    }
 }

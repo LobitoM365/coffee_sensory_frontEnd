@@ -31,9 +31,9 @@ export default function App() {
   return (
     <>
       <Routes>
-      <Route path='*' element={<NotFound/>} />
-
         <Route path='/' element={<Loader />}>
+          <Route path='*' element={<NotFound />} />
+
           <Route path='/modalfinca' element={<ModalFinca />}></Route>
 
           <Route path='/' element={<Inicio />}>

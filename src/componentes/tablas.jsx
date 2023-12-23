@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Form } from './Form.jsx';
 
 
@@ -21,6 +21,7 @@ export const Tablas = (array) => {
     const [modalFilter, changeModalFilter] = useState(false)
     const [nameLimitRegisters, changeNameModalLimitRegisters] = useState(5)
     const [positionElementPaginate, changePositionElementPaginate] = useState(1)
+    const formRef = useRef(null);
     let [limit, setLimit] = useState(5);
     let [inicio, setInicio] = useState(0);
     let [fin, setFin] = useState(limit);
@@ -109,6 +110,9 @@ export const Tablas = (array) => {
         setPositionFocusPaginate(data)
         setInicio(limit * (data - 1));
     }
+    function setClearClick() {
+        formRef.current.clearElementsClick()
+    }
     useEffect(() => {
         array.limitRegisters({ "inicio": inicio, "fin": limit })
     }, [inicio, limit, posicionPaginate])
@@ -119,7 +123,7 @@ export const Tablas = (array) => {
                 <div className="div-filters">
                     <div className='div-tittle'>
                         <h2> {array.tittle ? array.tittle : "Tabla de registros"}</h2>
-                        <button onClick={() => { array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>
+                        <button onClick={() => { setClearClick(); array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>
                     </div>
 
                     <div className='content-filters'>
@@ -176,7 +180,7 @@ export const Tablas = (array) => {
                                 </svg>
                             </div>
                             <div className="div-search">
-                                <input id='inputSearch' onInput={(e)=> {setValueSearch(e.target.value)}} className='input-search' type="text" />
+                                <input id='inputSearch' onInput={(e) => { setValueSearch(e.target.value) }} className='input-search' type="text" />
                             </div>
                         </div>
                     </div>
@@ -217,13 +221,13 @@ export const Tablas = (array) => {
                                                     } else {
                                                         if (keys == "estado") {
                                                             if (data[valuesD][keys] == 0) {
-                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"],data[valuesD][keys])} className='estado-0'>Inactivo</h4></td>;
+                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-0'>Inactivo</h4></td>;
                                                             } else if (data[valuesD][keys] == 1) {
-                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"],data[valuesD][keys])} className='estado-1'>Activo</h4></td>;
+                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-1'>Activo</h4></td>;
                                                             } else if (data[valuesD][keys] == 2) {
-                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"],data[valuesD][keys])} className='estado-2'>Pendiente</h4></td>;
+                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-2'>Pendiente</h4></td>;
                                                             } else if (data[valuesD][keys] == 3 || data[valuesD][keys] == 4) {
-                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"],data[valuesD][keys])} className='estado-3'>Aginado</h4></td>;
+                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-3'>Aginado</h4></td>;
                                                             }
                                                         } else {
 
@@ -272,11 +276,9 @@ export const Tablas = (array) => {
                                         }
                                         <td className='td-update'>
                                             <div className="center-update">
-                                                <h4 onClick={() => { array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} className='item-options option-update'>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 478.000000 522.000000" preserveAspectRatio="xMidYMid meet">
-                                                        <metadata>
-                                                            Created by potrace 1.16, written by Peter Selinger 2001-2019
-                                                        </metadata>
+                                                <h4 onClick={() => {  setClearClick();array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} className='item-options option-update'>
+                                                    <svg  version="1.0" viewBox="0 0 478.000000 522.000000" >
+                                                        
                                                         <g transform="translate(0.000000,522.000000) scale(0.100000,-0.100000)" stroke="none">
                                                             <path d="M2110 5203 c-33 -12 -40 -36 -40 -138 l0 -101 -137 -27 c-610 -121 -1166 -501 -1512 -1032 -315 -483 -442 -1101 -345 -1670 128 -750 594 -1380 1276 -1722 74 -38 144 -66 161 -66 51 0 77 63 40 95 -10 8 -70 40 -133 70 -679 330 -1147 987 -1241 1743 -16 127 -16 411 0 535 50 391 197 763 424 1066 291 389 674 661 1137 808 114 36 267 71 363 82 31 4 62 14 69 22 7 8 15 48 18 89 l5 74 187 -128 c102 -70 186 -132 187 -138 0 -5 -84 -74 -187 -152 l-187 -143 -5 86 c-4 60 -9 88 -20 94 -62 39 -423 -59 -669 -181 -408 -203 -723 -514 -922 -911 -263 -524 -289 -1134 -72 -1680 19 -47 43 -94 53 -103 25 -22 59 -16 82 16 19 26 19 26 -5 85 -165 395 -200 810 -102 1219 58 246 181 503 339 710 258 339 638 590 1065 701 140 36 131 41 131 -74 0 -72 4 -103 16 -120 32 -46 54 -34 355 193 156 119 290 227 297 241 21 39 1 59 -175 178 -87 59 -213 145 -280 191 -125 86 -147 97 -173 88z" />
                                                             <path d="M3280 4797 c-13 -7 -26 -21 -30 -32 -15 -42 5 -60 151 -132 681 -337 1133 -972 1235 -1733 18 -139 18 -410 -1 -557 -86 -658 -449 -1234 -1010 -1603 -121 -79 -364 -194 -515 -244 -119 -39 -367 -96 -419 -96 -10 0 -29 -8 -42 -19 -21 -17 -23 -26 -21 -91 2 -43 -1 -71 -7 -68 -19 7 -380 253 -381 260 0 3 86 72 190 152 l190 145 0 -55 c0 -105 24 -121 151 -99 584 102 1107 471 1417 1003 34 59 62 119 62 133 0 35 -31 61 -66 57 -24 -3 -36 -17 -81 -96 -243 -430 -606 -741 -1053 -899 -117 -41 -294 -85 -304 -75 -4 3 -6 44 -6 92 0 71 -3 90 -18 103 -30 27 -55 20 -128 -34 -295 -221 -514 -393 -519 -410 -15 -45 -16 -44 503 -396 51 -35 99 -63 108 -63 8 0 26 11 39 25 23 22 25 31 25 123 l0 99 77 13 c43 7 133 27 201 46 889 244 1553 972 1708 1874 61 348 37 750 -62 1077 -189 624 -617 1139 -1186 1427 -158 80 -179 87 -208 73z" />
@@ -305,13 +307,13 @@ export const Tablas = (array) => {
                         </svg> : "  "}
                         {paginate > 0 ? paginateJson.map((key, index) => (
 
-                            index < 5 ? <div onClick={() => { functionSetLimit(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : ""
+                            index <= 4 ? <div onClick={() => { functionSetLimit(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : ""
                         )) : ""}
-                        {paginate > 5 ?
+                        {paginate >= 5 ?
                             <div className='items-overflow-paginate'>
                                 <div className='div-points-paginate'><div className='points-paginate'></div><div className='points-paginate'></div><div className='points-paginate'></div></div>
                                 <div onClick={() => { functionSetLimit(paginate), changePositionElementPaginate(paginate) }} className={`${positionFocusPaginate == paginate ? "item-paginate-focus" : ""} item-paginate-round`}>{paginate}</div>
-                                <svg onClick={() => { posicionPaginate + 5 < paginate ? changePositionPaginate(1) : "" }} style={{ cursor: posicionPaginate + 5 < paginate ? "" : "unset", fill: posicionPaginate + 5 < paginate ? " rgb(0, 97, 227)" : "rgba(152, 152, 152, 0.438)" }} className='chevron-paginate' version="1.1" x="0px" y="0px" viewBox="0 0 256 256"  >
+                                <svg onClick={() => { posicionPaginate + 5 < paginate ? changePositionPaginate(1) : "" }} style={{ cursor: posicionPaginate + 5 < paginate ? "" : "unset", fill: posicionPaginate + 5 < paginate ? " rgb(0, 97, 227)" : "rgba(152, 152, 152, 0.438)" }} className='chevron-paginate' version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
                                     <g><g><path d="M169.3,130.8L61,233.7L73.3,246l109.5-101.6l12.3-12.3L73.2,10L60.8,22.4L169.3,130.8z" /></g></g>
                                 </svg>
                             </div> : "  "}
@@ -321,7 +323,7 @@ export const Tablas = (array) => {
 
 
 
-            <Form setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} />
+            <Form imgForm={array.imgForm} ref={formRef} setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} />
         </>
     )
 }

@@ -50,7 +50,8 @@ export const Fincas = () => {
                 type: "select",
                 referencia: "Municipio",
                 values: ["nombre"],
-                key: "id"
+                key: "id",
+                upper_case: true
             },
             nombre_vereda: {
                 type: "text",
@@ -128,18 +129,53 @@ export const Fincas = () => {
         }
     }
 
-    async function desactivarFinca(id) {
+    async function desactivarFinca() {
         try {
             const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
             if (axios.data.status == true) {
                 getFincas();
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: axios.data.message,
+                        "tittle": "Excelente",
+                    }
+                )
             } else if (axios.data.delete_error) {
-
-            } else {
-
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.delete_error,
+                        "tittle": "Inténtalo de nuevo",
+                    }
+                )
+            } else if(axios.data.permission_error){
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "function": procedureTrue,
+                            location: "/dashboard"
+                        }
+                    }
+                )
             }
+            console.log(axios)
 
         } catch (e) {
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "warning",
+                    description: "Error interno del servidor: " + e,
+                    "tittle": "Inténtalo de nuevo"
+                }
+            )
         }
     }
     async function cambiarEstado(id, estado) {
@@ -148,7 +184,7 @@ export const Fincas = () => {
         let descripcion = ""
         if (estado == 0) {
             tittle = "Activarás las finca " + id
-            descripcion = "Estás apunto de activar la finca, ten encuenta que esta accion no activará las dependencias de la finca, pero si permitirá el uso de sus dependencias.";
+            descripcion = "Estás apunto de activar la finca, ten encuenta que esta accion no activará las dependencias de la finca, pero si permitirá el uso de ellas.";
         } else if (estado == 1 || estado == 3 || estado == 4) {
             tittle = "¿Deseas desactivar la finca " + id + " ?";
             descripcion = "Estás apunto de desactivar la finca, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de esta finca."
@@ -160,11 +196,11 @@ export const Fincas = () => {
                 description: descripcion,
                 tittle: tittle,
                 continue: {
-                    "function": desactivarFinca,
-                    location: "/"
+                    "function": desactivarFinca
                 }
             }
         )
+        
     }
     async function setFinca(data) {
         try {
@@ -179,8 +215,7 @@ export const Fincas = () => {
                         description: axios.data.message,
                         "tittle": "Excelente",
                         continue: {
-                            "function": procedureTrue,
-                            location: "/"
+                            "function": procedureTrue
                         }
                     }
                 )
@@ -191,12 +226,25 @@ export const Fincas = () => {
                     {
                         status: "false",
                         description: axios.data.register_error,
-                        "tittle": "Intentalo de nuevo"
+                        "tittle": "Inténtalo de nuevo"
                     }
                 )
             } else if (axios.data.errors) {
                 setErrors(axios.data.errors)
-            } else {
+            }  else if(axios.data.permission_error){
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: axios.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "function": procedureTrue,
+                            location: "/dashboard"
+                        }
+                    }
+                )
+            }else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -214,8 +262,8 @@ export const Fincas = () => {
             setdataAlert(
                 {
                     status: "warning",
-                    description: "Error interno del servidor",
-                    "tittle": "Intentalo de nuevo"
+                    description: "Error interno del servidor: " + e,
+                    "tittle": "Inténtalo de nuevo"
                 }
             )
         }
@@ -288,7 +336,7 @@ export const Fincas = () => {
                     {
                         status: "false",
                         description: axios.data.update_error,
-                        "tittle": "Intentalo de nuevo"
+                        "tittle": "Inténtalo de nuevo"
                     }
                 )
             } else if (axios.data.errors) {
@@ -300,7 +348,7 @@ export const Fincas = () => {
                     {
                         status: "false",
                         description: axios.data.update_error,
-                        "tittle": "Intentalo de nuevo"
+                        "tittle": "Inténtalo de nuevo"
                     }
                 )
             }
@@ -309,8 +357,8 @@ export const Fincas = () => {
             setdataAlert(
                 {
                     status: "warning",
-                    description: "Error interno del servidor",
-                    "tittle": "Intentalo de nuevo"
+                    description: "Error interno del servidor: " + e,
+                    "tittle": "Inténtalo de nuevo"
                 }
             )
         }
@@ -368,7 +416,7 @@ export const Fincas = () => {
     }, [])
     return (
         <>
-            <Tablas changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas imgForml={"/img/formularios/img-form-state.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

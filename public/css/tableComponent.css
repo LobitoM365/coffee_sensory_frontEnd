@@ -116,13 +116,13 @@
 }
 
 .div-filters {
+
     padding: 20px;
     background-color: white;
     width: calc(100% - 40px);
     border-radius: 8px;
     display: grid;
     grid-template-columns: 1fr auto;
-    justify-content: center;
     align-items: center;
     height: max-content;
 }
@@ -307,20 +307,20 @@
 
 .content-table {
     height: 850px;
-    max-height: 70vh;
-    overflow: auto;
+    max-height: 60vh;
+    overflow: auto; 
 }
 
 .limit-registers {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100%;
+    align-items: center; 
+    height: 100%;   
     gap: 10px;
 }
 
 .limit-filter {
-    width: 80px;
+    width: 60px;
 }
 
 .opciones-limit-filter {

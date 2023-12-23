@@ -41,7 +41,6 @@ export const ProtectedRoute = ({ Element, allowRoles, userInfo }) => {
         if (window.history && window.history.length > 1) {
             window.history.go(-1);
           } else {
-            // Si no se puede retroceder o hay algún error, redirige a una ruta específica
             window.location.href = '/dashboard';
           }
     }

@@ -13,6 +13,8 @@ import { validateViews, ProtectedRoute } from './componentes/ValidateViews.jsx';
 import { FormRegiser } from './componentes/FormRegister.jsx';
 import { Loader } from './componentes/loader.jsx';
 import { NotFound } from './pages/NotFound.jsx';
+import { VerRegistros } from './pages/verRegistros.jsx';
+import { Lotes } from './pages/lotes.jsx';
 
 
 export default function App() {
@@ -31,35 +33,23 @@ export default function App() {
   return (
     <>
       <Routes>
-      <Route path='*' element={<NotFound/>} />
-
+        <Route path='*' element={<NotFound />} />
         <Route path='/' element={<Loader />}>
           <Route path='/modalfinca' element={<ModalFinca />}></Route>
-
           <Route path='/' element={<Inicio />}>
           </Route>
-
           <Route path='login' element={<Login />} />
 
 
           <Route path='/dashboard' element={<Menu />}>
             <Route path='' element={<Home />} />
             <Route path='profile' element={<Profile />} />
-
-            <Route
-              path="usuarios/registros"
-              element={
-                <ProtectedRoute
-                  allowRoles={'administrador'}
-                  userInfo={userInfo}
-                  Element={RegistrosUsuarios}
-                />
-              }
-            />
-
+            <Route path="usuarios/registros" element={<ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} />} />
             <Route path='formulario' element={<FormRegiser />} />
             <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
             <Route path='fincas/registros' element={<Fincas />} />
+            <Route path='lotes/registros' element={<Lotes />} />
+            <Route path='muestras/verRegistros' element={<VerRegistros />} />
           </Route>
         </Route>
       </Routes>

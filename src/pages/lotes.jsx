@@ -4,7 +4,7 @@ import Api from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
 
-export const Fincas = () => {
+export const Lotes = () => {
     let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
@@ -13,8 +13,8 @@ export const Fincas = () => {
         }
     })
         ;
-    const [fincas, setFincas] = useState([])
-    const [fincaEdit, setfincaEdit] = useState([])
+    const [lotes, setLotes] = useState([])
+    const [fincaEdit, setLoteEdit] = useState([])
     const [updateStatus, setUpdateStatus] = useState(false)
     const [municipios, setMunicipios] = useState([])
     const [countRegisters, setCountRegisters] = useState()
@@ -22,13 +22,13 @@ export const Fincas = () => {
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
     const [modalForm, changeModalForm] = useState(false);
-    let idFincaCambiarEstado = 0;
+    let idLoteCambiarEstado = 0;
 
     let [inputsForm, setInputsForm] = useState(
         {
             nombre: {
                 type: "text",
-                referencia: "Nombre",
+                referencia: "Nombre del lote",
                 upper_case: true,
             },
             longitud: {
@@ -39,43 +39,26 @@ export const Fincas = () => {
                 type: "ubicacion",
                 referencia: "Latitud"
             },
-            usuarios_id: {
+            fincas_id: {
                 type: "select",
-                referencia: "Usuario",
-                values: ["numero_documento", "nombre"],
+                referencia: "Finca",
+                values : ["numero_documento_usuario","nombre_completo_usuario","nombre"],
                 upper_case: true,
                 key: "id"
-            },
-            municipios_id: {
-                type: "select",
-                referencia: "Municipio",
-                values: ["nombre"],
-                key: "id",
-                upper_case: true
-            },
-            nombre_vereda: {
-                type: "text",
-                referencia: "Nombre de la vereda",
-                upper_case: true,
-
             }
         }
     )
 
     const keys = {
-        "fin_id": {
+        "lo_id": {
             "referencia": "Id",
         },
-        "nombre": {
-            "referencia": "Nombre",
+        "finca": {
+            "referencia": "Finca",
             "upper_case": true
         },
-        "numero_documento_usuario": {
-            "values": [
-                "numero_documento_usuario",
-                "nombre_completo_usuario"
-            ],
-            "referencia": "Usuario",
+        "nombre": {
+            "referencia": "Nombre del lote",
             "upper_case": true
         },
         "latitud": {
@@ -83,14 +66,6 @@ export const Fincas = () => {
         },
         "longitud": {
             "referencia": "Longitud"
-        },
-        "nombre_municipio": {
-            "referencia": "Municipio",
-            "upper_case": true
-        },
-        "nombre_vereda": {
-            "referencia": "Vereda",
-            "upper_case": true
         },
         "fecha_creacion": {
             "referencia": "Fecha creación"
@@ -108,32 +83,33 @@ export const Fincas = () => {
         }
     }
     useEffect(() => {
+        getLotes()
         getFincas()
-        getMunicipios()
     }, [])
-    getUsers()
-    async function getFincas() {
+
+    async function getLotes() {
         try {
-            const response = await Api.post("finca/listar", dataFilterTable);
+            const response = await Api.post("lotes/listar", dataFilterTable);
             if (response.data.status == true) {
-                setFincas(response.data.data)
+                setLotes(response.data.data)
                 setCountRegisters(response.data.count)
             } else if (response.data.find_error) {
                 setCountRegisters(0)
-                setFincas(response.data)
+                setLotes(response.data)
             } else {
-                setFincas(response.data)
+                setLotes(response.data)
             }
+            console.log(response)
         } catch (e) {
 
         }
     }
 
-    async function desactivarFinca() {
+    async function desactivarLote() {
         try {
-            const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
+            const axios = await Api.delete("lotes/eliminar/" + idLoteCambiarEstado);
             if (axios.data.status == true) {
-                getFincas();
+                getLotes();
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -179,15 +155,16 @@ export const Fincas = () => {
         }
     }
     async function cambiarEstado(id, estado) {
-        idFincaCambiarEstado = id;
+        console.log(id, "Loteeeeeee")
+        idLoteCambiarEstado = id;
         let tittle = ""
         let descripcion = ""
         if (estado == 0) {
-            tittle = "Activarás las finca " + id
-            descripcion = "Estás apunto de activar la finca, ten encuenta que esta accion no activará las dependencias de la finca, pero si permitirá el uso de ellas.";
+            tittle = "Activarás el Lote " + id
+            descripcion = "Estás apunto de activar el lote, ten encuenta que esta accion no activará las dependencias de el lote, pero si permitirá el uso de ellas.";
         } else if (estado == 1 || estado == 3 || estado == 4) {
             tittle = "¿Deseas desactivar la finca " + id + " ?";
-            descripcion = "Estás apunto de desactivar la finca, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de esta finca."
+            descripcion = "Estás apunto de desactivar el lote, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de este lote."
         }
         setStatusAlert(true)
         setdataAlert(
@@ -196,17 +173,17 @@ export const Fincas = () => {
                 description: descripcion,
                 tittle: tittle,
                 continue: {
-                    "function": desactivarFinca
+                    "function": desactivarLote
                 }
             }
         )
         
     }
-    async function setFinca(data) {
+    async function setLote(data) {
         try {
-            const axios = await Api.post("finca/registrar/", data);
+            const axios = await Api.post("lotes/registrar/", data);
             if (axios.data.status == true) {
-                getFincas();
+                getLotes();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -269,40 +246,26 @@ export const Fincas = () => {
         }
     }
 
-    async function getUsers() {
-        try {
-            const response = await Api.post("usuarios/listar");
-            if (response.data.status == true) {
-                let users = inputsForm;
-                if (!users["usuarios_id"]) {
-                    users["usuarios_id"] = {}
-                }
-                users["usuarios_id"]["opciones"] = response.data.data
-                setInputsForm(users)
-            } else if (response.data.find_error) {
 
-            } else {
-
-            }
-        } catch (e) {
-        }
-    }
-    async function getMunicipios() {
+    async function getFincas() {
         try {
-            const response = await Api.get("municipio/listar");
+            const response = await Api.post("finca/listar");
             if (response.data.status == true) {
                 let municipios = inputsForm;
-                if (!municipios["municipios_id"]) {
-                    municipios["municipios_id"] = {}
+                if (!municipios["fincas_id"]) {
+                    municipios["fincas_id"] = {}
                 }
-                municipios["municipios_id"]["opciones"] = response.data.data
-                setInputsForm(users)
+                municipios["fincas_id"]["opciones"] = response.data.data
+                setInputsForm(municipios)
             } else if (response.data.find_error) {
 
             } else {
 
             }
+            console.log(response, "responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
         } catch (e) {
+            console.log(e, "responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+
         }
     }
 
@@ -310,12 +273,12 @@ export const Fincas = () => {
         changeModalForm(false)
         setUpdateStatus(false)
     }
-    async function updateFinca(data, id) {
+    async function updateLote(data, id) {
 
         try {
-            const axios = await Api.put("finca/actualizar/" + id, data);
+            const axios = await Api.put("lotes/actualizar/" + id, data);
             if (axios.data.status == true) {
-                getFincas();
+                getLotes();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -375,23 +338,23 @@ export const Fincas = () => {
             delete cloneDataFilterTable.filter.where["fin.estado"]
         }
         setDataFilterTable(cloneDataFilterTable)
-        getFincas(dataFilterTable)
+        getLotes(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
         dataFilterTable.filter["order"] = filter
-        getFincas();
+        getLotes();
 
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
-        getFincas()
+        getLotes()
 
     }
-    async function buscarFinca(id) {
+    async function buscarLote(id) {
 
-        const response = await Api.get("finca/buscar/" + id);
+        const response = await Api.get("lotes/buscar/" + id);
         if (response.data.status == true) {
-            setfincaEdit(response.data.data[0])
+            setLoteEdit(response.data.data)
         } else if (response.data.find_error) {
 
         } else {
@@ -399,24 +362,24 @@ export const Fincas = () => {
         }
     }
     async function updateTable() {
-        getFincas();
+        getLotes();
     }
-    async function editarFinca(id) {
-        buscarFinca(id)
+    async function editarLote(id) {
+        console.log(id)
+        buscarLote(id)
     }
     function filterSeacth(search) {
+        console.log(search)
         let cloneDataFilterTable = { ...dataFilterTable }
         cloneDataFilterTable.filter["search"] = search
         setDataFilterTable(cloneDataFilterTable)
-        getFincas(dataFilterTable)
+        getLotes(dataFilterTable)
 
     }
-    useEffect(() => {
-        getUsers()
-    }, [])
+
     return (
         <>
-            <Tablas imgForm={"/img/formularios/img-form-state.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas imgForm={"/img/formularios/img-form-state.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarLote} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setLote} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={lotes} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateLote} tittle={"Lotes"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

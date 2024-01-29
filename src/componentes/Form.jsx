@@ -139,13 +139,13 @@ export const Form = forwardRef((data, ref) => {
         Init()
 
         let modalForm = document.getElementById("modalForm");
-        let divForm = document.getElementById("divForm");
+        let divContentForm = document.getElementById("divContentForm");
         let divFondomodalForm = document.getElementById("divFondomodalForm");
         let labelErrorSubmitForm = document.querySelectorAll(".label-error-submit-form");
 
         setTimeout(() => {
             resizeForm()
-        }, 200);
+        }, 100);
         document.addEventListener('keydown', function (event) {
             setKeydown(event.key)
         })
@@ -156,22 +156,21 @@ export const Form = forwardRef((data, ref) => {
                 displayNone = true
             }
            
-
-            if (divForm.scrollHeight > document.body.clientHeight) {
-
-                divFondomodalForm.style.height = modalForm.scrollHeight + "px"
-                divFondomodalForm.style.width = modalForm.clientWidth + "px"
+console.log(divContentForm.scrollHeight, "formmmmmm",document.body.clientHeight)
+            if (divContentForm.scrollHeight > document.body.clientHeight) {
                 modalForm.style.alignItems = "unset"
                 modalForm.style.padding = "20px 20px"
                 modalForm.style.height = "calc(100% - 40px)"
                 modalForm.style.width = "calc(100% - 40px)"
+                divFondomodalForm.style.height = divContentForm.clientHeight + 40 + "px"
+                divFondomodalForm.style.width = modalForm.clientWidth + "px"
             } else {
 
                 for (let x = 0; x < labelErrorSubmitForm.length; x++) {
                     labelErrorSubmitForm[x].style.height = ""
                 }
-                divFondomodalForm.style.height = ""
-                divFondomodalForm.style.width = ""
+                divFondomodalForm.style.height = "100vh"
+                divFondomodalForm.style.width = "100vw"
                 modalForm.style.alignItems = "center"
                 modalForm.style.padding = ""
                 modalForm.style.height = "100%"
@@ -188,6 +187,7 @@ export const Form = forwardRef((data, ref) => {
                     labelErrorSubmitForm[x].style.height = "max-content"
                 }
             }
+      
         }
         resizeForm()
         window.addEventListener("resize", function () {
@@ -225,10 +225,10 @@ export const Form = forwardRef((data, ref) => {
             <div style={{ display: (!data.modalForm && !data.updateStatus) ? "none" : "" }} className="modal-form" id="modalForm">
                 <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="div-fondo-modal-form" id="divFondomodalForm">
                 </div>
-                <div className="div-content-form">
+                <div id="divContentForm" className="div-content-form">
                     <form onSubmit={chageData} action="" >
                         <div className="header-form">
-                            <h3 className="tittle-form-register">{!data.updateStatus ? "Registrar Finca" : "Actualizar Finca"} </h3>
+                            <h3 className="tittle-form-register">{!data.updateStatus ? "Registrar "+data.tittle+"" : "Actualizar "+data.tittle+""} </h3>
                             <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="icon-quit-svg-form">
                                 <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -237,9 +237,10 @@ export const Form = forwardRef((data, ref) => {
                             </div>
                         </div>
                         <div className="div-body-form">
-                            <div className="div-img-form">
+                           <div className="div-img-form">
                                 <img className="img-form" src={data.imgForm ? data.imgForm : "/img/formularios/default-img-form.png"} alt="" />
-                            </div>
+                            </div> 
+                            
                             <div id="divForm" className="div-form">
 
 
@@ -247,24 +248,26 @@ export const Form = forwardRef((data, ref) => {
                                     {
                                         inputs.map((key, index) => {
                                             if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "ubicacion" || dataInputs[key]["type"] === "normal") {
-                                                if (data.statusInputDefault) {
-                                                    inputValor[key] = dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? ""
+                                                if (data.statusInputDefault && elementEdit) {
+
+                                                    console.log(elementEdit)
+                                                    inputValor[key] = elementEdit[key] ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : ""
                                                 } else if (data.statusInput) {
                                                     inputValor[key] = ""
 
                                                 }
                                                 return (
 
-                                                    <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email" : ""}input-content-form-register`}>
+                                                    <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
                                                         <div className="head-input">
                                                             <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                                            <input id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} className="input-form" type="text" />
+                                                            <input id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault && elementEdit? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} className="input-form" type="text" />
                                                         </div>
                                                         <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
                                                     </div>
                                                 );
 
-                                            } else if (dataInputs[key]["type"] === "select") {
+                                            } else if (dataInputs[key]["type"] === "select" && dataInputs[key]["visibility"] != false) {
 
                                                 if (data.statusSelect) {
                                                     selectsValues[key] = "Seleccione una opción...";
@@ -297,10 +300,13 @@ export const Form = forwardRef((data, ref) => {
                                                                             } else if (dataInputs[key]["capital_letter"]) {
                                                                                 value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
                                                                             }
-                                                                            if (!data.modalForm && dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] == elementEdit[key] && data.statusSelectDefault) {
-                                                                                selectsValues[key] = value;
-                                                                                dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
+                                                                            if(elementEdit){
+                                                                                if (!data.modalForm && dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] == elementEdit[key] && data.statusSelectDefault ) {
+                                                                                    selectsValues[key] = value;
+                                                                                    dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
+                                                                                }    
                                                                             }
+                                                                        
 
                                                                             return <h4 key={indexSelect} onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = false; changeModalSelect(cloneModalSelect); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); data.setStatusSelect(false); data.setStatusSelectDefault(false); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]; }} className={`select-option select-option-${key} ${selectsValues[key] == value ? 'option-focus' : ''}`} value="">
                                                                                 {value}
@@ -329,7 +335,7 @@ export const Form = forwardRef((data, ref) => {
                                             } else {
 
                                                 if (index + 1 == inputs.length) {
-                                                    return "No hay nada para mostrar";
+                                                    return "No hay nada para mostrar" + key;
                                                 }
 
                                             }

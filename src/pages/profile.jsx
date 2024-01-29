@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Api from "../componentes/Api"
 import { Menu } from './Menu.jsx'
 import { Loader } from '../componentes/loader.jsx'
+import { Alert } from '../componentes/alert.jsx'
 
 export const Profile = () => {
 
@@ -20,6 +21,10 @@ export const Profile = () => {
     const new_password = useRef();
     const confirm_password = useRef();
     const [mensaje, setMensaje] = useState({});
+    const [statusAlert, setStatusAlert] = useState(false);
+    const [dataAlert, setdataAlert] = useState({});
+
+
     async function fetchUser() {
 
 
@@ -84,12 +89,36 @@ export const Profile = () => {
             }
             console.log(data)
             const response = await Api.put("usuarios/actualizarPerfil", data);
-            if (response.data.status == false && response.data.errors) {
-                setErrors(response.data.errors)
-            } else {
+            if (response.data.errors) {
+                setErrors(response.data.errors) 
+
+            } else if (response.data.status == false) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.message,
+                        "tittle": "Inténtalo de nuevo.",
+                    }
+                )
+            } else if (response.data.status == true) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Excelente",
+                        "continue": {
+                            "function": fetchUser,
+                        }
+                    }
+                )
                 setMensaje(response.data.errors)
                 setErrors({})
-                await fetchUser()
+
+            }
+            else {
+
             }
             console.log(response)
 
@@ -130,7 +159,7 @@ export const Profile = () => {
     }
     return (
         <>
-       
+            <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
             <link rel="stylesheet" href="../../public/css/profile.css" />
             <div className="header-profile">
                 <img className='img-head-profile' src="https://static.vecteezy.com/system/resources/previews/008/277/939/non_2x/background-with-mountains-nature-mountain-in-green-color-free-vector.jpg" alt="" />
@@ -155,7 +184,7 @@ export const Profile = () => {
                                         <div className='form-update-profile'>
                                             <div className='element-form'>
                                                 <label htmlFor="nombre">Nombre</label>
-                                                <input id="nombre" ref={nombre} className='input-update-profile' type="text" name=""  />
+                                                <input id="nombre" ref={nombre} className='input-update-profile' type="text" name="" />
                                                 <div className='div-input-error'>
                                                     <h5 className='input-error'>{errors.nombre ? errors.nombre : ""}</h5>
                                                 </div>

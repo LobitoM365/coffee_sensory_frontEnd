@@ -210,7 +210,6 @@
 .head-input{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     height: 100%;
 }
 
@@ -222,5 +221,9 @@
 @media screen and (max-width : 450px) {
     .form-register { 
         grid-template-columns: 1fr;
+    }
+    .input-email{
+        grid-column-start: auto;
+        grid-column-end: auto;
     }
 }

@@ -4,7 +4,7 @@ import Api from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
 
-export const RegistrosUsuarios = () => {
+export const Lotes = () => {
     let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
@@ -13,8 +13,8 @@ export const RegistrosUsuarios = () => {
         }
     })
         ;
-    const [usuarios, setUsuarios] = useState([])
-    const [usuarioEdit, setUsuarioEdit] = useState([])
+    const [lotes, setLotes] = useState([])
+    const [fincaEdit, setLoteEdit] = useState([])
     const [updateStatus, setUpdateStatus] = useState(false)
     const [municipios, setMunicipios] = useState([])
     const [countRegisters, setCountRegisters] = useState()
@@ -22,93 +22,53 @@ export const RegistrosUsuarios = () => {
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
     const [modalForm, changeModalForm] = useState(false);
-    let idUsuarioCambiarEstado = 0;
+    let idLoteCambiarEstado = 0;
 
     let [inputsForm, setInputsForm] = useState(
         {
             nombre: {
                 type: "text",
-                referencia: "Nombre",
+                referencia: "Nombre del lote",
                 upper_case: true,
             },
-            apellido: {
-                type: "text",
-                referencia: "Apellido",
-                upper_case: true,
+            longitud: {
+                type: "ubicacion",
+                referencia: "Longitud",
             },
-            tipo_documento: {
+            latitud: {
+                type: "ubicacion",
+                referencia: "Latitud"
+            },
+            fincas_id: {
                 type: "select",
-                referencia: "Tipo de documento",
-                values: ["nombre"],
-                opciones: [{ nombre: "cedula de ciudadania" }, { nombre: "tarjeta de identidad" }],
+                referencia: "Finca",
+                values : ["numero_documento_usuario","nombre_completo_usuario","nombre"],
                 upper_case: true,
-                key: "nombre"
-            },
-            numero_documento: {
-                type: "number",
-                referencia: "Número de documento"
-            },
-            telefono: {
-                type: "number",
-                referencia: "Teléfono"
-            },
-
-            rol: {
-                type: "select",
-                referencia: "Rol",
-                values: ["nombre"],
-                opciones: [{ nombre: "catador" }, { nombre: "cafetero" }],
-                upper_case: true,
-                key: "nombre"
-            },
-            cargo: {
-                type: "select",
-                referencia: "Cargo",
-                values: ["nombre"],
-                opciones: [{ nombre: "instructor" }, { nombre: "aprendiz" }, { nombre: "cliente" }],
-                upper_case: true,
-                key: "nombre"
-            },
-            correo_electronico: {
-                type: "email",
-                referencia: "Correo electrónico"
+                key: "id"
             }
         }
     )
 
     const keys = {
-        "us_id": {
+        "lo_id": {
             "referencia": "Id",
         },
+        "finca": {
+            "referencia": "Finca",
+            "upper_case": true
+        },
         "nombre": {
-            "referencia": "Nombre",
+            "referencia": "Nombre del lote",
             "upper_case": true
         },
-        "apellido": {
-            "referencia": "Apelido",
-            "upper_case": true
+        "latitud": {
+            "referencia": "Latitud"
         },
-        "numero_documento": {
-            "referencia": "Numero de documento",
-            "upper_case": true
+        "longitud": {
+            "referencia": "Longitud"
         },
-        "telefono": {
-            "referencia": "Teléfono"
-        },
-        "correo_electronico": {
-            "referencia": "Correo electrónico"
-        },
-        "tipo_documento": {
-            "referencia": "Tipo de documento",
-            "upper_case": true
-        },
-        "rol": {
-            "referencia": "Rol",
-            "upper_case": true
-        },
-        "cargo": {
-            "referencia": "Cargo",
-            "upper_case": true
+        "fecha_creacion": {
+            "referencia": "Fecha creación"
         },
         "estado": {
             "referencia": "Estado"
@@ -123,31 +83,33 @@ export const RegistrosUsuarios = () => {
         }
     }
     useEffect(() => {
-        getusuarios()
+        getLotes()
+        getFincas()
     }, [])
 
-    async function getusuarios() {
+    async function getLotes() {
         try {
-            const response = await Api.post("usuarios/listar", dataFilterTable);
+            const response = await Api.post("lotes/listar", dataFilterTable);
             if (response.data.status == true) {
-                setUsuarios(response.data.data)
+                setLotes(response.data.data)
                 setCountRegisters(response.data.count)
             } else if (response.data.find_error) {
                 setCountRegisters(0)
-                setUsuarios(response.data)
+                setLotes(response.data)
             } else {
-                setUsuarios(response.data)
+                setLotes(response.data)
             }
+            console.log(response)
         } catch (e) {
 
         }
     }
 
-    async function desactivarUsuario() {
+    async function desactivarLote() {
         try {
-            const axios = await Api.delete("usuarios/desactivar/" + idUsuarioCambiarEstado);
+            const axios = await Api.delete("lotes/eliminar/" + idLoteCambiarEstado);
             if (axios.data.status == true) {
-                getusuarios();
+                getLotes();
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -165,17 +127,7 @@ export const RegistrosUsuarios = () => {
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if (axios.data.admin_error) {
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: axios.data.admin_error,
-                        "tittle": "Nó lo hagas",
-                    }
-                )
-            }
-            else if (axios.data.permission_error) {
+            } else if(axios.data.permission_error){
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -203,15 +155,16 @@ export const RegistrosUsuarios = () => {
         }
     }
     async function cambiarEstado(id, estado) {
-        idUsuarioCambiarEstado = id;
+        console.log(id, "Loteeeeeee")
+        idLoteCambiarEstado = id;
         let tittle = ""
         let descripcion = ""
         if (estado == 0) {
-            tittle = "Activarás el usuario " + id
-            descripcion = "Estás apunto de activar el usuario, ten encuenta que esta accion no activará las dependencias de el usuario, pero si permitirá el uso de ellas.";
+            tittle = "Activarás el Lote " + id
+            descripcion = "Estás apunto de activar el lote, ten encuenta que esta accion no activará las dependencias de el lote, pero si permitirá el uso de ellas.";
         } else if (estado == 1 || estado == 3 || estado == 4) {
-            tittle = "¿Deseas desactivar el usuario " + id + " ?";
-            descripcion = "Estás apunto de desactivar el usuario, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de este usuario."
+            tittle = "¿Deseas desactivar la finca " + id + " ?";
+            descripcion = "Estás apunto de desactivar el lote, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de este lote."
         }
         setStatusAlert(true)
         setdataAlert(
@@ -220,17 +173,17 @@ export const RegistrosUsuarios = () => {
                 description: descripcion,
                 tittle: tittle,
                 continue: {
-                    "function": desactivarUsuario
+                    "function": desactivarLote
                 }
             }
         )
-
+        
     }
-    async function setUsuario(data) {
+    async function setLote(data) {
         try {
-            const axios = await Api.post("usuarios/registrar/", data);
+            const axios = await Api.post("lotes/registrar/", data);
             if (axios.data.status == true) {
-                getusuarios();
+                getLotes();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -255,7 +208,7 @@ export const RegistrosUsuarios = () => {
                 )
             } else if (axios.data.errors) {
                 setErrors(axios.data.errors)
-            } else if (axios.data.permission_error) {
+            }  else if(axios.data.permission_error){
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -268,7 +221,7 @@ export const RegistrosUsuarios = () => {
                         }
                     }
                 )
-            } else {
+            }else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -279,7 +232,7 @@ export const RegistrosUsuarios = () => {
                     }
                 )
             }
-            console.log(axios, "axioos")
+            console.log(axios)
 
         } catch (e) {
             setStatusAlert(true)
@@ -294,17 +247,38 @@ export const RegistrosUsuarios = () => {
     }
 
 
+    async function getFincas() {
+        try {
+            const response = await Api.post("finca/listar");
+            if (response.data.status == true) {
+                let municipios = inputsForm;
+                if (!municipios["fincas_id"]) {
+                    municipios["fincas_id"] = {}
+                }
+                municipios["fincas_id"]["opciones"] = response.data.data
+                setInputsForm(municipios)
+            } else if (response.data.find_error) {
+
+            } else {
+
+            }
+            console.log(response, "responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+        } catch (e) {
+            console.log(e, "responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+
+        }
+    }
 
     async function procedureTrue() {
         changeModalForm(false)
         setUpdateStatus(false)
     }
-    async function updateUsuario(data, id) {
+    async function updateLote(data, id) {
 
         try {
-            const axios = await Api.put("usuarios/actualizar/" + id, data);
+            const axios = await Api.put("lotes/actualizar/" + id, data);
             if (axios.data.status == true) {
-                getusuarios();
+                getLotes();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -336,7 +310,7 @@ export const RegistrosUsuarios = () => {
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.message,
+                        description: axios.data.update_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
@@ -355,43 +329,32 @@ export const RegistrosUsuarios = () => {
     async function getFilterEstado(value) {
         let cloneDataFilterTable = { ...dataFilterTable }
         if (value !== false) {
-            cloneDataFilterTable.filter.where["us.estado"] = {
+            cloneDataFilterTable.filter.where["fin.estado"] = {
                 "value": value,
                 "require": "and"
             }
 
         } else {
-            delete cloneDataFilterTable.filter.where["us.estado"]
+            delete cloneDataFilterTable.filter.where["fin.estado"]
         }
         setDataFilterTable(cloneDataFilterTable)
-        getusuarios(dataFilterTable)
+        getLotes(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
         dataFilterTable.filter["order"] = filter
-        getusuarios();
+        getLotes();
 
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
-        getusuarios()
+        getLotes()
 
     }
-    async function clearInputs() {
-        inputsForm["rol"]["visibility"] = true
-        inputsForm["cargo"]["visibility"] = true
-    }
-    async function buscarUsuario(id) {
-        console.log(id)
-        const response = await Api.get("usuarios/buscar/" + id);
+    async function buscarLote(id) {
+
+        const response = await Api.get("lotes/buscar/" + id);
         if (response.data.status == true) {
-            if (response.data.data.rol == "administrador") {
-                inputsForm["rol"]["visibility"] = false
-                inputsForm["cargo"]["visibility"] = false
-            } else {
-                inputsForm["rol"]["visibility"] = true
-                inputsForm["cargo"]["visibility"] = true
-            }
-            setUsuarioEdit(response.data.data)
+            setLoteEdit(response.data.data)
         } else if (response.data.find_error) {
 
         } else {
@@ -399,22 +362,24 @@ export const RegistrosUsuarios = () => {
         }
     }
     async function updateTable() {
-        getusuarios();
+        getLotes();
     }
-    async function editarUsuario(id) {
-        buscarUsuario(id)
+    async function editarLote(id) {
+        console.log(id)
+        buscarLote(id)
     }
     function filterSeacth(search) {
+        console.log(search)
         let cloneDataFilterTable = { ...dataFilterTable }
         cloneDataFilterTable.filter["search"] = search
         setDataFilterTable(cloneDataFilterTable)
-        getusuarios(dataFilterTable)
+        getLotes(dataFilterTable)
 
     }
 
     return (
         <>
-            <Tablas clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas imgForm={"/img/formularios/img-form-state.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarLote} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setLote} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={lotes} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateLote} tittle={"Lotes"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

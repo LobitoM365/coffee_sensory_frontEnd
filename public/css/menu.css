@@ -54,9 +54,7 @@ body {
     text-decoration: none;
 }
 
-.nav-horizontal .change-hamburguer-quit{
-    display: none;
-}
+
 .nav-horizontal >ul {
     overflow-y: auto;
     overflow-x: hidden;
@@ -544,6 +542,7 @@ body {
     align-items: center;
     width: 40px;
     height: 40px;
+    flex: none;
 }
 .div-img-perfil-nav img{
     width: 100%;

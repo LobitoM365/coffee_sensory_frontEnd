@@ -40,7 +40,9 @@ export const Loader = () => {
 
             }, timeTransition);
         }
+        window.addEventListener('load', removeLoader());
         getInterval();
+       function removeLoader(){
         setTimeout(() => {
             if (divLoader) {
                 divLoader.remove()
@@ -49,7 +51,8 @@ export const Loader = () => {
             clearInterval(interval)
             iconLoader[lastPositionLoader].style.bottom = "0";
             positionIconLoader = -1;
-        }, 1000);
+        }, 800);
+       }
     }, [location.pathname]);
 
 

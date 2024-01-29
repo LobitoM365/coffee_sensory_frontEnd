@@ -15,6 +15,7 @@ import { Loader } from './componentes/loader.jsx';
 import { NotFound } from './pages/NotFound.jsx';
 import { VerRegistros } from './pages/verRegistros.jsx';
 import { Lotes } from './pages/lotes.jsx';
+import { MenuInicio } from './pages/MenuInicio.jsx';
 
 
 export default function App() {
@@ -36,9 +37,11 @@ export default function App() {
         <Route path='*' element={<NotFound />} />
         <Route path='/' element={<Loader />}>
           <Route path='/modalfinca' element={<ModalFinca />}></Route>
-          <Route path='/' element={<Inicio />}>
-          </Route>
+          <Route path='/' element={<MenuInicio/>}>
+          <Route path='/' element={<Inicio />}/>
           <Route path='login' element={<Login />} />
+          </Route>
+           
 
 
           <Route path='/dashboard' element={<Menu />}>

@@ -156,8 +156,8 @@ export const Form = forwardRef((data, ref) => {
                 displayNone = true
             }
            
-
-            if (modalForm.scrollHeight > document.body.clientHeight) {
+console.log(divContentForm.scrollHeight, "formmmmmm",document.body.clientHeight)
+            if (divContentForm.scrollHeight > document.body.clientHeight) {
                 modalForm.style.alignItems = "unset"
                 modalForm.style.padding = "20px 20px"
                 modalForm.style.height = "calc(100% - 40px)"
@@ -228,7 +228,7 @@ export const Form = forwardRef((data, ref) => {
                 <div id="divContentForm" className="div-content-form">
                     <form onSubmit={chageData} action="" >
                         <div className="header-form">
-                            <h3 className="tittle-form-register">{!data.updateStatus ? "Registrar Finca" : "Actualizar Finca"} </h3>
+                            <h3 className="tittle-form-register">{!data.updateStatus ? "Registrar "+data.tittle+"" : "Actualizar "+data.tittle+""} </h3>
                             <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="icon-quit-svg-form">
                                 <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -237,9 +237,9 @@ export const Form = forwardRef((data, ref) => {
                             </div>
                         </div>
                         <div className="div-body-form">
-                            {data.imgForm ?<div className="div-img-form">
+                           <div className="div-img-form">
                                 <img className="img-form" src={data.imgForm ? data.imgForm : "/img/formularios/default-img-form.png"} alt="" />
-                            </div> : ""}
+                            </div> 
                             
                             <div id="divForm" className="div-form">
 

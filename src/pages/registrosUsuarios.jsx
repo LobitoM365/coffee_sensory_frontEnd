@@ -376,14 +376,18 @@ export const RegistrosUsuarios = () => {
         getusuarios()
 
     }
+    async function clearInputs() {
+        inputsForm["rol"]["visibility"] = true
+        inputsForm["cargo"]["visibility"] = true
+    }
     async function buscarUsuario(id) {
         console.log(id)
         const response = await Api.get("usuarios/buscar/" + id);
         if (response.data.status == true) {
             if (response.data.data.rol == "administrador") {
-             inputsForm["rol"]["visibility"] = false
-             inputsForm["cargo"]["visibility"] = false
-            }else{
+                inputsForm["rol"]["visibility"] = false
+                inputsForm["cargo"]["visibility"] = false
+            } else {
                 inputsForm["rol"]["visibility"] = true
                 inputsForm["cargo"]["visibility"] = true
             }
@@ -410,7 +414,7 @@ export const RegistrosUsuarios = () => {
 
     return (
         <>
-            <Tablas imgForm={false} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuarios"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

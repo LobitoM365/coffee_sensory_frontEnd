@@ -53,7 +53,7 @@ export const Alert = (data) => {
 
                                     }
                                 }}
-                                    className="input-alert input-ok-alert">Continuar</button>
+                                    className="input-alert input-ok-alert">Ok</button>
                                 : data.dataAlert["status"] === "warning" ?
                                     <div className="div-content-inpunts-alert">
                                         <button onClick={() => { data.setStatusAlert(false); }} className="input-alert input-cancelar-alert">Cancelar</button>

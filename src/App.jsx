@@ -16,32 +16,47 @@ import { NotFound } from './pages/NotFound.jsx';
 import { VerRegistros } from './pages/verRegistros.jsx';
 import { Lotes } from './pages/lotes.jsx';
 import { MenuInicio } from './pages/MenuInicio.jsx';
-
+import { Alert } from './componentes/alert.jsx';
+import { useEffect, useState } from 'react';
 
 export default function App() {
-
+  const [statusAlert, setStatusAlert] = useState(false);
+  const [dataAlert, setdataAlert] = useState({});
   const responseValidateViews = validateViews();
-  let userInfo;
+  const [userInfo, setUserInfo] = useState(null);
 
-  if (!responseValidateViews) {
-    return <div className=""></div>
-  } else {
-    userInfo = responseValidateViews.data.user;
-    console.log('VALIDATEVIEWS: ', userInfo ? userInfo.rol : null);
-  }
+  useEffect(() => {
+    if (!responseValidateViews) {
+      console.log('VALIDATE VIEWS !: ', responseValidateViews);
+      return;
+    }
 
+    console.log('VALIDATE VIEWS: ', responseValidateViews);
+    if (responseValidateViews.data !== undefined) {
+      setUserInfo(responseValidateViews.data.user);
+    } else {
+      setStatusAlert(true);
+      setdataAlert({
+        status: "false",
+        description: 'Intente acceder de nuevo más tarde.',
+        "tittle": "Error interno del servidor! ",
+      });
+    }
+  }, [responseValidateViews]);
 
   return (
     <>
+      <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
+
       <Routes>
         <Route path='*' element={<NotFound />} />
         <Route path='/' element={<Loader />}>
           <Route path='/modalfinca' element={<ModalFinca />}></Route>
-          <Route path='/' element={<MenuInicio/>}>
-          <Route path='/' element={<Inicio />}/>
-          <Route path='login' element={<Login />} />
+          <Route path='/' element={<MenuInicio userInfo={userInfo} />}>
+            <Route path='/' element={<Inicio />} />
+            <Route path='login' element={<Login />} />
           </Route>
-           
+
 
 
           <Route path='/dashboard' element={<Menu />}>

@@ -161,6 +161,7 @@ export const Menu = () => {
             location.href = '/Login'
             console.log('LOGOUTSesion: ', response)
         } catch (e) {
+            location.href = '/Login'
             console.log("ERROR" + e)
         }
 

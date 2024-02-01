@@ -1,7 +1,7 @@
 // LoginForm.js
 import Api from "../componentes/Api"
 import React, { useEffect, useState } from 'react';
-
+import { Alert } from "../componentes/alert";
 import { useNavigate } from "react-router-dom";
 
 
@@ -9,6 +9,8 @@ export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [validationError, setValidationError] = useState(null);
+    const [statusAlert, setStatusAlert] = useState(false);
+    const [dataAlert, setdataAlert] = useState({});
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -30,7 +32,7 @@ export const Login = () => {
         }
         Api.post('/auth/credentials', data)
             .then((response) => {
-                console.log('ok:', response);
+                console.log('login response:', response);
                 if (response.data.errors) {
                     const credentialsError = response.data.errors['credentials_error'];
                     console.log(response.data.errors['credentials_error']);
@@ -41,8 +43,19 @@ export const Login = () => {
                 }
             })
             .catch((error) => {
-                location.href = '/login';
-                console.log('ERROR: ', error);
+                // location.href = '/login';
+                if (error) {
+                    setStatusAlert(true);
+                    setdataAlert({
+                        status: "false",
+                        description: 'Intente acceder de nuevo más tarde.',
+                        "tittle": "Error interno del servidor! ",
+                    });
+                    // alert('ERROR LOGIN')
+                } else {
+                    console.log('ERROR: ', error.response.data.message);
+                }
+
             })
 
     };
@@ -90,6 +103,7 @@ export const Login = () => {
                     <img src="../../public/img/login/login_size.jpg" className='login-image' alt="Imagen de inicio de sesión" />
                 </div>
             </div>
+            <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </div>
     );
 };

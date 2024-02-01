@@ -8,8 +8,6 @@ export const validateViews = () => {
         const authorized = async () => {
             try {
                 const response = await Api.post('auth/protectViews', {});
-                console.log('ok: ', response.data.authorized);
-
                 if (!response.data.authorized) {
                     if (location.pathname !== '/' && location.pathname !== '/login') {
                         window.location.href = '/login';
@@ -21,6 +19,7 @@ export const validateViews = () => {
                 }
                 setResponse(response);
             } catch (error) {
+                setResponse(error);
                 console.log('error: ', error);
             }
         };
@@ -29,7 +28,7 @@ export const validateViews = () => {
     }, []);
 
     return responseValidate;
-}
+};
 
 export const ProtectedRoute = ({ Element, allowRoles, userInfo }) => {
     const rol = userInfo ? userInfo.rol : null;
@@ -38,6 +37,10 @@ export const ProtectedRoute = ({ Element, allowRoles, userInfo }) => {
     if (rol && allowRoles.includes(rol)) {
         return <Element />
     } else {
-        window.history.go(-1)
+        if (window.history && window.history.length > 1) {
+            window.history.go(-1);
+        } else {
+            window.location.href = '/dashboard';
+        }
     }
 }

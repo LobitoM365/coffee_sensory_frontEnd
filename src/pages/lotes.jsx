@@ -329,13 +329,13 @@ export const Lotes = () => {
     async function getFilterEstado(value) {
         let cloneDataFilterTable = { ...dataFilterTable }
         if (value !== false) {
-            cloneDataFilterTable.filter.where["fin.estado"] = {
+            cloneDataFilterTable.filter.where["lo.estado"] = {
                 "value": value,
                 "require": "and"
             }
 
         } else {
-            delete cloneDataFilterTable.filter.where["fin.estado"]
+            delete cloneDataFilterTable.filter.where["lo.estado"]
         }
         setDataFilterTable(cloneDataFilterTable)
         getLotes(dataFilterTable)

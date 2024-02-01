@@ -67,7 +67,7 @@ export const Menu = () => {
             }
         }
         getUser();
-        let hamnuguerMode = 1;
+        let hamnuguerMode = 0;
         let iconHamburguer = document.getElementById("iconHamburguer")
         function stateMenu() {
             let linkMenu = document.querySelectorAll(".change-hamburguer-quit");

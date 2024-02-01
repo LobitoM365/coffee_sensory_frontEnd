@@ -1,5 +1,5 @@
 
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { Menu } from "./pages/Menu.jsx";
 import { RegistrosUsuarios } from './pages/registrosUsuarios.jsx';
 import { Home } from './pages/home.jsx';
@@ -18,13 +18,14 @@ import { Lotes } from './pages/lotes.jsx';
 import { MenuInicio } from './pages/MenuInicio.jsx';
 import { Alert } from './componentes/alert.jsx';
 import { useEffect, useState } from 'react';
+import Api from './componentes/Api.jsx';
 
 export default function App() {
   const [statusAlert, setStatusAlert] = useState(false);
   const [dataAlert, setdataAlert] = useState({});
   const responseValidateViews = validateViews();
   const [userInfo, setUserInfo] = useState(null);
-
+  const location = useLocation();
   useEffect(() => {
     if (!responseValidateViews) {
       console.log('VALIDATE VIEWS !: ', responseValidateViews);
@@ -44,6 +45,35 @@ export default function App() {
     }
   }, [responseValidateViews]);
 
+  async function validateViewsxd () {
+   let responseValidate;
+        const authorized = async () => {
+            try {
+                const response = await Api.post('auth/protectViews', {});
+                console.log(response,"responseeeeeeeeeeeeeeeeeeeeeeeee")
+                if (!response.data.authorized) {
+                    if (location.pathname !== '/' && location.pathname !== '/login') {
+                        window.location.href = '/login';
+                    }
+                } else {
+                    if (location.pathname === '/login') {
+                        window.history.go(-1);
+                    }
+                }
+                responseValidate = response
+                return responseValidate;
+            } catch (error) {
+              responseValidate = error
+                console.log('error: ', error);
+            }
+        };
+        authorized();
+    
+    
+};
+  useEffect(() => {
+    validateViewsxd();
+  }, [location.pathname])
   return (
     <>
       <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />

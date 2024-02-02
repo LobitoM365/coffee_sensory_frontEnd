@@ -352,3 +352,37 @@
     cursor: pointer;
     border: unset;
 }
+.new-tr-table >td >div >div{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    max-width: 100%;
+}
+.new-tr-table{
+    background-color: #0000000f;
+    height: 0px;
+}
+.div-svg-plus-table{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.svg-plus-table{
+    width: 20px;
+    padding: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.svg-plus-table:hover{
+    background-color: #00000029;
+}
+.new-div-table{
+    height: 0;
+    overflow: hidden;
+    transition: all 0.5s;
+}
+.new-tr-table{
+    display: none;
+}

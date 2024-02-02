@@ -70,7 +70,6 @@ export const Tablas = (array) => {
     if (array.filterEstado) {
         keysFilterEstado = array.filterEstado;
         filterEstado = Object.keys(keysFilterEstado)
-
     }
     function functionCancheFilterRotate(element) {
         let value = "asc"
@@ -116,6 +115,87 @@ export const Tablas = (array) => {
     useEffect(() => {
         array.limitRegisters({ "inicio": inicio, "fin": limit })
     }, [inicio, limit, posicionPaginate])
+
+    useEffect(() => {
+        let contentTable = document.querySelectorAll(".content-table")
+        let tableComponent = document.querySelectorAll(".table-component")
+        let svgPlusTable;
+        let arrayThQuit = [];
+        let ziseLess = 0;
+
+
+        window.addEventListener("resize", function () {
+
+            resizeTable()
+        })
+
+        function resizeTable() {
+
+            if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
+
+                let thQuit = contentTable[0].querySelectorAll("th");
+
+                if (thQuit.length > 2) {
+                    let tBody = contentTable[0].querySelectorAll("tbody")
+                    let trTbody = tBody[0].querySelectorAll(".tr-table")
+                    arrayThQuit.push(thQuit[(thQuit.length) - 1])
+
+                    let nameTd = thQuit[(thQuit.length) - 1].querySelectorAll(".tittle-item-header-table")
+                    console.log(nameTd)
+                    let name = nameTd[0].innerHTML
+                    thQuit[(thQuit.length) - 1].remove();
+
+                    for (let tr = 0; tr < trTbody.length; tr++) {
+                        let tdTbody = trTbody[tr].querySelectorAll("td")
+                        let newtr = document.createElement("tr");
+                        let newtd = document.createElement("td");
+                        let newdiv = document.createElement("div");
+                        newtd.setAttribute("colspan", 999999999999999);
+                        newtr.classList.add("new-tr-table")
+                        newtd.classList.add("new-td-table")
+                        newdiv.classList.add("new-div-table")
+                        newtr.setAttribute("data-tr", tr)
+                        newtr.appendChild(newtd)
+                        newtd.appendChild(newdiv)
+                        if (ziseLess == 0) {
+                            let td = document.createElement("td")
+                            td.innerHTML = '<div class="div-svg-plus-table"> <svg class="svg-plus-table" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" <g><g><g><path fill="#000000" d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z"/></g></g></g></svg> </div>'
+                            trTbody[tr].insertAdjacentElement('afterend', newtr)
+                            trTbody[tr].insertBefore(td, trTbody[tr].children[0]);
+                            let plus = td.querySelectorAll(".svg-plus-table")
+                            plus[0].addEventListener("click", function () {
+                                if (newtr.style.display == "table-row") {
+                                    newtr.style.display = "";
+                                    newdiv.style.height = "";
+                                } else {
+                                    newtr.style.display = "table-row";
+                                    newdiv.style.height = "max-content";
+                                }
+
+                            })
+                        }
+                        let elementsNewTr = document.querySelectorAll(".new-div-table");
+                        let div = document.createElement("div")
+                        div.innerHTML = "<h4> " + name + "</h4>"
+                        div.append(tdTbody[(thQuit.length) - 1])
+                        elementsNewTr[tr].appendChild(div)
+                    }
+                    if (ziseLess == 0) {
+                        let theadTable = document.querySelectorAll(".thead-table")
+                        let th = document.createElement("th")
+                        th.innerHTML = ''
+                        theadTable[0].insertBefore(th, theadTable[0].children[0]);
+                    }
+                    ziseLess = 1;
+                    resizeTable()
+                }
+
+            }
+        }
+        setTimeout(() => {
+            resizeTable()
+        }, [200])
+    }, [])
     return (
         <>
             <link rel="stylesheet" href="../../public/css/tableComponent.css" />
@@ -188,11 +268,11 @@ export const Tablas = (array) => {
                 <div className="content-table">
                     <table className='table-component' cellSpacing={0}>
                         <thead>
-                            <tr>
+                            <tr className='thead-table'>
                                 {keysPrint.map((keys, index) => {
                                     return <th key={index}>
                                         <div className="items-header-table">
-                                            {print[keys]["referencia"]}
+                                            <h4 className='tittle-item-header-table'>   {print[keys]["referencia"]} </h4>
                                             <svg onClick={() => functionCancheFilterRotate(keys)} style={{ rotate: filterRotate[keys] ? filterRotate[keys]["value"] == "desc" ? "0deg" : "180deg" : "0deg", fill: filterRotate[keys] ? "blue" : "" }} className="filter-asc-desc" version="1.0" viewBox="0 0 512.000000 512.000000">
 
                                                 <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" stroke="none">
@@ -206,13 +286,13 @@ export const Tablas = (array) => {
                                         </div>
                                     </th>
                                 })}
-                                <th>Actualizar</th>
+                                <th ><h4 className='tittle-item-header-table'>Actualizar</h4></th>
                             </tr>
                         </thead >
                         <tbody key={"tBody"}>
                             {data.length > 0 ? (
                                 data.map((keysD, valuesD) => (
-                                    <tr key={"fincas" + valuesD}>
+                                    <tr className='tr-table' key={"fincas" + valuesD}>
                                         {
                                             keysPrint.map((keys, index) => {
                                                 if (keysData.includes(keys)) {
@@ -276,9 +356,9 @@ export const Tablas = (array) => {
                                         }
                                         <td className='td-update'>
                                             <div className="center-update">
-                                                <h4 onClick={() => {  setClearClick();array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} className='item-options option-update'>
-                                                    <svg  version="1.0" viewBox="0 0 478.000000 522.000000" >
-                                                        
+                                                <h4 onClick={() => { setClearClick(); array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} className='item-options option-update'>
+                                                    <svg version="1.0" viewBox="0 0 478.000000 522.000000" >
+
                                                         <g transform="translate(0.000000,522.000000) scale(0.100000,-0.100000)" stroke="none">
                                                             <path d="M2110 5203 c-33 -12 -40 -36 -40 -138 l0 -101 -137 -27 c-610 -121 -1166 -501 -1512 -1032 -315 -483 -442 -1101 -345 -1670 128 -750 594 -1380 1276 -1722 74 -38 144 -66 161 -66 51 0 77 63 40 95 -10 8 -70 40 -133 70 -679 330 -1147 987 -1241 1743 -16 127 -16 411 0 535 50 391 197 763 424 1066 291 389 674 661 1137 808 114 36 267 71 363 82 31 4 62 14 69 22 7 8 15 48 18 89 l5 74 187 -128 c102 -70 186 -132 187 -138 0 -5 -84 -74 -187 -152 l-187 -143 -5 86 c-4 60 -9 88 -20 94 -62 39 -423 -59 -669 -181 -408 -203 -723 -514 -922 -911 -263 -524 -289 -1134 -72 -1680 19 -47 43 -94 53 -103 25 -22 59 -16 82 16 19 26 19 26 -5 85 -165 395 -200 810 -102 1219 58 246 181 503 339 710 258 339 638 590 1065 701 140 36 131 41 131 -74 0 -72 4 -103 16 -120 32 -46 54 -34 355 193 156 119 290 227 297 241 21 39 1 59 -175 178 -87 59 -213 145 -280 191 -125 86 -147 97 -173 88z" />
                                                             <path d="M3280 4797 c-13 -7 -26 -21 -30 -32 -15 -42 5 -60 151 -132 681 -337 1133 -972 1235 -1733 18 -139 18 -410 -1 -557 -86 -658 -449 -1234 -1010 -1603 -121 -79 -364 -194 -515 -244 -119 -39 -367 -96 -419 -96 -10 0 -29 -8 -42 -19 -21 -17 -23 -26 -21 -91 2 -43 -1 -71 -7 -68 -19 7 -380 253 -381 260 0 3 86 72 190 152 l190 145 0 -55 c0 -105 24 -121 151 -99 584 102 1107 471 1417 1003 34 59 62 119 62 133 0 35 -31 61 -66 57 -24 -3 -36 -17 -81 -96 -243 -430 -606 -741 -1053 -899 -117 -41 -294 -85 -304 -75 -4 3 -6 44 -6 92 0 71 -3 90 -18 103 -30 27 -55 20 -128 -34 -295 -221 -514 -393 -519 -410 -15 -45 -16 -44 503 -396 51 -35 99 -63 108 -63 8 0 26 11 39 25 23 22 25 31 25 123 l0 99 77 13 c43 7 133 27 201 46 889 244 1553 972 1708 1874 61 348 37 750 -62 1077 -189 624 -617 1139 -1186 1427 -158 80 -179 87 -208 73z" />
@@ -306,10 +386,10 @@ export const Tablas = (array) => {
                             <g><g><path d="M169.3,130.8L61,233.7L73.3,246l109.5-101.6l12.3-12.3L73.2,10L60.8,22.4L169.3,130.8z" /></g></g>
                         </svg> : "  "}
                         {paginate > 1 ? paginateJson.map((key, index) => (
-                            paginate == 5  && index <= 5 ? <div onClick={() => { functionSetLimit(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : index <= 4 ? <div onClick={() => { functionSetLimit(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : ""
-                            
+                            paginate == 5 && index <= 5 ? <div onClick={() => { functionSetLimit(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : index <= 4 ? <div onClick={() => { functionSetLimit(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : ""
+
                         )) : ""}
-                        {paginate > 5 ? 
+                        {paginate > 5 ?
                             <div className='items-overflow-paginate'>
                                 <div className='div-points-paginate'><div className='points-paginate'></div><div className='points-paginate'></div><div className='points-paginate'></div></div>
                                 <div onClick={() => { functionSetLimit(paginate), changePositionElementPaginate(paginate) }} className={`${positionFocusPaginate == paginate ? "item-paginate-focus" : ""} item-paginate-round`}>{paginate}</div>
@@ -323,7 +403,7 @@ export const Tablas = (array) => {
 
 
 
-            <Form imgForm={array.imgForm} ref={formRef} setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} tittle={array.tittle}/>
+            <Form imgForm={array.imgForm} ref={formRef} setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} tittle={array.tittle} />
         </>
     )
 }

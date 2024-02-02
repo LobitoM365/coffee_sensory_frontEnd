@@ -317,7 +317,7 @@ console.log(divContentForm.scrollHeight, "formmmmmm",document.body.clientHeight)
                                                                 </div>
                                                                 <div className='input-select-estado input-select-search' name="" id="">
 
-                                                                    <input id={key} type="text" className="input-select" onInput={(e) => { selectSearch(e.target.value, key) }} value={selectsValues[key]} />
+                                                                    <input id={key} type="text" className="input-select" onInput={(e) => { selectSearch(e.target.value, key) }} placeholder={selectsValues[key] == "Seleccione una opción..." ?  "Seleccione una opción..." : ""} value={selectsValues[key] != "Seleccione una opción..." ?selectsValues[key] : ""} />
                                                                     <div onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = !modalSelect[key]; changeModalSelect(cloneModalSelect) }} className="icon-chevron-estado">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                                                             <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>

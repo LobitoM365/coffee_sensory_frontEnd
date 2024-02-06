@@ -106,6 +106,7 @@ export const Tablas = (array) => {
         setPosicionPaginate(posicionPaginate + data)
     }
     function functionSetLimit(data) {
+
         setPositionFocusPaginate(data)
         setInicio(limit * (data - 1));
     }
@@ -119,25 +120,38 @@ export const Tablas = (array) => {
     useEffect(() => {
         let contentTable = document.querySelectorAll(".content-table")
         let tableComponent = document.querySelectorAll(".table-component")
+        
         let svgPlusTable;
         let arrayThQuit = [];
         let ziseLess = 0;
 
+      
+        const resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                resizeTable()
 
-        window.addEventListener("resize", function () {
+            }
+        });
 
-            resizeTable()
-        })
+
+        setTimeout(() => {
+            resizeObserver.observe(contentTable[0]);
+        }, [200])
+
+        resizeTable()
 
         function resizeTable() {
+
 
             if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
 
                 let thQuit = contentTable[0].querySelectorAll("th");
 
-                if (thQuit.length > 2) {
+                if (thQuit.length > 3) {
+
                     let tBody = contentTable[0].querySelectorAll("tbody")
                     let trTbody = tBody[0].querySelectorAll(".tr-table")
+                    console.log(trTbody, "tbodyyyyyyyyyyyyyyyyyyy")
                     arrayThQuit.push(thQuit[(thQuit.length) - 1])
 
                     let nameTd = thQuit[(thQuit.length) - 1].querySelectorAll(".tittle-item-header-table")
@@ -155,11 +169,16 @@ export const Tablas = (array) => {
                         newtd.classList.add("new-td-table")
                         newdiv.classList.add("new-div-table")
                         newtr.setAttribute("data-tr", tr)
+                        console.log(newtr,"trrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
                         newtr.appendChild(newtd)
                         newtd.appendChild(newdiv)
-                        if (ziseLess == 0) {
+                        console.log(ziseLess, "ahhhhhhhhhhh", tr)
+                        if (ziseLess == 0 ) {
+
+
                             let td = document.createElement("td")
                             td.innerHTML = '<div class="div-svg-plus-table"> <svg class="svg-plus-table" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" <g><g><g><path fill="#000000" d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z"/></g></g></g></svg> </div>'
+                            console.log("xdxxx", trTbody[tr], newtr)
                             trTbody[tr].insertAdjacentElement('afterend', newtr)
                             trTbody[tr].insertBefore(td, trTbody[tr].children[0]);
                             let plus = td.querySelectorAll(".svg-plus-table")
@@ -185,17 +204,16 @@ export const Tablas = (array) => {
                         let th = document.createElement("th")
                         th.innerHTML = ''
                         theadTable[0].insertBefore(th, theadTable[0].children[0]);
+                        ziseLess = 1;
+
                     }
-                    ziseLess = 1;
                     resizeTable()
                 }
 
             }
         }
-        setTimeout(() => {
-            resizeTable()
-        }, [200])
-    }, [])
+
+    }, [data])
     return (
         <>
             <link rel="stylesheet" href="../../public/css/tableComponent.css" />

@@ -353,11 +353,9 @@
     border: unset;
 }
 .new-tr-table >td >div >div{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-content: center;
+    display: flex;
     align-items: center;
-    width: 300px;
+    width: 100%;
     max-width: 100%;
 }
 .new-tr-table{
@@ -385,4 +383,15 @@
 }
 .new-tr-table{
     display: none;
+}
+
+.new-tr-table td{
+    border: unset;
+}
+.new-div-table >div{
+    border-bottom: 1px solid #e7e1e1;
+}
+.new-div-table td h4:not(.estado-1,.estado-0){
+    color: black;
+    font-weight: 400;
 }

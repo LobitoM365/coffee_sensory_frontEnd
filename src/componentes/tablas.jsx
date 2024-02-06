@@ -32,6 +32,7 @@ export const Tablas = (array) => {
 
     let filtersLimitRegister = [
         "1",
+        "2",
         "5",
         "10",
         "15",

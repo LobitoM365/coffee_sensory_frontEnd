@@ -19,6 +19,7 @@ import { MenuInicio } from './pages/MenuInicio.jsx';
 import { Alert } from './componentes/alert.jsx';
 import { useEffect, useState } from 'react';
 import Api from './componentes/Api.jsx';
+import { Municipios } from './pages/municipios.jsx';
 
 export default function App() {
   const [statusAlert, setStatusAlert] = useState(false);
@@ -96,6 +97,7 @@ export default function App() {
             <Route path='formulario' element={<FormRegiser />} />
             <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
             <Route path='fincas/registros' element={<Fincas />} />
+            <Route path='municipios/registros' element={<Municipios />} />
             <Route path='lotes/registros' element={<Lotes />} />
             <Route path='muestras/verRegistros' element={<VerRegistros />} />
           </Route>

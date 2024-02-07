@@ -290,9 +290,8 @@ export const Menu = () => {
                                 </svg> <h5 className="change-hamburguer-quit ">Cafés</h5>
                                 </li>
                             </Link>
-                           
-                            <li className="hamburguer-centered">
-                                <svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 335.000000 291.000000" preserveAspectRatio="xMidYMid meet">
+                            <Link to={"/dashboard/analisis/registros"} onClick={() => { selectedLi("/dashboard/analisis/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/analisis/registros" ? "selected-li" : ""}`}>
+                                <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 335.000000 291.000000" preserveAspectRatio="xMidYMid meet">
                                     <metadata>
                                         Created by potrace 1.16, written by Peter Selinger 2001-2019
                                     </metadata>
@@ -304,9 +303,10 @@ export const Menu = () => {
                                         <path d="M1060 1196 c0 -130 4 -236 9 -236 40 0 106 110 117 196 12 100 -32 220 -97 258 l-29 17 0 -235z" />
                                         <path d="M958 1400 c-33 -25 -68 -109 -75 -177 -9 -79 20 -175 67 -224 20 -21 42 -39 48 -39 9 0 12 63 12 230 0 249 -1 251 -52 210z" />
                                     </g>
-                                </svg>
-                                <Link className="link-memu-horizontal change-hamburguer-quit">Análisis</Link>
-                            </li>
+                                </svg> <h5 className="change-hamburguer-quit ">Análisis</h5>
+                                </li>
+                            </Link>
+ 
                             <li className="hamburguer-centered">
                                 <svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>

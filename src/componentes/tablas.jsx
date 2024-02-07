@@ -157,7 +157,7 @@ export const Tablas = (array) => {
 
                 let thQuit = contentTable[0].querySelectorAll("th");
 
-                if (thQuit.length > 3) {
+                if (thQuit.length > 1) {
 
                     let tBody = contentTable[0].querySelectorAll("tbody")
                     let trTbody = tBody[0].querySelectorAll(".tr-table")

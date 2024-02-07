@@ -11,6 +11,7 @@ export const Tablas = (array) => {
     let keysFilterEstado = [];
     let filterEstado = [];
     let [filterRotate, changeFilterRotate] = useState({});
+    let [keyTable, setkeyTable] = useState(1);
     const [statusSelectDefault, setStatusSelectDefault] = useState(false);
     const [statusSelect, setStatusSelect] = useState(true);
     const [statusInputDefault, setStatusInputDefault] = useState(false);
@@ -119,14 +120,20 @@ export const Tablas = (array) => {
     }, [inicio, limit, posicionPaginate])
 
     useEffect(() => {
+
+        setkeyTable(keyTable + 1)
+    }, [data])
+    useEffect(() => {
+
+        
         let contentTable = document.querySelectorAll(".content-table")
         let tableComponent = document.querySelectorAll(".table-component")
-        
+        let ziseTableComponent = 0;
         let svgPlusTable;
         let arrayThQuit = [];
         let ziseLess = 0;
 
-      
+
         const resizeObserver = new ResizeObserver(entries => {
             for (let entry of entries) {
                 resizeTable()
@@ -143,8 +150,10 @@ export const Tablas = (array) => {
 
         function resizeTable() {
 
-
+         
+  
             if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
+                ziseTableComponent = tableComponent[0].clientWidth;
 
                 let thQuit = contentTable[0].querySelectorAll("th");
 
@@ -152,8 +161,8 @@ export const Tablas = (array) => {
 
                     let tBody = contentTable[0].querySelectorAll("tbody")
                     let trTbody = tBody[0].querySelectorAll(".tr-table")
-                    console.log(trTbody, "tbodyyyyyyyyyyyyyyyyyyy")
                     arrayThQuit.push(thQuit[(thQuit.length) - 1])
+                    console.log(arrayThQuit, "tbodyyyyyyyyyyyyyyyyyyy")
 
                     let nameTd = thQuit[(thQuit.length) - 1].querySelectorAll(".tittle-item-header-table")
                     console.log(nameTd)
@@ -170,14 +179,15 @@ export const Tablas = (array) => {
                         newtd.classList.add("new-td-table")
                         newdiv.classList.add("new-div-table")
                         newtr.setAttribute("data-tr", tr)
-                        console.log(newtr,"trrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+                        console.log(newtr, "trrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
                         newtr.appendChild(newtd)
                         newtd.appendChild(newdiv)
                         console.log(ziseLess, "ahhhhhhhhhhh", tr)
-                        if (ziseLess == 0 ) {
+                        if (ziseLess == 0) {
 
 
                             let td = document.createElement("td")
+                            td.classList.add("td-view-elementos-ocult")
                             td.innerHTML = '<div class="div-svg-plus-table"> <svg class="svg-plus-table" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" <g><g><g><path fill="#000000" d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z"/></g></g></g></svg> </div>'
                             console.log("xdxxx", trTbody[tr], newtr)
                             trTbody[tr].insertAdjacentElement('afterend', newtr)
@@ -196,6 +206,7 @@ export const Tablas = (array) => {
                         }
                         let elementsNewTr = document.querySelectorAll(".new-div-table");
                         let div = document.createElement("div")
+                        div.classList.add("div-element-add")
                         div.innerHTML = "<h4> " + name + "</h4>"
                         div.append(tdTbody[(thQuit.length) - 1])
                         elementsNewTr[tr].appendChild(div)
@@ -203,6 +214,7 @@ export const Tablas = (array) => {
                     if (ziseLess == 0) {
                         let theadTable = document.querySelectorAll(".thead-table")
                         let th = document.createElement("th")
+                        th.classList.add("th-plus-view-elements-ocult")
                         th.innerHTML = ''
                         theadTable[0].insertBefore(th, theadTable[0].children[0]);
                         ziseLess = 1;
@@ -211,12 +223,58 @@ export const Tablas = (array) => {
                     resizeTable()
                 }
 
-            }
-        }
+            } else if (tableComponent[0].clientWidth > ziseTableComponent) {
 
-    }, [data])
+                let theadTable = document.querySelectorAll(".thead-table")
+
+                if (arrayThQuit.length > 0) {
+                    let newDivTable = document.querySelectorAll(".new-div-table");
+                    let trTable = document.querySelectorAll(".tr-table");
+                    theadTable[0].append(arrayThQuit[arrayThQuit.length - 1])
+                    arrayThQuit.pop()
+                    for (let x = 0; x < newDivTable.length; x++) {
+                        let divNewDivTable = newDivTable[x].querySelectorAll(".div-element-add");
+                        let divNewDivTableTd = divNewDivTable[divNewDivTable.length - 1].querySelectorAll("td");
+                        trTable[x].append(divNewDivTableTd[0])
+                        divNewDivTable[divNewDivTable.length - 1].remove()
+                        console.log(divNewDivTable, "removeeeeeeee")
+                    }
+
+
+                }
+                let elementsNewDivTable = document.querySelectorAll(".div-element-add");
+
+                if (elementsNewDivTable.length == 0) {
+                    let newTrTable = document.querySelectorAll(".new-tr-table");
+                    let tdPlus = document.querySelectorAll(".td-view-elementos-ocult");
+                    let thPlus = document.querySelectorAll(".th-plus-view-elements-ocult");
+                    for (let x = 0; x < newTrTable.length; x++) {
+                        newTrTable[x].remove()
+                    }
+                    for (let x = 0; x < tdPlus.length; x++) {
+                        tdPlus[x].remove()
+                    }
+                    for (let x = 0; x < thPlus.length; x++) {
+                        thPlus[x].remove()
+                    }
+
+                    ziseLess = 0
+                }
+
+
+
+                ziseTableComponent = tableComponent[0].clientWidth;
+
+            }
+            if( document.getElementById("loadTable")){
+                document.getElementById("loadTable").remove()
+            }
+            
+        }
+    }, [keyTable])
     return (
-        <>
+
+        <div >
             <link rel="stylesheet" href="../../public/css/tableComponent.css" />
             <div className="div-table">
                 <div className="div-filters">
@@ -284,11 +342,15 @@ export const Tablas = (array) => {
                         </div>
                     </div>
                 </div>
-                <div className="content-table">
+                <div key={keyTable} id='contentTable' className="content-table">
+                    <div id='loadTable' className='load-table'>
+                        Cargando
+                    </div>
                     <table className='table-component' cellSpacing={0}>
                         <thead>
                             <tr className='thead-table'>
                                 {keysPrint.map((keys, index) => {
+
                                     return <th key={index}>
                                         <div className="items-header-table">
                                             <h4 className='tittle-item-header-table'>   {print[keys]["referencia"]} </h4>
@@ -423,6 +485,7 @@ export const Tablas = (array) => {
 
 
             <Form imgForm={array.imgForm} ref={formRef} setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} tittle={array.tittle} />
-        </>
+        </div>
+
     )
 }

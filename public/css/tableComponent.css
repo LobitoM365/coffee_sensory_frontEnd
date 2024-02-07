@@ -8,7 +8,7 @@
     display: unset;
 }
 
-.component {
+.component >div{
     width: 100%;
     display: flex;
     align-items: center;
@@ -309,7 +309,8 @@
 .content-table {
     height: 850px;
     max-height: 60vh;
-    overflow: auto; 
+    overflow-x: hidden; 
+    position: relative;
 }
 
 .limit-registers {
@@ -394,4 +395,17 @@
 .new-div-table td h4:not(.estado-1,.estado-0){
     color: black;
     font-weight: 400;
+}
+
+.load-table{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    z-index: 1;
 }

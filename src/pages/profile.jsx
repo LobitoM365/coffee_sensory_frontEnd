@@ -90,7 +90,7 @@ export const Profile = () => {
             console.log(data)
             const response = await Api.put("usuarios/actualizarPerfil", data);
             if (response.data.errors) {
-                setErrors(response.data.errors) 
+                setErrors(response.data.errors)
 
             } else if (response.data.status == false) {
                 setStatusAlert(true)
@@ -142,10 +142,18 @@ export const Profile = () => {
                 user_password.current.value = "";
                 new_password.current.value = "";
                 confirm_password.current.value = "";
+
+                setStatusAlert(true);
+                setdataAlert({
+                    status: "true",
+                    description: response.data.message,
+                    "tittle": "Contraseña Actualizada Correctamente!",
+                });
             }
-            console.log(response.data)
+            console.log('UPDATE: ', response.data)
 
         } catch (e) {
+            
             console.error("Error" + e)
         }
     }

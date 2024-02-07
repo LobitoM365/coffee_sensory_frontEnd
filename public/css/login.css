@@ -143,3 +143,14 @@ background-size: cover;
   transition: box-shadow 0.2s ease-in;
   /* border: 10px solid red; */
 }
+
+.show-password{
+  position: relative;
+  left: 85%;
+  top: -30px;
+  /* background-color: rebeccapurple; */
+  width: 20px;
+}
+#showPassowrd{
+  display: none;
+}

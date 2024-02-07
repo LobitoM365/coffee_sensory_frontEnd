@@ -31,3 +31,16 @@ for (let i = 0; i < inputs.length; i++) {
     })
 
 }
+
+// Mostrar contraseña
+const showPassword = document.getElementById('showPassowrd')
+const hidePassword = document.getElementById('hidePassword')
+
+showPassword.addEventListener('click', function () {
+    hidePassword.style.display = 'flex'
+    showPassword.style.display = 'none'
+})
+hidePassword.addEventListener('click', function () {
+    hidePassword.style.display = 'none'
+    showPassword.style.display = 'flex'
+})

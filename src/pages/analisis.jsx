@@ -4,7 +4,7 @@ import Api from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
 
-export const Cafes = () => {
+export const Analisis = (userInfo) => {
     let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
@@ -13,8 +13,8 @@ export const Cafes = () => {
         }
     })
         ;
-    const [fincas, setFincas] = useState([])
-    const [fincaEdit, setfincaEdit] = useState([])
+    const [usuarios, setUsuarios] = useState([])
+    const [usuarioEdit, setUsuarioEdit] = useState([])
     const [updateStatus, setUpdateStatus] = useState(false)
     const [municipios, setMunicipios] = useState([])
     const [countRegisters, setCountRegisters] = useState()
@@ -22,38 +22,61 @@ export const Cafes = () => {
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
     const [modalForm, changeModalForm] = useState(false);
-    let idFincaCambiarEstado = 0;
+    let idUsuarioCambiarEstado = 0;
 
     let [inputsForm, setInputsForm] = useState(
         {
-            lotes_id: {
+            proceso: {
                 type: "select",
-                referencia: "Lote",
+                referencia: "Tipo de Proceso",
+                values: ["nombre"],
+                opciones: [{ nombre: "certificar" }, { nombre: "practica" }],
                 upper_case: true,
-                values : ["nombre"],
-                key : "id"
+                key: "nombre"
+            }, muestras_id: {
+                type: "select",
+                referencia: "Muestra",
+                values: ["numero_documento", "nombre_completo", "finca", "lote", "mu_id"],
+                upper_case: true,
+                key: "id"
+            }
 
-            },
-            variedades_id: {
-                type: "select",
-                referencia: "Variedad",
-                upper_case: true,
-                values : ["nombre"],
-                key : "id"
-            },
         }
     )
 
     const keys = {
-        "ca_id": {
+        "us_id": {
             "referencia": "Id",
         },
-        "lote": {
-            "referencia": "Lote",
+        "nombre": {
+            "referencia": "Nombre",
             "upper_case": true
         },
-        "variedad": {
-            "referencia": "Variedad"
+        "apellido": {
+            "referencia": "Apelido",
+            "upper_case": true
+        },
+        "numero_documento": {
+            "referencia": "Numero de documento",
+            "upper_case": true
+        },
+        "telefono": {
+            "referencia": "Teléfono"
+        },
+        "correo_electronico": {
+            "referencia": "Correo electrónico"
+        },
+        "tipo_documento": {
+            "referencia": "Tipo de documento",
+            "upper_case": true
+        },
+        "rol": {
+            "referencia": "Rol",
+            "upper_case": true
+        },
+        "cargo": {
+            "referencia": "Cargo",
+            "upper_case": true
         },
         "estado": {
             "referencia": "Estado"
@@ -68,20 +91,60 @@ export const Cafes = () => {
         }
     }
     useEffect(() => {
-        getFincas()
-        getLotes()
-        getVariedades()
+        getAnalisis()
+        getMuestras()
     }, [])
-    async function getLotes() {
+
+    getusuarios()
+
+    async function getusuarios() {
         try {
-            const response = await Api.post("lotes/listar");
-            console.log(response.data.data,"loteeeeeeeeeeeeeeeees")
+            if (userInfo.userInfo.rol == "administrador" && userInfo.userInfo.cargo == "administrador") {
+                let filter = {
+                    "filter": {
+                        "where": {
+                            "us.rol": "cafetero",
+                            "us.cargo": "cliente"
+                        }
+                    }
+                }
+                const response = await Api.post("usuarios/listar");
+                if (response.data.status == true) {
+                    let cafes = inputsForm;
+                    if (!cafes["usuarios_id"]) {
+                        cafes["usuarios_id"] = {}
+                    }
+                    cafes["usuarios_id"] = {
+                        type: "select",
+                        referencia: "Uusario",
+                        values: ["numero_documento", "nombre_completo"],
+                        opciones: response.data.data,
+                        upper_case: true,
+                        key: "id"
+                    }
+
+                    setInputsForm(cafes)
+                } else if (response.data.find_error) {
+
+                } else {
+
+                }
+            }
+
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    async function getMuestras() {
+        try {
+            const response = await Api.post("muestra/listar");
+            console.log(response, "muestrasss")
             if (response.data.status == true) {
                 let cafes = inputsForm;
-                if (!cafes["lotes_id"]) {
-                    cafes["lotes_id"] = {}
+                if (!cafes["muestras_id"]) {
+                    cafes["muestras_id"] = {}
                 }
-                cafes["lotes_id"]["opciones"] = response.data.data
+                cafes["muestras_id"]["opciones"] = response.data.data
                 setInputsForm(cafes)
             } else if (response.data.find_error) {
 
@@ -91,46 +154,29 @@ export const Cafes = () => {
         } catch (e) {
         }
     }
-    async function getVariedades() {
-        try {
-            const response = await Api.post("variedades/listar");
-            if (response.data.status == true) {
-                let cafes = inputsForm;
-                if (!cafes["variedades_id"]) {
-                    cafes["variedades_id"] = {}
-                }
-                cafes["variedades_id"]["opciones"] = response.data.data
-                setInputsForm(cafes)
-            } else if (response.data.find_error) {
 
-            } else {
-
-            }
-        } catch (e) {
-        }
-    }
-    async function getFincas() {
+    async function getAnalisis() {
         try {
-            const response = await Api.post("cafes/listar", dataFilterTable);
+            const response = await Api.post("analisis/listar", dataFilterTable);
             if (response.data.status == true) {
-                setFincas(response.data.data)
+                setUsuarios(response.data.data)
                 setCountRegisters(response.data.count)
             } else if (response.data.find_error) {
                 setCountRegisters(0)
-                setFincas(response.data)
+                setUsuarios(response.data)
             } else {
-                setFincas(response.data)
+                setUsuarios(response.data)
             }
         } catch (e) {
 
         }
     }
 
-    async function desactivarFinca() {
+    async function desactivarUsuario() {
         try {
-            const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
+            const axios = await Api.delete("usuarios/desactivar/" + idUsuarioCambiarEstado);
             if (axios.data.status == true) {
-                getFincas();
+                getAnalisis();
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -148,7 +194,17 @@ export const Cafes = () => {
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if(axios.data.permission_error){
+            } else if (axios.data.admin_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.admin_error,
+                        "tittle": "Nó lo hagas",
+                    }
+                )
+            }
+            else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -176,15 +232,15 @@ export const Cafes = () => {
         }
     }
     async function cambiarEstado(id, estado) {
-        idFincaCambiarEstado = id;
+        idUsuarioCambiarEstado = id;
         let tittle = ""
         let descripcion = ""
         if (estado == 0) {
-            tittle = "Activarás las finca " + id
-            descripcion = "Estás apunto de activar la finca, ten encuenta que esta accion no activará las dependencias de la finca, pero si permitirá el uso de ellas.";
+            tittle = "Activarás el usuario " + id
+            descripcion = "Estás apunto de activar el usuario, ten encuenta que esta accion no activará las dependencias de el usuario, pero si permitirá el uso de ellas.";
         } else if (estado == 1 || estado == 3 || estado == 4) {
-            tittle = "¿Deseas desactivar la finca " + id + " ?";
-            descripcion = "Estás apunto de desactivar la finca, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de esta finca."
+            tittle = "¿Deseas desactivar el usuario " + id + " ?";
+            descripcion = "Estás apunto de desactivar el usuario, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de este usuario."
         }
         setStatusAlert(true)
         setdataAlert(
@@ -193,17 +249,21 @@ export const Cafes = () => {
                 description: descripcion,
                 tittle: tittle,
                 continue: {
-                    "function": desactivarFinca
+                    "function": desactivarUsuario
                 }
             }
         )
-        
+
     }
-    async function setFinca(data) {
+    async function setUsuario(data) {
         try {
-            const axios = await Api.post("cafes/registrar/", data);
+            let route = "registrar"
+            if (userInfo.userInfo.rol == "administrador" && userInfo.userInfo.cargo == "administrador") {
+                route = "asignar"
+            }
+            const axios = await Api.post("analisis/" + route + "/", data);
             if (axios.data.status == true) {
-                getFincas();
+                getAnalisis();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -228,7 +288,7 @@ export const Cafes = () => {
                 )
             } else if (axios.data.errors) {
                 setErrors(axios.data.errors)
-            }  else if(axios.data.permission_error){
+            } else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -241,7 +301,7 @@ export const Cafes = () => {
                         }
                     }
                 )
-            }else {
+            } else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -252,7 +312,7 @@ export const Cafes = () => {
                     }
                 )
             }
-            console.log(axios)
+            console.log(axios, "axioos")
 
         } catch (e) {
             setStatusAlert(true)
@@ -266,18 +326,18 @@ export const Cafes = () => {
         }
     }
 
-   
+
 
     async function procedureTrue() {
         changeModalForm(false)
         setUpdateStatus(false)
     }
-    async function updateFinca(data, id) {
+    async function updateUsuario(data, id) {
 
         try {
-            const axios = await Api.put("finca/actualizar/" + id, data);
+            const axios = await Api.put("usuarios/actualizar/" + id, data);
             if (axios.data.status == true) {
-                getFincas();
+                getAnalisis();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -309,7 +369,7 @@ export const Cafes = () => {
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.update_error,
+                        description: axios.data.message,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
@@ -328,32 +388,38 @@ export const Cafes = () => {
     async function getFilterEstado(value) {
         let cloneDataFilterTable = { ...dataFilterTable }
         if (value !== false) {
-            cloneDataFilterTable.filter.where["fin.estado"] = {
+            cloneDataFilterTable.filter.where["us.estado"] = {
                 "value": value,
                 "require": "and"
             }
 
         } else {
-            delete cloneDataFilterTable.filter.where["fin.estado"]
+            delete cloneDataFilterTable.filter.where["us.estado"]
         }
         setDataFilterTable(cloneDataFilterTable)
-        getFincas(dataFilterTable)
+        getAnalisis(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
         dataFilterTable.filter["order"] = filter
-        getFincas();
+        getAnalisis();
 
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
-        getFincas()
+        getAnalisis()
 
     }
-    async function buscarFinca(id) {
-
-        const response = await Api.get("finca/buscar/" + id);
+    async function clearInputs() {
+        if( inputsForm["usuarios_id"]){
+            inputsForm["usuarios_id"]["visibility"] = true
+        }
+    }
+    async function buscarUsuario(id) {
+        console.log(id)
+        const response = await Api.get("usuarios/buscar/" + id);
         if (response.data.status == true) {
-            setfincaEdit(response.data.data[0])
+
+            setUsuarioEdit(response.data.data)
         } else if (response.data.find_error) {
 
         } else {
@@ -361,22 +427,22 @@ export const Cafes = () => {
         }
     }
     async function updateTable() {
-        getFincas();
+        getAnalisis();
     }
-    async function editarFinca(id) {
-        buscarFinca(id)
+    async function editarUsuario(id) {
+        buscarUsuario(id)
     }
     function filterSeacth(search) {
         let cloneDataFilterTable = { ...dataFilterTable }
         cloneDataFilterTable.filter["search"] = search
         setDataFilterTable(cloneDataFilterTable)
-        getFincas(dataFilterTable)
+        getAnalisis(dataFilterTable)
 
     }
- 
+
     return (
         <>
-            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Café"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

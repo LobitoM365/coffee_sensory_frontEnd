@@ -35,12 +35,14 @@ export const Muestras = () => {
                 type: "select",
                 referencia: "Café",
                 upper_case: true,
+                values: ["usuario","finca","lote","variedad"],
+                key : "id"
             },
         }
     )
 
     const keys = {
-        "vari_id": {
+        "mu_id": {
             "referencia": "Id",
         },
         "cantidad": {

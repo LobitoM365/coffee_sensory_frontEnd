@@ -150,7 +150,7 @@ export const Tablas = (array) => {
 
         function resizeTable() {
 
-         
+         console.log(ziseTableComponent,"sizeeeeeeeeeeeeeeeeeeeeeee",tableComponent[0].clientWidth,contentTable[0].clientWidth < tableComponent[0].clientWidth)
   
             if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
                 ziseTableComponent = tableComponent[0].clientWidth;

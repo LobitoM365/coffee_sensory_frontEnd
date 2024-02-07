@@ -4,7 +4,7 @@ import Api from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
 
-export const Fincas = () => {
+export const Muestras = () => {
     let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
@@ -26,70 +26,25 @@ export const Fincas = () => {
 
     let [inputsForm, setInputsForm] = useState(
         {
-            nombre: {
-                type: "text",
-                referencia: "Nombre",
+            cantidad: {
+                type: "number",
+                referencia: "Cantidad",
                 upper_case: true,
             },
-            longitud: {
-                type: "ubicacion",
-                referencia: "Longitud",
-            },
-            latitud: {
-                type: "ubicacion",
-                referencia: "Latitud"
-            },
-            usuarios_id: {
+            cafes_id: {
                 type: "select",
-                referencia: "Usuario",
-                values: ["numero_documento", "nombre"],
+                referencia: "Café",
                 upper_case: true,
-                key: "id"
             },
-            municipios_id: {
-                type: "select",
-                referencia: "Municipio",
-                values: ["nombre"],
-                key: "id",
-                upper_case: true
-            },
-            nombre_vereda: {
-                type: "text",
-                referencia: "Nombre de la vereda",
-                upper_case: true,
-
-            }
         }
     )
 
     const keys = {
-        "fin_id": {
+        "vari_id": {
             "referencia": "Id",
         },
-        "nombre": {
-            "referencia": "Nombre",
-            "upper_case": true
-        },
-        "numero_documento_usuario": {
-            "values": [
-                "numero_documento_usuario",
-                "nombre_completo_usuario"
-            ],
-            "referencia": "Usuario",
-            "upper_case": true
-        },
-        "latitud": {
-            "referencia": "Latitud"
-        },
-        "longitud": {
-            "referencia": "Longitud"
-        },
-        "nombre_municipio": {
-            "referencia": "Municipio",
-            "upper_case": true
-        },
-        "nombre_vereda": {
-            "referencia": "Vereda",
+        "cantidad": {
+            "referencia": "Cantidad",
             "upper_case": true
         },
         "fecha_creacion": {
@@ -109,12 +64,29 @@ export const Fincas = () => {
     }
     useEffect(() => {
         getFincas()
-        getMunicipios()
+        getCafes()
     }, [])
-    getUsers()
+    async function getCafes() {
+        try {
+            const response = await Api.post("cafes/listar");
+            if (response.data.status == true) {
+                let cafes = inputsForm;
+                if (!cafes["cafes_id"]) {
+                    cafes["cafes_id"] = {}
+                }
+                cafes["cafes_id"]["opciones"] = response.data.data
+                setInputsForm(cafes)
+            } else if (response.data.find_error) {
+
+            } else {
+
+            }
+        } catch (e) {
+        }
+    }
     async function getFincas() {
         try {
-            const response = await Api.post("finca/listar", dataFilterTable);
+            const response = await Api.post("muestra/listar", dataFilterTable);
             if (response.data.status == true) {
                 setFincas(response.data.data)
                 setCountRegisters(response.data.count)
@@ -204,7 +176,7 @@ export const Fincas = () => {
     }
     async function setFinca(data) {
         try {
-            const axios = await Api.post("finca/registrar/", data);
+            const axios = await Api.post("muestra/registrar/", data);
             if (axios.data.status == true) {
                 getFincas();
                 setErrors({})
@@ -269,42 +241,7 @@ export const Fincas = () => {
         }
     }
 
-    async function getUsers() {
-        try {
-            const response = await Api.post("usuarios/listar");
-            if (response.data.status == true) {
-                let users = inputsForm;
-                if (!users["usuarios_id"]) {
-                    users["usuarios_id"] = {}
-                }
-                users["usuarios_id"]["opciones"] = response.data.data
-                setInputsForm(users)
-            } else if (response.data.find_error) {
-
-            } else {
-
-            }
-        } catch (e) {
-        }
-    }
-    async function getMunicipios() {
-        try {
-            const response = await Api.post("municipio/listar");
-            if (response.data.status == true) {
-                let municipios = inputsForm;
-                if (!municipios["municipios_id"]) {
-                    municipios["municipios_id"] = {}
-                }
-                municipios["municipios_id"]["opciones"] = response.data.data
-                setInputsForm(users)
-            } else if (response.data.find_error) {
-
-            } else {
-
-            }
-        } catch (e) {
-        }
-    }
+   
 
     async function procedureTrue() {
         changeModalForm(false)
@@ -411,12 +348,10 @@ export const Fincas = () => {
         getFincas(dataFilterTable)
 
     }
-    useEffect(() => {
-        getUsers()
-    }, [])
+ 
     return (
         <>
-            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Muestra"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

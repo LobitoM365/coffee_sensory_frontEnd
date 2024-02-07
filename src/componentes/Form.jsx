@@ -155,8 +155,8 @@ export const Form = forwardRef((data, ref) => {
                 modalForm.style.display = "block"
                 displayNone = true
             }
-           
-console.log(divContentForm.scrollHeight, "formmmmmm",document.body.clientHeight)
+
+            console.log(divContentForm.scrollHeight, "formmmmmm", document.body.clientHeight)
             if (divContentForm.scrollHeight > document.body.clientHeight) {
                 modalForm.style.alignItems = "unset"
                 modalForm.style.padding = "20px 20px"
@@ -187,7 +187,7 @@ console.log(divContentForm.scrollHeight, "formmmmmm",document.body.clientHeight)
                     labelErrorSubmitForm[x].style.height = "max-content"
                 }
             }
-      
+
         }
         resizeForm()
         window.addEventListener("resize", function () {
@@ -206,8 +206,13 @@ console.log(divContentForm.scrollHeight, "formmmmmm",document.body.clientHeight)
             json[key] = dataSelect[key]
         })
         let keysJson = Object.keys(json);
+        
         keysJson.map((key, value) => {
-            json[key] = json[key].toString().trimEnd().toLowerCase()
+            console.log(keysJson,"xdxdadasdqwewqe",json[key])
+            if(json[key]){
+                json[key] = json[key].toString().trimEnd().toLowerCase()
+            }
+            
         })
 
 
@@ -228,7 +233,7 @@ console.log(divContentForm.scrollHeight, "formmmmmm",document.body.clientHeight)
                 <div id="divContentForm" className="div-content-form">
                     <form onSubmit={chageData} action="" >
                         <div className="header-form">
-                            <h3 className="tittle-form-register">{!data.updateStatus ? "Registrar "+data.tittle+"" : "Actualizar "+data.tittle+""} </h3>
+                            <h3  className="tittle-form-register">{!data.updateStatus ? "Registrar " + data.tittle + "" : "Actualizar " + data.tittle + ""} </h3>
                             <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="icon-quit-svg-form">
                                 <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -237,14 +242,14 @@ console.log(divContentForm.scrollHeight, "formmmmmm",document.body.clientHeight)
                             </div>
                         </div>
                         <div className="div-body-form">
-                           <div className="div-img-form">
+                            <div className="div-img-form">
                                 <img className="img-form" src={data.imgForm ? data.imgForm : "/img/formularios/default-img-form.png"} alt="" />
-                            </div> 
-                            
+                            </div>
+
                             <div id="divForm" className="div-form">
 
 
-                                <div className="form-register">
+                                <div style={{ display: Object.keys(inputs).length == 1 ? "unset" : "" }} className="form-register">
                                     {
                                         inputs.map((key, index) => {
                                             if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "ubicacion" || dataInputs[key]["type"] === "normal") {
@@ -261,7 +266,7 @@ console.log(divContentForm.scrollHeight, "formmmmmm",document.body.clientHeight)
                                                     <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
                                                         <div className="head-input">
                                                             <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                                            <input id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault && elementEdit? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} className="input-form" type="text" />
+                                                            <input id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault && elementEdit ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} className="input-form" type="text" />
                                                         </div>
                                                         <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
                                                     </div>
@@ -300,13 +305,13 @@ console.log(divContentForm.scrollHeight, "formmmmmm",document.body.clientHeight)
                                                                             } else if (dataInputs[key]["capital_letter"]) {
                                                                                 value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
                                                                             }
-                                                                            if(elementEdit){
-                                                                                if (!data.modalForm && dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] == elementEdit[key] && data.statusSelectDefault ) {
+                                                                            if (elementEdit) {
+                                                                                if (!data.modalForm && dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] == elementEdit[key] && data.statusSelectDefault) {
                                                                                     selectsValues[key] = value;
                                                                                     dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
-                                                                                }    
+                                                                                }
                                                                             }
-                                                                        
+
 
                                                                             return <h4 key={indexSelect} onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = false; changeModalSelect(cloneModalSelect); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); data.setStatusSelect(false); data.setStatusSelectDefault(false); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]; }} className={`select-option select-option-${key} ${selectsValues[key] == value ? 'option-focus' : ''}`} value="">
                                                                                 {value}
@@ -317,7 +322,7 @@ console.log(divContentForm.scrollHeight, "formmmmmm",document.body.clientHeight)
                                                                 </div>
                                                                 <div className='input-select-estado input-select-search' name="" id="">
 
-                                                                    <input id={key} type="text" className="input-select" onInput={(e) => { selectSearch(e.target.value, key) }} placeholder={selectsValues[key] == "Seleccione una opción..." ?  "Seleccione una opción..." : ""} value={selectsValues[key] != "Seleccione una opción..." ?selectsValues[key] : ""} />
+                                                                    <input id={key} type="text" className="input-select" onInput={(e) => { selectSearch(e.target.value, key) }} placeholder={selectsValues[key] == "Seleccione una opción..." ? "Seleccione una opción..." : ""} value={selectsValues[key] != "Seleccione una opción..." ? selectsValues[key] : ""} />
                                                                     <div onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = !modalSelect[key]; changeModalSelect(cloneModalSelect) }} className="icon-chevron-estado">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                                                             <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>

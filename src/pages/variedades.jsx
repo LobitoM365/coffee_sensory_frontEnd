@@ -4,7 +4,7 @@ import Api from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
 
-export const Fincas = () => {
+export const Variedades = () => {
     let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
@@ -28,75 +28,22 @@ export const Fincas = () => {
         {
             nombre: {
                 type: "text",
-                referencia: "Nombre",
+                referencia: "Nombre de la variedad",
                 upper_case: true,
-            },
-            longitud: {
-                type: "ubicacion",
-                referencia: "Longitud",
-            },
-            latitud: {
-                type: "ubicacion",
-                referencia: "Latitud"
-            },
-            usuarios_id: {
-                type: "select",
-                referencia: "Usuario",
-                values: ["numero_documento", "nombre"],
-                upper_case: true,
-                key: "id"
-            },
-            municipios_id: {
-                type: "select",
-                referencia: "Municipio",
-                values: ["nombre"],
-                key: "id",
-                upper_case: true
-            },
-            nombre_vereda: {
-                type: "text",
-                referencia: "Nombre de la vereda",
-                upper_case: true,
-
             }
         }
     )
 
     const keys = {
-        "fin_id": {
+        "vari_id": {
             "referencia": "Id",
         },
         "nombre": {
             "referencia": "Nombre",
             "upper_case": true
         },
-        "numero_documento_usuario": {
-            "values": [
-                "numero_documento_usuario",
-                "nombre_completo_usuario"
-            ],
-            "referencia": "Usuario",
-            "upper_case": true
-        },
-        "latitud": {
-            "referencia": "Latitud"
-        },
-        "longitud": {
-            "referencia": "Longitud"
-        },
-        "nombre_municipio": {
-            "referencia": "Municipio",
-            "upper_case": true
-        },
-        "nombre_vereda": {
-            "referencia": "Vereda",
-            "upper_case": true
-        },
         "fecha_creacion": {
             "referencia": "Fecha creación"
-        },
-        "estado": {
-            "referencia": "Estado"
         }
     }
     const filterEstado = {
@@ -109,12 +56,11 @@ export const Fincas = () => {
     }
     useEffect(() => {
         getFincas()
-        getMunicipios()
     }, [])
-    getUsers()
+    
     async function getFincas() {
         try {
-            const response = await Api.post("finca/listar", dataFilterTable);
+            const response = await Api.post("variedades/listar", dataFilterTable);
             if (response.data.status == true) {
                 setFincas(response.data.data)
                 setCountRegisters(response.data.count)
@@ -204,7 +150,7 @@ export const Fincas = () => {
     }
     async function setFinca(data) {
         try {
-            const axios = await Api.post("finca/registrar/", data);
+            const axios = await Api.post("variedades/registrar/", data);
             if (axios.data.status == true) {
                 getFincas();
                 setErrors({})
@@ -269,42 +215,7 @@ export const Fincas = () => {
         }
     }
 
-    async function getUsers() {
-        try {
-            const response = await Api.post("usuarios/listar");
-            if (response.data.status == true) {
-                let users = inputsForm;
-                if (!users["usuarios_id"]) {
-                    users["usuarios_id"] = {}
-                }
-                users["usuarios_id"]["opciones"] = response.data.data
-                setInputsForm(users)
-            } else if (response.data.find_error) {
-
-            } else {
-
-            }
-        } catch (e) {
-        }
-    }
-    async function getMunicipios() {
-        try {
-            const response = await Api.post("municipio/listar");
-            if (response.data.status == true) {
-                let municipios = inputsForm;
-                if (!municipios["municipios_id"]) {
-                    municipios["municipios_id"] = {}
-                }
-                municipios["municipios_id"]["opciones"] = response.data.data
-                setInputsForm(users)
-            } else if (response.data.find_error) {
-
-            } else {
-
-            }
-        } catch (e) {
-        }
-    }
+   
 
     async function procedureTrue() {
         changeModalForm(false)
@@ -411,12 +322,10 @@ export const Fincas = () => {
         getFincas(dataFilterTable)
 
     }
-    useEffect(() => {
-        getUsers()
-    }, [])
+ 
     return (
         <>
-            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Variedad"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

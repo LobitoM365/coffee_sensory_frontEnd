@@ -30,7 +30,7 @@ export const Cafes = () => {
                 type: "select",
                 referencia: "Lote",
                 upper_case: true,
-                values : ["nombre"],
+                values : ["numero_documento_usuario","finca","nombre"],
                 key : "id"
 
             },

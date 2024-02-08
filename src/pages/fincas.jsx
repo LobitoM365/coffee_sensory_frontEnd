@@ -92,6 +92,10 @@ export const Fincas = () => {
             "referencia": "Vereda",
             "upper_case": true
         },
+        "cantidad_lotes": {
+            "referencia": "Cantidad de lotes",
+            "upper_case": true
+        },
         "fecha_creacion": {
             "referencia": "Fecha creación"
         },

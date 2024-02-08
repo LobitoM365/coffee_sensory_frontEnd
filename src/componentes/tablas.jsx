@@ -157,7 +157,7 @@ export const Tablas = (array) => {
 
                 let thQuit = contentTable[0].querySelectorAll("th");
 
-                if (thQuit.length > 1) {
+                if (thQuit.length > 2) {
 
                     let tBody = contentTable[0].querySelectorAll("tbody")
                     let trTbody = tBody[0].querySelectorAll(".tr-table")
@@ -367,7 +367,7 @@ export const Tablas = (array) => {
                                         </div>
                                     </th>
                                 })}
-                                <th ><h4 className='tittle-item-header-table'>Actualizar</h4></th>
+                                <th ><h4  className='tittle-item-header-table'>Actualizar</h4></th>
                             </tr>
                         </thead >
                         <tbody key={"tBody"}>
@@ -437,7 +437,7 @@ export const Tablas = (array) => {
                                         }
                                         <td className='td-update'>
                                             <div className="center-update">
-                                                <h4 onClick={() => { setClearClick(); array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} className='item-options option-update'>
+                                                <h4 onClick={() => { setClearClick(); array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} title='actualizar' className='item-options option-update'>
                                                     <svg version="1.0" viewBox="0 0 478.000000 522.000000" >
 
                                                         <g transform="translate(0.000000,522.000000) scale(0.100000,-0.100000)" stroke="none">

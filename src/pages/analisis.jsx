@@ -92,41 +92,50 @@ export const Analisis = (userInfo) => {
     }
     useEffect(() => {
         getAnalisis()
-        getMuestras()
     }, [])
+    useEffect(() => {
+        getusuarios()
+        getMuestras()
 
-    getusuarios()
+    }, [userInfo])
+
 
     async function getusuarios() {
         try {
-            if (userInfo.userInfo.rol == "administrador" && userInfo.userInfo.cargo == "administrador") {
-                let filter = {
-                    "filter": {
-                        "where": {
-                            "us.rol": "cafetero",
-                            "us.cargo": "cliente"
+            console.log(userInfo)
+            if (userInfo.userInfo) {
+
+                if (userInfo.userInfo.rol == "administrador" && userInfo.userInfo.cargo == "administrador") {
+                    let filter = {
+                        "filter": {
+                            "where": {
+                                "us.rol": {
+                                    "value": "catador",
+                                    "require": "and"
+                                },
+                                "us.cargo": {
+                                    "value": "instructor",
+                                    "require": "and"
+                                }
+                            }
                         }
                     }
-                }
-                const response = await Api.post("usuarios/listar");
-                if (response.data.status == true) {
+                    const response = await Api.post("usuarios/listar", filter);
+
                     let cafes = inputsForm;
                     if (!cafes["usuarios_id"]) {
                         cafes["usuarios_id"] = {}
                     }
                     cafes["usuarios_id"] = {
                         type: "select",
-                        referencia: "Uusario",
+                        referencia: "Usuario",
                         values: ["numero_documento", "nombre_completo"],
-                        opciones: response.data.data,
+                        opciones: response.data.status == true ? response.data.data : [],
                         upper_case: true,
                         key: "id"
                     }
 
                     setInputsForm(cafes)
-                } else if (response.data.find_error) {
-
-                } else {
 
                 }
             }
@@ -137,20 +146,42 @@ export const Analisis = (userInfo) => {
     }
     async function getMuestras() {
         try {
-            const response = await Api.post("muestra/listar");
-            console.log(response, "muestrasss")
-            if (response.data.status == true) {
-                let cafes = inputsForm;
-                if (!cafes["muestras_id"]) {
-                    cafes["muestras_id"] = {}
+            let filter = {};
+            if (userInfo.userInfo) {
+                if (userInfo.userInfo.rol == "administrador" && userInfo.userInfo.cargo == "administrador") {
+                    filter = {
+                        "filter": {
+                            "where": {
+                                "us.rol": {
+                                    "value": "cafetero",
+                                    "require": "and"
+                                },
+                                "us.cargo": {
+                                    "value": "cliente",
+                                    "require": "and"
+                                }
+                            }
+                        }
+                    }
                 }
+            }
+            const response = await Api.post("muestra/listar",filter);
+            console.log(response, "muestrasss",filter)
+            let cafes = inputsForm;
+            if (!cafes["muestras_id"]) {
+                cafes["muestras_id"] = {}
+            }
+            if (response.data.status == true) {
+               
                 cafes["muestras_id"]["opciones"] = response.data.data
-                setInputsForm(cafes)
             } else if (response.data.find_error) {
+                cafes["muestras_id"]["opciones"] = []
 
             } else {
 
             }
+            setInputsForm(cafes)
+
         } catch (e) {
         }
     }
@@ -410,7 +441,7 @@ export const Analisis = (userInfo) => {
 
     }
     async function clearInputs() {
-        if( inputsForm["usuarios_id"]){
+        if (inputsForm["usuarios_id"]) {
             inputsForm["usuarios_id"]["visibility"] = true
         }
     }

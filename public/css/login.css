@@ -1,32 +1,36 @@
-*{
+* {
   margin: 0;
   padding: 0;
   color: black;
 }
 
-input{
+input {
   color: rgb(67, 67, 67);
   background-color: white;
 }
-img{
+
+img {
   height: 100%;
   width: 100%;
 }
-.title-login{
+
+.title-login {
   font-weight: bold;
   color: rgb(5, 150, 105);
   font-size: 1.9em;
-  margin-bottom:40px;
+  margin-bottom: 40px;
 }
+
 .main-container {
   background-image: url('../img/login/bg-login-2.png');
-background-size: cover;
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
-.bg-img{
+
+.bg-img {
   backdrop-filter: blur(3px);
   width: 100%;
   height: 100%;
@@ -71,7 +75,7 @@ background-size: cover;
   width: 85%;
 }
 
-.container-inputs{
+.container-inputs {
   position: relative;
 }
 
@@ -99,14 +103,14 @@ background-size: cover;
 
 .login-form input {
   font-size: 0.9em;
-  width:calc(100% - 30px);
+  width: calc(100% - 30px);
   outline: unset;
   padding: 15px;
   border: 1px solid #ccc;
   border-radius: 3px;
 }
 
-.login-form input::placeholder{
+.login-form input::placeholder {
   font-size: 1.1em;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   color: rgb(155, 155, 155)
@@ -126,30 +130,44 @@ background-size: cover;
 }
 
 .login-form button:hover {
-  box-shadow:  0px 0px 4px 0px rgb(158, 158, 158);
+  box-shadow: 0px 0px 4px 0px rgb(158, 158, 158);
   background: radial-gradient(rgb(12, 90, 12), rgb(42, 166, 42));
 }
 
 /* Error validation */
-.credentials-error{
+.credentials-error {
   position: absolute;
   bottom: -20px;
   font-size: 0.7em;
   color: orangered;
 }
 
-.input-error{
+.input-error {
   box-shadow: 0px 0px 3px 1px rgb(238, 125, 44) inset;
   transition: box-shadow 0.2s ease-in;
   /* border: 10px solid red; */
 }
 
-.container-inputs svg{
+.eyes-container {
   position: absolute;
-  top: calc(50% - 23px);
+  top: calc(0px + 2px);
   left: 83%;
   cursor: pointer;
-  width: 30px;
-  padding: 8px;
+  height: calc(100% - 4px);
+  display: flex;
   background-color: white;
+  justify-content: center;
+  align-items: center;
+}
+
+.eyes-container svg {
+  width: 24px;
+  /* top: 2px; */
+  position: relative;
+}
+
+.eyes-closed {
+  position: relative;
+  top: 4px;
+  width: 47px !important;
 }

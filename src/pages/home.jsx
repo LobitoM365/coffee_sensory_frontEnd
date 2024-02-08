@@ -6,10 +6,12 @@ export const Home = () => {
 
         <>
             <link rel="stylesheet" href="src\css\graficas.css" />
-            <h2>Inicio</h2>
+            
             <div className='BoxMain'>
-                <Graficos/>
+             <Graficos/>
             </div>
+                
+            
         </>
     );
 };

@@ -29,14 +29,9 @@
     flex-direction: column;    
 }
 .BoxOptions{
-<<<<<<< HEAD
-    width:max-content;
-    display: flex;
-=======
     width: max-content;
     display: flex;
     justify-content: center;
->>>>>>> development
     justify-content: center;
     align-items: center;
     
@@ -44,13 +39,7 @@
 .BoxOptions:hover{
     background-color: rgba(123, 124, 124, 0.542);
     border-radius: 7px;
-<<<<<<< HEAD
-    width:max-content;
-    padding: 0px 10px 0px 0px;
-=======
-    padding: 2px 15px;
-    transition: padding 0.3s ;
->>>>>>> development
+    padding-right: 10px;
 }
 .colors{
     width: 1.5rem;
@@ -68,4 +57,8 @@
 }
 .bueno{
    background-color: rgb(255, 174, 0);
+}
+.barras{
+    width: 20px !important;
+    height: 10%;
 }

@@ -6,7 +6,7 @@
 
 input {
   color: rgb(67, 67, 67);
-  background-color: white;
+  background-color: transparent;
 }
 
 img {
@@ -170,4 +170,8 @@ img {
   position: relative;
   top: 4px;
   width: 47px !important;
+}
+
+.container-input{
+  border: 1px solid rebeccapurple;
 }

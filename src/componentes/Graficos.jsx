@@ -1,111 +1,88 @@
 import axios from "axios";
-import React, { useEffect } from "react";
-import { useState } from "react";
-import Api from "./Api";
-import { useParams } from "react-router-dom";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  Cell
-} from "recharts";
-import "../../public/css/graficos.css";
+import React, { useEffect, useState } from "react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
-export const Graficos = (datos) => {
-  /* let {id}=useParams()
-    const [data,setdatos]=useState([]);
-    useEffect(()=>{
-        const buscar= async ()=>{
-            try {
-                const response = await Api.get(`${url}/${id}`);
-                setdatos(response.data)
-            } catch (error) {
-                console.error("error fetching tasks:" , error)
-            }
-        };
-        buscar();
-    },[]); */
+export const Graficos =  () => {
+  const [data, setData] = useState([]);
 
-    useEffect(()=>{
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post('http://localhost:3000/api/analisis/total/1');
+        const responseData = response.data;
+        setData(responseData.data);
+      } catch (error) {
+        console.error('Error al obtener los datos:', error);
+      }
+    };
 
-    },[])
-    
-    let data = datos.datos
+    fetchData();
+  }, []);
 
-    console.log(data)
+  const colors = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f50"]; // Colores para las barras
 
- 
-let colors =[];
-data.map((items)=>{
-    if (items.promedio>=9 && items.promedio<=10) {
-        colors.push('rgb(244, 50, 50)')
-    }else if(items.promedio>=8 && items.promedio<9){
-        colors.push(' #4ec74e')
-    }else if(items.promedio>=7 && items.promedio<8){
-        colors.push('rgb(39, 11, 174)')
-    }else if(items.promedio>=6 && items.promedio<7){
-        colors.push('rgb(255, 174, 0)')
-    }else{
-        colors.push('gray')
-    }
-})
-console.log(colors)
-
-return (
-    <div className="graphicBox">
-      <ResponsiveContainer width="50%" aspect={2}>
-        <BarChart
-          data={data}
-          width={100}
-          height={500}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="4" />
-          <XAxis dataKey="nombre" />
-          <YAxis />
-          <Tooltip />
-          <Legend/>
-          <Bar
-            dataKey="promedio"
-           
-            label={{ position: "top" }}
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index % 20]} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer> 
+  const createChart = (datos) => {
+    return (
+      <div className="graphicBox">
+        <link rel="stylesheet" href="../../public/css/graficos.css" />
+        <h3 className="title-graphic">{datos.menssage}</h3>
+        <div className="contentGraphic">
+          <ResponsiveContainer width="70%" aspect={2}>
+            <BarChart
+              data={datos.data}
+              width={100}
+              height={500}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+              
+            >
+              
+              <CartesianGrid strokeDasharray="4" />
+              <XAxis dataKey='fecha' />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="promedio" label={{ position: "top" }}>
                 
-      <div className="Tablecolors">
-                <div className="BoxOptions">
-                    <div className="colors extraordinario"></div>
-                    <h3>Extraordinario</h3>
-                </div>
-                <div className="BoxOptions">
-                    <div className="colors excelente"></div>
-                    <h3>Excelente</h3>
-                </div>
-                <div className="BoxOptions">
-                    <div className="colors MyBueno"></div>
-                    <h3>Muy Bueno</h3>
-                </div>
-                <div className="BoxOptions">
-                    <div className="colors bueno"></div>
-                    <h3>Bueno</h3>
-                </div>
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
 
+          <div className="Tablecolors">
+            <div className="BoxOptions">
+              <div className="colors extraordinario"></div>
+              <h3>Extraordinario</h3>
+            </div>
+            <div className="BoxOptions">
+              <div className="colors excelente"></div>
+              <h3>Excelente</h3>
+            </div>
+            <div className="BoxOptions">
+              <div className="colors MyBueno"></div>
+              <h3>Muy Bueno</h3>
+            </div>
+            <div className="BoxOptions">
+              <div className="colors bueno"></div>
+              <h3>Bueno</h3>
+            </div>
+          </div>
+        </div>
       </div>
+    );
+  };
+
+  return (
+    <div>
+      {data.map((element, index) => (
+        <div key={`chart-${index}`}>
+          {createChart(element)}
+        </div>
+      ))}
     </div>
   );
 };
+
+

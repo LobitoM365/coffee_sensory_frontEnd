@@ -16,9 +16,9 @@
 
 body {
     background-color: rgb(243,243,244);
-    height: calc(100vh);
+    height: calc(100%);
     width: calc(100%);
-
+    position: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,7 +26,7 @@ body {
 
 #root {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     position: relative;
     display: block;
 }
@@ -38,7 +38,7 @@ body {
 .nav-horizontal {
     left: 100%;
     background-color: rgb(31, 41, 55);
-    padding: 25px 20px;
+    padding: 25px 0px;
     width: 240px;
     height: calc(100% - 50px);
     left: 0;
@@ -49,7 +49,7 @@ body {
     overflow: hidden;
 }
 
-a {
+.nav-main a {
     font-weight: 500;
     text-decoration: none;
 }
@@ -58,6 +58,7 @@ a {
 .nav-horizontal >ul {
     overflow-y: auto;
     overflow-x: hidden;
+    padding: 10px 10px;
 }
 
 .nav-horizontal >ul::-webkit-scrollbar {
@@ -73,20 +74,25 @@ a {
 
 }
 
-.img-logo-nav {
+.nav-main .img-logo-nav {
     width: 30px;
     border-radius: 4px;
 }
-
-.title-header-nav-horizontal {
+.nav-main .div-header-nav{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.nav-main .title-header-nav-horizontal {
     font-size: 1em;
 }
 
-.header-nav {
+.nav-main .header-nav {
     display: flex;
     justify-content: space-between;
     margin-bottom: 55px;
     align-items: center;
+    width: calc(100% - 20px);
 }
 
 .nav-horizontal ul {
@@ -97,36 +103,50 @@ a {
 }
 
 .nav-horizontal ul li ul li,
-.footer-nav li {
+.nav-main .footer-nav li {
     cursor: pointer;
     padding: 5px 10px;
-    border-radius: 2px;
     display: flex;
     align-items: center;
     gap: 15px;
 }
-
-.nav-horizontal ul li ul li:hover,
-.footer-nav li:hover {
+.nav-horizontal ul li ul  a {
+    border-radius: 2px;
+}
+.nav-main .footer-nav li {
+    width: max-content;
+}
+.nav-main .footer-nav ul {
+    width: calc(100% - 20px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.nav-main .footer-nav{
+    display: flex;
+    justify-content: center;
+}
+.nav-horizontal ul li ul a:hover,
+.nav-main .footer-nav li:hover {
     background-color: rgb(102, 122, 138);
 }
 
-.icon-li-nav-horizontal {
+.nav-main .icon-li-nav-horizontal {
     width: 25px;
     fill: white;
 
 }
 
-.title-li {
+.nav-main .title-li {
     padding: 0px 0px 20px 0px;
 }
 
-.icon-li-dark-mode-nav-horizontal {
+.nav-main .icon-li-dark-mode-nav-horizontal {
     fill: white;
     width: 20px;
 }
 
-.toogle-footer-nav-horizontal {
+.nav-main .toogle-footer-nav-horizontal {
     width: 44px;
     height: 18px;
     border-radius: 100px;
@@ -136,17 +156,17 @@ a {
     align-items: center;
 }
 
-.footer-nav .li-dark-mode-nav-horizontal {
+.nav-main .footer-nav .li-dark-mode-nav-horizontal {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.footer-nav .li-dark-mode-nav-horizontal:hover {
+.nav-main .footer-nav .li-dark-mode-nav-horizontal:hover {
     background-color: unset;
 }
 
-.circle-footer-nav-horizontal {
+.nav-main .circle-footer-nav-horizontal {
     width: 20px;
     height: 20px;
     background-color: white;
@@ -154,23 +174,23 @@ a {
     transition: margin 0.5s;
 }
 
-.content-1-footer-nav-horizontal {
+.nav-main .content-1-footer-nav-horizontal {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
 }
 
-.icon-moon-li-dark-mode-nav-horizontal {
+.nav-main .icon-moon-li-dark-mode-nav-horizontal {
     rotate: -10deg;
     transform: rotate(-10deg);
 }
 
-.link-memu-horizontal {
+.nav-main .link-memu-horizontal {
     color: white;
 }
 
-.link-memu-horizontal:hover {
+.nav-main .link-memu-horizontal:hover {
     color: white;
 }
 
@@ -178,21 +198,21 @@ a {
     border-top: 1px solid white;
     padding: 20px 0px 0px 0px;
 }
-.line-nav-li{
+.nav-main .line-nav-li{
     border-bottom: 1px solid white;
     padding-bottom: 20px;
 }
-.icon-hamburguer-li-nav-horizontal {
+.nav-main .icon-hamburguer-li-nav-horizontal {
     cursor: pointer;
     padding: 6px;
     border-radius: 4px;
 }
 
-.icon-hamburguer-li-nav-horizontal:hover {
+.nav-main .icon-hamburguer-li-nav-horizontal:hover {
     background-color: rgb(102, 122, 138);
 }
 
-.selected-li {
+.nav-main .selected-li {
     background-color: rgb(60, 77, 100);
 }
 
@@ -204,12 +224,12 @@ a {
     left: 0;
     display: grid;
     grid-template-columns: 1fr auto;
-    padding: 10px 100px;
+    padding: 10px 50px;
     border-bottom: 2px solid rgb(227,227,228);
     color: black;
 }
 
-.contenido {
+ .contenido {
     color: black;
     overflow: auto;
     display: flex;
@@ -218,7 +238,7 @@ a {
     background-color: rgb(234,241,243);
 }
 
-.component {
+.nav-main .component {
     word-wrap: break-word;
     word-break: break-all;
     width: 100%;
@@ -227,42 +247,42 @@ a {
     position: relative;
 }
 
-.seccion-usuario-notificaciones {
+.nav-main .seccion-usuario-notificaciones {
     display: flex;
     position: relative;
     gap: 20px;
 }
 
-.div-info-usuario {
+.nav-main .div-info-usuario {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
 }
 
-.notificaciones {
+.nav-main .notificaciones {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.icono-notificaciones {
+.nav-main .icono-notificaciones {
     width: 35px;
     padding: 8px;
     border-radius: 100%;
     cursor: pointer;
 }
 
-.icono-notificaciones:hover {
+.nav-main .icono-notificaciones:hover {
     background-color: rgba(212, 210, 210, 0.235)
 }
 
-.secccion-notificaciones {
+.nav-main .secccion-notificaciones {
     position: relative;
 }
 
-.cantidad-notificaciones {
+.nav-main .cantidad-notificaciones {
     background-color: orange;
     padding: 3px;
     height: 14px;
@@ -278,7 +298,7 @@ a {
     left: 8px;
 }
 
-.esquina-notificaciones {
+.nav-main .esquina-notificaciones {
     position: absolute;
     border-top: 0px solid transparent;
     border-bottom: 10px solid white;
@@ -289,7 +309,7 @@ a {
     top: calc(100% - 6px);
 }
 
-.contenido-notificaciones {
+.nav-main .contenido-notificaciones {
     width: 400px;
     min-width: max-content;
     height: max-content;
@@ -306,20 +326,20 @@ a {
     z-index: 9;
 }
 
-.header-notificaciones {
+.nav-main .header-notificaciones {
     padding: 20px 25px;
     border-bottom: 1px solid rgb(234, 234, 234);
     display: flex;
     justify-content: space-between;
 }
 
-.titulo-notififcaciones {
+.nav-main .titulo-notififcaciones {
     font-size: 1em;
     color: black;
 
 }
 
-.quit-notificaciones {
+.nav-main .quit-notificaciones {
     color: black;
     padding: 8px;
     width: 10px;
@@ -331,11 +351,11 @@ a {
     cursor: pointer;
 }
 
-.quit-notificaciones:hover {
+.nav-main .quit-notificaciones:hover {
     background-color: rgba(3, 3, 3, 0.326);
 }
 
-.contenido-analisis {
+.nav-main .contenido-analisis {
     padding: 25px 20px 25px 15px;
     overflow: hidden;
     display: flex;
@@ -343,27 +363,27 @@ a {
     align-items: center;
 }
 
-.notificacion-analisis {
+.nav-main .notificacion-analisis {
     max-width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
 }
-.notificacion-analisis:hover{
+.nav-main .notificacion-analisis:hover{
     background-color: rgba(170, 170, 170, 0.235);
     border-radius: 8px;
 }
-.h4-informacion-notificacion-analisis {
+.nav-main .h4-informacion-notificacion-analisis {
     color: black;
 }
 
-.informacion-analisis {
+.nav-main .informacion-analisis {
     display: flex;
     gap: 20px;
 }
 
-.asignaciones-notificaciones {
+.nav-main .asignaciones-notificaciones {
     overflow: auto;
     height: 100%;
     max-width: 320px;
@@ -374,37 +394,37 @@ a {
     padding: 5px;
 }
 
-.asignaciones-notificaciones::-webkit-scrollbar {
+.nav-main .asignaciones-notificaciones::-webkit-scrollbar {
     width: 10px;
     background-color: rgb(31, 41, 55);
     border-radius: 8px;
 }
 
-.asignaciones-notificaciones::-webkit-scrollbar-thumb {
+.nav-main .asignaciones-notificaciones::-webkit-scrollbar-thumb {
     background-color: gray;
     border-radius: 8px;
 }
 
-.img-analisis {
+.nav-main .img-analisis {
     width: 60px;
     border-radius: 8px;
 }
 
-.asignado,
-.pendiente {
+.nav-main .asignado,
+.nav-main .pendiente {
     padding: 4px;
     border-radius: 4px;
 }
 
-.asignado {
+.nav-main .asignado {
     background-color: orange;
 }
 
-.pendiente {
+.nav-main .pendiente {
     background-color: gray;
 }
 
-.input-proceder-analisis {
+.nav-main .input-proceder-analisis {
     width: 60%;
     padding: 8px 10px;
     font-size: 1em;
@@ -414,20 +434,20 @@ a {
     border-radius: 4px;
 }
 
-.input-proceder-analisis:hover {
+.nav-main .input-proceder-analisis:hover {
     background-color: rgb(26, 33, 45)
 }
 
-.h4-notificaciones-vacias {
+.nav-main .h4-notificaciones-vacias {
     color: rgb(141, 141, 141);
     text-align: center;
 }
 
-.section-opciones-usuario {
+.nav-main .section-opciones-usuario {
     position: relative;
 }
 
-.icon-opciones-usuario {
+.nav-main .icon-opciones-usuario {
     width: 20px;
     fill: black;
     padding: 6px;
@@ -435,7 +455,7 @@ a {
     position: relative;
 }
 
-.contenido-opciones-usuario {
+.nav-main .contenido-opciones-usuario {
     width: max-content;
     min-width: max-content;
     height: max-content;
@@ -450,7 +470,7 @@ a {
     top: calc(100% + 9px);
 }
 
-.esquina-opciones-usuario {
+.nav-main .esquina-opciones-usuario {
     position: absolute;
     border-top: 0px solid transparent;
     border-bottom: 10px solid white;
@@ -461,19 +481,19 @@ a {
     top: calc(100% + 1px);
 }
 
-.opciones-usuario {
+.nav-main .opciones-usuario {
     padding: 10px 10px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
 }
 
-.link-opciones-usuarios {
+.nav-main .link-opciones-usuarios {
     color: black;
     font-size: 0.8em;
 }
 
-.li-opciones-usuario {
+.nav-main .li-opciones-usuario {
     list-style: none;
     display: flex;
     align-items: center;
@@ -482,35 +502,57 @@ a {
     cursor: pointer;
 
 }
-.li-content-usuarios{
+.nav-main .li-content-usuarios{
     display: flex;
     gap: 10px;
 }
-.li-opciones-usuario:hover {
+.nav-main .li-opciones-usuario:hover {
     background-color: rgb(30, 41, 59);
 }
-.selected-li-perfil{
+.nav-main .selected-li-perfil{
     background-color: rgb(30, 41, 59);
     fill: white;
 }
-.selected-li-perfil .link-opciones-usuarios {
+.nav-main .selected-li-perfil .link-opciones-usuarios {
     color: white;
     fill: white;
     display: flex;
 }
 
-.li-opciones-usuario:hover .link-opciones-usuarios,
-.li-opciones-usuario:hover .icon-li-opciones-usuario {
+.nav-main .li-opciones-usuario:hover .link-opciones-usuarios,
+.nav-main .li-opciones-usuario:hover .icon-li-opciones-usuario {
     color: white;
     fill: white;
 }
 
-.icon-li-opciones-usuario {
+.nav-main .icon-li-opciones-usuario {
     width: 20px;
 }
-.nombre-usuario{
+.nav-main .nombre-usuario{
     font-size: 0.8em;
 }
-.rol-usuario{
+.nav-main .rol-usuario{
     font-size: 0.7em;
+}
+.div-img-perfil-nav{
+    overflow: hidden;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    flex: none;
+}
+.div-img-perfil-nav img{
+    width: 100%;
+    height: 100%;
+}
+
+.btn-cerrar-sesion{
+    border: none;
+}
+
+.nav-horizontal h1,.nav-horizontal h2,.nav-horizontal h3,.nav-horizontal h4,.nav-horizontal h5,.nav-horizontal h6{
+    color: white;
 }

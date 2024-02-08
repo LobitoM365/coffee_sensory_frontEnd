@@ -1,0 +1,17 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.BoxMain{
+    width: 100%;
+    height: 50vh;
+    background-color: gray;
+}
+h2{
+    color: white;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: bolder;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+}

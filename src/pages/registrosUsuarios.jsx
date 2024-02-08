@@ -1,11 +1,421 @@
-import React from 'react'
-
+import React, { useEffect, useState } from 'react'
+import { Tablas } from "../componentes/tablas.jsx"
+import Api from '../componentes/Api.jsx'
+import { Alert } from '../componentes/alert.jsx'
 
 
 export const RegistrosUsuarios = () => {
+    let [dataFilterTable, setDataFilterTable] = useState({
+        "filter": {
+            "where": {
+
+            }
+        }
+    })
+        ;
+    const [usuarios, setUsuarios] = useState([])
+    const [usuarioEdit, setUsuarioEdit] = useState([])
+    const [updateStatus, setUpdateStatus] = useState(false)
+    const [municipios, setMunicipios] = useState([])
+    const [countRegisters, setCountRegisters] = useState()
+    const [errors, setErrors] = useState()
+    const [statusAlert, setStatusAlert] = useState(false);
+    const [dataAlert, setdataAlert] = useState({});
+    const [modalForm, changeModalForm] = useState(false);
+    let idUsuarioCambiarEstado = 0;
+
+    let [inputsForm, setInputsForm] = useState(
+        {
+            nombre: {
+                type: "text",
+                referencia: "Nombre",
+                upper_case: true,
+            },
+            apellido: {
+                type: "text",
+                referencia: "Apellido",
+                upper_case: true,
+            },
+            tipo_documento: {
+                type: "select",
+                referencia: "Tipo de documento",
+                values: ["nombre"],
+                opciones: [{ nombre: "cedula de ciudadania" }, { nombre: "tarjeta de identidad" }],
+                upper_case: true,
+                key: "nombre"
+            },
+            numero_documento: {
+                type: "number",
+                referencia: "Número de documento"
+            },
+            telefono: {
+                type: "number",
+                referencia: "Teléfono"
+            },
+
+            rol: {
+                type: "select",
+                referencia: "Rol",
+                values: ["nombre"],
+                opciones: [{ nombre: "catador" }, { nombre: "cafetero" }],
+                upper_case: true,
+                key: "nombre"
+            },
+            cargo: {
+                type: "select",
+                referencia: "Cargo",
+                values: ["nombre"],
+                opciones: [{ nombre: "instructor" }, { nombre: "aprendiz" }, { nombre: "cliente" }],
+                upper_case: true,
+                key: "nombre"
+            },
+            correo_electronico: {
+                type: "email",
+                referencia: "Correo electrónico"
+            }
+        }
+    )
+
+    const keys = {
+        "us_id": {
+            "referencia": "Id",
+        },
+        "nombre": {
+            "referencia": "Nombre",
+            "upper_case": true
+        },
+        "apellido": {
+            "referencia": "Apelido",
+            "upper_case": true
+        },
+        "numero_documento": {
+            "referencia": "Numero de documento",
+            "upper_case": true
+        },
+        "telefono": {
+            "referencia": "Teléfono"
+        },
+        "correo_electronico": {
+            "referencia": "Correo electrónico"
+        },
+        "tipo_documento": {
+            "referencia": "Tipo de documento",
+            "upper_case": true
+        },
+        "rol": {
+            "referencia": "Rol",
+            "upper_case": true
+        },
+        "cargo": {
+            "referencia": "Cargo",
+            "upper_case": true
+        },
+        "estado": {
+            "referencia": "Estado"
+        }
+    }
+    const filterEstado = {
+        "Activo": {
+            "value": 1
+        },
+        "Inactivo": {
+            "value": 0
+        }
+    }
+    useEffect(() => {
+        getusuarios()
+    }, [])
+
+    async function getusuarios() {
+        try {
+            const response = await Api.post("usuarios/listar", dataFilterTable);
+            if (response.data.status == true) {
+                setUsuarios(response.data.data)
+                setCountRegisters(response.data.count)
+            } else if (response.data.find_error) {
+                setCountRegisters(0)
+                setUsuarios(response.data)
+            } else {
+                setUsuarios(response.data)
+            }
+        } catch (e) {
+
+        }
+    }
+
+    async function desactivarUsuario() {
+        try {
+            const axios = await Api.delete("usuarios/desactivar/" + idUsuarioCambiarEstado);
+            if (axios.data.status == true) {
+                getusuarios();
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: axios.data.message,
+                        "tittle": "Excelente",
+                    }
+                )
+            } else if (axios.data.delete_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.delete_error,
+                        "tittle": "Inténtalo de nuevo",
+                    }
+                )
+            } else if (axios.data.admin_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.admin_error,
+                        "tittle": "Nó lo hagas",
+                    }
+                )
+            }
+            else if (axios.data.permission_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "function": procedureTrue,
+                            location: "/dashboard"
+                        }
+                    }
+                )
+            }
+            console.log(axios)
+
+        } catch (e) {
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "warning",
+                    description: "Error interno del servidor: " + e,
+                    "tittle": "Inténtalo de nuevo"
+                }
+            )
+        }
+    }
+    async function cambiarEstado(id, estado) {
+        idUsuarioCambiarEstado = id;
+        let tittle = ""
+        let descripcion = ""
+        if (estado == 0) {
+            tittle = "Activarás el usuario " + id
+            descripcion = "Estás apunto de activar el usuario, ten encuenta que esta accion no activará las dependencias de el usuario, pero si permitirá el uso de ellas.";
+        } else if (estado == 1 || estado == 3 || estado == 4) {
+            tittle = "¿Deseas desactivar el usuario " + id + " ?";
+            descripcion = "Estás apunto de desactivar el usuario, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de este usuario."
+        }
+        setStatusAlert(true)
+        setdataAlert(
+            {
+                status: "warning",
+                description: descripcion,
+                tittle: tittle,
+                continue: {
+                    "function": desactivarUsuario
+                }
+            }
+        )
+
+    }
+    async function setUsuario(data) {
+        try {
+            const axios = await Api.post("usuarios/registrar/", data);
+            if (axios.data.status == true) {
+                getusuarios();
+                setErrors({})
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: axios.data.message,
+                        "tittle": "Excelente",
+                        continue: {
+                            "function": procedureTrue
+                        }
+                    }
+                )
+            } else if (axios.data.register_error) {
+                setErrors({})
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.register_error,
+                        "tittle": "Inténtalo de nuevo"
+                    }
+                )
+            } else if (axios.data.errors) {
+                setErrors(axios.data.errors)
+            } else if (axios.data.permission_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: axios.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "function": procedureTrue,
+                            location: "/dashboard"
+                        }
+                    }
+                )
+            } else {
+                setErrors({})
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.register_error,
+                        "tittle": "Error!!!"
+                    }
+                )
+            }
+            console.log(axios, "axioos")
+
+        } catch (e) {
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "warning",
+                    description: "Error interno del servidor: " + e,
+                    "tittle": "Inténtalo de nuevo"
+                }
+            )
+        }
+    }
+
+
+
+    async function procedureTrue() {
+        changeModalForm(false)
+        setUpdateStatus(false)
+    }
+    async function updateUsuario(data, id) {
+
+        try {
+            const axios = await Api.put("usuarios/actualizar/" + id, data);
+            if (axios.data.status == true) {
+                getusuarios();
+                setErrors({})
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: axios.data.message,
+                        "tittle": "Excelente",
+                        continue: {
+                            "function": procedureTrue,
+                            location: "/"
+                        }
+                    }
+                )
+            } else if (axios.data.update_error) {
+                setErrors({})
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.update_error,
+                        "tittle": "Inténtalo de nuevo"
+                    }
+                )
+            } else if (axios.data.errors) {
+                setErrors(axios.data.errors)
+            } else {
+                setErrors({})
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.message,
+                        "tittle": "Inténtalo de nuevo"
+                    }
+                )
+            }
+        } catch (e) {
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "warning",
+                    description: "Error interno del servidor: " + e,
+                    "tittle": "Inténtalo de nuevo"
+                }
+            )
+        }
+    }
+    async function getFilterEstado(value) {
+        let cloneDataFilterTable = { ...dataFilterTable }
+        if (value !== false) {
+            cloneDataFilterTable.filter.where["us.estado"] = {
+                "value": value,
+                "require": "and"
+            }
+
+        } else {
+            delete cloneDataFilterTable.filter.where["us.estado"]
+        }
+        setDataFilterTable(cloneDataFilterTable)
+        getusuarios(dataFilterTable)
+    }
+    async function getFiltersOrden(filter) {
+        dataFilterTable.filter["order"] = filter
+        getusuarios();
+
+    }
+    async function limitRegisters(data) {
+        dataFilterTable.filter["limit"] = data
+        getusuarios()
+
+    }
+    async function clearInputs() {
+        inputsForm["rol"]["visibility"] = true
+        inputsForm["cargo"]["visibility"] = true
+    }
+    async function buscarUsuario(id) {
+        console.log(id)
+        const response = await Api.get("usuarios/buscar/" + id);
+        if (response.data.status == true) {
+            if (response.data.data.rol == "administrador") {
+                inputsForm["rol"]["visibility"] = false
+                inputsForm["cargo"]["visibility"] = false
+            } else {
+                inputsForm["rol"]["visibility"] = true
+                inputsForm["cargo"]["visibility"] = true
+            }
+            setUsuarioEdit(response.data.data)
+        } else if (response.data.find_error) {
+
+        } else {
+
+        }
+    }
+    async function updateTable() {
+        getusuarios();
+    }
+    async function editarUsuario(id) {
+        buscarUsuario(id)
+    }
+    function filterSeacth(search) {
+        let cloneDataFilterTable = { ...dataFilterTable }
+        cloneDataFilterTable.filter["search"] = search
+        setDataFilterTable(cloneDataFilterTable)
+        getusuarios(dataFilterTable)
+
+    }
+
     return (
         <>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet eos alias rerum totam molestiae modi, earum nostrum vitae assumenda? Reprehenderit magnam molestias et praesentium itaque perspiciatis adipisci provident? Repellat quidem ex aliquam omnis, delectus recusandae fuga facilis maxime in voluptatibus obcaecati eos dolores quos neque a suscipit iusto soluta distinctio aut? Sunt obcaecati explicabo voluptatum amet. Voluptate, consequuntur neque a blanditiis saepe vel non placeat qui aspernatur, similique dolore id sapiente inventore reiciendis animi nisi soluta quo eaque ab doloribus nihil nesciunt accusantium enim laboriosam. Blanditiis voluptatibus ut similique numquam, aperiam maiores! Doloribus delectus tempore sed, temporibus dolore quisquam totam! Deleniti numquam nesciunt sapiente alias est consequuntur error deserunt magnam ratione, assumenda labore quisquam minima libero doloribus quibusdam aliquam dolor commodi illum cupiditate illo et quidem magni voluptate odit. Iusto nostrum corporis nihil corrupti aperiam, velit aut officia distinctio laborum. Praesentium, quaerat debitis. Nostrum praesentium cumque deserunt vel exercitationem labore temporibus accusantium nulla dicta alias aliquam omnis unde quam ullam, quaerat modi mollitia beatae excepturi. Quod repellat tempora ab laborum neque sapiente, magni amet nobis fuga adipisci animi doloribus recusandae mollitia sed eveniet atque, culpa in esse deserunt expedita, facilis dolorem. Modi ipsum, consequuntur fugit soluta velit laboriosam nisi non nostrum rerum eos recusandae iusto laudantium cum molestiae incidunt dicta nam eum, adipisci possimus aperiam, maiores provident odio saepe! Minima et iure excepturi, porro at quae cum deleniti nemo, distinctio molestias nulla magnam. Vel commodi aut asperiores? Sed commodi nostrum ullam sit unde itaque, voluptatibus culpa, eveniet accusamus saepe iure. Minus labore omnis odio sit! Veniam nihil deserunt expedita animi eos ratione ad voluptates hic esse officiis omnis recusandae ab porro velit, incidunt reprehenderit quos accusamus nesciunt suscipit dolorum earum quaerat! Eum neque nulla ab cupiditate optio nam voluptatum? Eius autem qui eos sit. Eveniet possimus repellat, magnam reprehenderit quos veritatis eos est animi odio nemo ullam ipsum quo at repudiandae recusandae consequuntur! Corrupti expedita consectetur ex! Voluptatibus, doloribus. Voluptatibus numquam et quisquam eligendi autem ab, labore quia, sapiente similique quidem magni tempore fugiat illum consequuntur dolor, nulla expedita aspernatur maxime impedit quas? Ex architecto, veniam minima officiis alias fugiat perspiciatis optio commodi eos reiciendis enim aliquam eligendi saepe? Provident voluptates sed fugiat alias culpa aut hic qui, sint a? Error reiciendis alias doloribus fuga expedita, necessitatibus corrupti in quidem placeat totam mollitia facilis ipsum vel corporis adipisci rerum neque enim sint soluta non aliquid laboriosam perferendis dignissimos! Nemo veniam quos quo delectus maxime facere aliquid, temporibus, est, soluta dolorum sit. Suscipit iste quaerat, quas esse veritatis nisi, repudiandae voluptates quae enim accusantium sapiente neque maxime aut maiores facilis animi? Illo, reiciendis. Veniam quasi molestiae corporis, pariatur inventore quisquam praesentium minima aliquam delectus molestias unde nemo sunt esse illo. Magni deserunt soluta non quam fugit quas exercitationem officia quis minima error reiciendis, corporis quae cum dolorum quo consequuntur cumque amet suscipit aut ea dignissimos optio excepturi recusandae eveniet? Dolores libero itaque quae nesciunt, quia distinctio dolorem in perspiciatis unde mollitia dignissimos et placeat exercitationem quos id iste cum aperiam similique atque adipisci nobis excepturi modi sunt? Nesciunt animi qui recusandae ullam iure, vero sit, quo commodi, quidem aspernatur perspiciatis aliquid ea totam mollitia tenetur. Molestiae sint id placeat nam, fugiat dolorum minima sit aut nemo velit asperiores, hic, modi est facere fuga quod? Totam numquam, sequi aperiam dolores fuga consequuntur odit tenetur quis eaque quisquam quod accusamus, id debitis fugiat ipsam nihil modi nesciunt, pariatur eos non error autem eum ea. Numquam, ab, temporibus quam enim dicta doloribus aut quisquam doloremque ullam sit et tenetur beatae? Illo architecto quibusdam, doloremque sunt perspiciatis exercitationem, provident molestias consequatur ex mollitia non illum iusto accusamus eligendi alias earum rerum aliquam eveniet harum id nemo, quia repellat iure omnis! Ratione, quia commodi? Rerum deleniti et quis omnis, nesciunt accusamus exercitationem consequatur vero voluptates, aliquam nulla sunt ut, natus quaerat eos ullam iusto temporibus eius eaque modi id. Quod assumenda ipsum fugiat. Animi modi aliquam illum rem sit minima, perferendis at temporibus odio recusandae blanditiis suscipit velit dicta sed officiis perspiciatis. Earum ea eligendi ducimus reprehenderit delectus quod suscipit assumenda quam quae beatae molestiae distinctio magnam quasi omnis, officiis necessitatibus soluta error aliquid hic. Earum sequi aperiam animi sapiente accusamus reprehenderit dolor eaque distinctio nemo iusto sunt accusantium perspiciatis atque suscipit numquam quae nam, incidunt laborum eligendi corporis fuga? Odit molestiae temporibus, cum debitis, deleniti nobis quasi nesciunt voluptas accusantium, omnis nisi perferendis ipsum! Rerum esse consequuntur neque labore similique harum atque voluptatem. Cupiditate, perspiciatis. Quos debitis praesentium harum eos omnis sunt hic id, doloremque similique nam ea obcaecati voluptatum amet accusantium numquam animi minima est quisquam accusamus commodi ut ex labore. Excepturi mollitia eos repellendus impedit. Veritatis ipsa laudantium tenetur nisi dicta dolorem quod. Nemo, qui. Commodi a, corrupti repellendus dolor consequuntur quas ratione dolorum ullam officia maxime temporibus fugiat quasi architecto maiores! Temporibus natus ab harum adipisci consequuntur. Necessitatibus magnam commodi sunt, enim accusamus odio iure dicta dolorum beatae officia corporis repellendus expedita error! Harum illo porro illum maiores ipsum magnam cum dolor, obcaecati nostrum, necessitatibus in. Earum temporibus qui aspernatur est a eveniet quibusdam mollitia molestiae porro, maiores ad dolore odio ea hic minus harum quaerat nobis fuga odit dolorum id tenetur quis velit ipsam. Vitae dolorem blanditiis dolores consequuntur numquam debitis, magnam dolore tenetur odit iste nesciunt laudantium excepturi fugiat cumque nam eos quaerat distinctio, minus molestias consectetur sequi, accusamus ipsa ut! Ipsum aperiam corrupti natus nisi, sunt deleniti laudantium asperiores accusantium voluptatum sit quia ab dolorum eius magnam eveniet in! Ex ad omnis, recusandae dolor iste magni eaque neque, dicta eligendi deleniti ipsa suscipit et minima facere tenetur fugit laboriosam nostrum amet, minus similique ipsum animi repudiandae fugiat? Recusandae sint laudantium mollitia pariatur ullam nulla eum eos sequi dolorem facere doloremque illum, nemo neque repellat quaerat eius. Doloremque laudantium quos reprehenderit ipsa, animi omnis eum minima id illo rem blanditiis rerum tempore adipisci commodi maxime natus aspernatur ab nam totam sit enim? A minima dicta minus nulla dignissimos laborum enim, libero, ex expedita eius ipsa itaque iusto officia, nostrum corrupti?
+            <Tablas clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )
 }

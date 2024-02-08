@@ -1,21 +1,15 @@
-import React from 'react'
-import { Graficos } from '../componentes/graficos'
-
+import React from 'react';
+import { Graficos } from '../componentes/Graficos';
 
 export const Home = () => {
-    const data = [
-        { nombre: "Enero", promedio: 10},
-        { nombre: "Febrero", promedio: 6},
-        { nombre: "Marzo", promedio: 9,  },
-        { nombre: "Abril", promedio: 6},
-        { nombre: "Mayo", promedio: 7 },
-        { nombre: "Mayo", promedio: 11 },
-        
-      ];
     return (
+
         <>
+            <link rel="stylesheet" href="src\css\graficas.css" />
             <h2>Inicio</h2>
-            <Graficos datos={data}/>
+            <div className='BoxMain'>
+                <Graficos/>
+            </div>
         </>
-    )
-}
+    );
+};

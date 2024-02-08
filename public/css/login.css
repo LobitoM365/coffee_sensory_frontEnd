@@ -1,9 +1,11 @@
 *{
   margin: 0;
   padding: 0;
+  color: black;
 }
 
 input{
+  color: rgb(67, 67, 67);
   background-color: white;
 }
 img{
@@ -126,5 +128,29 @@ background-size: cover;
 .login-form button:hover {
   box-shadow:  0px 0px 4px 0px rgb(158, 158, 158);
   background: radial-gradient(rgb(12, 90, 12), rgb(42, 166, 42));
+}
 
+/* Error validation */
+.credentials-error{
+  position: absolute;
+  bottom: -20px;
+  font-size: 0.7em;
+  color: orangered;
+}
+
+.input-error{
+  box-shadow: 0px 0px 3px 1px rgb(238, 125, 44) inset;
+  transition: box-shadow 0.2s ease-in;
+  /* border: 10px solid red; */
+}
+
+.show-password{
+  position: relative;
+  left: 85%;
+  top: -30px;
+  /* background-color: rebeccapurple; */
+  width: 20px;
+}
+#showPassowrd{
+  display: none;
 }

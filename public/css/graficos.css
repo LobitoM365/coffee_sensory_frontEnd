@@ -4,10 +4,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 .barra{
     background-color: rgb(237, 155, 47);
     box-shadow: 0px 0px 7px rgb(120, 120, 213);
+}
+.contentGraphic{
+    display: flex;
+}
+.title-graphic{
+    color:gray;
+    font-weight: bolder;
+    font-size: 2em;
+    text-shadow: rgb(241, 235, 235) 1px 5px ;
+    text-transform: uppercase;
+    padding: 5px;
 }
 .Tablecolors{
     width: 15rem;
@@ -17,16 +29,28 @@
     flex-direction: column;    
 }
 .BoxOptions{
+<<<<<<< HEAD
     width:max-content;
     display: flex;
+=======
+    width: max-content;
+    display: flex;
+    justify-content: center;
+>>>>>>> development
     justify-content: center;
     align-items: center;
+    
 }
 .BoxOptions:hover{
     background-color: rgba(123, 124, 124, 0.542);
     border-radius: 7px;
+<<<<<<< HEAD
     width:max-content;
     padding: 0px 10px 0px 0px;
+=======
+    padding: 2px 15px;
+    transition: padding 0.3s ;
+>>>>>>> development
 }
 .colors{
     width: 1.5rem;

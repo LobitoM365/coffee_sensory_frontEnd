@@ -92,7 +92,7 @@ export const Login = () => {
                             <span className='span-input'>Contraseña</span>
                             <div className="container-input">
                                 <input
-                                    className='input-text'
+                                    className='input-password input-text'
                                     type={eyes ? 'text' : 'password'}
                                     value={password}
                                     placeholder='Contraseña'

@@ -106,8 +106,14 @@ img {
   width: calc(100% - 30px);
   outline: unset;
   padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+  border: none;
+  /* background-color: rebeccapurple; */
+  /* border-radius: 3px; */
+  /* border: 1px solid #ccc; */
+}
+
+.input-password{
+  width: 72% !important;
 }
 
 .login-form input::placeholder {
@@ -173,5 +179,7 @@ img {
 }
 
 .container-input{
-  border: 1px solid rebeccapurple;
+
+  border-radius: 3px;
+  border: 0.2px solid #ccc;
 }

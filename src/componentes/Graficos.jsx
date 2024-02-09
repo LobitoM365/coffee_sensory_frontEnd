@@ -1,4 +1,5 @@
 import axios from "axios";
+import Api from '../componentes/Api.jsx';
 import React, { useState, useEffect } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
@@ -13,16 +14,30 @@ ChartJS.register(
   Legend
 );
 
-export const Graficos = () => {
+export const Graficos = (user) => {
   const [data, setData] = useState([]);
   const [todo, setToo] = useState([]);
   const [key, setKey] = useState(0);
   
   useEffect(() => {
+    
     const fetchData = async () => {
       try {
-        const response = await axios.post('http://localhost:3000/api/analisis/total/1');
+        let UserIdSesion 
+        if(user.user){
+          UserIdSesion=user.user.userInfo
+          console.log(UserIdSesion)
+        }
+        const dataToSend ={
+          muestra: '1'
+        };
+        
+
+       
+        const response = await axios.post(`http://localhost:3000/api/analisis/total/${UserIdSesion.id}`,dataToSend);
         const responseData = response.data;
+        console.log(muestras,'Data Body', UserIdSesion.id , 'User')
+        console.log(responseData,'responseData')
         if (responseData.status == true) {
           setData(responseData.data);          
         }else{
@@ -42,7 +57,7 @@ export const Graficos = () => {
       setKey(key + 1)
       console.log(key + 1)
     })
-  }, []);
+  }, [user]);
  
   const options = {
     responsive: true,
@@ -73,7 +88,7 @@ export const Graficos = () => {
   };
 
   const color = [];
-
+  console.log(data,'')
   data.forEach(element=>{
     if (element.promedio>=8 && element.promedio < 11) {
       color.push ("rgb(244, 50, 50)")
@@ -100,8 +115,7 @@ export const Graficos = () => {
       ],
     };
 
-  
-  
+
     return ( 
       <div key={key}>
         <link rel="stylesheet" href="../../public/css/graficos.css" />

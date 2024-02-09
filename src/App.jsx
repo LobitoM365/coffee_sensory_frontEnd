@@ -95,7 +95,7 @@ export default function App() {
 
 
           <Route path='/dashboard' element={<Menu />}>
-            <Route path='' element={<Home />} />
+            <Route path='' element={<Home userInfo={userInfo}/>} />
             <Route path='profile' element={<Profile />} />
             <Route path="usuarios/registros" element={<ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} />} />
             <Route path='formulario' element={<FormRegiser />} />

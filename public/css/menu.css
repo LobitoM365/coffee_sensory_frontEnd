@@ -556,3 +556,20 @@ body {
 .nav-horizontal h1,.nav-horizontal h2,.nav-horizontal h3,.nav-horizontal h4,.nav-horizontal h5,.nav-horizontal h6{
     color: white;
 }
+.nav-main .selected-li {
+    background-color: #0D9276;
+}
+
+.nav-horizontal ul li ul a:hover,
+.nav-main .footer-nav li:hover {
+    background-color: #BBE2EC;
+}
+
+.nav-main .icon-li-nav-horizontal {
+    width: 25px;
+    fill: #FFF6E9;
+
+}
+.change-hamburguer-quit {
+color:  #FFF6E9 !important;
+}

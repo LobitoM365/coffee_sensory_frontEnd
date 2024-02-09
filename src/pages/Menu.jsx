@@ -338,7 +338,7 @@ export const Menu = () => {
                     </ul>
                 </div>
             </nav >
-            <nav className="nav-main nav-vertical" style={{ backgroundColor: !valueDarkMode ? "green" : "" }}>
+            <nav className="nav-main nav-vertical" style={{ backgroundColor: !valueDarkMode ? "white" : "" }}>
                 <div></div>
                 <div className="seccion-usuario-notificaciones">
                     {Object.keys(user).length > 0 ? user.rol == "catador" && user.cargo == "instructor" ?

@@ -31,6 +31,7 @@ export const validateViews = () => {
 };
 
 export const ProtectedRoute = ({ Element, allowRoles, userInfo }) => {
+    console.log(userInfo,"infooooooooooooooooooooooooooooooooooooooooooo")
     const rol = userInfo ? userInfo.rol : null;
     console.log('ROL: ', allowRoles + ' ---- ' + rol);
     console.log('Element: ', Element);

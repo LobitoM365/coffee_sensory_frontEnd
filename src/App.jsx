@@ -97,7 +97,7 @@ export default function App() {
           <Route path='/dashboard' element={<Menu />}>
             <Route path='' element={<Home />} />
             <Route path='profile' element={<Profile />} />
-            <Route path="usuarios/registros" element={<ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} />} />
+            <Route path="usuarios/registros"  element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} />: ""} />
             <Route path='formulario' element={<FormRegiser />} />
             <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
             <Route path='fincas/registros' element={<Fincas />} />

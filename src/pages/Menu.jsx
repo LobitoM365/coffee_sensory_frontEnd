@@ -7,7 +7,6 @@ import { validateViews } from "../componentes/ValidateViews.jsx";
 
 export const Menu = () => {
     const [pageLoad, setPageLoad] = useState({});
-    const location = useLocation();
     const [queryMenu, setQueryMenu] = useState(document.body.scrollWidth <= 610 ? true : false)
     let responseValidate = validateViews();
     if (responseValidate) {
@@ -29,9 +28,6 @@ export const Menu = () => {
     function selectedLi(location) {
         changeSelected(location)
     }
-    useEffect(() => {
-        haburguerMode = 0   
-    }, [location])
 
     async function getAgignaciones() {
 
@@ -46,7 +42,7 @@ export const Menu = () => {
     }
     function stateMenu() {
         let linkMenu = document.querySelectorAll(".change-hamburguer-quit");
-        console.log(haburguerMode,"modeeeeeeeeeeeeeeeeeeeeeeeee")
+        console.log(haburguerMode, "modeeeeeeeeeeeeeeeeeeeeeeeee")
         let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
         let navHorizontal = document.getElementById("navHorizontal");
         if (queryMenu) {
@@ -171,9 +167,14 @@ export const Menu = () => {
 
         window.addEventListener("resize", function () {
             if (document.body.scrollWidth <= 610) {
-                setQueryMenu(true)
+                if (!queryMenu) {
+                    setQueryMenu(true)
+
+                }
             } else {
-                setQueryMenu(false)
+                if (!queryMenu) {
+                    setQueryMenu(false)
+                }
             }
 
         })

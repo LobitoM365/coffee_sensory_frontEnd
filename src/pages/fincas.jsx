@@ -155,7 +155,7 @@ export const Fincas = () => {
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if(axios.data.permission_error){
+            } else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -204,7 +204,7 @@ export const Fincas = () => {
                 }
             }
         )
-        
+
     }
     async function setFinca(data) {
         try {
@@ -235,7 +235,7 @@ export const Fincas = () => {
                 )
             } else if (axios.data.errors) {
                 setErrors(axios.data.errors)
-            }  else if(axios.data.permission_error){
+            } else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -248,7 +248,7 @@ export const Fincas = () => {
                         }
                     }
                 )
-            }else {
+            } else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -275,7 +275,18 @@ export const Fincas = () => {
 
     async function getUsers() {
         try {
-            const response = await Api.post("usuarios/listar");
+            let filter = {
+                "filter": {
+                    "where": {
+                        "us.estado": {
+                            "operador": "!=",
+                            "value": "0",
+                            "require": "and"
+                        }
+                    }
+                }
+            }
+            const response = await Api.post("usuarios/listar",filter);
             if (response.data.status == true) {
                 let users = inputsForm;
                 if (!users["usuarios_id"]) {

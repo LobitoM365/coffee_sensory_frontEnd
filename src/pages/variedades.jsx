@@ -300,7 +300,7 @@ export const Variedades = () => {
     }
     async function buscarFinca(id) {
 
-        const response = await Api.get("finca/buscar/" + id);
+        const response = await Api.get("variedades/buscar/" + id);
         if (response.data.status == true) {
             setfincaEdit(response.data.data[0])
         } else if (response.data.find_error) {

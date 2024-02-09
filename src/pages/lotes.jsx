@@ -27,7 +27,7 @@ export const Lotes = () => {
     let [inputsForm, setInputsForm] = useState(
         {
             nombre: {
-                type: "text",
+                type: "normal",
                 referencia: "Nombre del lote",
                 upper_case: true,
             },

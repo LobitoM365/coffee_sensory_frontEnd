@@ -50,7 +50,7 @@ export const Municipios = () => {
             "upper_case": true
         },
         "departamento": {
-            "referencia": "Estado"
+            "referencia": "Departamento"
         },
         "fecha_creacion": {
             "referencia": "Fecha creación"

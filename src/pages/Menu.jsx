@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Link, Outlet, json } from "react-router-dom"
+import { Link, Outlet, json, useLocation } from "react-router-dom"
 
 import Api from '../componentes/Api.jsx';
 import { validateViews } from "../componentes/ValidateViews.jsx";
@@ -7,12 +7,14 @@ import { validateViews } from "../componentes/ValidateViews.jsx";
 
 export const Menu = () => {
     const [pageLoad, setPageLoad] = useState({});
-
+    const location = useLocation();
+    const [queryMenu, setQueryMenu] = useState(document.body.scrollWidth <= 610 ? true : false)
     let responseValidate = validateViews();
     if (responseValidate) {
         console.log('MENU VALIDATE: ', responseValidate.data);
     }
 
+    let haburguerMode = queryMenu ? 1 : 0;
     const [user, setUser] = useState({});
     const [asignaciones, setAsignaciones] = useState([]);
     const [modalNotificaciones, changeModalNotificaciones] = useState(false);
@@ -27,7 +29,9 @@ export const Menu = () => {
     function selectedLi(location) {
         changeSelected(location)
     }
-
+    useEffect(() => {
+        haburguerMode = 0   
+    }, [location])
 
     async function getAgignaciones() {
 
@@ -40,6 +44,88 @@ export const Menu = () => {
             console.log("ERROR" + e)
         }
     }
+    function stateMenu() {
+        let linkMenu = document.querySelectorAll(".change-hamburguer-quit");
+        console.log(haburguerMode,"modeeeeeeeeeeeeeeeeeeeeeeeee")
+        let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
+        let navHorizontal = document.getElementById("navHorizontal");
+        if (queryMenu) {
+            let height = document.querySelectorAll(".nav-vertical")
+            console.log(height[0].scrollHeight, "xdddddddddddddddd")
+            navHorizontal.style.height = "calc(100% - " + height[0].clientHeight + "px - 50px)";
+            navHorizontal.style.bottom = "0";
+            navHorizontal.style.width = "100%";
+
+            for (let x = 0; x < linkMenu.length; x++) {
+                linkMenu[x].style.opacity = "1"
+                linkMenu[x].style.fontSize = ""
+                setTimeout(() => {
+                    linkMenu[x].style.display = "block"
+                }, 100)
+
+            }
+            for (let x = 0; x < hamburguerCentered.length; x++) {
+
+                hamburguerCentered[x].style.display = ""
+                hamburguerCentered[x].style.justifyContent = ""
+
+            }
+        } else {
+            navHorizontal.style.height = "";
+
+        }
+        if (haburguerMode == 0) {
+            if (queryMenu) {
+                navHorizontal.style.left = "0%";
+            } else {
+                for (let x = 0; x < linkMenu.length; x++) {
+
+                    linkMenu[x].style.transition = "all  0.3s"
+                    linkMenu[x].style.opacity = "0"
+                    linkMenu[x].style.fontSize = "10px"
+                    setTimeout(() => {
+                        linkMenu[x].style.display = "none"
+
+                    }, 100)
+
+                }
+                for (let x = 0; x < hamburguerCentered.length; x++) {
+                    setTimeout(() => {
+                        hamburguerCentered[x].style.display = "flex"
+                        hamburguerCentered[x].style.justifyContent = "center"
+                    }, 100)
+
+                }
+                navHorizontal.style.width = "75px";
+            }
+
+            haburguerMode = 1;
+        } else {
+            if (queryMenu) {
+                navHorizontal.style.left = "-100%";
+            } else {
+                for (let x = 0; x < linkMenu.length; x++) {
+                    navHorizontal.style.width = "";
+                    linkMenu[x].style.transition = "all  0.3s"
+                    linkMenu[x].style.opacity = "1"
+                    linkMenu[x].style.fontSize = ""
+                    setTimeout(() => {
+                        linkMenu[x].style.display = "block"
+                    }, 100)
+
+                }
+                for (let x = 0; x < hamburguerCentered.length; x++) {
+                    setTimeout(() => {
+                        hamburguerCentered[x].style.display = ""
+                        hamburguerCentered[x].style.justifyContent = ""
+                    }, 100)
+                }
+            }
+            haburguerMode = 0;
+
+        }
+    }
+
     useEffect(() => {
         let ulContentLi = document.getElementById("ulContentLi")
         setTimeout(() => {
@@ -67,68 +153,40 @@ export const Menu = () => {
             }
         }
         getUser();
-        let hamnuguerMode = 0;
+
+        window.addEventListener("resize", function () {
+
+
+            resizeMenuToOverFlowUl()
+        })
+        stateMenu()
         let iconHamburguer = document.getElementById("iconHamburguer")
-        function stateMenu() {
-            let linkMenu = document.querySelectorAll(".change-hamburguer-quit");
-            console.log(linkMenu)
-            let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
-            let navHorizontal = document.getElementById("navHorizontal");
-            navHorizontal.style.transition = "width 0.5s";
 
-            if (hamnuguerMode == 0) {
-                for (let x = 0; x < linkMenu.length; x++) {
-
-                    linkMenu[x].style.transition = "all  0.3s"
-                    linkMenu[x].style.opacity = "0"
-                    linkMenu[x].style.fontSize = "10px"
-                    setTimeout(() => {
-                        linkMenu[x].style.display = "none"
-
-                    }, 100)
-
-                }
-                for (let x = 0; x < hamburguerCentered.length; x++) {
-                    setTimeout(() => {
-                        hamburguerCentered[x].style.display = "flex"
-                        hamburguerCentered[x].style.justifyContent = "center"
-                    }, 100)
-
-                }
-                navHorizontal.style.width = "75px";
-
-                hamnuguerMode = 1;
-            } else {
-                for (let x = 0; x < linkMenu.length; x++) {
-                    navHorizontal.style.width = "";
-                    linkMenu[x].style.transition = "all  0.3s"
-                    linkMenu[x].style.opacity = "1"
-                    linkMenu[x].style.fontSize = ""
-                    setTimeout(() => {
-                        linkMenu[x].style.display = "block"
-                    }, 100)
-
-                }
-                for (let x = 0; x < hamburguerCentered.length; x++) {
-                    setTimeout(() => {
-                        hamburguerCentered[x].style.display = ""
-                        hamburguerCentered[x].style.justifyContent = ""
-                    }, 100)
-                }
-                hamnuguerMode = 0;
-            }
-        }
         iconHamburguer.addEventListener("click", function () {
             stateMenu();
         })
-        stateMenu();
-        window.addEventListener("resize", function () {
-            resizeMenuToOverFlowUl()
-        })
-
-
     }, [responseValidate])
+    useEffect(() => {
+        let iconHamburguer = document.getElementById("iconHamburguer")
 
+        window.addEventListener("resize", function () {
+            if (document.body.scrollWidth <= 610) {
+                setQueryMenu(true)
+            } else {
+                setQueryMenu(false)
+            }
+
+        })
+        if (iconHamburguer) {
+            iconHamburguer.addEventListener("click", function () {
+                stateMenu();
+            })
+
+            stateMenu()
+
+        }
+
+    }, [queryMenu])
 
     function darkMode() {
         changeDarkMode(!valueDarkMode)
@@ -167,7 +225,6 @@ export const Menu = () => {
 
     };
 
-
     pageLoad[location.pathname] = false
 
     return (
@@ -180,11 +237,11 @@ export const Menu = () => {
 
             <nav id="navHorizontal" className="nav-main nav-horizontal" style={{ backgroundColor: !valueDarkMode ? "green" : "" }}>
                 <div id="divHeaderNav" className="div-header-nav">
-                    <div className="header-nav hamburguer-centered">
-                        <img className="img-logo-nav change-hamburguer-quit" src="../../public/img/logo-coffee-sensory.jpeg" alt="" />
+                    {!queryMenu ? <div className="header-nav hamburguer-centered">
+                        <img className="img-logo-nav change-hamburguer-quit" src="../../public/img/logo-coffee-sensory.png" alt="" />
 
                         <h2 className="title-header-nav-horizontal change-hamburguer-quit">Dashboard</h2>
-                        <svg id="iconHamburguer" className="icon-hamburguer-li-nav-horizontal icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 1024.000000 1024.000000" preserveAspectRatio="xMidYMid meet">
+                        <svg id="iconHamburguer" className="icon-hamburguer-li-nav-horizontal icon-li-nav-horizontal" version="1.0" viewBox="0 0 1024.000000 1024.000000" preserveAspectRatio="xMidYMid meet">
 
                             <g transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)" stroke="none">
                                 <path d="M1105 8301 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
@@ -192,7 +249,7 @@ export const Menu = () => {
                                 <path d="M1105 3181 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
                             </g>
                         </svg>
-                    </div>
+                    </div> : ""}
                 </div>
                 <ul id="ulContentLi">
                     <li className="hamburguer-centered line-nav-li">
@@ -203,6 +260,11 @@ export const Menu = () => {
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                     <g><g><g><path d="M119.1,22c-42.9,3.2-80.9,29.7-98.7,69c-4.6,10.1-7.7,20.7-9.5,32.8c-1.1,7.1-1.1,24.9,0,32.1c4.3,28.4,16.6,51.8,37.6,71.3c3.9,3.6,8.5,7.2,8.8,7c0.1-0.1,0.8-2.9,1.6-6.2c3.6-14.5,6.2-22.3,8.2-24.4c2.3-2.4,14.4-5.9,29.1-8.5c9.5-1.6,9.5-1.6,9.5-2.3c0-0.3,1-1.5,2.2-2.7l2.2-2.1l0-6.1c0-3.3-0.1-7-0.1-8.1l0-2l-3.1-1.4c-4.7-2.2-10.5-6.3-11.8-8.3c-3.2-4.9-6.6-13.4-8.7-22c-0.8-3.1-1.4-6.1-1.4-6.7c0-0.6-0.9-2.1-2.1-3.5c-4.3-5-5.1-12.5-2.2-18.6l1.5-3V95.7c0-9.5,0.2-13.4,0.7-15.6c3.2-13.4,14.9-23.2,34.5-28.7c8.2-2.3,12.7-2.3,20.9,0c18.1,5.1,29.5,14,33.8,26.3c1,2.8,1.1,3.8,1.2,16.8c0.1,13.8,0.1,13.8,1.3,15.5c3.8,5.7,3,15.5-1.8,20.4c-1.3,1.3-1.6,2.3-2.5,6.9c-1.4,6.9-3.8,14.1-6.7,20c-3.2,6.5-5.1,8.3-13.9,12.8l-3.9,2l-0.1,7.9l-0.1,7.8l2.3,2.3c1.3,1.3,2.3,2.5,2.3,2.9c0,0.3,0.7,0.7,1.5,0.8c24.5,4.2,35,7.2,37.8,10.7c1.2,1.5,4.6,11.9,7.1,21.9c1.1,4.4,2.1,8,2.3,8c0.8,0,9.6-7.9,14.4-12.8c36.7-37.9,43.4-96.5,16.3-141.9c-12.6-21.1-31.1-37.6-53.6-47.7C158.9,24.3,137.9,20.6,119.1,22z" /></g></g></g>
                                 </svg> <h5 className="change-hamburguer-quit ">Inicio</h5>
+                                </li>
+                            </Link>
+                            <Link to={"/"}>
+                                <li className="hamburguer-centered"><img className="icon-li-nav-horizontal" src="/img/iconMapColombia.png" alt="" />
+                                    <h5 className="change-hamburguer-quit ">Mapa</h5>
                                 </li>
                             </Link>
                         </ul>
@@ -247,9 +309,9 @@ export const Menu = () => {
 
                             <Link to={"/dashboard/fincas/registros"} onClick={() => { selectedLi("/dashboard/fincas/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/fincas/registros" ? "selected-li" : ""}`}>
                                 <li className="hamburguer-centered">
-                                    <svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" space="preserve">
+                                    <svg className="icon-li-nav-horizontal" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256" >
                                         <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                        <g><g><g><path d="M45.1,121.4l-3.7-19.3l-18.5,6.4L29.3,90L10,86.3l14.9-12.8L10,60.7L29.3,57l-6.4-18.5L41.4,45l3.7-19.3l12.8,14.9l12.8-14.9L74.4,45l18.5-6.4L86.4,57l19.3,3.7L90.9,73.5l14.9,12.8L86.4,90l6.4,18.5l-18.5-6.4l-3.7,19.3l-12.8-14.9L45.1,121.4z M57.9,99.9c4.8,0,9.2-1.2,13.2-3.5c4-2.4,7.2-5.6,9.6-9.6c2.4-4,3.5-8.4,3.5-13.2c0-7.3-2.6-13.5-7.7-18.6c-5.1-5.2-11.3-7.7-18.6-7.7s-13.5,2.6-18.6,7.7c-5.2,5.2-7.7,11.3-7.7,18.6s2.6,13.5,7.7,18.6C44.4,97.3,50.6,99.9,57.9,99.9z M156.9,81.8c-0.6-0.7-1.9-1.6-3.9-2.8c-2-1.2-3.9-2.2-5.6-3l-2.6-1.2c-0.2-0.1-0.3-0.3-0.3-0.6V74c0-0.3,0.1-0.4,0.4-0.4c0.7,0.1,1.6,0.3,2.7,0.5c1.1,0.2,2.7,0.7,4.9,1.4c2.2,0.7,3.6,1.5,4.3,2.2c0.6-0.8,1.9-1.5,3.9-2.1s3.8-1.2,5.5-1.5l2.6-0.5c0.3,0,0.4,0.1,0.4,0.4v0.2c0,0.3-0.1,0.5-0.3,0.6C162.4,77.8,158.4,80.1,156.9,81.8z M194.1,180.8v-4.1c0-1.2,0.4-2.1,1.2-2.9c0.8-0.8,1.8-1.2,2.9-1.2v-29c-2.5,1.7-5.2,2.5-8.3,2.5c-4.1,0-7.6-1.4-10.5-4.3s-4.3-6.4-4.3-10.5c0-1,0.1-2,0.3-3.1c-1.3-0.6-2.4-1.3-3.5-2.2c-1-0.9-1.9-2-2.7-3.1c-0.8-1.1-1.4-2.4-1.8-3.8c-0.4-1.4-0.6-2.8-0.6-4.3c0-4.1,1.4-7.6,4.3-10.5c2.9-2.9,6.4-4.3,10.4-4.3c0.3,0,0.9,0,1.9,0.2c0-0.1,0-0.4-0.1-0.8c0-0.4-0.1-0.8-0.1-1.1c0-6.4,2.2-11.8,6.7-16.3c4.5-4.5,9.9-6.7,16.3-6.7c5.2,0,9.8,1.6,13.8,4.7c4,3.1,6.8,7.1,8.2,12c4.9,0.3,9,2.3,12.4,5.9c3.4,3.6,5.1,7.9,5.1,12.8c0,3.3-0.8,6.5-2.4,9.3c-1.6,2.8-3.8,5.1-6.6,6.8c0.5,1.6,0.7,3.1,0.7,4.6c0,4.1-1.4,7.6-4.3,10.5c-2.9,2.9-6.4,4.3-10.5,4.3c-3,0-5.8-0.8-8.3-2.5v29c1.2,0,2.1,0.4,2.9,1.2c0.8,0.8,1.2,1.8,1.2,2.9v4.1L194.1,180.8L194.1,180.8z M140.4,98.3c-0.6-0.7-1.9-1.6-3.9-2.8c-2-1.2-3.9-2.2-5.6-3l-2.6-1.2c-0.2-0.1-0.3-0.3-0.3-0.6v-0.2c0-0.3,0.1-0.4,0.4-0.4c0.7,0.1,1.6,0.3,2.7,0.5c1.1,0.2,2.7,0.7,4.9,1.4c2.2,0.7,3.6,1.5,4.3,2.2c0.6-0.8,1.9-1.5,3.9-2.1c2-0.6,3.8-1.2,5.5-1.5l2.6-0.5c0.3,0,0.4,0.1,0.4,0.4v0.2c0,0.3-0.1,0.5-0.3,0.6C145.9,94.3,141.9,96.6,140.4,98.3z M24.9,208.2v-12.7l37.2-17.4L42.9,137c1.8-0.4,4.8-1,9-1.8l26,35.5L88,166l-29.8-32c2.1-0.3,4.9-0.7,8.2-1.2l33.2,27.6l7.5-3.5l-34.7-24.8c1.9-0.2,4.6-0.5,7.9-0.7l35.6,21.4l17.4-8.1l-32.6-14c1.8,0,5,0.2,9.4,0.3l28.8,11.1l3.7-1.7l-24.8-8.9c4.4,0.3,8.5,0.7,12.5,1.2l17,5.5l15.1-7c1,1.3,1.8,2,2.1,2.3L24.9,208.2z M121.7,150.1l-35.6-19.1c1.6,0,4.4-0.1,8.3-0.2l34.3,16L121.7,150.1z M24.9,230.3v-9.9L165,136.3c0.3,1.7,0.8,3.2,1.4,4.7l-125,89.3H24.9z M24.9,195.5v-53.6c3.3-1,6.9-2.1,10.8-3.1l12.2,45.9L24.9,195.5z M66.1,230.3L168.5,145c1.4,2.1,3.1,4,5,5.7l-74.4,79.6H66.1z M123.9,230.3l55.6-75.8c2.6,1.2,5.3,1.9,8,2.1v8.2l-1.7,3.7c-0.6,0.9-1.1,2-1.6,3.3l-27.2,58.5H123.9z M181.7,230.3l10.3-38.8h22.7v38.8H181.7z" /></g></g></g>
+                                        <g><g><path d="M240.3,123.1c-0.9-0.4-1.8-0.6-2.7-0.6c-0.8-1.2-2-2-3.4-2.1c-2.3-0.3-4.4,1.3-5.3,3.7c-0.3-0.2-0.6-0.4-0.9-0.6c-2.7-1.4-5.6-0.5-7.3,1.9c-0.3-0.3-0.7-0.5-1.1-0.7c-1.4-0.7-2.8-0.7-4.1-0.2c-0.2-1.2-0.9-2.3-2-2.8c-1.6-0.8-3.4,0-3.9,2c-0.1,0.3-0.1,0.7-0.2,1.1c-1.3-0.3-2.6,0.1-3.6,0.9c-0.6-1.2-1.8-1.9-3.1-1.9c-2,0-3.6,1.8-3.6,4c0,0.4,0.1,0.9,0.2,1.3c15.9,1.6,31.3,3.8,46,6.6l0,0C247.1,130.4,244.8,124.9,240.3,123.1z M53.5,124.1c-0.6,0.3-1.1,0.7-1.6,1.3c-1-0.9-2.3-1.3-3.6-1.1c0-0.4,0-0.7-0.1-1.1c-0.6-2-2.3-3-3.9-2.1c-1,0.5-1.8,1.6-2,2.9c-1.3-0.6-2.7-0.6-4.1,0.1c-0.4,0.2-0.8,0.4-1.1,0.7c-1.7-2.5-4.6-3.5-7.4-2.2c-1.1,0.5-1.5,0.9-1.8,1.1c-2.6-3.6-7.1-5.1-11.2-3.4c-5.2,2.1-7.9,8.5-6,14.3l0,0c15.5-2.7,31.7-4.9,48.5-6.5c0-0.2-0.1-0.9-0.4-1.7C57.8,124.2,55.6,123.1,53.5,124.1z" /><path d="M171.7,160.9c16.3,1.2,34.1,3,53.4,6c1.7-1.7,3.4-3.6,5.2-5.7c-11.6-1.9-22.7-3.3-33.2-4.3L171.7,160.9z M199.3,150.6c11.3,1.3,23.1,2.9,35.5,5c1.1-1.5,2.2-3.2,3.3-4.9c-13.6-2.4-26.6-4.1-38.8-5.3V150.6z M199.3,139.1c13.2,1.4,27.3,3.4,42,6c0.7-1.3,1.3-2.7,1.9-4c-15.5-2.8-30.2-4.8-43.9-6.2V139.1z M55.7,161v-2.1c-19.4,2.5-27.8,4.6-27.8,4.6S36.4,162.3,55.7,161z M55.7,148.7v-2.1c-25.5,3.1-36.4,5.8-36.4,5.8S30.4,150.7,55.7,148.7z M54.5,136c-28.6,3.3-40.8,6.4-40.8,6.4s11.8-2.1,39.1-4.5L54.5,136z" /><path d="M98.5,81.5c-1.4,0-2.6,1.2-2.6,2.7v7.1l5.1,0.2v-7.1C101.1,82.9,99.9,81.6,98.5,81.5z M138.5,119.4c0-1.9-1.4-3.5-3.1-3.6c-1.7-0.1-3.1,1.4-3.1,3.3v8.6l6.2,0.3L138.5,119.4L138.5,119.4z M123.3,118.8c0-1.9-1.4-3.5-3.1-3.6c-1.7-0.1-3.1,1.4-3.1,3.3v8.6l6.2,0.2L123.3,118.8L123.3,118.8z M153.8,120c0-1.9-1.4-3.5-3.1-3.6c-1.7-0.1-3.1,1.4-3.1,3.3v8.6l6.2,0.3L153.8,120L153.8,120z M71.3,133.2v4l5.1,0.2v-4c0-1.6-1.2-2.9-2.6-3C72.5,130.3,71.3,131.6,71.3,133.2z M73.9,143.4c-1.4-0.1-2.6,1.2-2.6,2.7v5.6l5.1,0.2v-5.6C76.5,144.8,75.3,143.5,73.9,143.4z M179.5,91.8l-56.5-2.3l-0.6,0.7V76.1l2.7-0.4l-20.4-23.8L85.3,77.5l2.7,0.1v23.4c-0.2-1.8-0.3-3.6-0.6-5.3c-0.4-2-1-3.9-1.5-5.9c-0.4-1.8-0.2-3.6-1-5.3c-0.4-0.8-0.8-3.3-2.4-3.2C82,81.6,81,82,80.8,82.6c-0.1,0.2,0.1,0.4,0,0.6c-0.9,1.5-1.4,3.5-1.7,5.2c-0.3,1.6-0.3,3.2-0.6,4.8c-0.3,1.7-0.8,3.3-1.2,5c-0.6,2.3-0.9,4.5-1.1,6.8c-0.1,0.8-0.1,1.6-0.2,2.5c-0.1,0.8-0.5,1.6-0.7,2.4c-0.4,1.3,0,2.6-0.2,3.9c-0.2,1.5-0.7,3-0.9,4.6c-0.1,0.7-0.1,1.4-0.1,2.2l-0.7,0.1l-18,19.1l3.4,0.1v21.4l29.2,1.2l33.2-5.2l42.2,1.7l33.2-5.2v-45.3l4.1-0.7L179.5,91.8z M178.1,115.4l1.9-0.3v9.7l-1.9,0.3V115.4z M168.4,94.4l-16.4,15.7c-1.7-0.1-3.6-0.1-5.6-0.2l12.9-15.8C162.7,94.2,165.8,94.3,168.4,94.4z M159.2,94l-16.4,15.7c-1.8-0.1-3.7-0.1-5.6-0.2l12.9-15.8C153.2,93.8,156.3,93.9,159.2,94z M149.9,93.6l-16.4,15.7c-1.9-0.1-3.8-0.1-5.6-0.2l13-15.8C143.8,93.4,146.9,93.5,149.9,93.6z M140.7,93.3l-16.4,15.7c-2-0.1-3.9-0.1-5.6-0.2l13-15.8C134.2,93,137.3,93.1,140.7,93.3z M111.8,84.3c0-1.5,1.1-2.9,2.5-3.2s2.5,0.8,2.5,2.4v6.9l-5,0.8V84.3z M124.1,92.6c0.5,0,3.3,0.1,7.3,0.3L115,108.6c-2.2-0.1-4.1-0.2-5.5-0.2C114.8,102.7,122.9,93.9,124.1,92.6z M103.8,57.8l2.4,17.5c-2.5-0.1-11.2-0.5-15.2-0.6C93.8,71.1,101,61.5,103.8,57.8z M90.7,77.7l15.5,0.7v29.2l-3.3,3.6l3.3,0.1v4.1l-15.5,2.4V77.7z M78.4,108.9c0.3-6.5,3.9-21.7,3.7-21.8c0.2-0.1,1.2,16.1,0,21.9c-0.3,1.4,0.7,5.7,0.6,10.1l-5.4,0.8C77.8,115.7,78.2,111.5,78.4,108.9z M86.4,159.2c-2.5-0.1-22.7-0.9-24.9-1v-20.9c4.4-4.7,10.8-11.4,12.5-13.2l12.5,14.3L86.4,159.2L86.4,159.2z M82.1,122.3l14.7,14.2l-2.7,0.4L82.1,122.3z M100.4,151.1l-5,0.8V145c0-1.5,1.1-2.9,2.5-3.2c1.4-0.2,2.5,0.8,2.5,2.4V151.1z M102.9,135.5l-12-14.6l14.7,14.2L102.9,135.5z M112,149.3l-5,0.8v-6.8c0-1.5,1.1-2.9,2.5-3.2c1.4-0.2,2.5,0.8,2.5,2.4V149.3z M111.6,134.2l-12-14.6l14.7,14.2L111.6,134.2z M161.7,155.8c-0.5,0-2.9-0.1-6.3-0.3v-11.1c0-2.9-2.1-5.4-4.8-5.5c-2.6-0.1-4.8,2.2-4.8,5.1v11.1c-8-0.3-17.5-0.7-24.8-1v-18.3l2.7-0.4l-14.7-16.8v-7.1l52.7,2.2L161.7,155.8L161.7,155.8z M175.3,125.5l-1.9,0.3v-9.7l1.9-0.3V125.5z M161.2,110.5c-0.4,0-2.5-0.1-5.5-0.2l12.9-15.8c3.4,0.1,5.9,0.2,7.1,0.3C173.4,97.3,162.6,109,161.2,110.5z M181.6,146l-5,0.8v-6.9c0-1.5,1.1-2.9,2.5-3.2c1.4-0.2,2.5,0.8,2.5,2.4V146z M184.7,124l-1.9,0.3v-9.7l1.9-0.3V124z" /><path d="M59,187.3c0.7-0.2,1.3-0.7,1.9-1.2c1.3,1.3,3,1.9,4.6,1.4c2.3-0.7,3.7-3.6,3.3-6.6c1.1,1.4,2.6,2,4.1,1.5c1-0.3,1.8-1.1,2.3-2.1c0.8,0.5,1.6,0.7,2.5,0.4c1.8-0.6,2.9-3,2.3-5.4c0-0.2-0.1-0.4-0.2-0.6c0.8-1.1,1.2-2.7,0.8-4.3c-0.6-2.4-2.6-3.9-4.4-3.3c-0.6,0.2-1.1,0.6-1.5,1.1c-1.1-1-2.4-1.5-3.7-1.1c-0.4,0.1-0.7,0.3-1.1,0.6c-0.8-1.1-2-1.6-3.2-1.2c-1.3,0.4-2.2,1.9-2.2,3.5c-0.6-0.1-1.1,0-1.7,0.2c-0.6,0.2-1.1,0.5-1.5,0.9c-1.4-1.6-3.4-2.4-5.2-1.8c-1.6,0.5-2.8,1.9-3.3,3.8c-1-0.3-2-0.4-3,0c-0.8,0.3-1.5,0.7-2,1.3c-0.8-1-2-1.6-3.3-1.6c-1.7,0-3.1,1-3.9,2.5C46.1,179.7,52.3,183.8,59,187.3C59,187.3,59,187.3,59,187.3z M126.1,190.5c0.7,0,1.4-0.1,2.1-0.4c0.7-0.3,1.3-0.7,1.8-1.3c1.2,1.7,3,2.5,4.6,1.8c1.4-0.6,2.3-2.1,2.5-3.9c0.5,0,1-0.1,1.5-0.3c1.6-0.7,2.7-2.3,3.2-4.2c0.8,0.2,1.6,0.2,2.3-0.1c2.3-0.9,3.4-4.1,2.5-7.1c-0.3-1-0.8-1.8-1.4-2.5c0.6-1.4,0.7-3.1,0.2-4.8c-0.9-3-3.6-4.7-6-3.8c-1.1,0.4-1.9,1.3-2.4,2.5c-1.2-0.7-2.6-0.8-3.9-0.3c-1.9,0.8-3.1,2.8-3.3,5.1c-1.7-3.4-5.1-5.2-8.1-3.9c-2.1,0.9-3.4,3-3.8,5.4c-0.9-0.1-1.9,0-2.8,0.4c-1,0.4-1.8,1.1-2.4,2c-2.1-1.9-4.8-2.5-7.2-1.4c-1.9,0.9-3.3,2.6-3.9,4.8c-1.2-1.7-3.2-2.5-4.8-1.7c-2.1,1-2.9,3.9-1.9,6.6c0.2,0.6,0.5,1.1,0.9,1.5c-2.3-2-5.3-2.7-7.9-1.4c-1.2,0.6-2.2,1.5-2.9,2.6c-2.3-2-5.3-2.6-7.9-1.3c-2.9,1.5-4.5,4.9-4.3,8.7c10.6,4.2,21.9,7.2,33.6,8.9c0.7-1.2,1.1-2.7,1.1-4.4c1.8,1.1,3.9,1.3,5.8,0.5c1.3-0.6,2.2-1.5,3-2.8c1.8,1.3,4,1.8,5.9,0.9C124.4,195.8,125.8,193.3,126.1,190.5z M205.1,179.4c0.7-1.7,0.9-3.9,0.1-6c-1.2-3.5-4.3-5.4-6.8-4.3c-0.8,0.4-1.5,1-2,1.9c-1.7-1.4-3.7-1.9-5.5-1c-0.5,0.2-1,0.6-1.4,1c-1.3-1.4-3.2-2-4.8-1.3c-1.8,0.8-2.7,3.2-2.4,5.6c-0.8,0-1.6,0.2-2.3,0.5c-0.8,0.4-1.4,0.9-2,1.5c-2.3-2.2-5.2-2.9-7.7-1.7c-2.1,1.1-3.5,3.4-3.9,6.2c-1.4-0.3-2.9-0.2-4.3,0.6c-2.1,1.1-3.4,3.2-3.9,5.8c-2-2.3-4.9-3.1-7.2-1.9c-1.4,0.7-2.3,2.1-2.8,3.8c-2.2-1.1-4.6-1.1-6.7,0c-2.8,1.5-4.3,4.9-4.2,8.7c-1.4-0.1-2.8,0.1-4,0.8c-0.7,0.4-1.3,0.9-1.8,1.5c-1.9-2-4.5-2.6-6.5-1.4c-1.5,0.9-2.3,2.5-2.6,4.4c1.9,0.1,3.7,0.1,5.6,0.1c22.2,0,43.7-4.8,62.5-13.5c0-0.4-0.1-0.8-0.2-1.2c0.3,0.3,0.6,0.6,0.9,0.8c5-2.4,9.8-5,14.3-7.9c0-0.9-0.2-1.8-0.5-2.8C205.2,179.6,205.1,179.5,205.1,179.4z" /></g></g>
                                     </svg>
                                     <h5 className="change-hamburguer-quit ">Fincas</h5>
                                 </li>
@@ -265,7 +327,7 @@ export const Menu = () => {
                             </Link>
 
 
-                           
+
                             <Link to={"/dashboard/variedades/registros"} onClick={() => { selectedLi("/dashboard/variedades/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/variedades/registros" ? "selected-li" : ""}`}>
                                 <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256"  >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -275,7 +337,7 @@ export const Menu = () => {
                             </Link>
 
 
-                           
+
                             <Link to={"/dashboard/muestras/registros"} onClick={() => { selectedLi("/dashboard/muestras/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/muestras/registros" ? "selected-li" : ""}`}>
                                 <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -306,7 +368,7 @@ export const Menu = () => {
                                 </svg> <h5 className="change-hamburguer-quit ">Análisis</h5>
                                 </li>
                             </Link>
- 
+
                             <li className="hamburguer-centered">
                                 <svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -339,6 +401,17 @@ export const Menu = () => {
                 </div>
             </nav >
             <nav className="nav-main nav-vertical" style={{ backgroundColor: !valueDarkMode ? "green" : "" }}>
+                {queryMenu ? <div className="header-nav hamburguer-centered">
+
+                    <svg id="iconHamburguer" className="icon-hamburguer-li-nav-horizontal icon-li-nav-horizontal" version="1.0" viewBox="0 0 1024.000000 1024.000000" preserveAspectRatio="xMidYMid meet">
+
+                        <g transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)" stroke="none">
+                            <path d="M1105 8301 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
+                            <path d="M1105 5741 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
+                            <path d="M1105 3181 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
+                        </g>
+                    </svg>
+                </div> : ""}
                 <div></div>
                 <div className="seccion-usuario-notificaciones">
                     {Object.keys(user).length > 0 ? user.rol == "catador" && user.cargo == "instructor" ?

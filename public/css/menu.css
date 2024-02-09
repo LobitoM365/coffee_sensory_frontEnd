@@ -15,7 +15,7 @@
 }
 
 body {
-    background-color: rgb(243,243,244);
+    background-color: rgb(243, 243, 244);
     height: calc(100%);
     width: calc(100%);
     position: fixed;
@@ -55,34 +55,36 @@ body {
 }
 
 
-.nav-horizontal >ul {
+.nav-horizontal>ul {
     overflow-y: auto;
     overflow-x: hidden;
     padding: 10px 10px;
 }
 
-.nav-horizontal >ul::-webkit-scrollbar {
+.nav-horizontal>ul::-webkit-scrollbar {
     -webkit-appearance: none;
     appearance: none;
     background-color: transparent;
     width: 10px;
 }
 
-.nav-horizontal >ul::-webkit-scrollbar-thumb {
+.nav-horizontal>ul::-webkit-scrollbar-thumb {
     background-color: rgb(11, 46, 75);
     border-radius: 4px;
 
 }
 
 .nav-main .img-logo-nav {
-    width: 30px;
+    width: 50px;
     border-radius: 4px;
 }
-.nav-main .div-header-nav{
+
+.nav-main .div-header-nav {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .nav-main .title-header-nav-horizontal {
     font-size: 1em;
 }
@@ -110,22 +112,27 @@ body {
     align-items: center;
     gap: 15px;
 }
-.nav-horizontal ul li ul  a {
+
+.nav-horizontal ul li ul a {
     border-radius: 2px;
 }
+
 .nav-main .footer-nav li {
     width: max-content;
 }
+
 .nav-main .footer-nav ul {
     width: calc(100% - 20px);
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.nav-main .footer-nav{
+
+.nav-main .footer-nav {
     display: flex;
     justify-content: center;
 }
+
 .nav-horizontal ul li ul a:hover,
 .nav-main .footer-nav li:hover {
     background-color: rgb(102, 122, 138);
@@ -198,10 +205,12 @@ body {
     border-top: 1px solid white;
     padding: 20px 0px 0px 0px;
 }
-.nav-main .line-nav-li{
+
+.nav-main .line-nav-li {
     border-bottom: 1px solid white;
     padding-bottom: 20px;
 }
+
 .nav-main .icon-hamburguer-li-nav-horizontal {
     cursor: pointer;
     padding: 6px;
@@ -225,17 +234,17 @@ body {
     display: grid;
     grid-template-columns: 1fr auto;
     padding: 10px 50px;
-    border-bottom: 2px solid rgb(227,227,228);
+    border-bottom: 2px solid rgb(227, 227, 228);
     color: black;
 }
 
- .contenido {
+.contenido {
     color: black;
     overflow: auto;
     display: flex;
     justify-content: center;
     padding: 50px;
-    background-color: rgb(234,241,243);
+    background-color: rgb(234, 241, 243);
 }
 
 .nav-main .component {
@@ -370,10 +379,12 @@ body {
     align-items: center;
     padding: 20px;
 }
-.nav-main .notificacion-analisis:hover{
+
+.nav-main .notificacion-analisis:hover {
     background-color: rgba(170, 170, 170, 0.235);
     border-radius: 8px;
 }
+
 .nav-main .h4-informacion-notificacion-analisis {
     color: black;
 }
@@ -502,17 +513,21 @@ body {
     cursor: pointer;
 
 }
-.nav-main .li-content-usuarios{
+
+.nav-main .li-content-usuarios {
     display: flex;
     gap: 10px;
 }
+
 .nav-main .li-opciones-usuario:hover {
     background-color: rgb(30, 41, 59);
 }
-.nav-main .selected-li-perfil{
+
+.nav-main .selected-li-perfil {
     background-color: rgb(30, 41, 59);
     fill: white;
 }
+
 .nav-main .selected-li-perfil .link-opciones-usuarios {
     color: white;
     fill: white;
@@ -528,31 +543,76 @@ body {
 .nav-main .icon-li-opciones-usuario {
     width: 20px;
 }
-.nav-main .nombre-usuario{
-    font-size: 0.8em;
+
+.nav-main .nombre-usuario {
+    font-size: 1.1em;
 }
-.nav-main .rol-usuario{
+
+.nav-main .rol-usuario {
     font-size: 0.7em;
 }
-.div-img-perfil-nav{
+
+.div-img-perfil-nav {
     overflow: hidden;
     border-radius: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     flex: none;
 }
-.div-img-perfil-nav img{
+
+.div-img-perfil-nav img {
     width: 100%;
     height: 100%;
 }
 
-.btn-cerrar-sesion{
+.btn-cerrar-sesion {
     border: none;
 }
 
-.nav-horizontal h1,.nav-horizontal h2,.nav-horizontal h3,.nav-horizontal h4,.nav-horizontal h5,.nav-horizontal h6{
+.nav-horizontal h1,
+.nav-horizontal h2,
+.nav-horizontal h3,
+.nav-horizontal h4,
+.nav-horizontal h5,
+.nav-horizontal h6 {
     color: white;
+}
+
+#navHorizontal{
+    transition: width 0.5s;
+}
+@media screen and (max-width:610px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    #navHorizontal {
+        position: absolute;
+        z-index: 9;
+        right: 0;
+        transition: left 0.5s;
+    }
+
+    .nav-vertical {
+        grid-template-columns: 1fr 1fr 1fr;
+        padding: 10px 10px;
+
+    }
+
+   #iconHamburguer{
+    fill: black;
+   }
+   #iconHamburguer:hover{
+    background-color: #00000012;
+   }
+   .header-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-bottom : 0 !important;
+   }
 }

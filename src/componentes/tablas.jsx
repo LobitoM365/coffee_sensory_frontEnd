@@ -125,7 +125,7 @@ export const Tablas = (array) => {
     }, [data])
     useEffect(() => {
 
-        
+
         let contentTable = document.querySelectorAll(".content-table")
         let tableComponent = document.querySelectorAll(".table-component")
         let ziseTableComponent = 0;
@@ -150,8 +150,8 @@ export const Tablas = (array) => {
 
         function resizeTable() {
 
-         console.log(ziseTableComponent,"sizeeeeeeeeeeeeeeeeeeeeeee",tableComponent[0].clientWidth,contentTable[0].clientWidth < tableComponent[0].clientWidth)
-  
+            console.log(ziseTableComponent, "sizeeeeeeeeeeeeeeeeeeeeeee", tableComponent[0].clientWidth, contentTable[0].clientWidth < tableComponent[0].clientWidth)
+
             if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
                 ziseTableComponent = tableComponent[0].clientWidth;
 
@@ -261,15 +261,21 @@ export const Tablas = (array) => {
                     ziseLess = 0
                 }
 
+                if (arrayThQuit.length > 0) {
+                    ziseTableComponent == 0;
+                    resizeTable()
+                } else {
+                    ziseTableComponent = tableComponent[0].clientWidth;
+                }
 
 
-                ziseTableComponent = tableComponent[0].clientWidth;
 
             }
-            if( document.getElementById("loadTable")){
+            console.log(ziseTableComponent, "tableeComponenttt", contentTable[0].scrollWidth)
+            if (document.getElementById("loadTable")) {
                 document.getElementById("loadTable").remove()
             }
-            
+
         }
     }, [keyTable])
     return (
@@ -367,7 +373,7 @@ export const Tablas = (array) => {
                                         </div>
                                     </th>
                                 })}
-                                <th ><h4  className='tittle-item-header-table'>Actualizar</h4></th>
+                                <th ><h4 className='tittle-item-header-table'>Actualizar</h4></th>
                             </tr>
                         </thead >
                         <tbody key={"tBody"}>

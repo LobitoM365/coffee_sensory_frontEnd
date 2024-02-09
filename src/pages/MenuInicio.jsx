@@ -12,7 +12,7 @@ export const MenuInicio = ({ userInfo }) => {
 
             <div className="menu-horizontal-inicio">
                 <div className="logo">
-                    <img className='logo-menu' src="/img/logoCoffeeSensory.png" alt="" />
+                    <img className='logo-menu' src="../../public/img/logo-coffee-sensory.png" alt="" />
                 </div>
                 <nav>
                     <ul>

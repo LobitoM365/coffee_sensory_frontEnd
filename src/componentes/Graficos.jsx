@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import { element } from "prop-types";
 
 ChartJS.register(
   CategoryScale,
@@ -47,7 +48,7 @@ export const Graficos = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        display: false,
       },
       title: {
         display: true,
@@ -71,16 +72,30 @@ export const Graficos = () => {
   
   };
 
-  const color = 'red';
+  const color = [];
+
+  data.forEach(element=>{
+    if (element.promedio>=8 && element.promedio < 11) {
+      color.push ("rgb(244, 50, 50)")
+    }else if (element.promedio>=4 && element.promedio < 8) {
+      color.push("#4ec74e")
+    }
+
+    console.log(color, "colores")
+  })
   
    const chartData={
     
       labels: data.map(element => element.fecha),
       datasets: [
         {
-          label: 'Promedio',
+          label: data.map(element=>element.fecha),
           data: data.map(element => element.promedio),
-          backgroundColor: color,
+          backgroundColor: color.map(element=>element),
+          borderRadius:5,
+          datalabels: {
+           display:false,
+          },
         },
       ],
     };

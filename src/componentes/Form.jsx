@@ -137,7 +137,7 @@ export const Form = forwardRef((data, ref) => {
 
     useEffect(() => {
         Init()
-
+ 
         let modalForm = document.getElementById("modalForm");
         let divContentForm = document.getElementById("divContentForm");
         let divFondomodalForm = document.getElementById("divFondomodalForm");
@@ -216,7 +216,7 @@ export const Form = forwardRef((data, ref) => {
         })
 
 
-        if (!data.updateStatus) {
+        if (!data.updateStatus)  {
             data.funcionregistrar(json)
         } else {
             data.updateEntitie(json, elementEdit["id"])

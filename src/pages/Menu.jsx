@@ -9,9 +9,6 @@ export const Menu = () => {
     const [pageLoad, setPageLoad] = useState({});
     const [queryMenu, setQueryMenu] = useState(document.body.scrollWidth <= 610 ? true : false)
     let responseValidate = validateViews();
-    if (responseValidate) {
-        console.log('MENU VALIDATE: ', responseValidate.data);
-    }
 
     let haburguerMode = queryMenu ? 1 : 0;
     const [user, setUser] = useState({});
@@ -47,7 +44,7 @@ export const Menu = () => {
         let navHorizontal = document.getElementById("navHorizontal");
         if (queryMenu) {
             let height = document.querySelectorAll(".nav-vertical")
-            console.log(height[0].scrollHeight, "xdddddddddddddddd")
+
             navHorizontal.style.height = "calc(100% - " + height[0].clientHeight + "px - 50px)";
             navHorizontal.style.bottom = "0";
             navHorizontal.style.width = "100%";
@@ -68,6 +65,7 @@ export const Menu = () => {
             }
         } else {
             navHorizontal.style.height = "";
+            navHorizontal.style.left = "0%";
 
         }
         if (haburguerMode == 0) {
@@ -143,7 +141,7 @@ export const Menu = () => {
                 if (response.data.status == true) {
                     setUser(response.data.data)
                 }
-                console.log(response)
+
             } catch (e) {
                 console.log("ERROR" + e)
             }
@@ -167,14 +165,10 @@ export const Menu = () => {
 
         window.addEventListener("resize", function () {
             if (document.body.scrollWidth <= 610) {
-                if (!queryMenu) {
                     setQueryMenu(true)
 
-                }
             } else {
-                if (!queryMenu) {
                     setQueryMenu(false)
-                }
             }
 
         })
@@ -218,7 +212,7 @@ export const Menu = () => {
         try {
             const response = await Api.post("/auth/close");
             location.href = '/Login'
-            console.log('LOGOUTSesion: ', response)
+
         } catch (e) {
             location.href = '/Login'
             console.log("ERROR" + e)
@@ -237,6 +231,11 @@ export const Menu = () => {
 
 
             <nav id="navHorizontal" className="nav-main nav-horizontal" style={{ backgroundColor: !valueDarkMode ? "green" : "" }}>
+                <div className="div-img-nav">
+               <img className="logo-menu" src="/img/logoENCC.png" alt="" />
+                    
+                    <img className="img-nav" src="/img/fondoMenuVertical2.webp" alt="" />
+                </div>
                 <div id="divHeaderNav" className="div-header-nav">
                     {!queryMenu ? <div className="header-nav hamburguer-centered">
                         <img className="img-logo-nav change-hamburguer-quit" src="../../public/img/logo-coffee-sensory.png" alt="" />

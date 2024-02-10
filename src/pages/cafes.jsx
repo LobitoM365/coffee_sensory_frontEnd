@@ -112,6 +112,7 @@ export const Cafes = () => {
     async function getFincas() {
         try {
             const response = await Api.post("cafes/listar", dataFilterTable);
+            console.log('FILTER CAFE: ', dataFilterTable);
             if (response.data.status == true) {
                 setFincas(response.data.data)
                 setCountRegisters(response.data.count)

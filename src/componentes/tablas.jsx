@@ -126,8 +126,6 @@ export const Tablas = (array) => {
     useEffect(() => {
 
 
-        let contentTable = document.querySelectorAll(".content-table")
-        let tableComponent = document.querySelectorAll(".table-component")
         let contentComponent = document.getElementById("contentComponent")
 
         let ziseTableComponent = 0;
@@ -149,13 +147,20 @@ export const Tablas = (array) => {
         }, [200])
 
 
-
         function resizeTable() {
+            let newDivTable = document.querySelectorAll(".new-div-table");
+            let contentTable = document.querySelectorAll(".content-table")
+            if (newDivTable.length == 0) {
+                arrayThQuit = []; 
+            }
+
+            let tableComponent = document.querySelectorAll(".table-component")
+            console.log(contentTable[0].clientWidth, tableComponent[0].clientWidth, "tameeeeeeeeeeee")
 
             let contentComponent = document.getElementById("contentComponent")
-            console.log(contentComponent.scrollWidth , tableComponent[0].clientWidth)
 
             if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
+ 
 
                 let thQuit = contentTable[0].querySelectorAll("th");
 
@@ -242,7 +247,7 @@ export const Tablas = (array) => {
 
                     }
 
-resizeTable()
+                    resizeTable()
                 }
                 let elementsNewDivTable = document.querySelectorAll(".div-element-add");
 

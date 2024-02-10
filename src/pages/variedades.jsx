@@ -13,8 +13,8 @@ export const Variedades = () => {
         }
     })
         ;
-    const [fincas, setFincas] = useState([])
-    const [fincaEdit, setfincaEdit] = useState([])
+    const [fincas, setVariedads] = useState([])
+    const [fincaEdit, setVariedadEdit] = useState([])
     const [updateStatus, setUpdateStatus] = useState(false)
     const [municipios, setMunicipios] = useState([])
     const [countRegisters, setCountRegisters] = useState()
@@ -62,13 +62,13 @@ export const Variedades = () => {
         try {
             const response = await Api.post("variedades/listar", dataFilterTable);
             if (response.data.status == true) {
-                setFincas(response.data.data)
+                setVariedads(response.data.data)
                 setCountRegisters(response.data.count)
             } else if (response.data.find_error) {
                 setCountRegisters(0)
-                setFincas(response.data)
+                setVariedads(response.data)
             } else {
-                setFincas(response.data)
+                setVariedads(response.data)
             }
         } catch (e) {
 
@@ -148,7 +148,7 @@ export const Variedades = () => {
         )
         
     }
-    async function setFinca(data) {
+    async function setVariedad(data) {
         try {
             const axios = await Api.post("variedades/registrar/", data);
             if (axios.data.status == true) {
@@ -302,7 +302,7 @@ export const Variedades = () => {
 
         const response = await Api.get("variedades/buscar/" + id);
         if (response.data.status == true) {
-            setfincaEdit(response.data.data[0])
+            setVariedadEdit(response.data.data[0])
         } else if (response.data.find_error) {
 
         } else {
@@ -325,7 +325,7 @@ export const Variedades = () => {
  
     return (
         <>
-            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Variedad"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Variedad"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

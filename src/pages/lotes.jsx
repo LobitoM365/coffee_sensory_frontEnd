@@ -160,10 +160,10 @@ export const Lotes = () => {
         let tittle = ""
         let descripcion = ""
         if (estado == 0) {
-            tittle = "Activarás el Lote " + id
+            tittle = "Activarás el lote " + id
             descripcion = "Estás apunto de activar el lote, ten encuenta que esta accion no activará las dependencias de el lote, pero si permitirá el uso de ellas.";
         } else if (estado == 1 || estado == 3 || estado == 4) {
-            tittle = "¿Deseas desactivar la finca " + id + " ?";
+            tittle = "¿Deseas desactivar el lote " + id + " ?";
             descripcion = "Estás apunto de desactivar el lote, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de este lote."
         }
         setStatusAlert(true)
@@ -277,6 +277,7 @@ export const Lotes = () => {
 
         try {
             const axios = await Api.put("lotes/actualizar/" + id, data);
+            console.log('DATA LOTES UPDATE: ' , data);
             if (axios.data.status == true) {
                 getLotes();
                 setErrors({})

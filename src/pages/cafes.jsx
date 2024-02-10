@@ -112,7 +112,7 @@ export const Cafes = () => {
     async function getFincas() {
         try {
             const response = await Api.post("cafes/listar", dataFilterTable);
-            console.log('FILTER CAFE: ', dataFilterTable);
+            // console.log('FILTER CAFE: ', dataFilterTable);
             if (response.data.status == true) {
                 setFincas(response.data.data)
                 setCountRegisters(response.data.count)
@@ -180,11 +180,11 @@ export const Cafes = () => {
         let tittle = ""
         let descripcion = ""
         if (estado == 0) {
-            tittle = "Activarás las finca " + id
-            descripcion = "Estás apunto de activar la finca, ten encuenta que esta accion no activará las dependencias de la finca, pero si permitirá el uso de ellas.";
+            tittle = "Activarás las café " + id
+            descripcion = "Estás apunto de activar la café, ten encuenta que esta accion no activará las dependencias de la café, pero si permitirá el uso de ellas.";
         } else if (estado == 1 || estado == 3 || estado == 4) {
-            tittle = "¿Deseas desactivar la finca " + id + " ?";
-            descripcion = "Estás apunto de desactivar la finca, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de esta finca."
+            tittle = "¿Deseas desactivar la café " + id + " ?";
+            descripcion = "Estás apunto de desactivar la café, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de esta café."
         }
         setStatusAlert(true)
         setdataAlert(
@@ -328,13 +328,13 @@ export const Cafes = () => {
     async function getFilterEstado(value) {
         let cloneDataFilterTable = { ...dataFilterTable }
         if (value !== false) {
-            cloneDataFilterTable.filter.where["fin.estado"] = {
+            cloneDataFilterTable.filter.where["ca.estado"] = {
                 "value": value,
                 "require": "and"
             }
 
         } else {
-            delete cloneDataFilterTable.filter.where["fin.estado"]
+            delete cloneDataFilterTable.filter.where["ca.estado"]
         }
         setDataFilterTable(cloneDataFilterTable)
         getFincas(dataFilterTable)
@@ -351,7 +351,7 @@ export const Cafes = () => {
     }
     async function buscarFinca(id) {
 
-        const response = await Api.get("finca/buscar/" + id);
+        const response = await Api.get("cafes/buscar/" + id);
         if (response.data.status == true) {
             setfincaEdit(response.data.data[0])
         } else if (response.data.find_error) {

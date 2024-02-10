@@ -45,39 +45,56 @@ export const Analisis = (userInfo) => {
     )
 
     const keys = {
-        "us_id": {
+        "an_id": {
             "referencia": "Id",
         },
-        "nombre": {
-            "referencia": "Nombre",
+        "calidad": {
+            "referencia": "Calidad",
+        },
+        "proceso": {
+            "referencia": "Tipo de proceso",
             "upper_case": true
         },
-        "apellido": {
-            "referencia": "Apelido",
+        "tipo_analisis": {
+            "referencia": "Tipo de análisis",
             "upper_case": true
         },
-        "numero_documento": {
-            "referencia": "Numero de documento",
+        "muestras_id": {
+            "referencia": "Muestra",
             "upper_case": true
         },
-        "telefono": {
-            "referencia": "Teléfono"
-        },
-        "correo_electronico": {
-            "referencia": "Correo electrónico"
-        },
-        "tipo_documento": {
-            "referencia": "Tipo de documento",
+        "variedad": {
+            "referencia": "Variedad",
             "upper_case": true
         },
-        "rol": {
-            "referencia": "Rol",
+        "finca": {
+            "referencia": "Finca",
             "upper_case": true
         },
-        "cargo": {
-            "referencia": "Cargo",
+        "lote": {
+            "referencia": "Lote",
             "upper_case": true
         },
+        "catador": {
+            "referencia": "Catador",
+            "values": [
+                "catador_documento",
+                "catador"
+            ],
+            "upper_case": true
+        },
+        "fecha_analisis": {
+            "referencia": "Fecha de análisis",
+        },
+        "fecha_analisis": {
+            "referencia": "Fecha de análisis",
+        },
+        "fecha_analisis": {
+            "referencia": "Fecha de creación",
+        }, 
+        "fecha_formato": {
+            "referencia": "Fecha de análisis",
+        }, 
         "estado": {
             "referencia": "Estado"
         }
@@ -102,7 +119,7 @@ export const Analisis = (userInfo) => {
 
     async function getusuarios() {
         try {
-            
+
             if (userInfo.userInfo) {
 
                 if (userInfo.userInfo.rol == "administrador" && userInfo.userInfo.cargo == "administrador") {
@@ -128,7 +145,7 @@ export const Analisis = (userInfo) => {
                     }
                     cafes["usuarios_id"] = {
                         type: "select",
-                        referencia: "Usuario",
+                        referencia: "Catador",
                         values: ["numero_documento", "nombre_completo"],
                         opciones: response.data.status == true ? response.data.data : [],
                         upper_case: true,
@@ -141,7 +158,7 @@ export const Analisis = (userInfo) => {
             }
 
         } catch (e) {
-       
+
         }
     }
     async function getMuestras() {
@@ -165,14 +182,14 @@ export const Analisis = (userInfo) => {
                     }
                 }
             }
-            const response = await Api.post("muestra/listar",filter);
+            const response = await Api.post("muestra/listar", filter);
 
             let cafes = inputsForm;
             if (!cafes["muestras_id"]) {
                 cafes["muestras_id"] = {}
             }
             if (response.data.status == true) {
-               
+
                 cafes["muestras_id"]["opciones"] = response.data.data
             } else if (response.data.find_error) {
                 cafes["muestras_id"]["opciones"] = []
@@ -293,6 +310,7 @@ export const Analisis = (userInfo) => {
                 route = "asignar"
             }
             const axios = await Api.post("analisis/" + route + "/", data);
+            console.log(axios, "axiossssssss")
             if (axios.data.status == true) {
                 getAnalisis();
                 setErrors({})
@@ -343,7 +361,7 @@ export const Analisis = (userInfo) => {
                     }
                 )
             }
-      
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -446,7 +464,7 @@ export const Analisis = (userInfo) => {
         }
     }
     async function buscarUsuario(id) {
-   
+
         const response = await Api.get("usuarios/buscar/" + id);
         if (response.data.status == true) {
 

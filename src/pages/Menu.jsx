@@ -34,12 +34,11 @@ export const Menu = () => {
                 setAsignaciones(response.data.data)
             }
         } catch (e) {
-            console.log("ERROR" + e)
+            
         }
     }
     function stateMenu() {
         let linkMenu = document.querySelectorAll(".change-hamburguer-quit");
-        console.log(haburguerMode, "modeeeeeeeeeeeeeeeeeeeeeeeee")
         let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
         let navHorizontal = document.getElementById("navHorizontal");
         if (queryMenu) {
@@ -143,7 +142,7 @@ export const Menu = () => {
                 }
 
             } catch (e) {
-                console.log("ERROR" + e)
+              
             }
         }
         getUser();
@@ -165,10 +164,15 @@ export const Menu = () => {
 
         window.addEventListener("resize", function () {
             if (document.body.scrollWidth <= 610) {
-                    setQueryMenu(true)
+                    if(!queryMenu){
+                        setQueryMenu(true)
+                    }
 
             } else {
+                if(queryMenu){
                     setQueryMenu(false)
+                }
+                    
             }
 
         })
@@ -192,7 +196,7 @@ export const Menu = () => {
             const response = await Api.put("/analisis/cambiarEstado");
             getAgignaciones()
         } catch (e) {
-            console.log("ERROR" + e)
+           
         }
 
     }
@@ -215,7 +219,7 @@ export const Menu = () => {
 
         } catch (e) {
             location.href = '/Login'
-            console.log("ERROR" + e)
+      
         }
 
     };

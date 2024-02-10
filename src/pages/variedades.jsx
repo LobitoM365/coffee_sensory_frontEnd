@@ -111,7 +111,7 @@ export const Variedades = () => {
                     }
                 )
             }
-            console.log(axios)
+      
 
         } catch (e) {
             setStatusAlert(true)
@@ -201,7 +201,7 @@ export const Variedades = () => {
                     }
                 )
             }
-            console.log(axios)
+      
 
         } catch (e) {
             setStatusAlert(true)

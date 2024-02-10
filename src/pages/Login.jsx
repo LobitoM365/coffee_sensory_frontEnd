@@ -25,18 +25,17 @@ export const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Correo: ', email);
-        console.log('Contraseña: ', password);
+
         const data = {
             correo_electronico: email,
             user_password: password
         }
         Api.post('/auth/credentials', data)
             .then((response) => {
-                console.log('login response:', response);
+   
                 if (response.data.errors) {
                     const credentialsError = response.data.errors['credentials_error'];
-                    console.log(response.data.errors['credentials_error']);
+                   
                     setValidationError(credentialsError);
                 } else {
                     // navigate('/dashboard')
@@ -54,7 +53,7 @@ export const Login = () => {
                     });
                     // alert('ERROR LOGIN')
                 } else {
-                    console.log('ERROR: ', error.response.data.message);
+                    
                 }
 
             })

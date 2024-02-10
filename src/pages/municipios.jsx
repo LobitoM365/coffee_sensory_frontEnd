@@ -122,7 +122,7 @@ export const Municipios = () => {
                     }
                 )
             }
-            console.log(axios)
+         
 
         } catch (e) {
             setStatusAlert(true)
@@ -212,7 +212,7 @@ export const Municipios = () => {
                     }
                 )
             }
-            console.log(axios)
+        
 
         } catch (e) {
             setStatusAlert(true)

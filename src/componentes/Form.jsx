@@ -81,7 +81,7 @@ export const Form = forwardRef((data, ref) => {
     if (data.data) {
         inputs = Object.keys(data.data)
         dataInputs = data.data
-        console.log(dataInputs)
+
         elementEdit = data.elementEdit
     }
     function Init() {
@@ -125,7 +125,7 @@ export const Form = forwardRef((data, ref) => {
         changeSelectsValues(cloneSlectValue)
 
         setDataSelects(cloneDataSelect)
-        console.log(cloneDataSelect)
+
 
     }
     function clearElementsClick() {
@@ -156,7 +156,7 @@ export const Form = forwardRef((data, ref) => {
                 displayNone = true
             }
 
-            console.log(divContentForm.scrollHeight, "formmmmmm", document.body.clientHeight)
+            
             if (divContentForm.scrollHeight > document.body.clientHeight) {
                 modalForm.style.alignItems = "unset"
                 modalForm.style.padding = "20px 20px"
@@ -180,10 +180,10 @@ export const Form = forwardRef((data, ref) => {
                 modalForm.style.display = "none"
             }
             for (let x = 0; x < labelErrorSubmitForm.length; x++) {
-                console.log(labelErrorSubmitForm[x].scrollHeight + 10, labelErrorSubmitForm[x].clientHeight)
+           
 
                 if ((labelErrorSubmitForm[x].scrollHeight) > labelErrorSubmitForm[x].clientHeight) {
-                    console.log("xd")
+              
                     labelErrorSubmitForm[x].style.height = "max-content"
                 }
             }
@@ -208,7 +208,7 @@ export const Form = forwardRef((data, ref) => {
         let keysJson = Object.keys(json);
         
         keysJson.map((key, value) => {
-            console.log(keysJson,"xdxdadasdqwewqe",json[key])
+
             if(json[key]){
                 json[key] = json[key].toString().trimEnd().toLowerCase()
             }
@@ -255,7 +255,7 @@ export const Form = forwardRef((data, ref) => {
                                             if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "ubicacion" || dataInputs[key]["type"] === "normal") {
                                                 if (data.statusInputDefault && elementEdit) {
 
-                                                    console.log(elementEdit)
+                                        
                                                     inputValor[key] = elementEdit[key] ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : ""
                                                 } else if (data.statusInput) {
                                                     inputValor[key] = ""

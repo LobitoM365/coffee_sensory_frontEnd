@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 
 
 export const Slider = (data) => {
-    console.log(data.data, "dataaa")
+  
     useEffect(() => {
         let count = 0;
         if (data.data.length > 0) {
@@ -12,12 +12,12 @@ export const Slider = (data) => {
                 div.classList.add("div-element-slider");
                 div.appendChild(data.data[s])
                 divCarrusel.appendChild(div)
-                console.log(div, "xdxdxd")
+              
                 count = count + 1;  
             }
-            console.log(count, "COUNNTT")
+      
             if (count >= data.data.length) {
-                console.log(document.querySelectorAll(".div-element-slider"), "Dataaaaaaaaaaaaaaaaaaaaaaaaa")
+             
                 const sliderContent = document.getElementById("sliderContent")
                 const script = document.createElement("script");
                 script.setAttribute("src", "/js/slider.js")

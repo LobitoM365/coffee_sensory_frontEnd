@@ -47,7 +47,7 @@ export const Loader = () => {
             if (divLoader) {
                 divLoader.remove()
             }
-            console.log(lastPositionLoader)
+
             clearInterval(interval)
             iconLoader[lastPositionLoader].style.bottom = "0";
             positionIconLoader = -1;

@@ -169,7 +169,7 @@ export const Fincas = () => {
                     }
                 )
             }
-            console.log(axios)
+        
 
         } catch (e) {
             setStatusAlert(true)
@@ -259,7 +259,7 @@ export const Fincas = () => {
                     }
                 )
             }
-            console.log(axios)
+         
 
         } catch (e) {
             setStatusAlert(true)

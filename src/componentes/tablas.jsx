@@ -262,8 +262,8 @@ export const Tablas = (array) => {
                 }
 
                 if (arrayThQuit.length > 0) {
-                    ziseTableComponent == 0;
-                    resizeTable()
+                 /*    ziseTableComponent == 0;
+                    resizeTable() */
                 } else {
                     ziseTableComponent = tableComponent[0].clientWidth;
                 }

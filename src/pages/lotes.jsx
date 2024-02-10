@@ -99,7 +99,7 @@ export const Lotes = () => {
             } else {
                 setLotes(response.data)
             }
-            console.log(response)
+        
         } catch (e) {
 
         }
@@ -141,7 +141,7 @@ export const Lotes = () => {
                     }
                 )
             }
-            console.log(axios)
+      
 
         } catch (e) {
             setStatusAlert(true)
@@ -155,7 +155,7 @@ export const Lotes = () => {
         }
     }
     async function cambiarEstado(id, estado) {
-        console.log(id, "Loteeeeeee")
+
         idLoteCambiarEstado = id;
         let tittle = ""
         let descripcion = ""
@@ -232,7 +232,7 @@ export const Lotes = () => {
                     }
                 )
             }
-            console.log(axios)
+       
 
         } catch (e) {
             setStatusAlert(true)
@@ -262,9 +262,9 @@ export const Lotes = () => {
             } else {
 
             }
-            console.log(response, "responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+          
         } catch (e) {
-            console.log(e, "responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+
 
         }
     }
@@ -365,11 +365,11 @@ export const Lotes = () => {
         getLotes();
     }
     async function editarLote(id) {
-        console.log(id)
+    
         buscarLote(id)
     }
     function filterSeacth(search) {
-        console.log(search)
+     
         let cloneDataFilterTable = { ...dataFilterTable }
         cloneDataFilterTable.filter["search"] = search
         setDataFilterTable(cloneDataFilterTable)

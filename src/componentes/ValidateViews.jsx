@@ -20,7 +20,6 @@ export const validateViews = () => {
                 setResponse(response);
             } catch (error) {
                 setResponse(error);
-                console.log('error: ', error);
             }
         };
 
@@ -31,10 +30,9 @@ export const validateViews = () => {
 };
 
 export const ProtectedRoute = ({ Element, allowRoles, userInfo }) => {
-    console.log(userInfo,"infooooooooooooooooooooooooooooooooooooooooooo")
+  
     const rol = userInfo ? userInfo.rol : null;
-    console.log('ROL: ', allowRoles + ' ---- ' + rol);
-    console.log('Element: ', Element);
+
     if (rol && allowRoles.includes(rol)) {
         return <Element />
     } else {

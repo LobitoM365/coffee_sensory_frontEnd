@@ -4,7 +4,7 @@ import { Link, Outlet } from 'react-router-dom';
 
 export const MenuInicio = ({ userInfo }) => {
     const [locationName, setLocation] = useState(location.pathname);
-    console.log('MENU INCIO: ', userInfo);
+
 
     return (
         <>
@@ -19,16 +19,16 @@ export const MenuInicio = ({ userInfo }) => {
                         <li>
                             {locationName === "/" ? (
                                 userInfo ? (
-                                    <Link onClick={() => { locationName = location.pathname }} to="/dashboard">
+                                    <Link onClick={() => { setLocation(location.pathname) }} to="/dashboard">
                                         Menú Principal
                                     </Link>
                                 ) : (
-                                    <Link onClick={() => { locationName = location.pathname }} to="/login">
+                                    <Link onClick={() => { setLocation(location.pathname) }} to="/login">
                                         Iniciar Sesión
                                     </Link>
                                 )
                             ) : (
-                                <Link onClick={() => { locationName = location.pathname }} to="">
+                                <Link onClick={() => { setLocation(location.pathname) }} to="">
                                     Mapa
                                 </Link>
                             )}

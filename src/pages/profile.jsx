@@ -50,12 +50,12 @@ export const Profile = () => {
                 }
                 getInfoInputs()
             } else if (response.errors) {
-                console.log(response)
+
                 setMensaje(response.data.errors)
                 setUser({})
                 changeCount(0)
             } else {
-                console.log(response)
+
                 setMensaje({ "find_error": "Error interno del servidor" })
 
             }
@@ -70,7 +70,7 @@ export const Profile = () => {
         window.addEventListener("load", function () {
             if (heightForm.current) {
                 const height = heightForm.current.scrollHeight
-                console.log(heightForm.current.paddingTop, height, getComputedStyle(heightForm.current).paddingTop, "xdaqewq")
+           
                 changeHeightForm(height);
             }
         })
@@ -87,7 +87,7 @@ export const Profile = () => {
                 "correo_electronico": correo_electronico.current.value,
                 "numero_documento": numero_documento.current.value
             }
-            console.log(data)
+           
             const response = await Api.put("usuarios/actualizarPerfil", data);
             if (response.data.errors) {
                 setErrors(response.data.errors)
@@ -120,7 +120,7 @@ export const Profile = () => {
             else {
 
             }
-            console.log(response)
+
 
         } catch (e) {
             console.error("Error" + e)
@@ -150,7 +150,7 @@ export const Profile = () => {
                     "tittle": "Contraseña Actualizada Correctamente!",
                 });
             }
-            console.log('UPDATE: ', response.data)
+   
 
         } catch (e) {
             

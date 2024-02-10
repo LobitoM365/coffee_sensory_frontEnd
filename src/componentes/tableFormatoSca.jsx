@@ -16,7 +16,7 @@ export const TableFormatoSca = () => {
         const cloneDataFormatoSca = dataformatosSca
         dataformatosSca.push(cloneFormatoSca);
    
-        console.log(cloneDataFormatoSca)
+
     }
    
     useEffect(() => {
@@ -27,8 +27,7 @@ export const TableFormatoSca = () => {
        
         
         const iframeFormatoSca = document.querySelectorAll(".iframe-formato-sca");
-        console.log(iframeFormatoSca, "Iframeeeeeeeeeee ")
-        console.log(iframeFormatoSca, "Iframee")
+ 
 
         for (let i = 0; i < iframeFormatoSca.length; i++) { 
             iframeFormatoSca[i].addEventListener("load", function () {
@@ -45,7 +44,7 @@ export const TableFormatoSca = () => {
                     
                     const iframeFormatoScaContentDocument = iframeFormatoSca[i].contentDocument;
                     const formatoSca = iframeFormatoScaContentDocument.getElementById("formatoSca");
-                    console.log(formatoSca)
+                    
                     if (formatoSca) {
                         iframeFormatoSca[i].style.height = "calc(" + formatoSca.clientHeight + "px" + " + 0.5vw)"
                     }

@@ -102,7 +102,7 @@ export const Analisis = (userInfo) => {
 
     async function getusuarios() {
         try {
-            console.log(userInfo)
+            
             if (userInfo.userInfo) {
 
                 if (userInfo.userInfo.rol == "administrador" && userInfo.userInfo.cargo == "administrador") {
@@ -141,7 +141,7 @@ export const Analisis = (userInfo) => {
             }
 
         } catch (e) {
-            console.log(e)
+       
         }
     }
     async function getMuestras() {
@@ -166,7 +166,7 @@ export const Analisis = (userInfo) => {
                 }
             }
             const response = await Api.post("muestra/listar",filter);
-            console.log(response, "muestrasss",filter)
+
             let cafes = inputsForm;
             if (!cafes["muestras_id"]) {
                 cafes["muestras_id"] = {}
@@ -249,7 +249,7 @@ export const Analisis = (userInfo) => {
                     }
                 )
             }
-            console.log(axios)
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -343,7 +343,7 @@ export const Analisis = (userInfo) => {
                     }
                 )
             }
-            console.log(axios, "axioos")
+      
 
         } catch (e) {
             setStatusAlert(true)
@@ -446,7 +446,7 @@ export const Analisis = (userInfo) => {
         }
     }
     async function buscarUsuario(id) {
-        console.log(id)
+   
         const response = await Api.get("usuarios/buscar/" + id);
         if (response.data.status == true) {
 

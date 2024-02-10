@@ -67,7 +67,7 @@ export const Alert = (data) => {
                                             }
                                         }} className="input-alert input-warning-alert">Continuar</button>
                                     </div>
-                                    :  data.dataAlert["status"] === "interrogative" ?  <button onClick={() => { console.log(data); if(data.dataAlert.continue.location ){location.href = data.dataAlert.continue.location}else{location.href = "/"}}} className="input-alert input-entiendo-alert">Entiendo</button> : <button onClick={() => { data.setStatusAlert(false) }} className="input-alert input-cancelar-alert">Cancelar</button> :
+                                    :  data.dataAlert["status"] === "interrogative" ?  <button onClick={() => { if(data.dataAlert.continue.location ){location.href = data.dataAlert.continue.location}else{location.href = "/"}}} className="input-alert input-entiendo-alert">Entiendo</button> : <button onClick={() => { data.setStatusAlert(false) }} className="input-alert input-cancelar-alert">Cancelar</button> :
                             <button onClick={() => { data.setStatusAlert(false) }} className="input-alert input-cancelar-alert">Cancelar</button>}
                     </div>
                 </div>

@@ -139,7 +139,7 @@ export const Muestras = () => {
                     }
                 )
             }
-            console.log(axios)
+     
 
         } catch (e) {
             setStatusAlert(true)
@@ -229,7 +229,7 @@ export const Muestras = () => {
                     }
                 )
             }
-            console.log(axios)
+         
 
         } catch (e) {
             setStatusAlert(true)

@@ -189,7 +189,7 @@ export const RegistrosUsuarios = () => {
                     }
                 )
             }
-            console.log(axios)
+   
 
         } catch (e) {
             setStatusAlert(true)
@@ -279,7 +279,7 @@ export const RegistrosUsuarios = () => {
                     }
                 )
             }
-            console.log(axios, "axioos")
+     
 
         } catch (e) {
             setStatusAlert(true)
@@ -381,7 +381,7 @@ export const RegistrosUsuarios = () => {
         inputsForm["cargo"]["visibility"] = true
     }
     async function buscarUsuario(id) {
-        console.log(id)
+
         const response = await Api.get("usuarios/buscar/" + id);
         if (response.data.status == true) {
             if (response.data.data.rol == "administrador") {

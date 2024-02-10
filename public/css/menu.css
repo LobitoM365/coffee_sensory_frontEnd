@@ -642,3 +642,6 @@ body {
     
 
 }
+.nav-main .selected-li svg{
+    fill: black;
+}

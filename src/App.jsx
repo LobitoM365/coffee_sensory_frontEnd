@@ -33,11 +33,11 @@ export default function App() {
   const location = useLocation();
   useEffect(() => {
     if (!responseValidateViews) {
-      console.log('VALIDATE VIEWS !: ', responseValidateViews);
+
       return;
     }
 
-    console.log('VALIDATE VIEWS: ', responseValidateViews);
+  
     if (responseValidateViews.data !== undefined) {
       setUserInfo(responseValidateViews.data.user);
     } else {
@@ -55,7 +55,7 @@ export default function App() {
         const authorized = async () => {
             try {
                 const response = await Api.post('auth/protectViews', {});
-                console.log(response,"responseeeeeeeeeeeeeeeeeeeeeeeee")
+           
                 if (!response.data.authorized) {
                     if (location.pathname !== '/' && location.pathname !== '/login') {
                         window.location.href = '/login';
@@ -69,7 +69,7 @@ export default function App() {
                 return responseValidate;
             } catch (error) {
               responseValidate = error
-                console.log('error: ', error);
+          
             }
         };
         authorized();

@@ -37,7 +37,7 @@ export function Graficos (datos)  {
     
     let data = datos.datos
 
-    console.log(data)
+   
 
  
 let colors =[];
@@ -50,7 +50,7 @@ data.map((fecha)=>{
 
   let nombreMes = mes.toLocaleString('default', { month: 'long' })
   fecha['fecha']=nombreMes
-  console.log(fecha['fecha'])
+
 })
 data.map((items)=>{
     if (items.promedio>=9 && items.promedio<=10) {
@@ -65,8 +65,7 @@ data.map((items)=>{
         colors.push('gray')
     }
 })
-console.log(colors)
-console.log (datos.titulo)
+
 
 return (
     <div className="graphicBox">

@@ -75,7 +75,7 @@ export const Cafes = () => {
     async function getLotes() {
         try {
             const response = await Api.post("lotes/listar");
-            console.log(response.data.data,"loteeeeeeeeeeeeeeeees")
+            
             if (response.data.status == true) {
                 let cafes = inputsForm;
                 if (!cafes["lotes_id"]) {
@@ -163,8 +163,7 @@ export const Cafes = () => {
                     }
                 )
             }
-            console.log(axios)
-
+       
         } catch (e) {
             setStatusAlert(true)
             setdataAlert(
@@ -253,7 +252,7 @@ export const Cafes = () => {
                     }
                 )
             }
-            console.log(axios)
+   
 
         } catch (e) {
             setStatusAlert(true)

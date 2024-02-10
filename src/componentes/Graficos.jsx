@@ -16,36 +16,35 @@ ChartJS.register(
 
 export const Graficos = (user) => {
   const [data, setData] = useState([]);
-  const [todo, setToo] = useState([]);
   const [key, setKey] = useState(0);
   
   useEffect(() => {
-    
     const fetchData = async () => {
       try {
-        let UserIdSesion 
-        if(user.user){
-          UserIdSesion=user.user.userInfo
-          console.log(UserIdSesion)
-        }
+        let VariableIdUser=user.user;
+        console.log(VariableIdUser,'Hola desde graficos')
+       /*  let UserIdSesion = user?.user?.userInfo || 0;
+        console.log(UserIdSesion,"Inicio Sesion");
+        if (!UserIdSesion) {
+          console.log('UserIdSesion es nulo');
+          return;
+        }  */
         const dataToSend ={
-          muestra: '1'
+          muestras_id: '1'
         };
-        
-
-       
-        const response = await axios.post(`http://localhost:3000/api/analisis/total/${UserIdSesion.id}`,dataToSend);
+        const response = await axios.post(`http://localhost:3000/api/analisis/total/${VariableIdUser}`,dataToSend);
         const responseData = response.data;
-        console.log(muestras,'Data Body', UserIdSesion.id , 'User')
-        console.log(responseData,'responseData')
-        if (responseData.status == true) {
+       /*  console.log(dataToSend,'Data Body', UserIdSesion.id , 'User')
+        console.log(responseData,'responseData') */
+
+        console.log(responseData,'ResponseData')
+        if (responseData.status === true) {
           setData(responseData.data);          
         }else{
           setData([
            
           ]);          
         }
-        setToo(response);
         // console.log(responseData,"DATA RESPONSE")
       } catch (error) {
         console.error('Error al obtener los datos:', error);
@@ -57,7 +56,7 @@ export const Graficos = (user) => {
       setKey(key + 1)
       console.log(key + 1)
     })
-  }, [user]);
+  }, [user ]);
  
   const options = {
     responsive: true,
@@ -116,42 +115,62 @@ export const Graficos = (user) => {
     };
 
 
+    
+      const [windowSize, setWindowSize] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    
+      const [StilyCharts, setStilyCharts] = useState({
+        width: '1000px',
+        height: '200px'
+      });
+    
+      const handleResize = () => {
+        setWindowSize({
+          width: window.innerWidth,
+          height: window.innerHeight
+        });
+      };
+    
+      useEffect(() => {
+        // Suscribirse al evento de cambio de tamaño de la ventana
+        window.addEventListener('resize', handleResize);
+    
+        // Limpieza: Desuscribirse al desmontar el componente
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+      }, []);
+    
+      useEffect(() => {
+        // Actualizar el estado de StilyCharts según el tamaño de la pantalla
+        if (windowSize.width >= 768 && windowSize.width <= 1244) {
+          setStilyCharts({ width: '400px', height: '200px' ,margin:'10px'});
+        } else if (windowSize.width >= 320 && windowSize.width <= 480) {
+          setStilyCharts({ width: '100px', height: '50px' });
+        }else{
+          setStilyCharts({ width: '1000px', height: '200px' });
+        }
+      }, [windowSize]);
+
+     
+
+  //==============================================
+
     return ( 
       <div key={key}>
         <link rel="stylesheet" href="../../public/css/graficos.css" />
           {data ? data.length > 0 ? 
-        <div style={{ width: '1000px', height: '500px' }}>
+        <div  style={StilyCharts} >
 
           <Bar options={options} data={chartData} /> 
-          <div className="Tablecolors">
-          <div className="BoxOptions">
-            <div className="colors extraordinario"></div>
-            <h3>Extraordinario</h3>
-          </div>
-          <div className="BoxOptions">
-            <div className="colors excelente"></div>
-            <h3>Excelente</h3>
-          </div>
-          <div className="BoxOptions">
-            <div className="colors MyBueno"></div>
-            <h3>Muy Bueno</h3>
-          </div>
-          <div className="BoxOptions">
-            <div className="colors bueno"></div>
-            <h3>Bueno</h3>
-          </div>
-        </div>
+          
         </div>
           :   
           "No hay nada para mostrar" 
           : "No hay nada para mostrar" }
           
-      
-        
       </div>
     );
-  
-  
-  
-  
 };

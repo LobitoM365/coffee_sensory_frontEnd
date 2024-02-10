@@ -1,5 +1,4 @@
 .graphicBox{
-    margin: auto;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -21,13 +20,7 @@
     text-transform: uppercase;
     padding: 5px;
 }
-.Tablecolors{
-    width: 15rem;
-    height: 20rem;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;    
-}
+
 .BoxOptions{
     width: max-content;
     display: flex;
@@ -61,4 +54,9 @@
 .barras{
     width: 20px !important;
     height: 10%;
+}
+
+.BocCharts{
+    width: '1000px';
+    height: '500px';
 }

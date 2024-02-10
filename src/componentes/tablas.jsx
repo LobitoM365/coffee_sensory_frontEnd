@@ -148,16 +148,19 @@ export const Tablas = (array) => {
 
 
         function resizeTable() {
+            let contentComponent = document.getElementById("contentComponent")
+
+            if(contentComponent){
+
+            
+            let tableComponent = document.querySelectorAll(".table-component")
             let newDivTable = document.querySelectorAll(".new-div-table");
             let contentTable = document.querySelectorAll(".content-table")
             if (newDivTable.length == 0) {
                 arrayThQuit = []; 
             }
 
-            let tableComponent = document.querySelectorAll(".table-component")
-            console.log(contentTable[0].clientWidth, tableComponent[0].clientWidth, "tameeeeeeeeeeee")
-
-            let contentComponent = document.getElementById("contentComponent")
+            
 
             if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
  
@@ -276,7 +279,7 @@ export const Tablas = (array) => {
             if (document.getElementById("loadTable")) {
                 document.getElementById("loadTable").remove()
             }
-
+        }
         }
     }, [keyTable])
     return (

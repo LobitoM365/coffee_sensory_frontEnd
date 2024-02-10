@@ -596,7 +596,7 @@ body {
         position: absolute;
         z-index: 9;
         right: 0;
-        transition: left 0.5s;
+        transition: transform 0.5s;
     }
 
     .nav-vertical {
@@ -621,12 +621,14 @@ body {
         margin-bottom: 0 !important;
     }
 }
-.div-img-nav{
+
+.div-img-nav {
     position: absolute;
     width: 100%;
     height: 100%;
     z-index: -1;
 }
+
 .img-nav {
     position: absolute;
     z-index: -2;
@@ -635,13 +637,15 @@ body {
     filter: blur(3px);
 
 }
-.logo-menu{
+
+.logo-menu {
     width: 75px;
     bottom: 0;
     position: absolute;
-    
+
 
 }
-.nav-main .selected-li svg{
+
+.nav-main .selected-li svg {
     fill: black;
 }

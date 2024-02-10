@@ -60,16 +60,17 @@ export const Menu = () => {
 
                 hamburguerCentered[x].style.display = ""
                 hamburguerCentered[x].style.justifyContent = ""
-
             }
+            navHorizontal.style.left = "unset";
+
         } else {
             navHorizontal.style.height = "";
-            navHorizontal.style.left = "0%";
-
+            navHorizontal.style.transform = "";
         }
         if (haburguerMode == 0) {
             if (queryMenu) {
-                navHorizontal.style.left = "0%";
+                navHorizontal.style.transform = "translateX(0%)";
+
             } else {
                 for (let x = 0; x < linkMenu.length; x++) {
 
@@ -95,7 +96,7 @@ export const Menu = () => {
             haburguerMode = 1;
         } else {
             if (queryMenu) {
-                navHorizontal.style.left = "-100%";
+                navHorizontal.style.transform = "translateX(-100%)";
             } else {
                 for (let x = 0; x < linkMenu.length; x++) {
                     navHorizontal.style.width = "";

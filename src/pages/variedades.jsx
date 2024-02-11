@@ -55,10 +55,10 @@ export const Variedades = () => {
         }
     }
     useEffect(() => {
-        getFincas()
+        getVariedades()
     }, [])
     
-    async function getFincas() {
+    async function getVariedades() {
         try {
             const response = await Api.post("variedades/listar", dataFilterTable);
             if (response.data.status == true) {
@@ -79,7 +79,7 @@ export const Variedades = () => {
         try {
             const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
             if (axios.data.status == true) {
-                getFincas();
+                getVariedades();
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -152,7 +152,7 @@ export const Variedades = () => {
         try {
             const axios = await Api.post("variedades/registrar/", data);
             if (axios.data.status == true) {
-                getFincas();
+                getVariedades();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -224,9 +224,9 @@ export const Variedades = () => {
     async function updateFinca(data, id) {
 
         try {
-            const axios = await Api.put("finca/actualizar/" + id, data);
+            const axios = await Api.put("variedades/actualizar/" + id, data);
             if (axios.data.status == true) {
-                getFincas();
+                getVariedades();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -286,16 +286,16 @@ export const Variedades = () => {
             delete cloneDataFilterTable.filter.where["fin.estado"]
         }
         setDataFilterTable(cloneDataFilterTable)
-        getFincas(dataFilterTable)
+        getVariedades(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
         dataFilterTable.filter["order"] = filter
-        getFincas();
+        getVariedades();
 
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
-        getFincas()
+        getVariedades()
 
     }
     async function buscarFinca(id) {
@@ -310,7 +310,7 @@ export const Variedades = () => {
         }
     }
     async function updateTable() {
-        getFincas();
+        getVariedades();
     }
     async function editarFinca(id) {
         buscarFinca(id)
@@ -319,7 +319,7 @@ export const Variedades = () => {
         let cloneDataFilterTable = { ...dataFilterTable }
         cloneDataFilterTable.filter["search"] = search
         setDataFilterTable(cloneDataFilterTable)
-        getFincas(dataFilterTable)
+        getVariedades(dataFilterTable)
 
     }
  

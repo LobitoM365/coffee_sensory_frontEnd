@@ -82,6 +82,8 @@ export const Cafes = () => {
                     cafes["lotes_id"] = {}
                 }
                 cafes["lotes_id"]["opciones"] = response.data.data
+                console.log('LISTA LOTES: ', response.data.data);
+
                 setInputsForm(cafes)
             } else if (response.data.find_error) {
 
@@ -100,6 +102,7 @@ export const Cafes = () => {
                     cafes["variedades_id"] = {}
                 }
                 cafes["variedades_id"]["opciones"] = response.data.data
+                console.log('LISTA VATIEDADES: ',cafes);
                 setInputsForm(cafes)
             } else if (response.data.find_error) {
 
@@ -197,11 +200,12 @@ export const Cafes = () => {
                 }
             }
         )
-        
+            
     }
     async function setFinca(data) {
         try {
-            const axios = await Api.post("cafes/registrar/", data);
+            const axios = await Api.post("cafes/registrar", data);
+            console.log('DATA REGISTER CAFE: ', data);
             if (axios.data.status == true) {
                 getFincas();
                 setErrors({})
@@ -275,7 +279,10 @@ export const Cafes = () => {
     async function updateFinca(data, id) {
 
         try {
-            const axios = await Api.put("finca/actualizar/" + id, data);
+            const axios = await Api.put("cafes/actualizar/" + id, data);
+
+            console.log('DATA UPDATE FINCA: ', data);
+
             if (axios.data.status == true) {
                 getFincas();
                 setErrors({})

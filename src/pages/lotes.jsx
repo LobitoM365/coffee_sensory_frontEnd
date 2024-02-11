@@ -277,7 +277,6 @@ export const Lotes = () => {
 
         try {
             const axios = await Api.put("lotes/actualizar/" + id, data);
-            console.log('DATA LOTES UPDATE: ' , data);
             if (axios.data.status == true) {
                 getLotes();
                 setErrors({})

@@ -1,9 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Form } from './Form.jsx';
 
+export const formatDate = (data) => {
+    
+    let date = new Date(data);
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1 ;
+    let day = date.getDate();
+
+    return `${day < 10 ? '0' + day : day} / ${month < 10 ? '0' + month : month} / ${year} `
+}
+
 
 export const Tablas = (array) => {
-
     let data = [];
     let print = []
     let keysData = [];
@@ -150,136 +159,136 @@ export const Tablas = (array) => {
         function resizeTable() {
             let contentComponent = document.getElementById("contentComponent")
 
-            if(contentComponent){
-
-            
-            let tableComponent = document.querySelectorAll(".table-component")
-            let newDivTable = document.querySelectorAll(".new-div-table");
-            let contentTable = document.querySelectorAll(".content-table")
-            if (newDivTable.length == 0) {
-                arrayThQuit = []; 
-            }
-
-            
-
-            if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
- 
-
-                let thQuit = contentTable[0].querySelectorAll("th");
-
-                if (thQuit.length > 2) {
-
-                    let tBody = contentTable[0].querySelectorAll("tbody")
-                    let trTbody = tBody[0].querySelectorAll(".tr-table")
-                    arrayThQuit.push(thQuit[(thQuit.length) - 1])
+            if (contentComponent) {
 
 
-                    let nameTd = thQuit[(thQuit.length) - 1].querySelectorAll(".tittle-item-header-table")
-
-                    let name = nameTd[0].innerHTML
-                    thQuit[(thQuit.length) - 1].remove();
-
-                    for (let tr = 0; tr < trTbody.length; tr++) {
-                        let tdTbody = trTbody[tr].querySelectorAll("td")
-                        let newtr = document.createElement("tr");
-                        let newtd = document.createElement("td");
-                        let newdiv = document.createElement("div");
-                        newtd.setAttribute("colspan", 999999999999999);
-                        newtr.classList.add("new-tr-table")
-                        newtd.classList.add("new-td-table")
-                        newdiv.classList.add("new-div-table")
-                        newtr.setAttribute("data-tr", tr)
-
-                        newtr.appendChild(newtd)
-                        newtd.appendChild(newdiv)
-
-                        if (ziseLess == 0) {
+                let tableComponent = document.querySelectorAll(".table-component")
+                let newDivTable = document.querySelectorAll(".new-div-table");
+                let contentTable = document.querySelectorAll(".content-table")
+                if (newDivTable.length == 0) {
+                    arrayThQuit = [];
+                }
 
 
-                            let td = document.createElement("td")
-                            td.classList.add("td-view-elementos-ocult")
-                            td.innerHTML = '<div class="div-svg-plus-table"> <svg class="svg-plus-table" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" <g><g><g><path fill="#000000" d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z"/></g></g></g></svg> </div>'
 
-                            trTbody[tr].insertAdjacentElement('afterend', newtr)
-                            trTbody[tr].insertBefore(td, trTbody[tr].children[0]);
-                            let plus = td.querySelectorAll(".svg-plus-table")
-                            plus[0].addEventListener("click", function () {
-                                if (newtr.style.display == "table-row") {
-                                    newtr.style.display = "";
-                                    newdiv.style.height = "";
-                                } else {
-                                    newtr.style.display = "table-row";
-                                    newdiv.style.height = "max-content";
-                                }
+                if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
 
-                            })
+
+                    let thQuit = contentTable[0].querySelectorAll("th");
+
+                    if (thQuit.length > 2) {
+
+                        let tBody = contentTable[0].querySelectorAll("tbody")
+                        let trTbody = tBody[0].querySelectorAll(".tr-table")
+                        arrayThQuit.push(thQuit[(thQuit.length) - 1])
+
+
+                        let nameTd = thQuit[(thQuit.length) - 1].querySelectorAll(".tittle-item-header-table")
+
+                        let name = nameTd[0].innerHTML
+                        thQuit[(thQuit.length) - 1].remove();
+
+                        for (let tr = 0; tr < trTbody.length; tr++) {
+                            let tdTbody = trTbody[tr].querySelectorAll("td")
+                            let newtr = document.createElement("tr");
+                            let newtd = document.createElement("td");
+                            let newdiv = document.createElement("div");
+                            newtd.setAttribute("colspan", 999999999999999);
+                            newtr.classList.add("new-tr-table")
+                            newtd.classList.add("new-td-table")
+                            newdiv.classList.add("new-div-table")
+                            newtr.setAttribute("data-tr", tr)
+
+                            newtr.appendChild(newtd)
+                            newtd.appendChild(newdiv)
+
+                            if (ziseLess == 0) {
+
+
+                                let td = document.createElement("td")
+                                td.classList.add("td-view-elementos-ocult")
+                                td.innerHTML = '<div class="div-svg-plus-table"> <svg class="svg-plus-table" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" <g><g><g><path fill="#000000" d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z"/></g></g></g></svg> </div>'
+
+                                trTbody[tr].insertAdjacentElement('afterend', newtr)
+                                trTbody[tr].insertBefore(td, trTbody[tr].children[0]);
+                                let plus = td.querySelectorAll(".svg-plus-table")
+                                plus[0].addEventListener("click", function () {
+                                    if (newtr.style.display == "table-row") {
+                                        newtr.style.display = "";
+                                        newdiv.style.height = "";
+                                    } else {
+                                        newtr.style.display = "table-row";
+                                        newdiv.style.height = "max-content";
+                                    }
+
+                                })
+                            }
+                            let elementsNewTr = document.querySelectorAll(".new-div-table");
+                            let div = document.createElement("div")
+                            div.classList.add("div-element-add")
+                            div.innerHTML = "<h4> " + name + "</h4>"
+                            div.append(tdTbody[(thQuit.length) - 1])
+                            elementsNewTr[tr].appendChild(div)
                         }
-                        let elementsNewTr = document.querySelectorAll(".new-div-table");
-                        let div = document.createElement("div")
-                        div.classList.add("div-element-add")
-                        div.innerHTML = "<h4> " + name + "</h4>"
-                        div.append(tdTbody[(thQuit.length) - 1])
-                        elementsNewTr[tr].appendChild(div)
-                    }
-                    if (ziseLess == 0) {
-                        let theadTable = document.querySelectorAll(".thead-table")
-                        let th = document.createElement("th")
-                        th.classList.add("th-plus-view-elements-ocult")
-                        th.innerHTML = ''
-                        theadTable[0].insertBefore(th, theadTable[0].children[0]);
-                        ziseLess = 1;
+                        if (ziseLess == 0) {
+                            let theadTable = document.querySelectorAll(".thead-table")
+                            let th = document.createElement("th")
+                            th.classList.add("th-plus-view-elements-ocult")
+                            th.innerHTML = ''
+                            theadTable[0].insertBefore(th, theadTable[0].children[0]);
+                            ziseLess = 1;
 
+                        }
+                        ziseTableComponent = tableComponent[0].clientWidth;
+                        resizeTable()
                     }
-                    ziseTableComponent = tableComponent[0].clientWidth;
-                    resizeTable()
+
+                } else if (contentComponent.scrollWidth - tableComponent[0].clientWidth >= 100) {
+                    let theadTable = document.querySelectorAll(".thead-table")
+
+                    if (arrayThQuit.length > 0) {
+                        let newDivTable = document.querySelectorAll(".new-div-table");
+                        let trTable = document.querySelectorAll(".tr-table");
+                        theadTable[0].append(arrayThQuit[arrayThQuit.length - 1])
+                        arrayThQuit.pop()
+                        for (let x = 0; x < newDivTable.length; x++) {
+                            let divNewDivTable = newDivTable[x].querySelectorAll(".div-element-add");
+                            let divNewDivTableTd = divNewDivTable[divNewDivTable.length - 1].querySelectorAll("td");
+                            trTable[x].append(divNewDivTableTd[0])
+                            divNewDivTable[divNewDivTable.length - 1].remove()
+
+                        }
+
+                        resizeTable()
+                    }
+                    let elementsNewDivTable = document.querySelectorAll(".div-element-add");
+
+                    if (elementsNewDivTable.length == 0) {
+                        let newTrTable = document.querySelectorAll(".new-tr-table");
+                        let tdPlus = document.querySelectorAll(".td-view-elementos-ocult");
+                        let thPlus = document.querySelectorAll(".th-plus-view-elements-ocult");
+                        for (let x = 0; x < newTrTable.length; x++) {
+                            newTrTable[x].remove()
+                        }
+                        for (let x = 0; x < tdPlus.length; x++) {
+                            tdPlus[x].remove()
+                        }
+                        for (let x = 0; x < thPlus.length; x++) {
+                            thPlus[x].remove()
+                        }
+
+                        ziseLess = 0
+                    }
+
+
+
+
                 }
 
-            } else if (contentComponent.scrollWidth - tableComponent[0].clientWidth >= 100) {
-                let theadTable = document.querySelectorAll(".thead-table")
-
-                if (arrayThQuit.length > 0) {
-                    let newDivTable = document.querySelectorAll(".new-div-table");
-                    let trTable = document.querySelectorAll(".tr-table");
-                    theadTable[0].append(arrayThQuit[arrayThQuit.length - 1])
-                    arrayThQuit.pop()
-                    for (let x = 0; x < newDivTable.length; x++) {
-                        let divNewDivTable = newDivTable[x].querySelectorAll(".div-element-add");
-                        let divNewDivTableTd = divNewDivTable[divNewDivTable.length - 1].querySelectorAll("td");
-                        trTable[x].append(divNewDivTableTd[0])
-                        divNewDivTable[divNewDivTable.length - 1].remove()
-
-                    }
-
-                    resizeTable()
+                if (document.getElementById("loadTable")) {
+                    document.getElementById("loadTable").remove()
                 }
-                let elementsNewDivTable = document.querySelectorAll(".div-element-add");
-
-                if (elementsNewDivTable.length == 0) {
-                    let newTrTable = document.querySelectorAll(".new-tr-table");
-                    let tdPlus = document.querySelectorAll(".td-view-elementos-ocult");
-                    let thPlus = document.querySelectorAll(".th-plus-view-elements-ocult");
-                    for (let x = 0; x < newTrTable.length; x++) {
-                        newTrTable[x].remove()
-                    }
-                    for (let x = 0; x < tdPlus.length; x++) {
-                        tdPlus[x].remove()
-                    }
-                    for (let x = 0; x < thPlus.length; x++) {
-                        thPlus[x].remove()
-                    }
-
-                    ziseLess = 0
-                }
-
-
-
-
             }
-
-            if (document.getElementById("loadTable")) {
-                document.getElementById("loadTable").remove()
-            }
-        }
         }
     }, [keyTable])
     return (
@@ -383,7 +392,9 @@ export const Tablas = (array) => {
                         <tbody key={"tBody"}>
                             {data.length > 0 ? (
                                 data.map((keysD, valuesD) => (
+
                                     <tr className='tr-table' key={"fincas" + valuesD}>
+
                                         {
                                             keysPrint.map((keys, index) => {
                                                 if (keysData.includes(keys)) {
@@ -427,6 +438,10 @@ export const Tablas = (array) => {
                                                                 } else {
                                                                     return <td key={index}><h4>No registra</h4></td>;
                                                                 }
+                                                            } else if (print[keys]["format"]) {
+
+                                                                return <td key={index}><h4>{formatDate(data[valuesD][keys])}</h4></td>;
+
                                                             } else {
                                                                 if (print[keys]["upper_case"]) {
                                                                     return <td key={index}><h4>{data[valuesD][keys].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h4></td>;
@@ -438,6 +453,8 @@ export const Tablas = (array) => {
 
                                                             }
 
+
+
                                                         }
                                                     }
                                                 } else {
@@ -447,7 +464,7 @@ export const Tablas = (array) => {
                                         }
                                         <td className='td-update'>
                                             <div className="center-update">
-                                                <h4 onClick={() => { setClearClick(); array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} title='actualizar' className='item-options option-update'>
+                                                <button onClick={() => { setClearClick(); array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} title='actualizar' {...data[valuesD]["estado"] == 0 ? { disabled: true, title: 'Inactivo - No se puede actualizar' } : ''} className={`item-options option-update ${data[valuesD]['estado'] == 0 ? 'btn-disabled' : ""}`}>
                                                     <svg version="1.0" viewBox="0 0 478.000000 522.000000" >
 
                                                         <g transform="translate(0.000000,522.000000) scale(0.100000,-0.100000)" stroke="none">
@@ -457,7 +474,7 @@ export const Tablas = (array) => {
                                                             <path d="M1722 3494 c-26 -18 -30 -65 -6 -88 14 -14 89 -16 683 -16 539 0 671 3 685 13 26 19 24 67 -4 89 -21 17 -60 18 -679 18 -578 0 -659 -2 -679 -16z" />
                                                         </g>
                                                     </svg>
-                                                </h4>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>

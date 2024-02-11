@@ -89,12 +89,23 @@
 }
 
 .item-options {
-    width: 30px;
-    height: 30px;
+    outline: none;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
     padding: 5px;
     border-radius: 4px;
+    background-color: transparent;
+    border: none;
 
+}
+.btn-disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-disabled:hover{
+    background-color: transparent !important;
 }
 
 .center-update {
@@ -434,3 +445,4 @@
         height: max-content;
     }
 }
+

@@ -43,7 +43,8 @@ export const Variedades = () => {
             "upper_case": true
         },
         "fecha_creacion": {
-            "referencia": "Fecha creación"
+            "referencia": "Fecha creación",
+            "format": true
         }
     }
     const filterEstado = {
@@ -57,7 +58,7 @@ export const Variedades = () => {
     useEffect(() => {
         getVariedades()
     }, [])
-    
+
     async function getVariedades() {
         try {
             const response = await Api.post("variedades/listar", dataFilterTable);
@@ -97,7 +98,7 @@ export const Variedades = () => {
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if(axios.data.permission_error){
+            } else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -111,7 +112,7 @@ export const Variedades = () => {
                     }
                 )
             }
-      
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -146,7 +147,7 @@ export const Variedades = () => {
                 }
             }
         )
-        
+
     }
     async function setVariedad(data) {
         try {
@@ -177,7 +178,7 @@ export const Variedades = () => {
                 )
             } else if (axios.data.errors) {
                 setErrors(axios.data.errors)
-            }  else if(axios.data.permission_error){
+            } else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -190,7 +191,7 @@ export const Variedades = () => {
                         }
                     }
                 )
-            }else {
+            } else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -201,7 +202,7 @@ export const Variedades = () => {
                     }
                 )
             }
-      
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -215,7 +216,7 @@ export const Variedades = () => {
         }
     }
 
-   
+
 
     async function procedureTrue() {
         changeModalForm(false)
@@ -322,7 +323,7 @@ export const Variedades = () => {
         getVariedades(dataFilterTable)
 
     }
- 
+
     return (
         <>
             <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Variedad"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />

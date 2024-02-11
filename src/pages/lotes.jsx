@@ -42,7 +42,7 @@ export const Lotes = () => {
             fincas_id: {
                 type: "select",
                 referencia: "Finca",
-                values : ["numero_documento_usuario","nombre_completo_usuario","nombre"],
+                values: ["numero_documento_usuario", "nombre_completo_usuario", "nombre"],
                 upper_case: true,
                 key: "id"
             }
@@ -68,7 +68,8 @@ export const Lotes = () => {
             "referencia": "Longitud"
         },
         "fecha_creacion": {
-            "referencia": "Fecha creación"
+            "referencia": "Fecha creación",
+            "format" : true
         },
         "estado": {
             "referencia": "Estado"
@@ -99,7 +100,7 @@ export const Lotes = () => {
             } else {
                 setLotes(response.data)
             }
-        
+
         } catch (e) {
 
         }
@@ -127,7 +128,7 @@ export const Lotes = () => {
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if(axios.data.permission_error){
+            } else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -141,7 +142,7 @@ export const Lotes = () => {
                     }
                 )
             }
-      
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -177,7 +178,7 @@ export const Lotes = () => {
                 }
             }
         )
-        
+
     }
     async function setLote(data) {
         try {
@@ -208,7 +209,7 @@ export const Lotes = () => {
                 )
             } else if (axios.data.errors) {
                 setErrors(axios.data.errors)
-            }  else if(axios.data.permission_error){
+            } else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -221,7 +222,7 @@ export const Lotes = () => {
                         }
                     }
                 )
-            }else {
+            } else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -232,7 +233,7 @@ export const Lotes = () => {
                     }
                 )
             }
-       
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -249,7 +250,19 @@ export const Lotes = () => {
 
     async function getFincas() {
         try {
-            const response = await Api.post("finca/listar");
+            let filter = {
+                "filter": {
+                    "where": {
+                        "fin.estado": {
+                            "operador": "!=",
+                            "value": "0",
+                            "require": "and"
+                        }
+                    }
+                }
+            }
+            const response = await Api.post("finca/listar", filter);
+
             if (response.data.status == true) {
                 let municipios = inputsForm;
                 if (!municipios["fincas_id"]) {
@@ -262,7 +275,7 @@ export const Lotes = () => {
             } else {
 
             }
-          
+
         } catch (e) {
 
 
@@ -365,11 +378,11 @@ export const Lotes = () => {
         getLotes();
     }
     async function editarLote(id) {
-    
+
         buscarLote(id)
     }
     function filterSeacth(search) {
-     
+
         let cloneDataFilterTable = { ...dataFilterTable }
         cloneDataFilterTable.filter["search"] = search
         setDataFilterTable(cloneDataFilterTable)
@@ -380,6 +393,7 @@ export const Lotes = () => {
     return (
         <>
             <Tablas imgForm={"/img/formularios/img-form-state.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarLote} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setLote} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={lotes} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateLote} tittle={"Lotes"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

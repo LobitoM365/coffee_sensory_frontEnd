@@ -30,16 +30,16 @@ export const Cafes = () => {
                 type: "select",
                 referencia: "Lote",
                 upper_case: true,
-                values : ["numero_documento_usuario","finca","nombre"],
-                key : "id"
+                values: ["numero_documento_usuario", "finca", "nombre"],
+                key: "id"
 
             },
             variedades_id: {
                 type: "select",
                 referencia: "Variedad",
                 upper_case: true,
-                values : ["nombre"],
-                key : "id"
+                values: ["nombre"],
+                key: "id"
             },
         }
     )
@@ -48,12 +48,19 @@ export const Cafes = () => {
         "ca_id": {
             "referencia": "Id",
         },
+        "finca": {
+            "referencia": "Finca",
+        },
         "lote": {
             "referencia": "Lote",
             "upper_case": true
         },
         "variedad": {
             "referencia": "Variedad"
+        },
+        "fecha_creacion": {
+            "referencia": "Fecha Creación",
+            "format": true
         },
         "estado": {
             "referencia": "Estado"
@@ -68,21 +75,32 @@ export const Cafes = () => {
         }
     }
     useEffect(() => {
-        getFincas()
+        getCafes()
         getLotes()
         getVariedades()
     }, [])
     async function getLotes() {
         try {
-            const response = await Api.post("lotes/listar");
-            
+            let filter = {
+                "filter": {
+                    "where": {
+                        "lo.estado": {
+                            "operador": "!=",
+                            "value": "0",
+                            "require": "and"
+                        }
+                    }
+                }
+            }
+            const response = await Api.post("lotes/listar", filter);
+
             if (response.data.status == true) {
                 let cafes = inputsForm;
                 if (!cafes["lotes_id"]) {
                     cafes["lotes_id"] = {}
                 }
                 cafes["lotes_id"]["opciones"] = response.data.data
-                console.log('LISTA LOTES: ', response.data.data);
+                // console.log('LISTA LOTES: ', response.data.data);
 
                 setInputsForm(cafes)
             } else if (response.data.find_error) {
@@ -102,7 +120,7 @@ export const Cafes = () => {
                     cafes["variedades_id"] = {}
                 }
                 cafes["variedades_id"]["opciones"] = response.data.data
-                console.log('LISTA VATIEDADES: ',cafes);
+                // console.log('LISTA VATIEDADES: ', cafes);
                 setInputsForm(cafes)
             } else if (response.data.find_error) {
 
@@ -112,10 +130,10 @@ export const Cafes = () => {
         } catch (e) {
         }
     }
-    async function getFincas() {
+    async function getCafes() {
         try {
             const response = await Api.post("cafes/listar", dataFilterTable);
-            // console.log('FILTER CAFE: ', dataFilterTable);
+            console.log('DATA CAFE: ', response);
             if (response.data.status == true) {
                 setFincas(response.data.data)
                 setCountRegisters(response.data.count)
@@ -134,7 +152,7 @@ export const Cafes = () => {
         try {
             const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
             if (axios.data.status == true) {
-                getFincas();
+                getCafes();
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -152,7 +170,7 @@ export const Cafes = () => {
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if(axios.data.permission_error){
+            } else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -166,7 +184,7 @@ export const Cafes = () => {
                     }
                 )
             }
-       
+
         } catch (e) {
             setStatusAlert(true)
             setdataAlert(
@@ -200,14 +218,14 @@ export const Cafes = () => {
                 }
             }
         )
-            
+
     }
     async function setFinca(data) {
         try {
             const axios = await Api.post("cafes/registrar", data);
             console.log('DATA REGISTER CAFE: ', data);
             if (axios.data.status == true) {
-                getFincas();
+                getCafes();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -232,7 +250,7 @@ export const Cafes = () => {
                 )
             } else if (axios.data.errors) {
                 setErrors(axios.data.errors)
-            }  else if(axios.data.permission_error){
+            } else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -245,7 +263,7 @@ export const Cafes = () => {
                         }
                     }
                 )
-            }else {
+            } else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -256,7 +274,7 @@ export const Cafes = () => {
                     }
                 )
             }
-   
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -270,13 +288,13 @@ export const Cafes = () => {
         }
     }
 
-   
+
 
     async function procedureTrue() {
         changeModalForm(false)
         setUpdateStatus(false)
     }
-    async function updateFinca(data, id) {
+    async function updateCafe(data, id) {
 
         try {
             const axios = await Api.put("cafes/actualizar/" + id, data);
@@ -284,7 +302,7 @@ export const Cafes = () => {
             console.log('DATA UPDATE FINCA: ', data);
 
             if (axios.data.status == true) {
-                getFincas();
+                getCafes();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -344,16 +362,16 @@ export const Cafes = () => {
             delete cloneDataFilterTable.filter.where["ca.estado"]
         }
         setDataFilterTable(cloneDataFilterTable)
-        getFincas(dataFilterTable)
+        getCafes(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
         dataFilterTable.filter["order"] = filter
-        getFincas();
+        getCafes();
 
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
-        getFincas()
+        getCafes()
 
     }
     async function buscarFinca(id) {
@@ -368,7 +386,7 @@ export const Cafes = () => {
         }
     }
     async function updateTable() {
-        getFincas();
+        getCafes();
     }
     async function editarFinca(id) {
         buscarFinca(id)
@@ -377,13 +395,13 @@ export const Cafes = () => {
         let cloneDataFilterTable = { ...dataFilterTable }
         cloneDataFilterTable.filter["search"] = search
         setDataFilterTable(cloneDataFilterTable)
-        getFincas(dataFilterTable)
+        getCafes(dataFilterTable)
 
     }
- 
+
     return (
         <>
-            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Café"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateCafe} tittle={"Café"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

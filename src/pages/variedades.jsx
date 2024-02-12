@@ -13,8 +13,8 @@ export const Variedades = () => {
         }
     })
         ;
-    const [fincas, setFincas] = useState([])
-    const [fincaEdit, setfincaEdit] = useState([])
+    const [fincas, setVariedads] = useState([])
+    const [fincaEdit, setVariedadEdit] = useState([])
     const [updateStatus, setUpdateStatus] = useState(false)
     const [municipios, setMunicipios] = useState([])
     const [countRegisters, setCountRegisters] = useState()
@@ -43,7 +43,8 @@ export const Variedades = () => {
             "upper_case": true
         },
         "fecha_creacion": {
-            "referencia": "Fecha creación"
+            "referencia": "Fecha creación",
+            "format": true
         }
     }
     const filterEstado = {
@@ -55,20 +56,20 @@ export const Variedades = () => {
         }
     }
     useEffect(() => {
-        getFincas()
+        getVariedades()
     }, [])
-    
-    async function getFincas() {
+
+    async function getVariedades() {
         try {
             const response = await Api.post("variedades/listar", dataFilterTable);
             if (response.data.status == true) {
-                setFincas(response.data.data)
+                setVariedads(response.data.data)
                 setCountRegisters(response.data.count)
             } else if (response.data.find_error) {
                 setCountRegisters(0)
-                setFincas(response.data)
+                setVariedads(response.data)
             } else {
-                setFincas(response.data)
+                setVariedads(response.data)
             }
         } catch (e) {
 
@@ -79,7 +80,7 @@ export const Variedades = () => {
         try {
             const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
             if (axios.data.status == true) {
-                getFincas();
+                getVariedades();
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -97,7 +98,7 @@ export const Variedades = () => {
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if(axios.data.permission_error){
+            } else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -111,7 +112,7 @@ export const Variedades = () => {
                     }
                 )
             }
-      
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -146,13 +147,13 @@ export const Variedades = () => {
                 }
             }
         )
-        
+
     }
-    async function setFinca(data) {
+    async function setVariedad(data) {
         try {
             const axios = await Api.post("variedades/registrar/", data);
             if (axios.data.status == true) {
-                getFincas();
+                getVariedades();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -177,7 +178,7 @@ export const Variedades = () => {
                 )
             } else if (axios.data.errors) {
                 setErrors(axios.data.errors)
-            }  else if(axios.data.permission_error){
+            } else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -190,7 +191,7 @@ export const Variedades = () => {
                         }
                     }
                 )
-            }else {
+            } else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -201,7 +202,7 @@ export const Variedades = () => {
                     }
                 )
             }
-      
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -215,7 +216,7 @@ export const Variedades = () => {
         }
     }
 
-   
+
 
     async function procedureTrue() {
         changeModalForm(false)
@@ -224,9 +225,9 @@ export const Variedades = () => {
     async function updateFinca(data, id) {
 
         try {
-            const axios = await Api.put("finca/actualizar/" + id, data);
+            const axios = await Api.put("variedades/actualizar/" + id, data);
             if (axios.data.status == true) {
-                getFincas();
+                getVariedades();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -286,23 +287,23 @@ export const Variedades = () => {
             delete cloneDataFilterTable.filter.where["fin.estado"]
         }
         setDataFilterTable(cloneDataFilterTable)
-        getFincas(dataFilterTable)
+        getVariedades(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
         dataFilterTable.filter["order"] = filter
-        getFincas();
+        getVariedades();
 
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
-        getFincas()
+        getVariedades()
 
     }
     async function buscarFinca(id) {
 
         const response = await Api.get("variedades/buscar/" + id);
         if (response.data.status == true) {
-            setfincaEdit(response.data.data[0])
+            setVariedadEdit(response.data.data[0])
         } else if (response.data.find_error) {
 
         } else {
@@ -310,7 +311,7 @@ export const Variedades = () => {
         }
     }
     async function updateTable() {
-        getFincas();
+        getVariedades();
     }
     async function editarFinca(id) {
         buscarFinca(id)
@@ -319,13 +320,13 @@ export const Variedades = () => {
         let cloneDataFilterTable = { ...dataFilterTable }
         cloneDataFilterTable.filter["search"] = search
         setDataFilterTable(cloneDataFilterTable)
-        getFincas(dataFilterTable)
+        getVariedades(dataFilterTable)
 
     }
- 
+
     return (
         <>
-            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Variedad"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Variedad"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

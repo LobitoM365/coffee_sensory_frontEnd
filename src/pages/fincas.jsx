@@ -97,7 +97,8 @@ export const Fincas = () => {
             "upper_case": true
         },
         "fecha_creacion": {
-            "referencia": "Fecha creación"
+            "referencia": "Fecha creación",
+            "format": true
         },
         "estado": {
             "referencia": "Estado"

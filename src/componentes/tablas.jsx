@@ -1,9 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Form } from './Form.jsx';
 
+export const formatDate = (data) => {
+    
+    let date = new Date(data);
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1 ;
+    let day = date.getDate();
+
+    return `${day < 10 ? '0' + day : day} / ${month < 10 ? '0' + month : month} / ${year} `
+}
+
 
 export const Tablas = (array) => {
-
     let data = [];
     let print = []
     let keysData = [];
@@ -159,6 +168,7 @@ export const Tablas = (array) => {
                 if (newDivTable.length == 0) {
                     arrayThQuit = [];
                 }
+
 
 
                 if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
@@ -382,7 +392,9 @@ export const Tablas = (array) => {
                         <tbody key={"tBody"}>
                             {data.length > 0 ? (
                                 data.map((keysD, valuesD) => (
+
                                     <tr className='tr-table' key={"fincas" + valuesD}>
+
                                         {
                                             keysPrint.map((keys, index) => {
                                                 if (keysData.includes(keys)) {
@@ -474,6 +486,10 @@ export const Tablas = (array) => {
                                                                 } else {
                                                                     return <td key={index}><h4>No registra</h4></td>;
                                                                 }
+                                                            } else if (print[keys]["format"]) {
+
+                                                                return <td key={index}><h4>{formatDate(data[valuesD][keys])}</h4></td>;
+
                                                             } else {
                                                                 if (print[keys]["upper_case"]) {
                                                                     return <td key={index}><h4>{data[valuesD][keys].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h4></td>;
@@ -485,6 +501,8 @@ export const Tablas = (array) => {
 
                                                             }
 
+
+
                                                         }
                                                     }
                                                 } else {
@@ -494,7 +512,7 @@ export const Tablas = (array) => {
                                         }
                                         <td className='td-update'>
                                             <div className="center-update">
-                                                <h4 onClick={() => { setClearClick(); array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} title='actualizar' className='item-options option-update'>
+                                                <button onClick={() => { setClearClick(); array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} title='actualizar' {...data[valuesD]["estado"] == 0 ? { disabled: true, title: 'Inactivo - No se puede actualizar' } : ''} className={`item-options option-update ${data[valuesD]['estado'] == 0 ? 'btn-disabled' : ""}`}>
                                                     <svg version="1.0" viewBox="0 0 478.000000 522.000000" >
 
                                                         <g transform="translate(0.000000,522.000000) scale(0.100000,-0.100000)" stroke="none">
@@ -504,7 +522,7 @@ export const Tablas = (array) => {
                                                             <path d="M1722 3494 c-26 -18 -30 -65 -6 -88 14 -14 89 -16 683 -16 539 0 671 3 685 13 26 19 24 67 -4 89 -21 17 -60 18 -679 18 -578 0 -659 -2 -679 -16z" />
                                                         </g>
                                                     </svg>
-                                                </h4>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>

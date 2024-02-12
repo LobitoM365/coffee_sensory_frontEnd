@@ -136,6 +136,7 @@ export const Fincas = () => {
     async function desactivarFinca() {
         try {
             const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
+            console.log(axios,"xddddddddddddddd")
             if (axios.data.status == true) {
                 getFincas();
                 setStatusAlert(true)

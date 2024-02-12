@@ -339,8 +339,8 @@ export const Form = forwardRef((data, ref) => {
                                                 );
                                             } else {
 
-                                                if (index + 1 == inputs.length) {
-                                                    return "No hay nada para mostrar" + key;
+                                                if (index  == inputs.length) {
+                                                    return "No hay nada para mostrar " + key;
                                                 }
 
                                             }

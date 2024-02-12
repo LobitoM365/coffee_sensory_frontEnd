@@ -39,7 +39,21 @@ export const Analisis = (userInfo) => {
                 values: ["numero_documento", "nombre_completo", "finca", "lote", "mu_id"],
                 upper_case: true,
                 key: "id"
-            }
+            },
+            usuario_formato_sca: {
+                type: "select",
+                referencia: "Catador Formato Sca",
+                values: ["numero_documento", "nombre"],
+                upper_case: true,
+                key: "id"
+            },
+            usuario_formato_fisico: {
+                type: "select",
+                referencia: "Catador Formato Físico",
+                values: ["numero_documento", "nombre"],
+                upper_case: true,
+                key: "id"
+            },
 
         }
     )
@@ -53,10 +67,6 @@ export const Analisis = (userInfo) => {
         },
         "proceso": {
             "referencia": "Tipo de proceso",
-            "upper_case": true
-        },
-        "tipo_analisis": {
-            "referencia": "Tipo de análisis",
             "upper_case": true
         },
         "muestras_id": {
@@ -75,26 +85,61 @@ export const Analisis = (userInfo) => {
             "referencia": "Lote",
             "upper_case": true
         },
-        "catador": {
-            "referencia": "Catador",
-            "values": [
-                "catador_documento",
-                "catador"
-            ],
+        "permission_formato_sca": {
+            "referencia": "Catador Formato Sca",
+            "conditions": {
+                "true": {
+                    "element": {
+                        "type": "button",
+                        "referencia": "Ver",
+                        "function": {
+                            "value": xd2,
+                            "execute": {
+                                "type": "table",
+                                "value": "an_id"
+                            }
+                        }
+                    }
+                },
+                "false": {
+                    "element": {
+                        "type": "text",
+                        "referencia": "No disponible",
+                        "class": "button-false-procedure"
+                    }
+                }
+            },
             "upper_case": true
         },
-        "fecha_analisis": {
-            "referencia": "Fecha de análisis",
+        "permission_formato_fisico": {
+            "referencia": "Catador Formato Físico",
+            "conditions": {
+                "true": {
+                    "element": {
+                        "type": "button",
+                        "referencia": "Ver",
+                        "function": {
+                            "value": xd,
+                            "execute": {
+                                "type": "table",
+                                "value": "an_id"
+                            }
+                        }
+                    }
+                },
+                "false": {
+                    "element": {
+                        "type": "text",
+                        "referencia": "No disponible",
+                        "class": "button-false-procedure"
+                    }
+                }
+            },
+            "upper_case": true
         },
-        "fecha_analisis": {
-            "referencia": "Fecha de análisis",
-        },
-        "fecha_analisis": {
+        "fecha_creacion": {
             "referencia": "Fecha de creación",
-        }, 
-        "fecha_formato": {
-            "referencia": "Fecha de análisis",
-        }, 
+        },
         "estado": {
             "referencia": "Estado"
         }
@@ -115,7 +160,12 @@ export const Analisis = (userInfo) => {
         getMuestras()
 
     }, [userInfo])
-
+    function xd(id) {
+        alert(id)
+    }
+    function xd2(id) {
+        alert(id)
+    }
 
     async function getusuarios() {
         try {
@@ -138,19 +188,18 @@ export const Analisis = (userInfo) => {
                         }
                     }
                     const response = await Api.post("usuarios/listar", filter);
-
                     let cafes = inputsForm;
-                    if (!cafes["usuarios_id"]) {
-                        cafes["usuarios_id"] = {}
+                    if (!cafes["usuario_formato_sca"]) {
+                        cafes["usuario_formato_sca"] = {}
                     }
-                    cafes["usuarios_id"] = {
-                        type: "select",
-                        referencia: "Catador",
-                        values: ["numero_documento", "nombre_completo"],
-                        opciones: response.data.status == true ? response.data.data : [],
-                        upper_case: true,
-                        key: "id"
+                    cafes["usuario_formato_sca"]["opciones"] = response.data.data ? response.data.data : [];
+
+                    if (!cafes["usuario_formato_fisico"]) {
+                        cafes["usuario_formato_fisico"] = {}
                     }
+                    cafes["usuario_formato_fisico"]["opciones"] = response.data.data ? response.data.data : [];
+
+                    console.log(response, "ahhhhhhhhhhhhhhh", cafes)
 
                     setInputsForm(cafes)
 
@@ -305,12 +354,9 @@ export const Analisis = (userInfo) => {
     }
     async function setUsuario(data) {
         try {
-            let route = "registrar"
-            if (userInfo.userInfo.rol == "administrador" && userInfo.userInfo.cargo == "administrador") {
-                route = "asignar"
-            }
-            const axios = await Api.post("analisis/" + route + "/", data);
-            console.log(axios, "axiossssssss")
+
+            const axios = await Api.post("analisis/registrar/", data);
+
             if (axios.data.status == true) {
                 getAnalisis();
                 setErrors({})
@@ -384,7 +430,7 @@ export const Analisis = (userInfo) => {
     async function updateUsuario(data, id) {
 
         try {
-            const axios = await Api.put("usuarios/actualizar/" + id, data);
+            const axios = await Api.put("analisis/actualizar/" + id, data);
             if (axios.data.status == true) {
                 getAnalisis();
                 setErrors({})
@@ -423,6 +469,7 @@ export const Analisis = (userInfo) => {
                     }
                 )
             }
+            console.log(axios)
         } catch (e) {
             setStatusAlert(true)
             setdataAlert(
@@ -459,21 +506,25 @@ export const Analisis = (userInfo) => {
 
     }
     async function clearInputs() {
-        if (inputsForm["usuarios_id"]) {
-            inputsForm["usuarios_id"]["visibility"] = true
+        if (inputsForm["usuario_formato_sca"]) {
+            inputsForm["usuario_formato_sca"]["visibility"] = true
+            inputsForm["usuario_formato_fisico"]["visibility"] = true
         }
+
     }
     async function buscarUsuario(id) {
+        inputsForm["usuario_formato_sca"]["visibility"] = false
+        inputsForm["usuario_formato_fisico"]["visibility"] = false
 
-        const response = await Api.get("usuarios/buscar/" + id);
+        const response = await Api.post("analisis/buscar/" + id);
         if (response.data.status == true) {
-
-            setUsuarioEdit(response.data.data)
+            setUsuarioEdit(response.data.data[0])
         } else if (response.data.find_error) {
 
         } else {
 
         }
+        console.log(response)
     }
     async function updateTable() {
         getAnalisis();

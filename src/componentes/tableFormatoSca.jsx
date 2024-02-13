@@ -15,27 +15,18 @@ export const TableFormatoSca = () => {
         let cloneFormatoSca = iframe.cloneNode(true)
         const cloneDataFormatoSca = dataformatosSca
         dataformatosSca.push(cloneFormatoSca);
-   
-
     }
    
     useEffect(() => {
        
         const contenidoComponent = document.getElementById("contenidoComponent");
-        const contentFormatoSca = document.getElementById("contentFormatoSca");
 
-       
-        
         const iframeFormatoSca = document.querySelectorAll(".iframe-formato-sca");
- 
-
         for (let i = 0; i < iframeFormatoSca.length; i++) { 
             iframeFormatoSca[i].addEventListener("load", function () {
                 resizeFormatoSca()
             })
         } 
-
-
         function resizeFormatoSca() {
             const iframeFormatoSca = document.querySelectorAll(".iframe-formato-sca");
 
@@ -50,18 +41,14 @@ export const TableFormatoSca = () => {
                     }
                 }
             }
-
         }
 
 
         const resizeObserver = new ResizeObserver(entries => {
-            // La función de devolución de llamada se ejecutará cuando haya cambios de tamaño
             entries.forEach(entry => {
                 resizeFormatoSca();
             });
         });
-
-        // Inicia la observación del elemento
         resizeObserver.observe(contenidoComponent);
 
 

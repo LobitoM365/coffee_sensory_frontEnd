@@ -11,7 +11,7 @@ let inputTazasIntensidad = document.querySelectorAll(".inputTazasIntensidad");
 let resultadoTazasXIntensidad = document.getElementById("resultadoTazasXIntensidad");
 let puntajeTotal = document.getElementById("puntajeTotal");
 let puntajeFinal = document.getElementById("puntajeFinal");
-let notasFinal = document.getElementById("notasFinal");
+/* let notas = document.getElementById("notas"); */
 
 for (let RI = 0; RI < rangeIntensidad.length; RI++) {
     rangeIntensidad[RI].addEventListener("input", function () {
@@ -229,18 +229,18 @@ for (let x = 0; x < inputTazasIntensidad.length; x++) {
 }
 
 
-let button = document.getElementById("button");
-let notasFinalDiv = document.getElementById("notasFinalDiv");
-notasFinal.addEventListener("input", function () {
-    console.log(notasFinal.scrollHeight)
-    if(notasFinal.scrollHeight != notasFinalDiv.scrollHeight){
+/* let button = document.getElementById("button");
+let notasDiv = document.getElementById("notasDiv");
+notas.addEventListener("input", function () {
+    console.log(notas.scrollHeight)
+    if(notas.scrollHeight != notasDiv.scrollHeight){
         button.style.display = "block";
     }else{
         button.style.display = "none";
-        notasFinalDiv.style.height =  notasFinal.scrollHeight + "px";
+        notasDiv.style.height =  notas.scrollHeight + "px";
     }
 })
 
 button.addEventListener("click", function(){
-    notasFinalDiv.style.height = notasFinal.scrollHeight + "px";
-})
+    notasDiv.style.height = notas.scrollHeight + "px";
+}) */

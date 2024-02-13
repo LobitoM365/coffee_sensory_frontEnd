@@ -2,9 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { Tablas } from "../componentes/tablas.jsx"
 import Api from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
-
+import { FormResultados } from '../componentes/FormResultados.jsx'
 
 export const Analisis = (userInfo) => {
+    ///Variables para abrir modal de resultados
+    const [modalFormResults, changeModalFormResults] = useState(false);
+    const [dataModalAnalisis, setDataModalAnalisis] = useState(false);
+    const [dataModalResultado, setDataModalResultado] = useState(false);
+    const [dataModalResultadoAnalisis, setDataModalResultadoAnalisis] = useState(false);
+
+
+    ///////
     let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
@@ -93,7 +101,7 @@ export const Analisis = (userInfo) => {
                         "type": "button",
                         "referencia": "Ver",
                         "function": {
-                            "value": xd2,
+                            "value": xd,
                             "execute": {
                                 "type": "table",
                                 "value": "an_id"
@@ -119,7 +127,7 @@ export const Analisis = (userInfo) => {
                         "type": "button",
                         "referencia": "Ver",
                         "function": {
-                            "value": xd,
+                            "value": xd2,
                             "execute": {
                                 "type": "table",
                                 "value": "an_id"
@@ -160,13 +168,61 @@ export const Analisis = (userInfo) => {
         getMuestras()
 
     }, [userInfo])
-    function xd(id) {
-        alert(id)
+
+    async function xd(id) {
+        setInfoFormato(id, 2)
     }
     function xd2(id) {
-        alert(id)
+        setInfoFormato(id, 1)
     }
+    async function setInfoFormato(id, tipo) {
+        try {
+            setDataModalAnalisis([])
+            setDataModalResultado([])
+            setDataModalResultadoAnalisis([])
+            const response = await Api.post("analisis/buscar/" + id + "");
+            if (response.data.status == true) {
+                setDataModalAnalisis(response.data.data)
+                const filterFormato = {
+                    "filter": {
+                        "where": {
+                            "forma.analisis_id": {
+                                "value": id,
+                                "require": "and",
+                                "group": 2
+                            },
+                            "forma.tipos_analisis_id": {
+                                "value": tipo,
+                                "require": "and",
+                                "group": 2
+                            }
+                        }
+                    },
+                }
+                const formato = await Api.post("formatos/buscar/not", filterFormato);
+                console.log(formato, "formmaoooooooo")
+                if (formato.data.status == true) {
+                    setDataModalResultado(formato.data.data)
+                    const resultado = await Api.post("resultado/buscar/" + formato.data.data[0].id + "");
+                    console.log(resultado, formato, "dataaaaaaaaaaaaaaaaaa", formato.data.data[0].id)
+                    if (resultado.data.status == true) {
+                        setDataModalResultadoAnalisis(resultado.data.data)
+                    } else {
 
+                    }
+
+                } else {
+
+                }
+                changeModalFormResults(true)
+
+            } else if (response.data.find_error) {
+            } else {
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
     async function getusuarios() {
         try {
 
@@ -198,8 +254,6 @@ export const Analisis = (userInfo) => {
                         cafes["usuario_formato_fisico"] = {}
                     }
                     cafes["usuario_formato_fisico"]["opciones"] = response.data.data ? response.data.data : [];
-
-                    console.log(response, "ahhhhhhhhhhhhhhh", cafes)
 
                     setInputsForm(cafes)
 
@@ -469,7 +523,7 @@ export const Analisis = (userInfo) => {
                     }
                 )
             }
-            console.log(axios)
+
         } catch (e) {
             setStatusAlert(true)
             setdataAlert(
@@ -524,7 +578,7 @@ export const Analisis = (userInfo) => {
         } else {
 
         }
-        console.log(response)
+
     }
     async function updateTable() {
         getAnalisis();
@@ -539,10 +593,28 @@ export const Analisis = (userInfo) => {
         getAnalisis(dataFilterTable)
 
     }
+    async function setFormatoSca(data, id, tipoRegistro, tipoAnalisis) {
+        let route = "";
+        console.log(data)
+        data["tipos_analisis_id"] = tipoAnalisis ? tipoAnalisis : ""
+        data["formatos_id"] = id ? id : ""
+        if (tipoRegistro == 1) {
+            route = "resultado/registrar/"
+            data["xd"] = "xd";
+        } else {
+            route = "resultado/actualizar/" + id
+        }
+        
+        const axios = await Api.put(route,data);
+        console.log(axios)
 
+    }
     return (
         <>
+            <link rel="stylesheet" href="../../public/css/analisis.css" />
+
             <Tablas clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <FormResultados setFormatoSca={setFormatoSca} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

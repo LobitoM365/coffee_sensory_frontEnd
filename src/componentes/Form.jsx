@@ -194,7 +194,7 @@ export const Form = forwardRef((data, ref) => {
             resizeForm()
         })
 
-    }, [])
+    }, [data])
 
 
     const chageData = (event) => {

@@ -595,6 +595,7 @@ export const Analisis = (userInfo) => {
     }
     async function setFormatoSca(data, id, tipoRegistro, tipoAnalisis) {
         let route = "";
+        let method = "post";
         console.log(data)
         data["tipos_analisis_id"] = tipoAnalisis ? tipoAnalisis : ""
         data["formatos_id"] = id ? id : ""
@@ -602,10 +603,11 @@ export const Analisis = (userInfo) => {
             route = "resultado/registrar/"
             data["xd"] = "xd";
         } else {
+            method = put
             route = "resultado/actualizar/" + id
         }
         
-        const axios = await Api.put(route,data);
+        const axios = await Api[method](route,data);
         console.log(axios)
 
     }

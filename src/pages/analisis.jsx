@@ -310,7 +310,7 @@ export const Analisis = (userInfo) => {
     async function getAnalisis() {
         try {
             const response = await Api.post("analisis/listar", dataFilterTable);
-            console.log('FILTER DATA: ', dataFilterTable)
+            console.log(response,"anaaalisis")
             if (response.data.status == true) {
                 setUsuarios(response.data.data)
                 setCountRegisters(response.data.count)

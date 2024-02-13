@@ -123,7 +123,11 @@ export const Graficos = (user) => {
     
       const [StilyCharts, setStilyCharts] = useState({
         width: '1000px',
-        height: '200px'
+        height: '200px',
+        display:'flex',
+        justifyContent: "center",
+        alignItems:"center",
+        marginLeft:"100px"
       });
     
       const handleResize = () => {
@@ -150,7 +154,7 @@ export const Graficos = (user) => {
         } else if (windowSize.width >= 320 && windowSize.width <= 480) {
           setStilyCharts({ width: '100px', height: '50px' });
         }else{
-          setStilyCharts({ width: '1000px', height: '200px' });
+          setStilyCharts({ width: '1300px', height: '300px' ,marginLeft:'50px'});
         }
       }, [windowSize]);
 

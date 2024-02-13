@@ -46,9 +46,13 @@ export const GraficoCircular = ({ user }) => {
       return "rgba(0, 0, 0, 0)";
     }
   });
+  const ResultLabel=[]
+  data.map(element => ResultLabel.push(element.fecha.substring(0,3)))
 
+  console.log(ResultLabel,"lo logreeeeeeeeeeeeeeee")
+const ejemplo=['Feb', 'Feb', 'Feb', 'Feb', 'Feb'];
   const chartData = {
-    labels: data.map(element => element.fecha),
+    labels:ResultLabel,
     datasets: [
       {
         label: 'Calidad',
@@ -58,6 +62,9 @@ export const GraficoCircular = ({ user }) => {
       },
     ],
   };
+
+  
+  
 
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
@@ -90,7 +97,7 @@ export const GraficoCircular = ({ user }) => {
     } else if (windowSize.width >= 320 && windowSize.width <= 480) {
       setStyleCharts({ width: '100px', height: '50px' });
     } else {
-      setStyleCharts({ width: '1000px', height: '200px' });
+      setStyleCharts({ width: '1500px', height: '400px',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"50px"});
     }
   }, [windowSize]);
 
@@ -99,7 +106,7 @@ export const GraficoCircular = ({ user }) => {
       <link rel="stylesheet" href="../../public/css/graficos.css" />
       {data && data.length > 0 ?
         <div style={styleCharts}>
-          <Pie data={chartData} />
+          <Pie data={chartData}/>
         </div>
         :
         ""

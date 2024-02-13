@@ -23,8 +23,43 @@ h2{
     background-color: white;
     border-radius: 10px;
     padding: 20px;
-    overflow: auto;
+    overflow: hidden;
 }
+.BoxMain {
+  width: calc(100%);
+  height: 80vh;
+  
+  display: grid;
+  grid-template-areas:
+    'grafica colores'
+    /* Puedes ajustar las proporciones según tus necesidades */
+  ;
+  grid-template-columns: 80% 20% ;
+  gap: 5px;
+  padding-left: 15px;
+}
+.BoxGraficas {
+   
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: auto;
+  width: 100%;
+  height: 60vh;
+  
+  grid-area: grafica;
+}
+
+.Tablecolors {
+  width: 50%;
+  height: 20rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  grid-area: colores;
+}
+
 
 @media only screen and (min-width: 768px) and (max-width: 1240px) {
     .component {

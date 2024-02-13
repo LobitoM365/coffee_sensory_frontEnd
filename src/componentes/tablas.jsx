@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Form } from './Form.jsx';
 
 export const formatDate = (data) => {
-    
+
     let date = new Date(data);
     let year = date.getFullYear();
-    let month = date.getMonth() + 1 ;
+    let month = date.getMonth() + 1;
     let day = date.getDate();
 
     return `${day < 10 ? '0' + day : day} / ${month < 10 ? '0' + month : month} / ${year} `
@@ -13,6 +13,9 @@ export const formatDate = (data) => {
 
 
 export const Tablas = (array) => {
+
+    console.log('DATA: ');
+
     let data = [];
     let print = []
     let keysData = [];
@@ -299,7 +302,7 @@ export const Tablas = (array) => {
                 <div className="div-filters">
                     <div className='div-tittle'>
                         <h2> {array.tittle ? array.tittle : "Tabla de registros"}</h2>
-                        <button onClick={() => { array.clearInputs ? array.clearInputs() : ""; setClearClick(); array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>
+                        <button style={{ display: array.hidden && array.hidden.includes('register') ? 'none' : '' }} onClick={() => { array.clearInputs ? array.clearInputs() : ""; setClearClick(); array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>
                     </div>
 
                     <div className='content-filters'>
@@ -327,7 +330,7 @@ export const Tablas = (array) => {
                             </div>
                             <h4>Registros</h4>
                         </div>
-                        <div className="filter-estado">
+                        <div className="filter-estado" style={{ display: array.hidden && array.hidden.includes('status') ? 'none' : '' }}>
                             <div onClick={() => { changeModalEstado(!modalEstado) }} className='input-select-estado' name="" id="">
                                 <h4>{nameEstadoFocus}</h4>
                                 <div className="icon-chevron-estado">
@@ -338,7 +341,7 @@ export const Tablas = (array) => {
                                 </div>
 
                             </div>
-                            <div style={{ display: modalEstado == false ? "none" : "block" }} className="opciones">
+                            <div style={{ display: modalEstado == false ? "none" : "block" }} className="opciones" >
 
                                 <h4 onClick={() => { changeNameEstadoFocus("Estado..."); array.getFilterEstado(false); setPosicionPaginate(0); functionSetLimit(1) }} className='select-option'>Estado...</h4>
 
@@ -386,7 +389,7 @@ export const Tablas = (array) => {
                                         </div>
                                     </th>
                                 })}
-                                <th ><h4 className='tittle-item-header-table'>Actualizar</h4></th>
+                                <th style={{ display: array.hidden && array.hidden.includes('update') ? 'none' : '' }}><h4 className='tittle-item-header-table' >Actualizar</h4></th>
                             </tr>
                         </thead >
                         <tbody key={"tBody"}>
@@ -434,26 +437,26 @@ export const Tablas = (array) => {
                                                                                         let functionProcedure;
                                                                                         let valueFunctionProcedure;
 
-                                                                                        if(print[keys]["conditions"][keyC][keyT]["function"]){
-                                                                                            if(print[keys]["conditions"][keyC][keyT]["function"]["value"]){
+                                                                                        if (print[keys]["conditions"][keyC][keyT]["function"]) {
+                                                                                            if (print[keys]["conditions"][keyC][keyT]["function"]["value"]) {
                                                                                                 functionProcedure = print[keys]["conditions"][keyC][keyT]["function"]["value"]
                                                                                             }
-                                                                                            if(print[keys]["conditions"][keyC][keyT]["function"]["execute"]){
-                                                                                                if(print[keys]["conditions"][keyC][keyT]["function"]["execute"]["type"]){
-                                                                                                    if(print[keys]["conditions"][keyC][keyT]["function"]["execute"]["type"] == "table"){
-                                                                                                        if(print[keys]["conditions"][keyC][keyT]["function"]["execute"]["value"]){
-                                                                                                            if(keysData.includes(print[keys]["conditions"][keyC][keyT]["function"]["execute"]["value"])){
-                                                                                                                
+                                                                                            if (print[keys]["conditions"][keyC][keyT]["function"]["execute"]) {
+                                                                                                if (print[keys]["conditions"][keyC][keyT]["function"]["execute"]["type"]) {
+                                                                                                    if (print[keys]["conditions"][keyC][keyT]["function"]["execute"]["type"] == "table") {
+                                                                                                        if (print[keys]["conditions"][keyC][keyT]["function"]["execute"]["value"]) {
+                                                                                                            if (keysData.includes(print[keys]["conditions"][keyC][keyT]["function"]["execute"]["value"])) {
+
                                                                                                                 valueFunctionProcedure = data[valuesD][print[keys]["conditions"][keyC][keyT]["function"]["execute"]["value"]]
                                                                                                             }
                                                                                                         }
-                                                                                                        
+
                                                                                                     }
                                                                                                 }
                                                                                             }
                                                                                         }
-                                                                                        return <td key={index}><button  onClick={()=>{functionProcedure ? functionProcedure(valueFunctionProcedure) : ""}} className={'table-attribute-button-condition '+ classProcedure}>{referenciaProcedure}</button></td>;
-                                                                                    }else{
+                                                                                        return <td key={index}><button onClick={() => { functionProcedure ? functionProcedure(valueFunctionProcedure) : "" }} className={'table-attribute-button-condition ' + classProcedure}>{referenciaProcedure}</button></td>;
+                                                                                    } else {
                                                                                         return <td key={index}><h4 className='table-attribute-no-registra'>{referenciaProcedure}</h4></td>;
                                                                                     }
                                                                                 }
@@ -510,7 +513,7 @@ export const Tablas = (array) => {
                                                 }
                                             })
                                         }
-                                        <td className='td-update'>
+                                        <td className='td-update' style={{ display: array.hidden && array.hidden.includes('update') ? 'none' : '' }}>
                                             <div className="center-update">
                                                 <button onClick={() => { setClearClick(); array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} title='actualizar' {...data[valuesD]["estado"] == 0 ? { disabled: true, title: 'Inactivo - No se puede actualizar' } : ''} className={`item-options option-update ${data[valuesD]['estado'] == 0 ? 'btn-disabled' : ""}`}>
                                                     <svg version="1.0" viewBox="0 0 478.000000 522.000000" >

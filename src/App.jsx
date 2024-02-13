@@ -20,6 +20,7 @@ import { Alert } from './componentes/alert.jsx';
 import { useEffect, useState } from 'react';
 import Api from './componentes/Api.jsx';
 import { Municipios } from './pages/municipios.jsx';
+import { Departamentos } from './pages/departamentos.jsx';
 import { Variedades } from './pages/variedades.jsx';
 import { Muestras } from './pages/muestras.jsx';
 import { Cafes } from './pages/cafes.jsx';
@@ -103,6 +104,7 @@ export default function App() {
             <Route path='fincas/registros' element={<Fincas />} />
             <Route path='analisis/registros' element={<Analisis userInfo={userInfo}/>} />
             <Route path='cafes/registros' element={<Cafes />} />
+            <Route path='departamentos/registros' element={<Departamentos />} />
             <Route path='municipios/registros' element={<Municipios />} />
             <Route path='variedades/registros' element={<Variedades />} />
             <Route path='muestras/registros' element={<Muestras />} />

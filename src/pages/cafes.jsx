@@ -133,7 +133,7 @@ export const Cafes = () => {
     async function getCafes() {
         try {
             const response = await Api.post("cafes/listar", dataFilterTable);
-            console.log('DATA CAFE: ', response);
+            // console.log('DATA CAFE: ', dataFilterTable);
             if (response.data.status == true) {
                 setFincas(response.data.data)
                 setCountRegisters(response.data.count)
@@ -150,7 +150,10 @@ export const Cafes = () => {
 
     async function desactivarFinca() {
         try {
-            const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
+            const axios = await Api.delete("cafes/cambiarEstado/" + idFincaCambiarEstado);
+
+            // console.log('DEACTIVAR DATA: ', axios);
+
             if (axios.data.status == true) {
                 getCafes();
                 setStatusAlert(true)

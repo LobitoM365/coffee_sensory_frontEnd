@@ -134,9 +134,11 @@ export const Form = forwardRef((data, ref) => {
     React.useImperativeHandle(ref, () => ({
         clearElementsClick
     }));
+   useEffect(()=>{
+    Init()
+   },[])
 
     useEffect(() => {
-        Init()
  
         let modalForm = document.getElementById("modalForm");
         let divContentForm = document.getElementById("divContentForm");

@@ -30,7 +30,7 @@ export const Analisis = (userInfo) => {
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
     const [modalForm, changeModalForm] = useState(false);
-    let idUsuarioCambiarEstado = 0;
+    let idAnalisis = 0;
 
     let [inputsForm, setInputsForm] = useState(
         {
@@ -147,6 +147,7 @@ export const Analisis = (userInfo) => {
         },
         "fecha_creacion": {
             "referencia": "Fecha de creación",
+            "format":true
         },
         "estado": {
             "referencia": "Estado"
@@ -309,6 +310,7 @@ export const Analisis = (userInfo) => {
     async function getAnalisis() {
         try {
             const response = await Api.post("analisis/listar", dataFilterTable);
+            console.log('FILTER DATA: ', dataFilterTable)
             if (response.data.status == true) {
                 setUsuarios(response.data.data)
                 setCountRegisters(response.data.count)
@@ -325,7 +327,7 @@ export const Analisis = (userInfo) => {
 
     async function desactivarUsuario() {
         try {
-            const axios = await Api.delete("usuarios/desactivar/" + idUsuarioCambiarEstado);
+            const axios = await Api.delete("analisis/eliminar/" + idAnalisis);
             if (axios.data.status == true) {
                 getAnalisis();
                 setStatusAlert(true)
@@ -383,7 +385,7 @@ export const Analisis = (userInfo) => {
         }
     }
     async function cambiarEstado(id, estado) {
-        idUsuarioCambiarEstado = id;
+        idAnalisis = id;
         let tittle = ""
         let descripcion = ""
         if (estado == 0) {
@@ -538,13 +540,13 @@ export const Analisis = (userInfo) => {
     async function getFilterEstado(value) {
         let cloneDataFilterTable = { ...dataFilterTable }
         if (value !== false) {
-            cloneDataFilterTable.filter.where["us.estado"] = {
+            cloneDataFilterTable.filter.where["an.estado"] = {
                 "value": value,
                 "require": "and"
             }
 
         } else {
-            delete cloneDataFilterTable.filter.where["us.estado"]
+            delete cloneDataFilterTable.filter.where["an.estado"]
         }
         setDataFilterTable(cloneDataFilterTable)
         getAnalisis(dataFilterTable)
@@ -603,7 +605,7 @@ export const Analisis = (userInfo) => {
             route = "resultado/registrar/"
             data["xd"] = "xd";
         } else {
-            method = put
+            method = "put"
             route = "resultado/actualizar/" + id
         }
         

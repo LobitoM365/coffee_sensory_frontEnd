@@ -13,8 +13,8 @@ export const Muestras = () => {
         }
     })
         ;
-    const [fincas, setFincas] = useState([])
-    const [fincaEdit, setfincaEdit] = useState([])
+    const [fincas, setMuestras] = useState([])
+    const [fincaEdit, setMuestraEdit] = useState([])
     const [updateStatus, setUpdateStatus] = useState(false)
     const [municipios, setMunicipios] = useState([])
     const [countRegisters, setCountRegisters] = useState()
@@ -35,8 +35,73 @@ export const Muestras = () => {
                 type: "select",
                 referencia: "Café",
                 upper_case: true,
-                values: ["numero_documento","usuario","finca","lote","variedad"],
-                key : "id"
+                values: ["numero_documento", "usuario", "finca", "lote", "variedad"],
+                key: "id"
+            },
+            codigo_externo: {
+                type: "normal",
+                referencia: "Codigo Externo",
+                upper_case: true,
+            },
+            consecutivo_informe: {
+                type: "normal",
+                referencia: "Consecutivo Informe",
+                upper_case: true,
+            },
+            muestreo: {
+                type: "normal",
+                referencia: "Muestreo",
+                upper_case: true,
+            },
+            preparacion_muestra: {
+                type: "normal",
+                referencia: "Preparación",
+                upper_case: true,
+            },
+            tipo_molienda: {
+                type: "normal",
+                referencia: "Tipo de Molienda",
+                upper_case: true,
+            },
+            tipo_fermentacion: {
+                type: "normal",
+                referencia: "Tipo de Fermentación",
+                upper_case: true,
+            },
+            densidad_cafe_verde: {
+                type: "normal",
+                referencia: "Densidad de Café Verde",
+                upper_case: true,
+            },
+            tipo_tostion: {
+                type: "normal",
+                referencia: "Tipo de Tostión",
+                upper_case: true,
+            },
+            tiempo_fermentacion: {
+                type: "normal",
+                referencia: "Tiempo de Fermentación",
+                upper_case: true,
+            },
+            codigo_muestra: {
+                type: "normal",
+                referencia: "Código Muestra",
+                upper_case: true,
+            },
+            actividad_agua: {
+                type: "normal",
+                referencia: "Actividad de Agua",
+                upper_case: true,
+            },
+            tiempo_secado: {
+                type: "normal",
+                referencia: "Tiempo Secado",
+                upper_case: true,
+            },
+            presentacion: {
+                type: "normal",
+                referencia: "Presentación",
+                upper_case: true,
             },
         }
     )
@@ -45,12 +110,21 @@ export const Muestras = () => {
         "mu_id": {
             "referencia": "Id",
         },
+        "codigo_externo": {
+            "referencia": "Codigo Externo",
+            "upper_case": true
+        },
+        "codigo_muestra": {
+            "referencia": "Codigo Muestra",
+            "upper_case": true
+        },
         "cantidad": {
             "referencia": "Cantidad",
             "upper_case": true
         },
         "fecha_creacion": {
-            "referencia": "Fecha creación"
+            "referencia": "Fecha creación",
+            "format": true
         },
         "estado": {
             "referencia": "Estado"
@@ -65,12 +139,23 @@ export const Muestras = () => {
         }
     }
     useEffect(() => {
-        getFincas()
+        getMuestra()
         getCafes()
     }, [])
     async function getCafes() {
         try {
-            const response = await Api.post("cafes/listar");
+            let filter = {
+                "filter": {
+                    "where": {
+                        "ca.estado": {
+                            "operador": "!=",
+                            "value": "0",
+                            "require": "and"
+                        }
+                    }
+                }
+            }
+            const response = await Api.post("cafes/listar", filter);
             if (response.data.status == true) {
                 let cafes = inputsForm;
                 if (!cafes["cafes_id"]) {
@@ -86,28 +171,29 @@ export const Muestras = () => {
         } catch (e) {
         }
     }
-    async function getFincas() {
+    async function getMuestra() {
         try {
             const response = await Api.post("muestra/listar", dataFilterTable);
+            console.log('DATA FILTER: ', dataFilterTable);
             if (response.data.status == true) {
-                setFincas(response.data.data)
+                setMuestras(response.data.data)
                 setCountRegisters(response.data.count)
             } else if (response.data.find_error) {
                 setCountRegisters(0)
-                setFincas(response.data)
+                setMuestras(response.data)
             } else {
-                setFincas(response.data)
+                setMuestras(response.data)
             }
         } catch (e) {
 
         }
     }
 
-    async function desactivarFinca() {
+    async function desactivaMuestra() {
         try {
-            const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
+            const axios = await Api.delete("muestra/desactivar/" + idFincaCambiarEstado);
             if (axios.data.status == true) {
-                getFincas();
+                getMuestra();
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -125,7 +211,7 @@ export const Muestras = () => {
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if(axios.data.permission_error){
+            } else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -139,7 +225,7 @@ export const Muestras = () => {
                     }
                 )
             }
-     
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -157,11 +243,11 @@ export const Muestras = () => {
         let tittle = ""
         let descripcion = ""
         if (estado == 0) {
-            tittle = "Activarás las finca " + id
-            descripcion = "Estás apunto de activar la finca, ten encuenta que esta accion no activará las dependencias de la finca, pero si permitirá el uso de ellas.";
+            tittle = "Activarás las muestra " + id
+            descripcion = "Estás apunto de activar la muestra, ten encuenta que esta accion no activará las dependencias de la muestra, pero si permitirá el uso de ellas.";
         } else if (estado == 1 || estado == 3 || estado == 4) {
-            tittle = "¿Deseas desactivar la finca " + id + " ?";
-            descripcion = "Estás apunto de desactivar la finca, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de esta finca."
+            tittle = "¿Deseas desactivar la muestra " + id + " ?";
+            descripcion = "Estás apunto de desactivar la muestra, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de esta muestra."
         }
         setStatusAlert(true)
         setdataAlert(
@@ -170,17 +256,17 @@ export const Muestras = () => {
                 description: descripcion,
                 tittle: tittle,
                 continue: {
-                    "function": desactivarFinca
+                    "function": desactivaMuestra
                 }
             }
         )
-        
+
     }
-    async function setFinca(data) {
+    async function setMuestra(data) {
         try {
             const axios = await Api.post("muestra/registrar/", data);
             if (axios.data.status == true) {
-                getFincas();
+                getMuestra();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -205,7 +291,7 @@ export const Muestras = () => {
                 )
             } else if (axios.data.errors) {
                 setErrors(axios.data.errors)
-            }  else if(axios.data.permission_error){
+            } else if (axios.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -218,7 +304,7 @@ export const Muestras = () => {
                         }
                     }
                 )
-            }else {
+            } else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -229,7 +315,7 @@ export const Muestras = () => {
                     }
                 )
             }
-         
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -243,18 +329,18 @@ export const Muestras = () => {
         }
     }
 
-   
+
 
     async function procedureTrue() {
         changeModalForm(false)
         setUpdateStatus(false)
     }
-    async function updateFinca(data, id) {
+    async function updateMuestra(data, id) {
 
         try {
-            const axios = await Api.put("finca/actualizar/" + id, data);
+            const axios = await Api.put("muestra/actualizar/" + id, data);
             if (axios.data.status == true) {
-                getFincas();
+                getMuestra();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
@@ -305,32 +391,32 @@ export const Muestras = () => {
     async function getFilterEstado(value) {
         let cloneDataFilterTable = { ...dataFilterTable }
         if (value !== false) {
-            cloneDataFilterTable.filter.where["fin.estado"] = {
+            cloneDataFilterTable.filter.where["mu.estado"] = {
                 "value": value,
                 "require": "and"
             }
 
         } else {
-            delete cloneDataFilterTable.filter.where["fin.estado"]
+            delete cloneDataFilterTable.filter.where["mu.estado"]
         }
         setDataFilterTable(cloneDataFilterTable)
-        getFincas(dataFilterTable)
+        getMuestra(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
         dataFilterTable.filter["order"] = filter
-        getFincas();
+        getMuestra();
 
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
-        getFincas()
+        getMuestra()
 
     }
-    async function buscarFinca(id) {
+    async function buscarMuestra(id) {
 
-        const response = await Api.get("finca/buscar/" + id);
+        const response = await Api.get("muestra/buscar/" + id);
         if (response.data.status == true) {
-            setfincaEdit(response.data.data[0])
+            setMuestraEdit(response.data.data[0])
         } else if (response.data.find_error) {
 
         } else {
@@ -338,22 +424,23 @@ export const Muestras = () => {
         }
     }
     async function updateTable() {
-        getFincas();
+        getMuestra();
     }
     async function editarFinca(id) {
-        buscarFinca(id)
+        buscarMuestra(id)
     }
     function filterSeacth(search) {
         let cloneDataFilterTable = { ...dataFilterTable }
         cloneDataFilterTable.filter["search"] = search
         setDataFilterTable(cloneDataFilterTable)
-        getFincas(dataFilterTable)
+        getMuestra(dataFilterTable)
 
     }
- 
+
     return (
         <>
-            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Muestra"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setMuestra} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateMuestra} tittle={"Muestra"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

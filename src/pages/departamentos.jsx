@@ -4,7 +4,7 @@ import Api from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
 
-export const Municipios = () => {
+export const Departamentos = () => {
     let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
@@ -13,7 +13,7 @@ export const Municipios = () => {
         }
     })
         ;
-    const [fincas, setEntities] = useState([])
+    const [data, setEntities] = useState([])
     const [fincaEdit, setEntitieEdit] = useState([])
     const [updateStatus, setUpdateStatus] = useState(false)
     const [municipios, setMunicipios] = useState([])
@@ -43,16 +43,14 @@ export const Municipios = () => {
     )
 
     const keys = {
-        "muni_id": {
+        "id": {
             "referencia": "Id",
         },
         "nombre": {
             "referencia": "Nombre",
             "upper_case": true
-        },
-        "departamento": {
-            "referencia": "Departamento"
-        },
+        }
+        
         // "fecha_creacion": {
         //     "referencia": "Fecha creación"
         // }
@@ -69,10 +67,11 @@ export const Municipios = () => {
         getEntities()
 
     }, [])
-    getDepartamentos()
+
     async function getEntities() {
         try {
-            const response = await Api.post("municipio/listar", dataFilterTable);
+            const response = await Api.post("departamento/listar", dataFilterTable);
+            console.log('DEPARTAMENTS: ', dataFilterTable);
             if (response.data.status == true) {
                 setEntities(response.data.data)
                 setCountRegisters(response.data.count)
@@ -87,82 +86,9 @@ export const Municipios = () => {
         }
     }
 
-    async function desactivarEntitie() {
-        try {
-            const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
-            if (axios.data.status == true) {
-                getEntities();
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: axios.data.message,
-                        "tittle": "Excelente",
-                    }
-                )
-            } else if (axios.data.delete_error) {
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: axios.data.delete_error,
-                        "tittle": "Inténtalo de nuevo",
-                    }
-                )
-            } else if (axios.data.permission_error) {
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: axios.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "function": procedureTrue,
-                            location: "/dashboard"
-                        }
-                    }
-                )
-            }
-
-
-        } catch (e) {
-            setStatusAlert(true)
-            setdataAlert(
-                {
-                    status: "warning",
-                    description: "Error interno del servidor: " + e,
-                    "tittle": "Inténtalo de nuevo"
-                }
-            )
-        }
-    }
-    async function cambiarEstado(id, estado) {
-        idFincaCambiarEstado = id;
-        let tittle = ""
-        let descripcion = ""
-        if (estado == 0) {
-            tittle = "Activarás las finca " + id
-            descripcion = "Estás apunto de activar la finca, ten encuenta que esta accion no activará las dependencias de la finca, pero si permitirá el uso de ellas.";
-        } else if (estado == 1 || estado == 3 || estado == 4) {
-            tittle = "¿Deseas desactivar la finca " + id + " ?";
-            descripcion = "Estás apunto de desactivar la finca, por favor verifica si realmente quieres hacerlo. Esta acción conlleva a desactivar todos los registros de las  dependencias de esta finca."
-        }
-        setStatusAlert(true)
-        setdataAlert(
-            {
-                status: "warning",
-                description: descripcion,
-                tittle: tittle,
-                continue: {
-                    "function": desactivarEntitie
-                }
-            }
-        )
-
-    }
     async function setEntitie(data) {
         try {
-            const axios = await Api.post("municipio/registrar/", data);
+            const axios = await Api.post("departamento/registrar/", data);
             if (axios.data.status == true) {
                 getEntities();
                 setErrors({})
@@ -227,42 +153,7 @@ export const Municipios = () => {
         }
     }
 
-    async function getDepartamentos() {
-        try {
-            const response = await Api.post("departamento/listar");
-            if (response.data.status == true) {
-                let users = inputsForm;
-                if (!users["departamentos_Id"]) {
-                    users["departamentos_Id"] = {}
-                }
-                users["departamentos_Id"]["opciones"] = response.data.data
-                setInputsForm(users)
-            } else if (response.data.find_error) {
 
-            } else {
-
-            }
-        } catch (e) {
-        }
-    }
-    async function getMunicipios() {
-        try {
-            const response = await Api.get("municipio/listar");
-            if (response.data.status == true) {
-                let municipios = inputsForm;
-                if (!municipios["municipios_Id"]) {
-                    municipios["municipios_Id"] = {}
-                }
-                municipios["municipios_Id"]["opciones"] = response.data.data
-                setInputsForm(municipios)
-            } else if (response.data.find_error) {
-
-            } else {
-
-            }
-        } catch (e) {
-        }
-    }
 
     async function procedureTrue() {
         changeModalForm(false)
@@ -271,7 +162,7 @@ export const Municipios = () => {
     async function updateFinca(data, id) {
 
         try {
-            const axios = await Api.put("finca/actualizar/" + id, data);
+            const axios = await Api.put("departamento/actualizar/" + id, data);
             if (axios.data.status == true) {
                 getEntities();
                 setErrors({})
@@ -324,13 +215,13 @@ export const Municipios = () => {
     async function getFilterEstado(value) {
         let cloneDataFilterTable = { ...dataFilterTable }
         if (value !== false) {
-            cloneDataFilterTable.filter.where["fin.estado"] = {
+            cloneDataFilterTable.filter.where["de.estado"] = {
                 "value": value,
                 "require": "and"
             }
 
         } else {
-            delete cloneDataFilterTable.filter.where["fin.estado"]
+            delete cloneDataFilterTable.filter.where["de.estado"]
         }
         setDataFilterTable(cloneDataFilterTable)
         getEntities(dataFilterTable)
@@ -345,9 +236,9 @@ export const Municipios = () => {
         getEntities()
 
     }
-    async function buscarFinca(id) {
+    async function buscarDepartamento(id) {
 
-        const response = await Api.get("finca/buscar/" + id);
+        const response = await Api.get("departamento/buscar/" + id);
         if (response.data.status == true) {
             setEntitieEdit(response.data.data[0])
         } else if (response.data.find_error) {
@@ -360,7 +251,7 @@ export const Municipios = () => {
         getEntities();
     }
     async function editarFinca(id) {
-        buscarFinca(id)
+        buscarDepartamento(id)
     }
     function filterSeacth(search) {
         let cloneDataFilterTable = { ...dataFilterTable }
@@ -370,11 +261,11 @@ export const Municipios = () => {
 
     }
     useEffect(() => {
-        getDepartamentos()
+    
     }, [])
     return (
         <>
-            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} hidden={['status', 'register','update']} tittle={"Municipio"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={data} keys={keys}  updateEntitie={updateFinca} hidden={['status', 'register', 'update']} tittle={"Departamentos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

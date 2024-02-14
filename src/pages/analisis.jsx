@@ -27,9 +27,12 @@ export const Analisis = (userInfo) => {
     const [municipios, setMunicipios] = useState([])
     const [countRegisters, setCountRegisters] = useState()
     const [errors, setErrors] = useState()
+    const [errorsFormato, setErrorsFormato] = useState()
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
     const [modalForm, changeModalForm] = useState(false);
+    const [tipoAnalisis, setTipoAnalisis] = useState(null);
+    const [idAnalisisResult, setIdAnalisisResult] = useState(null);
     let idAnalisis = 0;
 
     let [inputsForm, setInputsForm] = useState(
@@ -63,6 +66,16 @@ export const Analisis = (userInfo) => {
                 key: "id"
             },
 
+        }
+    )
+    let [selectAsignar, setSelectAsignar] = useState(
+        {
+            usuarios_id: {
+                type: "select",
+                values: ["numero_documento", "nombre"],
+                upper_case: true,
+                key: "id"
+            }
         }
     )
 
@@ -147,7 +160,7 @@ export const Analisis = (userInfo) => {
         },
         "fecha_creacion": {
             "referencia": "Fecha de creación",
-            "format":true
+            "format": true
         },
         "estado": {
             "referencia": "Estado"
@@ -178,6 +191,11 @@ export const Analisis = (userInfo) => {
     }
     async function setInfoFormato(id, tipo) {
         try {
+            setTipoAnalisis(tipo)
+            setIdAnalisisResult(id)
+            let asignar = selectAsignar;
+            asignar["usuarios_id"]["referencia"] = "Catador para el Formato " + (tipo == 2 ? "SCA" : "Físico")
+
             setDataModalAnalisis([])
             setDataModalResultado([])
             setDataModalResultadoAnalisis([])
@@ -246,6 +264,7 @@ export const Analisis = (userInfo) => {
                     }
                     const response = await Api.post("usuarios/listar", filter);
                     let cafes = inputsForm;
+                    let asignar = selectAsignar;
                     if (!cafes["usuario_formato_sca"]) {
                         cafes["usuario_formato_sca"] = {}
                     }
@@ -256,7 +275,9 @@ export const Analisis = (userInfo) => {
                     }
                     cafes["usuario_formato_fisico"]["opciones"] = response.data.data ? response.data.data : [];
 
+                    asignar["usuarios_id"]["opciones"] = response.data.data ? response.data.data : []
                     setInputsForm(cafes)
+                    setSelectAsignar(asignar)
 
                 }
             }
@@ -310,7 +331,7 @@ export const Analisis = (userInfo) => {
     async function getAnalisis() {
         try {
             const response = await Api.post("analisis/listar", dataFilterTable);
-            console.log(response,"anaaalisis")
+            console.log(response, "anaaalisis")
             if (response.data.status == true) {
                 setUsuarios(response.data.data)
                 setCountRegisters(response.data.count)
@@ -595,7 +616,7 @@ export const Analisis = (userInfo) => {
         getAnalisis(dataFilterTable)
 
     }
-    async function setFormatoSca(data, id, tipoRegistro, tipoAnalisis) {
+    async function setFormatoSca(data, id, tipoRegistro, tipoAnalisis, idAnalisis) {
         let route = "";
         let method = "post";
         console.log(data)
@@ -608,17 +629,81 @@ export const Analisis = (userInfo) => {
             method = "put"
             route = "resultado/actualizar/" + id
         }
-        
-        const axios = await Api[method](route,data);
-        console.log(axios)
 
+        const axios = await Api[method](route, data);
+        console.log(axios)
+        if (axios.data.status == true) {
+            setInfoFormato(idAnalisisResult, tipoAnalisis)
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "true",
+                    description: axios.data.message,
+                    "tittle": "Excelente",
+                }
+            )
+            console.log(idAnalisis, tipoAnalisis, "ahhhh")
+        } else {
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "false",
+                    description: axios.data.message,
+                    "tittle": "Inténtalo de nuevo",
+                    continue: {
+
+                    }
+                }
+            )
+        }
+
+    }
+
+    async function asignarFormato(idAnalisis, tipo, usuario) {
+        try {
+            console.log(idAnalisis, tipo, usuario)
+            const data = {
+                "analisis_id": idAnalisis,
+                "tipos_analisis_id": tipo,
+                "usuarios_id": usuario
+            }
+            const response = await Api.post("formatos/registrar", data);
+            console.log(response, "ahhhhhh")
+            if (response.data.status == true) {
+                setInfoFormato(idAnalisis, tipoAnalisis)
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Excelente",
+                    }
+                )
+            } else if (response.data.register_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.register_error,
+                        "tittle": "Inténtalo de nuevo",
+                        continue: {
+
+                        }
+                    }
+                )
+            } else if (response.data.errors) {
+                setErrorsFormato(response.data.errors)
+            }
+        } catch (e) {
+            console.log(e)
+        }
     }
     return (
         <>
             <link rel="stylesheet" href="../../public/css/analisis.css" />
 
             <Tablas clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
-            <FormResultados setFormatoSca={setFormatoSca} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
+            <FormResultados errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setFormatoSca={setFormatoSca} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

@@ -38,7 +38,7 @@ export default function App() {
       return;
     }
 
-  
+
     if (responseValidateViews.data !== undefined) {
       setUserInfo(responseValidateViews.data.user);
     } else {
@@ -51,32 +51,32 @@ export default function App() {
     }
   }, [responseValidateViews]);
 
-  async function validateViewsxd () {
-   let responseValidate;
-        const authorized = async () => {
-            try {
-                const response = await Api.post('auth/protectViews', {});
-           
-                if (!response.data.authorized) {
-                    if (location.pathname !== '/' && location.pathname !== '/login') {
-                        window.location.href = '/login';
-                    }
-                } else {
-                    if (location.pathname === '/login') {
-                        window.history.go(-1);
-                    }
-                }
-                responseValidate = response
-                return responseValidate;
-            } catch (error) {
-              responseValidate = error
-          
-            }
-        };
-        authorized();
-    
-    
-};
+  async function validateViewsxd() {
+    let responseValidate;
+    const authorized = async () => {
+      try {
+        const response = await Api.post('auth/protectViews', {});
+
+        if (!response.data.authorized) {
+          if (location.pathname !== '/' && location.pathname !== '/login') {
+            window.location.href = '/login';
+          }
+        } else {
+          if (location.pathname === '/login') {
+            window.history.go(-1);
+          }
+        }
+        responseValidate = response
+        return responseValidate;
+      } catch (error) {
+        responseValidate = error
+
+      }
+    };
+    authorized();
+
+
+  };
   useEffect(() => {
     validateViewsxd();
   }, [location.pathname])
@@ -98,15 +98,15 @@ export default function App() {
           <Route path='/dashboard' element={<Menu />}>
             <Route path='' element={<Home />} />
             <Route path='profile' element={<Profile />} />
-            <Route path="usuarios/registros"  element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} />: ""} />
+            <Route path="usuarios/registros" element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} /> : ""} />
             <Route path='formulario' element={<FormRegiser />} />
             <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
             <Route path='fincas/registros' element={<Fincas />} />
-            <Route path='analisis/registros' element={<Analisis userInfo={userInfo}/>} />
+            <Route path='analisis/registros' element={<Analisis userInfo={userInfo} />} />
             <Route path='cafes/registros' element={<Cafes />} />
-            <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} />: ""} />
-            <Route path='municipios/registros' element={<Municipios />} />
-            <Route path='variedades/registros' element={<Variedades />} />
+            <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} /> : ""} />
+            <Route path='municipios/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Municipios} /> : ""} />
+            <Route path='variedades/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Variedades} /> : ""}  />
             <Route path='muestras/registros' element={<Muestras />} />
             <Route path='lotes/registros' element={<Lotes />} />
             <Route path='muestras/verRegistros' element={<VerRegistros />} />

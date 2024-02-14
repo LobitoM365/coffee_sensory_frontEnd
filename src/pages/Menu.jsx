@@ -344,14 +344,16 @@ export const Menu = () => {
                             </Link>
 
 
+                            {responseValidate && responseValidate.data.user.rol == 'administrador' && (
 
-                            <Link to={"/dashboard/variedades/registros"} onClick={() => { selectedLi("/dashboard/variedades/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/variedades/registros" ? "selected-li" : ""}`}>
-                                <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256"  >
-                                    <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                    <g><g><path d="M99.6,10.4H29.1C18.6,10.4,10,18.4,10,29v69c0,10.5,8.6,20.2,19.1,20.2h70.6c10.5,0,19.1-9.7,19.1-20.2V29C118.7,18.4,110.1,10.4,99.6,10.4z M99.6,99.1H29.1V29h70.6V99.1z M99.6,137.8H29.1c-10.5,0-19.1,8.6-19.1,19.1v69.6c0,10.5,8.6,19.1,19.1,19.1h70.6c10.5,0,19.1-8.6,19.1-19.1v-69.6C118.7,146.5,110.1,137.8,99.6,137.8z M99.6,226.5H29.1v-70.1h70.6V226.5z M226.9,10.4h-70c-10.5,0-19.6,8.1-19.6,18.6v70.1c0,10.5,9.1,19.1,19.6,19.1h70c10.5,0,19.1-8.6,19.1-19.1V29C246,18.4,237.4,10.4,226.9,10.4z M226.9,99.1h-70V29h70V99.1L226.9,99.1z M224.8,137.8h-68.4c-10.5,0-19.1,8.6-19.1,19.1v69.6c0,10.5,8.6,19.1,19.1,19.1h70.6c10.5,0,19.1-8.6,19.1-19.1v-69.6C246,146.5,235.3,137.8,224.8,137.8z M226.9,226.5h-70V157h70V226.5L226.9,226.5z" /></g></g>
-                                </svg> <h5 className="change-hamburguer-quit ">Variedades</h5>
-                                </li>
-                            </Link>
+                                <Link to={"/dashboard/variedades/registros"} onClick={() => { selectedLi("/dashboard/variedades/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/variedades/registros" ? "selected-li" : ""}`}>
+                                    <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256"  >
+                                        <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                        <g><g><path d="M99.6,10.4H29.1C18.6,10.4,10,18.4,10,29v69c0,10.5,8.6,20.2,19.1,20.2h70.6c10.5,0,19.1-9.7,19.1-20.2V29C118.7,18.4,110.1,10.4,99.6,10.4z M99.6,99.1H29.1V29h70.6V99.1z M99.6,137.8H29.1c-10.5,0-19.1,8.6-19.1,19.1v69.6c0,10.5,8.6,19.1,19.1,19.1h70.6c10.5,0,19.1-8.6,19.1-19.1v-69.6C118.7,146.5,110.1,137.8,99.6,137.8z M99.6,226.5H29.1v-70.1h70.6V226.5z M226.9,10.4h-70c-10.5,0-19.6,8.1-19.6,18.6v70.1c0,10.5,9.1,19.1,19.6,19.1h70c10.5,0,19.1-8.6,19.1-19.1V29C246,18.4,237.4,10.4,226.9,10.4z M226.9,99.1h-70V29h70V99.1L226.9,99.1z M224.8,137.8h-68.4c-10.5,0-19.1,8.6-19.1,19.1v69.6c0,10.5,8.6,19.1,19.1,19.1h70.6c10.5,0,19.1-8.6,19.1-19.1v-69.6C246,146.5,235.3,137.8,224.8,137.8z M226.9,226.5h-70V157h70V226.5L226.9,226.5z" /></g></g>
+                                    </svg> <h5 className="change-hamburguer-quit ">Variedades</h5>
+                                    </li>
+                                </Link>
+                            )}
 
 
 

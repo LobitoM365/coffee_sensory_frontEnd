@@ -7,11 +7,33 @@ let rangePuntaje = document.querySelectorAll(".range-puntaje ");
 let cuadroSelect = document.querySelectorAll(".cuadro-select ");
 let rangeColor = document.querySelectorAll(".range-color");
 let divRangeColorIntensidad = document.querySelectorAll(".div-range-color-intensidad");
-let inputTazasIntensidad = document.querySelectorAll(".inputTazasIntensidad");
 let resultadoTazasXIntensidad = document.getElementById("resultadoTazasXIntensidad");
 let puntajeTotal = document.getElementById("puntajeTotal");
 let puntajeFinal = document.getElementById("puntajeFinal");
+let intensidadDefectos = document.getElementById("intensidadDefectos");
+let intensidad = document.getElementById("intensidad");
+let tazas = document.getElementById("tazas");
 /* let notas = document.getElementById("notas"); */
+
+function getPuntajeFinal() {
+    let FocusCuadro = document.querySelectorAll(".focus-cuadro-select");
+    let puntajeFinalValue = (parseFloat(document.getElementById("fragancia_aroma").value ? document.getElementById("fragancia_aroma").value : 0) + parseFloat(document.getElementById("sabor").value ? document.getElementById("sabor").value : 0) + parseFloat(document.getElementById("sabor_residual").value ? document.getElementById("sabor_residual").value : 0) + parseFloat(document.getElementById("acidez").value ? document.getElementById("acidez").value : 0) + parseFloat(document.getElementById("cuerpo").value ? document.getElementById("cuerpo").value : 0) + parseFloat(document.getElementById("balance").value ? document.getElementById("balance").value : 0) + parseFloat(document.getElementById("puntaje_catador").value ? document.getElementById("puntaje_catador").value : 0)) + (30 - (FocusCuadro.length * 2)) - (parseFloat(document.getElementById("tazas").value ? document.getElementById("tazas").value : 0) * parseFloat(document.getElementById("intensidad").value ? document.getElementById("intensidad").value : 0));
+    puntajeFinal.innerHTML = puntajeFinalValue >= 0 ? puntajeFinalValue : 0
+}
+
+intensidad.addEventListener("input", function () {
+    intensidadDefectos.innerHTML = intensidad.value;
+})
+tazas.addEventListener("input", function () {
+    tazas.value = tazas.value.replace(/\D/g, '')
+    if (tazas.value > 10) {
+        tazas.value = 10
+    } else if (tazas.value < 0) {
+        tazas.value = 0
+    }
+    resultadoTazasXIntensidad.innerHTML = tazas.value != "" ? !Number.isInteger((tazas.value * intensidad.value)) ? (tazas.value * intensidad.value).toFixed(1) : (tazas.value * intensidad.value) : "";
+    getPuntajeFinal()
+})
 
 for (let RI = 0; RI < rangeIntensidad.length; RI++) {
     rangeIntensidad[RI].addEventListener("input", function () {
@@ -44,6 +66,7 @@ for (let x = 0; x < rangePuntaje.length; x++) {
     })
 
     rangePuntaje[x].addEventListener("input", function () {
+        getPuntajeFinal()
         puntajeRange[x].innerHTML = rangePuntaje[x].value;
         let resultadoRangePuntaje = 0;
         let resultadoCuadroSelectPuntaje = 0;
@@ -73,26 +96,7 @@ for (let x = 0; x < rangePuntaje.length; x++) {
         }
         let totalTazasXIntensidad = 1;
         let contadorInput = 0;
-        for (let x = 0; x < inputTazasIntensidad.length; x++) {
-            totalTazasXIntensidad = 1;
-            contadorInput = 0;
-            for (let u = 0; u < inputTazasIntensidad.length; u++) {
-                if (inputTazasIntensidad[x].value == 0 && inputTazasIntensidad[u].value != 0) {
-                    resultadoTazasXIntensidad.innerHTML = inputTazasIntensidad[u].value;
-                } else if (inputTazasIntensidad[u].value != 0) {
-                    totalTazasXIntensidad = parseFloat(totalTazasXIntensidad) * parseFloat(inputTazasIntensidad[u].value);
-                } else if (inputTazasIntensidad[u].value == 0) {
-                    contadorInput = 1;
-                }
-            }
-        }
-        console.log(contadorInput)
-        for (let u = 0; u < inputTazasIntensidad.length; u++) {
-            if (contadorInput == 0 && contador == 7) {
-                puntajeFinal.innerHTML = parseFloat(puntajeTotal.innerHTML) - parseFloat(resultadoTazasXIntensidad.innerHTML);
-            }
-        }
-        console.log(puntajeTotal)
+
     })
 
 }
@@ -169,6 +173,7 @@ for (let CS = 0; CS < cuadroSelect.length; CS++) {
 }
 for (let CS = 0; CS < cuadroSelect.length; CS++) {
     cuadroSelect[CS].addEventListener("click", function () {
+        getPuntajeFinal()
         let resultadoRangePuntaje = 0;
         let resultadoCuadroSelectPuntaje = 0;
         for (let x = 0; x < puntajeSelect.length; x++) {
@@ -192,41 +197,7 @@ for (let CS = 0; CS < cuadroSelect.length; CS++) {
 
     })
 }
-for (let x = 0; x < inputTazasIntensidad.length; x++) {
-    inputTazasIntensidad[x].addEventListener("input", function () {
-        resultadoTazasXIntensidad.innerHTML = inputTazasIntensidad[x].value;
-        let totalTazasXIntensidad = 1;
-        let contador = 0;
-        for (let u = 0; u < inputTazasIntensidad.length; u++) {
-            if (inputTazasIntensidad[x].value == 0 && inputTazasIntensidad[u].value != 0) {
-                resultadoTazasXIntensidad.innerHTML = inputTazasIntensidad[u].value;
-            } else if (inputTazasIntensidad[u].value != 0) {
-                totalTazasXIntensidad = parseFloat(totalTazasXIntensidad) * parseFloat(inputTazasIntensidad[u].value);
-            } else if (inputTazasIntensidad[u].value == 0) {
-                contador = 1;
-            }
 
-        }
-
-        if (contador == 0) {
-            resultadoTazasXIntensidad.innerHTML = totalTazasXIntensidad;
-        }
-        let contadorInput = 0;
-        for (let u = 0; u < rangePuntaje.length; u++) {
-            if (rangePuntaje[u].classList.contains("true")) {
-                contadorInput = contadorInput + 1;
-            }
-
-        }
-        for (let u = 0; u < inputTazasIntensidad.length; u++) {
-            if (contadorInput == 7 && contador == 0) {
-                puntajeFinal.innerHTML = parseFloat(puntajeTotal.innerHTML) - parseFloat(resultadoTazasXIntensidad.innerHTML);
-            }
-        }
-        console.log(resultadoTazasXIntensidad, puntajeTotal.innerHTML)
-    })
-
-}
 
 
 /* let button = document.getElementById("button");

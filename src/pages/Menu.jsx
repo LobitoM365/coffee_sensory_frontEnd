@@ -287,22 +287,26 @@ export const Menu = () => {
                                     </li>
                                 </Link>
                             )}
-                            <Link to={"/dashboard/departamentos/registros"} onClick={() => { selectedLi("/dashboard/departamentos/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/departamentos/registros" ? "selected-li" : ""}`}>
-                                <li className="hamburguer-centered">
-                                    <svg className="icon-li-nav-horizontal" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
-                                        <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                        <g><g><path d="M98.1,120.6H187v14.7H98.1V120.6z" /><path d="M98.1,69.1H187v14.7H98.1V69.1z" /><path d="M98.1,172.2H187V187H98.1V172.2z" /><path d="M231.3,10.1H24.7H10v14.7v206.4v14.7h14.7h206.5H246v-14.7V24.8V10.1H231.3z M231.3,231.2H24.7V24.8h206.5L231.3,231.2L231.3,231.2z" /><path d="M69,172.2h14.3V187H69V172.2z" /><path d="M69,120.6h14.3v14.7H69V120.6z" /><path d="M69,69.1h14.3v14.7H69V69.1z" /></g></g>
-                                    </svg> <h5 className="change-hamburguer-quit ">Departamentos</h5>
-                                </li>
-                            </Link>
-                            <Link to={"/dashboard/municipios/registros"} onClick={() => { selectedLi("/dashboard/municipios/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/municipios/registros" ? "selected-li" : ""}`}>
-                                <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
-                                    <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                    <g><g><path d="M10,10v177h196.7V10H10z M187,167.3H29.7V29.7H187V167.3z M108.3,108.3h-59v-59h59V108.3z M167.3,108.3H128V88.7h39.3V108.3z M167.3,69H128V49.3h39.3V69z M167.3,147.7h-118V128h118V147.7z M69,206.7v19.7h157.3V69H246v177H49.3v-39.3H69z" /></g></g>
-                                </svg> <h5 className="change-hamburguer-quit ">Municipios</h5>
-                                </li>
-                            </Link>
 
+                            {responseValidate && responseValidate.data.user.rol == 'administrador' && (
+                                <Link to={"/dashboard/departamentos/registros"} onClick={() => { selectedLi("/dashboard/departamentos/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/departamentos/registros" ? "selected-li" : ""}`}>
+                                    <li className="hamburguer-centered">
+                                        <svg className="icon-li-nav-horizontal" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
+                                            <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                            <g><g><path d="M98.1,120.6H187v14.7H98.1V120.6z" /><path d="M98.1,69.1H187v14.7H98.1V69.1z" /><path d="M98.1,172.2H187V187H98.1V172.2z" /><path d="M231.3,10.1H24.7H10v14.7v206.4v14.7h14.7h206.5H246v-14.7V24.8V10.1H231.3z M231.3,231.2H24.7V24.8h206.5L231.3,231.2L231.3,231.2z" /><path d="M69,172.2h14.3V187H69V172.2z" /><path d="M69,120.6h14.3v14.7H69V120.6z" /><path d="M69,69.1h14.3v14.7H69V69.1z" /></g></g>
+                                        </svg> <h5 className="change-hamburguer-quit ">Departamentos</h5>
+                                    </li>
+                                </Link>
+                            )}
+                            {responseValidate && responseValidate.data.user.rol == 'administrador' && (
+                                <Link to={"/dashboard/municipios/registros"} onClick={() => { selectedLi("/dashboard/municipios/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/municipios/registros" ? "selected-li" : ""}`}>
+                                    <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
+                                        <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                        <g><g><path d="M10,10v177h196.7V10H10z M187,167.3H29.7V29.7H187V167.3z M108.3,108.3h-59v-59h59V108.3z M167.3,108.3H128V88.7h39.3V108.3z M167.3,69H128V49.3h39.3V69z M167.3,147.7h-118V128h118V147.7z M69,206.7v19.7h157.3V69H246v177H49.3v-39.3H69z" /></g></g>
+                                    </svg> <h5 className="change-hamburguer-quit ">Municipios</h5>
+                                    </li>
+                                </Link>
+                            )}
                             {/* <li className="hamburguer-centered">
                                 <svg className="icon-li-nav-horizontal" version="1.1" x="0px" y="0px" viewBox="0 0 256 256"  >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>

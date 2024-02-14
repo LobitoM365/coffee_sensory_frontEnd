@@ -104,7 +104,7 @@ export default function App() {
             <Route path='fincas/registros' element={<Fincas />} />
             <Route path='analisis/registros' element={<Analisis userInfo={userInfo}/>} />
             <Route path='cafes/registros' element={<Cafes />} />
-            <Route path='departamentos/registros' element={<Departamentos />} />
+            <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} />: ""} />
             <Route path='municipios/registros' element={<Municipios />} />
             <Route path='variedades/registros' element={<Variedades />} />
             <Route path='muestras/registros' element={<Muestras />} />

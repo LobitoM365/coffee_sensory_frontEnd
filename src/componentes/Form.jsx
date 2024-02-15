@@ -10,7 +10,6 @@ export const Form = forwardRef((data, ref) => {
     let [dataInputs, setDataInputs] = useState({});
     const [selectsValues, changeSelectsValues] = useState({});
     const [dataSelect, setDataSelects] = useState({});
-    const [modalSelect, changeModalSelect] = useState({});
     const [inputValor, setInputValor] = useState({});
     const [keyDown, setKeydown] = useState();
     const handleInputChange = (e, key, type) => {
@@ -94,7 +93,6 @@ export const Form = forwardRef((data, ref) => {
             }
         })
         changeSelectsValues(cloneSlectValue)
-        changeModalSelect(cloneModalSelect)
     }
     function selectSearch(value, key) {
         let cloneDataSelect = { ...dataSelect }
@@ -103,9 +101,7 @@ export const Form = forwardRef((data, ref) => {
         cloneSlectValue[key] = value
         data.setStatusSelectDefault(false)
         data.setStatusSelect(false)
-        let cloneModalSelect = { ...modalSelect }
-        cloneModalSelect[key] = true
-        changeModalSelect(cloneModalSelect)
+
 
         for (let s = 0; s < selectOptions.length; s++) {
             if (selectOptions[s].innerHTML.toLocaleLowerCase().includes(value.toLocaleLowerCase())) {
@@ -129,17 +125,17 @@ export const Form = forwardRef((data, ref) => {
 
     }
     function clearElementsClick() {
-        changeModalSelect({})
+       /*  changeModalSelect({}) */
     }
     React.useImperativeHandle(ref, () => ({
         clearElementsClick
     }));
-   useEffect(()=>{
-    Init()
-   },[])
+    useEffect(() => {
+        Init()
+    }, [])
 
     useEffect(() => {
- 
+
         let modalForm = document.getElementById("modalForm");
         let divContentForm = document.getElementById("divContentForm");
         let divFondomodalForm = document.getElementById("divFondomodalForm");
@@ -158,7 +154,7 @@ export const Form = forwardRef((data, ref) => {
                 displayNone = true
             }
 
-            
+
             if (divContentForm.scrollHeight > document.body.clientHeight) {
                 modalForm.style.alignItems = "unset"
                 modalForm.style.padding = "20px 20px"
@@ -182,10 +178,10 @@ export const Form = forwardRef((data, ref) => {
                 modalForm.style.display = "none"
             }
             for (let x = 0; x < labelErrorSubmitForm.length; x++) {
-           
+
 
                 if ((labelErrorSubmitForm[x].scrollHeight) > labelErrorSubmitForm[x].clientHeight) {
-              
+
                     labelErrorSubmitForm[x].style.height = "max-content"
                 }
             }
@@ -208,17 +204,17 @@ export const Form = forwardRef((data, ref) => {
             json[key] = dataSelect[key]
         })
         let keysJson = Object.keys(json);
-        
+
         keysJson.map((key, value) => {
 
-            if(json[key]){
+            if (json[key]) {
                 json[key] = json[key].toString().trimEnd().toLowerCase()
             }
-            
+
         })
 
 
-        if (!data.updateStatus)  {
+        if (!data.updateStatus) {
             data.funcionregistrar(json)
         } else {
             data.updateEntitie(json, elementEdit["id"])
@@ -235,7 +231,7 @@ export const Form = forwardRef((data, ref) => {
                 <div id="divContentForm" className="div-content-form">
                     <form onSubmit={chageData} action="" >
                         <div className="header-form">
-                            <h3  className="tittle-form-register">{!data.updateStatus ? "Registrar " + data.tittle + "" : "Actualizar " + data.tittle + ""} </h3>
+                            <h3 className="tittle-form-register">{!data.updateStatus ? "Registrar " + data.tittle + "" : "Actualizar " + data.tittle + ""} </h3>
                             <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="icon-quit-svg-form">
                                 <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -257,7 +253,7 @@ export const Form = forwardRef((data, ref) => {
                                             if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "ubicacion" || dataInputs[key]["type"] === "normal") {
                                                 if (data.statusInputDefault && elementEdit) {
 
-                                        
+
                                                     inputValor[key] = elementEdit[key] ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : ""
                                                 } else if (data.statusInput) {
                                                     inputValor[key] = ""
@@ -277,7 +273,7 @@ export const Form = forwardRef((data, ref) => {
                                             } else if (dataInputs[key]["type"] === "select" && dataInputs[key]["visibility"] != false) {
 
                                                 if (data.statusSelect) {
-                                                    selectsValues[key] = "Seleccione una opción...";
+                                                    selectsValues[key] = "";
                                                     dataSelect[key] = ""
                                                 }
 
@@ -287,9 +283,15 @@ export const Form = forwardRef((data, ref) => {
                                                             <label htmlFor={key} className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
                                                             <div key={key} className="filter-estado div-select">
 
-                                                                <div key={index} style={{ display: !modalSelect[key] ? "none" : "" }} className="opciones opciones-input-select">
+                                                                <div key={index} style={{ display: "none" }} className="opciones opciones-input-select">
 
-                                                                    <h4 onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = false; changeModalSelect(cloneModalSelect); data.setStatusSelect(false); data.setStatusSelectDefault(false); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = "Seleccione una opción..."; changeSelectsValues(cloneSelectsValues); dataSelect[key] = ""; }} className='select-option'>Seleccione una opción...</h4>
+                                                                    <h4 onClick={(e) => {
+                                                                        const parentElement = e.target.closest(".div-select");
+                                                                        const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                        divOptions[0] ? divOptions[0].style.display = "none" : ""
+
+                                                                        data.setStatusSelect(false); data.setStatusSelectDefault(false); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = ""; changeSelectsValues(cloneSelectsValues); dataSelect[key] = "";
+                                                                    }} className='select-option'>Seleccione una opción...</h4>
 
                                                                     {
                                                                         dataInputs[key]["opciones"] ? dataInputs[key]["opciones"].map((select, indexSelect) => {
@@ -315,7 +317,11 @@ export const Form = forwardRef((data, ref) => {
                                                                             }
 
 
-                                                                            return <h4 key={indexSelect} onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = false; changeModalSelect(cloneModalSelect); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); data.setStatusSelect(false); data.setStatusSelectDefault(false); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]; }} className={`select-option select-option-${key} ${selectsValues[key] == value ? 'option-focus' : ''}`} value="">
+                                                                            return <h4 key={indexSelect} onClick={(e) => {
+                                                                                const parentElement = e.target.parentElement.parentElement;
+                                                                                const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                divOptions[0] ? divOptions[0].style.display = "none" : ""; let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); data.setStatusSelect(false); data.setStatusSelectDefault(false); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]];
+                                                                            }} className={`select-option select-option-${key} ${selectsValues[key] == value ? 'option-focus' : ''}`} value="">
                                                                                 {value}
                                                                             </h4>
                                                                         }) : ""
@@ -324,8 +330,18 @@ export const Form = forwardRef((data, ref) => {
                                                                 </div>
                                                                 <div className='input-select-estado input-select-search' name="" id="">
 
-                                                                    <input id={key} type="text" className="input-select" onInput={(e) => { selectSearch(e.target.value, key) }} placeholder={selectsValues[key] == "Seleccione una opción..." ? "Seleccione una opción..." : ""} value={selectsValues[key] != "Seleccione una opción..." ? selectsValues[key] : ""} />
-                                                                    <div onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = !modalSelect[key]; changeModalSelect(cloneModalSelect) }} className="icon-chevron-estado">
+                                                                    <input id={key} type="text" className="input-select" onInput={(e) => {
+                                                                        const parentElement = e.target.closest(".div-select");
+                                                                        const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                        divOptions[0] ? divOptions[0].style.display = "block" : ""
+                                                                        selectSearch(e.target.value, key)
+                                                                    }} placeholder={"Seleccione una opción..."} value={selectsValues[key] != "Seleccione una opción..." ? selectsValues[key] : ""} />
+                                                                    <div onClick={(e) => {
+                                                                        const parentElement = e.target.closest(".div-select");
+                                                                        const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                        divOptions[0] ? divOptions[0].style.display == "none" ? divOptions[0].style.display = "block" : divOptions[0].style.display = "none" : ""
+                                                                        console.log(parentElement)
+                                                                    }} className="icon-chevron-estado">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                                                             <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                                                             <g><g><path fill="#000000" d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
@@ -341,7 +357,7 @@ export const Form = forwardRef((data, ref) => {
                                                 );
                                             } else {
 
-                                                if (index  == inputs.length) {
+                                                if (index == inputs.length) {
                                                     return "No hay nada para mostrar " + key;
                                                 }
 

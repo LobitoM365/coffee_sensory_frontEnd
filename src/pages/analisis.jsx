@@ -200,6 +200,7 @@ export const Analisis = (userInfo) => {
             setDataModalResultado([])
             setDataModalResultadoAnalisis([])
             const response = await Api.post("analisis/buscar/" + id + "");
+            console.log(response, "ahhhhh")
             if (response.data.status == true) {
                 setDataModalAnalisis(response.data.data)
                 const filterFormato = {
@@ -236,6 +237,14 @@ export const Analisis = (userInfo) => {
                 changeModalFormResults(true)
 
             } else if (response.data.find_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.find_error,
+                        "tittle": "Inténtalo de nuevo",
+                    }
+                )
             } else {
             }
         } catch (e) {
@@ -668,7 +677,43 @@ export const Analisis = (userInfo) => {
                 "usuarios_id": usuario
             }
             const response = await Api.post("formatos/registrar", data);
-            console.log(response, "ahhhhhh")
+            if (response.data.status == true) {
+                setInfoFormato(idAnalisis, tipoAnalisis)
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Excelente",
+                    }
+                )
+            } else if (response.data.register_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.register_error,
+                        "tittle": "Inténtalo de nuevo",
+                        continue: {
+
+                        }
+                    }
+                )
+            } else if (response.data.errors) {
+                setErrorsFormato(response.data.errors)
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    async function actualizarFormato(idAnalisis, idFormato, tipo, usuario) {
+        try {
+            console.log(idAnalisis, tipo, usuario)
+            const data = {
+                "tipos_analisis_id": tipo,
+                "usuarios_id": usuario
+            }
+            const response = await Api.put("formatos/actualizar/" + idFormato, data);
             if (response.data.status == true) {
                 setInfoFormato(idAnalisis, tipoAnalisis)
                 setStatusAlert(true)
@@ -703,7 +748,7 @@ export const Analisis = (userInfo) => {
             <link rel="stylesheet" href="../../public/css/analisis.css" />
 
             <Tablas clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
-            <FormResultados errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setFormatoSca={setFormatoSca} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
+            <FormResultados actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setFormatoSca={setFormatoSca} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

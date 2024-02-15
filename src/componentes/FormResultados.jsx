@@ -10,11 +10,12 @@ export const FormResultados = forwardRef((data, ref) => {
     let [dataInputs, setDataInputs] = useState({});
     const [selectsValues, changeSelectsValues] = useState({});
     const [dataSelect, setDataSelects] = useState({});
-    const [modalSelect, changeModalSelect] = useState({});
+
     const [inputValor, setInputValor] = useState({});
     const [keyDown, setKeydown] = useState();
     const [keyData, setKeyData] = useState(0);
     const [modalFormNormal, setModalFormNormal] = useState(false);
+    const [statusSelectDefault, setStatusSelectDefault] = useState(true);
 
     const [modeFormato, setModeFormato] = useState(null);
     const [tipoRegistro, setTipoRegistro] = useState(null);
@@ -94,24 +95,22 @@ export const FormResultados = forwardRef((data, ref) => {
     }
     function Init() {
         let cloneSlectValue = { ...selectsValues }
-        let cloneModalSelect = { ...selectsValues }
+
         inputs.map((key, value) => {
             if (dataInputs[key]["type"] == "select") {
                 cloneSlectValue[key] = "Seleccione una opción..."
-                cloneModalSelect[key] = false
+
             }
         })
         changeSelectsValues(cloneSlectValue)
-        changeModalSelect(cloneModalSelect)
+
     }
     function selectSearch(value, key) {
         let cloneDataSelect = { ...dataSelect }
         let selectOptions = document.querySelectorAll(".select-option-" + key)
         let cloneSlectValue = { ...selectsValues }
         cloneSlectValue[key] = value
-        let cloneModalSelect = { ...modalSelect }
-        cloneModalSelect[key] = true
-        changeModalSelect(cloneModalSelect)
+
 
         for (let s = 0; s < selectOptions.length; s++) {
             if (selectOptions[s].innerHTML.toLocaleLowerCase().includes(value.toLocaleLowerCase())) {
@@ -135,7 +134,7 @@ export const FormResultados = forwardRef((data, ref) => {
 
     }
     function clearElementsClick() {
-        changeModalSelect({})
+        /*  changeModalSelect({}) */
     }
     React.useImperativeHandle(ref, () => ({
         clearElementsClick
@@ -426,6 +425,7 @@ export const FormResultados = forwardRef((data, ref) => {
         }
 
     }
+
     useEffect(() => {
 
         const iframeFormatoSca = document.querySelectorAll(".iframe-formato-sca");
@@ -499,6 +499,18 @@ export const FormResultados = forwardRef((data, ref) => {
             }
         }
     }
+    useEffect(() => {
+        if (data.dataModalResultado) {
+            if (data.dataModalResultado.length > 0) {
+                setStatusSelectDefault(true)
+            }
+        }
+    }, [data.dataModalResultado])
+    useEffect(() => {
+        if (data.setErrorsFormato) {
+            data.setErrorsFormato({})
+        }
+    }, [data.modalFormResults])
     return (
         <>
             <link rel="stylesheet" href="../../public/css/form.css" />
@@ -511,7 +523,7 @@ export const FormResultados = forwardRef((data, ref) => {
                     <form /* onSubmit={chageData} */ action="" >
                         <div className="header-form">
                             <h3 className="tittle-form-register">{"Información General Sobre el Análisis"} </h3>
-                            <div onClick={() => {setDataSelects({}), data.changeModalFormResults(false) }} className="icon-quit-svg-form">
+                            <div onClick={() => { setDataSelects({}), data.changeModalFormResults(false) }} className="icon-quit-svg-form">
                                 <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                     <g><g><path fill="#000000" d="M150.7,128l90.6-90.7c6.3-6.3,6.3-16.4,0-22.7c-6.3-6.3-16.4-6.3-22.7,0L128,105.3L37.4,14.7c-6.3-6.3-16.4-6.3-22.7,0s-6.3,16.4,0,22.7l90.6,90.6l-90.6,90.6c-6.3,6.3-6.3,16.4,0,22.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7l90.7-90.6l90.6,90.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7c6.3-6.3,6.3-16.4,0-22.7L150.7,128z" /></g></g>
@@ -523,44 +535,47 @@ export const FormResultados = forwardRef((data, ref) => {
                                 <div className="info-analisis info-catador">
                                     <h3>Información sobre el catador</h3>
                                     {data.dataModalResultado ?
-                                        data.dataModalResultado.length > 0 ?
-                                            data.dataModalResultado.map((key, index) => {
-                                                if (index == 0) {
-                                                    return <div key={key.id + "catador"}>
-                                                        <div className="div-info-analisis">
-                                                            <div>
-                                                                <h4>Nombre</h4>
-                                                                <h3>{key.nombre_catador ? key.nombre_catador : "No registra"}</h3>
-                                                            </div>
-                                                            <div>
-                                                                <h4>Documento</h4>
-                                                                <h3>{key.catador_documento ? key.catador_documento : "No registra"}</h3>
-                                                            </div>
-                                                            <div>
-                                                                <h4>Teléfono</h4>
-                                                                <h3>{key.catador_telefono ? key.catador_telefono : "No registra"}</h3>
-                                                            </div>
-                                                            <div>
-                                                                <h4>Correo</h4>
-                                                                <h3>{key.catador_correo ? key.catador_correo : "No registra"}</h3>
-                                                            </div>
-                                                            <div>
-                                                                <h4>Rol</h4>
-                                                                <h3>{key.catador_rol ? key.catador_rol : "No registra"}</h3>
-                                                            </div>
-                                                            <div>
-                                                                <h4>Cargo</h4>
-                                                                <h3>{key.catador_cargo ? key.catador_cargo : "No registra"}</h3>
-                                                            </div>
+                                        (
+                                            <div>{
+                                                data.dataModalResultado.length > 0 ?
+                                                    data.dataModalResultado.map((key, index) => {
+                                                        if (index == 0) {
+                                                            return <div key={key.id + "catador"}>
+                                                                <div className="div-info-analisis">
+                                                                    <div>
+                                                                        <h4>Nombre</h4>
+                                                                        <h3>{key.nombre_catador ? key.nombre_catador : "No registra"}</h3>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h4>Documento</h4>
+                                                                        <h3>{key.catador_documento ? key.catador_documento : "No registra"}</h3>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h4>Teléfono</h4>
+                                                                        <h3>{key.catador_telefono ? key.catador_telefono : "No registra"}</h3>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h4>Correo</h4>
+                                                                        <h3>{key.catador_correo ? key.catador_correo : "No registra"}</h3>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h4>Rol</h4>
+                                                                        <h3>{key.catador_rol ? key.catador_rol : "No registra"}</h3>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h4>Cargo</h4>
+                                                                        <h3>{key.catador_cargo ? key.catador_cargo : "No registra"}</h3>
+                                                                    </div>
 
-                                                        </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+
+                                                    })
+                                                    : <div>
+                                                        Aún no se ha asignado nigún usuario para el formato {data.tipoAnalisis == 1 ? "Físico" : "Sensorial"}
                                                     </div>
-                                                }
-
-                                            })
-                                            : <div>
-                                                Aún no se ha asignado nigún usuario para el formato {data.tipoAnalisis == 1 ? "Físico" : "Sensorial"}
-
+                                            }
                                                 {
                                                     inputs.length > 0 && data.userInfo.userInfo.rol == "administrador" ?
                                                         inputs.map((key, index) => {
@@ -573,15 +588,21 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                 }
 
                                                                 return (
-                                                                    <div>
+                                                                    <div key={key}>
                                                                         <div key={key} className="input-content-form-register">
                                                                             <div className="head-input">
                                                                                 <label htmlFor={key} className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
                                                                                 <div key={key} className="filter-estado div-select">
 
-                                                                                    <div key={index} style={{ display: !modalSelect[key] ? "none" : "" }} className="opciones opciones-input-select">
+                                                                                    <div key={index} style={{ display: "none" }} className="opciones opciones-input-select">
 
-                                                                                        <h4 onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = false; changeModalSelect(cloneModalSelect); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = "Seleccione una opción..."; changeSelectsValues(cloneSelectsValues); dataSelect[key] = ""; }} className='select-option'>Seleccione una opción...</h4>
+                                                                                        <h4 onClick={(e) => {
+                                                                                            const parentElement = e.target.closest(".div-select");
+                                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                            divOptions[0] ? divOptions[0].style.display = "none" : ""
+
+                                                                                            setStatusSelectDefault(false); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = "Seleccione una opción..."; changeSelectsValues(cloneSelectsValues); dataSelect[key] = "";
+                                                                                        }} className='select-option'>Seleccione una opción...</h4>
 
                                                                                         {
                                                                                             dataInputs[key]["opciones"] ? dataInputs[key]["opciones"].map((select, indexSelect) => {
@@ -591,23 +612,24 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                                         value += nameIndexSelect == 0 ? dataInputs[key]["opciones"][indexSelect][nameSelect] : ", " + dataInputs[key]["opciones"][indexSelect][nameSelect];
                                                                                                     })
                                                                                                 }
-
-
-
+                                                                                                console.log("modalllll", key)
                                                                                                 if (dataInputs[key]["upper_case"]) {
                                                                                                     value = value.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())
                                                                                                 } else if (dataInputs[key]["capital_letter"]) {
                                                                                                     value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
                                                                                                 }
-                                                                                                if (elementEdit) {
-                                                                                                    if (!data.modalForm && dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] == elementEdit[key] && data.statusSelectDefault) {
+                                                                                                if (data.dataModalResultado.length > 0) {
+                                                                                                    if (dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] == data.dataModalResultado[0][key] && statusSelectDefault) {
                                                                                                         selectsValues[key] = value;
                                                                                                         dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
                                                                                                     }
                                                                                                 }
-
-
-                                                                                                return <h4 key={indexSelect} onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = false; changeModalSelect(cloneModalSelect); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]; }} className={`select-option select-option-${key} ${selectsValues[key] == value ? 'option-focus' : ''}`} value="">
+                                                                                                return <h4 key={indexSelect} onClick={(e) => {
+                                                                                                    const parentElement = e.target.closest(".div-select");
+                                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                                    divOptions[0] ? divOptions[0].style.display = "none" : ""
+                                                                                                    setStatusSelectDefault(false); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]];
+                                                                                                }} className={`select-option select-option-${key} ${selectsValues[key] == value ? 'option-focus' : ''}`} value="">
                                                                                                     {value}
                                                                                                 </h4>
                                                                                             }) : ""
@@ -616,8 +638,17 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                     </div>
                                                                                     <div className='input-select-estado input-select-search' name="" id="">
 
-                                                                                        <input id={key} type="text" className="input-select" onInput={(e) => { selectSearch(e.target.value, key) }} placeholder={selectsValues[key] == "Seleccione una opción..." ? "Seleccione una opción..." : ""} value={selectsValues[key] != "Seleccione una opción..." ? selectsValues[key] : ""} />
-                                                                                        <div onClick={() => { let cloneModalSelect = { ...modalSelect }; cloneModalSelect[key] = !modalSelect[key]; changeModalSelect(cloneModalSelect) }} className="icon-chevron-estado">
+                                                                                        <input id={key} type="text" className="input-select" onInput={(e) => {
+                                                                                            const parentElement = e.target.closest(".div-select");
+                                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                            divOptions[0] ? divOptions[0].style.display = "block" : ""
+                                                                                            selectSearch(e.target.value, key)
+                                                                                        }} placeholder={selectsValues[key] == "Seleccione una opción..." ? "Seleccione una opción..." : ""} value={selectsValues[key] != "Seleccione una opción..." ? selectsValues[key] : ""} />
+                                                                                        <div onClick={(e) => {
+                                                                                            const parentElement = e.target.closest(".div-select");
+                                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                            divOptions[0] ? divOptions[0].style.display == "none" ? divOptions[0].style.display = "block" : divOptions[0].style.display = "none" : ""
+                                                                                        }} className="icon-chevron-estado">
                                                                                             <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                                                                                 <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                                                                                 <g><g><path fill="#000000" d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
@@ -630,7 +661,12 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                             <h4 className="label-error-submit-form" htmlFor="">{data.errorsFormato ? data.errorsFormato[key] ? data.errorsFormato[key] : "" : ""}</h4>
 
                                                                         </div>
-                                                                        <button onClick={() => { data.asignarFormato(data.dataModalAnalisis[0].id, data.tipoAnalisis, dataSelect["usuarios_id"]) }} type="button" className="button-submit-form">Asignar</button>
+                                                                        {data.dataModalResultado.length > 0 ?
+                                                                            <button onClick={() => { data.actualizarFormato(data.dataModalAnalisis.length > 0 ? data.dataModalAnalisis[0].id ? data.dataModalAnalisis[0].id : "" : "",data.dataModalResultado[0].id, data.tipoAnalisis, dataSelect["usuarios_id"]) }} type="button" className="button-submit-form">Actualizar</button>
+                                                                            :
+                                                                            <button onClick={() => { data.asignarFormato(data.dataModalAnalisis.length > 0 ? data.dataModalAnalisis[0].id ? data.dataModalAnalisis[0].id : "" : "", data.tipoAnalisis, dataSelect["usuarios_id"]) }} type="button" className="button-submit-form">Asignar</button>
+                                                                        }
+
                                                                     </div>
                                                                 );
                                                             }
@@ -638,6 +674,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                         : ""
                                                 }
                                             </div>
+                                        )
                                         : "Error interno"}
                                 </div>
                                 <div className="info-analisis">

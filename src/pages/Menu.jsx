@@ -119,7 +119,19 @@ export const Menu = () => {
 
         }
     }
-
+    useEffect(() => {
+        window.addEventListener("click", function (event) {
+            let divSelect = document.querySelectorAll(".div-select")
+            let optionsInputs = document.querySelectorAll(".opciones-input-select")
+            for (let o = 0; o < divSelect.length; o++) {
+                if (event.target !== divSelect[o] && !divSelect[o].contains(event.target)) {
+                    if (optionsInputs[o]) {
+                        optionsInputs[o].style.display = "none"
+                    }
+                }
+            }
+        })
+    }, [])
     useEffect(() => {
         let ulContentLi = document.getElementById("ulContentLi")
         setTimeout(() => {

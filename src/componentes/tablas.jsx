@@ -125,7 +125,7 @@ export const Tablas = (array) => {
         setInicio(limit * (data - 1));
     }
     function setClearClick() {
-        formRef.current.clearElementsClick()
+        /* formRef.current.clearElementsClick() */
     }
     useEffect(() => {
         array.limitRegisters({ "inicio": inicio, "fin": limit })

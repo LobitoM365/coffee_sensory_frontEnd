@@ -619,6 +619,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                                     value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
                                                                                                 }
                                                                                                 if (data.dataModalResultado.length > 0) {
+                                                                                                    console.log("ahhhhholaaaaaaaaaaaaaaaaaaaa",statusSelectDefault)
                                                                                                     if (dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] == data.dataModalResultado[0][key] && statusSelectDefault) {
                                                                                                         selectsValues[key] = value;
                                                                                                         dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]

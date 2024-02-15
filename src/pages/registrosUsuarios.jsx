@@ -127,7 +127,7 @@ export const RegistrosUsuarios = () => {
     }, [])
 
     async function getusuarios() {
-        try {
+        try {   
             const response = await Api.post("usuarios/listar", dataFilterTable);
             if (response.data.status == true) {
                 setUsuarios(response.data.data)

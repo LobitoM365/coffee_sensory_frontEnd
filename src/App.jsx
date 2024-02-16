@@ -85,7 +85,7 @@ export default function App() {
       <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
 
       <Routes>
-        <Route path='*' element={<NotFound />} />
+        
         <Route path='/' element={<Loader />}>
           <Route path='/modalfinca' element={<ModalFinca />}></Route>
           <Route path='/' element={<MenuInicio userInfo={userInfo} />}>
@@ -112,7 +112,9 @@ export default function App() {
             <Route path='muestras/verRegistros' element={<VerRegistros />} />
           </Route>
         </Route>
+        <Route path='*' element={<NotFound />} />
       </Routes>
+      
     </>
   )
 }

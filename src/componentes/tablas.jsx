@@ -297,7 +297,7 @@ export const Tablas = (array) => {
     return (
 
         <div id='contentComponent'>
-            <link rel="stylesheet" href="../../public/css/tableComponent.css" />
+            <link rel="stylesheet" href="/public/css/tableComponent.css" />
             <div className="div-table">
                 <div className="div-filters">
                     <div className='div-tittle'>

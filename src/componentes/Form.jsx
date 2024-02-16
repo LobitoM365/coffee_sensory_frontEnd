@@ -226,7 +226,7 @@ export const Form = forwardRef((data, ref) => {
     };
     return (
         <>
-            <link rel="stylesheet" href="../../public/css/form.css" />
+            <link rel="stylesheet" href="/public/css/form.css" />
 
             <div style={{ display: (!data.modalForm && !data.updateStatus) ? "none" : "" }} className="modal-form" id="modalForm">
                 <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="div-fondo-modal-form" id="divFondomodalForm">

@@ -17,8 +17,14 @@ ChartJS.register(
 export const Graficos = (user) => {
   const [data, setData] = useState([]);
   const [key, setKey] = useState(0);
-  
+  const [fecha,setFecha]=useState([]);
+  const [muestras,setMuestra]=useState([]);
   useEffect(() => {
+    const getfecha = async ()=>{
+        
+    }
+
+
     const fetchData = async () => {
       try {
         let VariableIdUser=user.user;
@@ -30,9 +36,10 @@ export const Graficos = (user) => {
           return;
         }  */
         const dataToSend ={
-          muestras_id: '1'
+          muestras_id: '1',
+          limit:5
         };
-        const response = await axios.post(`http://localhost:3000/api/analisis/total/${VariableIdUser}`,dataToSend);
+        const response = await Api.post(`analisis/total/${VariableIdUser}`,dataToSend);
         const responseData = response.data;
        /*  console.log(dataToSend,'Data Body', UserIdSesion.id , 'User')
         console.log(responseData,'responseData') */
@@ -154,7 +161,7 @@ export const Graficos = (user) => {
         } else if (windowSize.width >= 320 && windowSize.width <= 480) {
           setStilyCharts({ width: '100px', height: '50px' });
         }else{
-          setStilyCharts({ width: '1300px', height: '300px' ,marginLeft:'50px'});
+          setStilyCharts({ width: '1200px', height: '300px' ,marginLeft:'50px'});
         }
       }, [windowSize]);
 

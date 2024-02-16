@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import Api from './Api';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -18,7 +19,7 @@ export const GraficoCircular = ({ user }) => {
           muestras_id: '1'
         };
 
-        const response = await axios.post(`http://localhost:3000/api/analisis/Mes/${VariableIdUser}`, dataToSend);
+        const response = await Api.post(`analisis/Mes/${VariableIdUser}`, dataToSend);
         const responseData = response.data;
         console.log(responseData,"No tiene Porque llegar")
         console.log(VariableIdUser,'USER')
@@ -97,7 +98,7 @@ const ejemplo=['Feb', 'Feb', 'Feb', 'Feb', 'Feb'];
     } else if (windowSize.width >= 320 && windowSize.width <= 480) {
       setStyleCharts({ width: '100px', height: '50px' });
     } else {
-      setStyleCharts({ width: '1500px', height: '400px',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"50px"});
+      setStyleCharts({ width: '1500px', height: '320px',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"50px"});
     }
   }, [windowSize]);
 

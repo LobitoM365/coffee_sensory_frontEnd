@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Graficos } from '../componentes/Graficos';
 import { GraficoCircular } from '../componentes/GraficoCircular';
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 export const Home = ({ userInfo }) => {
   const [user, setUser] = useState(userInfo);
@@ -14,7 +15,10 @@ export const Home = ({ userInfo }) => {
   console.log(UserId,'USER INICIO')
   return (
     <>
-      <link rel="stylesheet" href="src/css/graficas.css" />
+       <TransformWrapper initialScale={1} initialPositionX={20} initialPositionY={2}>
+       <React.Fragment>
+       <TransformComponent>
+        <link rel="stylesheet" href="src/css/graficas.css" />
       <link rel="stylesheet" href="../../public/css/graficos.css" />
 
       <div className='BoxMain'>
@@ -43,6 +47,11 @@ export const Home = ({ userInfo }) => {
           </div>
         </div>
       </div>
+
+        </TransformComponent>
+       </React.Fragment>
+        
+      </TransformWrapper>
     </>
   );
 };

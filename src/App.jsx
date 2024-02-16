@@ -24,7 +24,7 @@ import { Variedades } from './pages/variedades.jsx';
 import { Muestras } from './pages/muestras.jsx';
 import { Cafes } from './pages/cafes.jsx';
 import { Analisis } from './pages/analisis.jsx';
-
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 export default function App() {
   const [statusAlert, setStatusAlert] = useState(false);
   const [dataAlert, setdataAlert] = useState({});
@@ -81,9 +81,11 @@ export default function App() {
   }, [location.pathname])
   return (
     <>
+     
       <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
 
       <Routes>
+      
         <Route path='*' element={<NotFound />} />
         <Route path='/' element={<Loader />}>
           <Route path='/modalfinca' element={<ModalFinca />}></Route>
@@ -110,7 +112,9 @@ export default function App() {
             <Route path='muestras/verRegistros' element={<VerRegistros />} />
           </Route>
         </Route>
+       
       </Routes>
+      
     </>
   )
 }

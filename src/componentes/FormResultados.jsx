@@ -146,7 +146,7 @@ export const FormResultados = forwardRef((data, ref) => {
                 const iframeFormatoScaContentDocument = iframeFormatoSca[i].contentDocument;
                 const formatoSca = iframeFormatoScaContentDocument.getElementById("contenidoFormatoSca");
                 if (formatoSca) {
-                    iframeFormatoSca[i].style.height = "calc(" + formatoSca.clientHeight + "px" + " + 1px)"
+                    iframeFormatoSca[i].style.height = "calc(" + formatoSca.clientHeight + "px" + " + 7px)"
                 }
             }
         }
@@ -161,65 +161,20 @@ export const FormResultados = forwardRef((data, ref) => {
         }
 
 
-        setTimeout(() => {
-            resizeForm()
-        }, 100);
+
         document.addEventListener('keydown', function (event) {
             setKeydown(event.key)
         })
-        function resizeForm() {
-            let modalForm = document.getElementById("modalFormResult");
-            let divContentForm = document.getElementById("divContentFormResult");
-            let divFondomodalForm = document.getElementById("divFondomodalFormResult");
-            let labelErrorSubmitForm = document.querySelectorAll(".label-error-submit-form-result");
-            let displayNone = false;
-            if (modalForm.style.display == "none") {
-                modalForm.style.display = "block"
-                displayNone = true
-            }
 
-
-            if (divContentForm.scrollHeight > document.body.clientHeight) {
-
-                modalForm.style.justifyContent = "unset"
-                modalForm.style.padding = "20px 20px"
-                modalForm.style.height = "calc(100% - 40px)"
-                modalForm.style.width = "calc(100% - 40px)"
-                divFondomodalForm.style.height = divContentForm.clientHeight + 40 + "px"
-                divFondomodalForm.style.width = modalForm.clientWidth + "px"
-            } else {
-
-                for (let x = 0; x < labelErrorSubmitForm.length; x++) {
-                    labelErrorSubmitForm[x].style.height = ""
-                }
-                divFondomodalForm.style.height = "100vh"
-                divFondomodalForm.style.width = "100vw"
-                modalForm.style.alignItems = "center"
-                modalForm.style.justifyContent = ""
-                modalForm.style.padding = ""
-                modalForm.style.height = "100%"
-                modalForm.style.width = "100%"
-            }
-            if (displayNone) {
-                modalForm.style.display = "none"
-            }
-            for (let x = 0; x < labelErrorSubmitForm.length; x++) {
-
-
-                if ((labelErrorSubmitForm[x].scrollHeight) > labelErrorSubmitForm[x].clientHeight) {
-
-                    labelErrorSubmitForm[x].style.height = "max-content"
-                }
-            }
-
-        }
         function resizeModal() {
+            
             let modalForm = document.querySelectorAll(".div-modal-form");
+            console.log(modalForm)
             let divContentForm = document.querySelectorAll(".div-content-modal");
             let divFondomodalForm = document.querySelectorAll(".div-fondo-modal ");
 
             for (let m = 0; m < modalForm.length; m++) {
-                if (divContentForm[m].scrollHeight > document.body.clientHeight) {
+                if ((divContentForm[m].scrollHeight + 100) > document.body.clientHeight) {
                     modalForm[m].style.justifyContent = "unset"
                     modalForm[m].style.padding = "20px 20px"
                     modalForm[m].style.height = "calc(100% - 40px)"
@@ -239,10 +194,8 @@ export const FormResultados = forwardRef((data, ref) => {
 
             }
         }
-        resizeForm()
         resizeModal()
         window.addEventListener("resize", function () {
-            resizeForm()
             resizeModal()
         })
         const contenidoComponent = document.getElementById("divContentFormResult");
@@ -515,10 +468,10 @@ export const FormResultados = forwardRef((data, ref) => {
         <>
             <link rel="stylesheet" href="../../public/css/form.css" />
 
-            <div style={{ display: (!data.modalFormResults) ? "none" : "" }} className="modal-form" id="modalFormResult">
-                <div onClick={() => { setDataSelects({}), data.changeModalFormResults(false) }} className="div-fondo-modal-form" id="divFondomodalFormResult">
+            <div style={{ display: (!data.modalFormResults) ? "none" : "" }} className="div-modal-form modal-form" id="modalFormResult">
+                <div onClick={() => { setDataSelects({}), data.changeModalFormResults(false) }} className="div-fondo-modal div-fondo-modal-form" id="divFondomodalFormResult">
                 </div>
-                <div id="divContentFormResult" className="div-content-form">
+                <div id="divContentFormResult" className="div-content-modal div-content-form">
 
                     <form /* onSubmit={chageData} */ action="" >
                         <div className="header-form">

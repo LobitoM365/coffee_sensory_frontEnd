@@ -73,6 +73,7 @@ export const Municipios = () => {
     async function getEntities() {
         try {
             const response = await Api.post("municipio/listar", dataFilterTable);
+            console.log(dataFilterTable,"filterrrrrrrrrrrrr")
             if (response.data.status == true) {
                 setEntities(response.data.data)
                 setCountRegisters(response.data.count)

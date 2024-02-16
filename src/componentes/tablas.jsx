@@ -42,7 +42,7 @@ export const Tablas = (array) => {
     let paginate = 0;
     let paginateJson = []
     let [posicionPaginate, setPosicionPaginate] = useState(0);
-
+        
     let filtersLimitRegister = [
         "1",
         "2",
@@ -164,31 +164,28 @@ export const Tablas = (array) => {
 
             if (contentComponent) {
 
-
+                console.log(contentComponent.clientWidth, "ahhhh",contentComponent.scrollWidth)
                 let tableComponent = document.querySelectorAll(".table-component")
                 let newDivTable = document.querySelectorAll(".new-div-table");
                 let contentTable = document.querySelectorAll(".content-table")
                 if (newDivTable.length == 0) {
                     arrayThQuit = [];
                 }
+                let thQuit = contentTable[0].querySelectorAll("th");
 
 
-
+                
                 if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
 
 
-                    let thQuit = contentTable[0].querySelectorAll("th");
-
+                    console.log(thQuit)
                     if (thQuit.length > 2) {
 
                         let tBody = contentTable[0].querySelectorAll("tbody")
                         let trTbody = tBody[0].querySelectorAll(".tr-table")
-                        arrayThQuit.push(thQuit[(thQuit.length) - 1])
-
-
                         let nameTd = thQuit[(thQuit.length) - 1].querySelectorAll(".tittle-item-header-table")
-
                         let name = nameTd[0].innerHTML
+                        arrayThQuit.push(thQuit[(thQuit.length) - 1])
                         thQuit[(thQuit.length) - 1].remove();
 
                         for (let tr = 0; tr < trTbody.length; tr++) {
@@ -246,24 +243,10 @@ export const Tablas = (array) => {
                         resizeTable()
                     }
 
-                } else if (contentComponent.scrollWidth - tableComponent[0].clientWidth >= 100) {
+                } else if ((contentComponent.clientWidth - tableComponent[0].scrollWidth) >= 100) {
                     let theadTable = document.querySelectorAll(".thead-table")
 
-                    if (arrayThQuit.length > 0) {
-                        let newDivTable = document.querySelectorAll(".new-div-table");
-                        let trTable = document.querySelectorAll(".tr-table");
-                        theadTable[0].append(arrayThQuit[arrayThQuit.length - 1])
-                        arrayThQuit.pop()
-                        for (let x = 0; x < newDivTable.length; x++) {
-                            let divNewDivTable = newDivTable[x].querySelectorAll(".div-element-add");
-                            let divNewDivTableTd = divNewDivTable[divNewDivTable.length - 1].querySelectorAll("td");
-                            trTable[x].append(divNewDivTableTd[0])
-                            divNewDivTable[divNewDivTable.length - 1].remove()
 
-                        }
-
-                        resizeTable()
-                    }
                     let elementsNewDivTable = document.querySelectorAll(".div-element-add");
 
                     if (elementsNewDivTable.length == 0) {
@@ -283,7 +266,20 @@ export const Tablas = (array) => {
                         ziseLess = 0
                     }
 
+                    if (arrayThQuit.length > 0) {
+                        let newDivTable = document.querySelectorAll(".new-div-table");
+                        let trTable = document.querySelectorAll(".tr-table");
+                        theadTable[0].append(arrayThQuit[arrayThQuit.length - 1])
+                        arrayThQuit.pop()
+                        for (let x = 0; x < newDivTable.length; x++) {
+                            let divNewDivTable = newDivTable[x].querySelectorAll(".div-element-add");
+                            let divNewDivTableTd = divNewDivTable[divNewDivTable.length - 1].querySelectorAll("td");
+                            trTable[x].append(divNewDivTableTd[0])
+                            divNewDivTable[divNewDivTable.length - 1].remove()
 
+                        }
+                        resizeTable()
+                    }
 
 
                 }

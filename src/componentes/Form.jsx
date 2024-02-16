@@ -125,7 +125,7 @@ export const Form = forwardRef((data, ref) => {
 
     }
     function clearElementsClick() {
-       /*  changeModalSelect({}) */
+        /*  changeModalSelect({}) */
     }
     React.useImperativeHandle(ref, () => ({
         clearElementsClick
@@ -148,42 +148,45 @@ export const Form = forwardRef((data, ref) => {
             setKeydown(event.key)
         })
         function resizeForm() {
-            let displayNone = false;
-            if (modalForm.style.display == "none") {
-                modalForm.style.display = "block"
-                displayNone = true
-            }
+            if (modalForm) {
+                let displayNone = false;
+                if (modalForm.style.display == "none") {
+                    modalForm.style.display = "block"
+                    displayNone = true
+                }
 
 
-            if (divContentForm.scrollHeight > document.body.clientHeight) {
-                modalForm.style.alignItems = "unset"
-                modalForm.style.padding = "20px 20px"
-                modalForm.style.height = "calc(100% - 40px)"
-                modalForm.style.width = "calc(100% - 40px)"
-                divFondomodalForm.style.height = divContentForm.clientHeight + 40 + "px"
-                divFondomodalForm.style.width = modalForm.clientWidth + "px"
-            } else {
+                if (divContentForm.scrollHeight > document.body.clientHeight) {
+                    modalForm.style.alignItems = "unset"
+                    modalForm.style.padding = "20px 20px"
+                    modalForm.style.height = "calc(100% - 40px)"
+                    modalForm.style.width = "calc(100% - 40px)"
+                    divFondomodalForm.style.height = divContentForm.clientHeight + 40 + "px"
+                    divFondomodalForm.style.width = modalForm.clientWidth + "px"
+                } else {
 
+                    for (let x = 0; x < labelErrorSubmitForm.length; x++) {
+                        labelErrorSubmitForm[x].style.height = ""
+                    }
+                    divFondomodalForm.style.height = "100vh"
+                    divFondomodalForm.style.width = "100vw"
+                    modalForm.style.alignItems = "center"
+                    modalForm.style.padding = ""
+                    modalForm.style.height = "100%"
+                    modalForm.style.width = "100%"
+                }
+                if (displayNone) {
+                    modalForm.style.display = "none"
+                }
                 for (let x = 0; x < labelErrorSubmitForm.length; x++) {
-                    labelErrorSubmitForm[x].style.height = ""
+
+
+                    if ((labelErrorSubmitForm[x].scrollHeight) > labelErrorSubmitForm[x].clientHeight) {
+
+                        labelErrorSubmitForm[x].style.height = "max-content"
+                    }
                 }
-                divFondomodalForm.style.height = "100vh"
-                divFondomodalForm.style.width = "100vw"
-                modalForm.style.alignItems = "center"
-                modalForm.style.padding = ""
-                modalForm.style.height = "100%"
-                modalForm.style.width = "100%"
-            }
-            if (displayNone) {
-                modalForm.style.display = "none"
-            }
-            for (let x = 0; x < labelErrorSubmitForm.length; x++) {
 
-
-                if ((labelErrorSubmitForm[x].scrollHeight) > labelErrorSubmitForm[x].clientHeight) {
-
-                    labelErrorSubmitForm[x].style.height = "max-content"
-                }
             }
 
         }

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 
 
 export const MenuInicio = ({ userInfo }) => {
-    const [locationName, setLocation] = useState(location.pathname);
+    const location = useLocation()
 
-
+    console.log(location.pathname)
     return (
         <>
             <link rel="stylesheet" href="css/menuInicio.css" />
@@ -17,18 +17,18 @@ export const MenuInicio = ({ userInfo }) => {
                 <nav>
                     <ul>
                         <li>
-                            {locationName === "/" ? (
+                            {location.pathname === "/" ? (
                                 userInfo ? (
-                                    <Link onClick={() => { setLocation(location.pathname) }} to="/dashboard">
+                                    <Link onClick={() => { location.pathname }} to="/dashboard">
                                         Menú Principal
                                     </Link>
                                 ) : (
-                                    <Link onClick={() => { setLocation(location.pathname) }} to="/login">
+                                    <Link onClick={() => { location.pathname }} to="/login">
                                         Iniciar Sesión
                                     </Link>
                                 )
                             ) : (
-                                <Link onClick={() => { setLocation(location.pathname) }} to="">
+                                <Link onClick={() => { location.pathname }} to="">
                                     Mapa
                                 </Link>
                             )}

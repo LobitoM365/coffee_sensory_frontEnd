@@ -5,10 +5,26 @@ import Api from '../componentes/Api.jsx';
 import { validateViews } from "../componentes/ValidateViews.jsx";
 
 
-export const Menu = () => {
+export const Menu = (data) => {
+    if (data.socket) {
+        data.socket.on('perfilChange', (message) => {
+            console.log("el perfil cambioooo",message)  
+            getUser();
+        });
+        data.socket.on('ok', (message) => {
+            console.log("oaskdkasdkas",message)  
+        });
+        data.socket.on("asignAnalisis", (io)=>{
+            getAgignaciones()
+        })
+    }
+
+     
     const [pageLoad, setPageLoad] = useState({});
     const [queryMenu, setQueryMenu] = useState(document.body.scrollWidth <= 610 ? true : false)
     let responseValidate = validateViews();
+
+
 
     let haburguerMode = queryMenu ? 1 : 0;
     const [user, setUser] = useState({});
@@ -29,7 +45,19 @@ export const Menu = () => {
     async function getAgignaciones() {
 
         try {
-            const response = await Api.get("/analisis/buscarAsignaciones");
+            const filterFormato = {
+                "filter": {
+                    "where": {
+                        "forma.estado": {
+                            "value": 1,
+                            "operador": "!=",
+                            "require": "and"
+                        }
+                    }
+                }
+            }
+            const response = await Api.post("formatos/listarPendientes", filterFormato);
+            console.log(response, "analisisssaaaaaaaaaaaaaaaaaaaaaaa")
             if (response.data.status == true) {
                 setAsignaciones(response.data.data)
             }
@@ -132,6 +160,18 @@ export const Menu = () => {
             }
         })
     }, [])
+    async function getUser() {
+        try {
+            const response = await Api.get("/usuarios/perfil");
+            if (response.data.status == true) {
+                setUser(response.data.data)
+            }
+
+        } catch (e) {
+
+        }
+    }
+
     useEffect(() => {
         let ulContentLi = document.getElementById("ulContentLi")
         setTimeout(() => {
@@ -147,18 +187,9 @@ export const Menu = () => {
             }
         }
         getAgignaciones();
-        async function getUser() {
-            try {
-                const response = await Api.get("/usuarios/perfil");
-                if (response.data.status == true) {
-                    setUser(response.data.data)
-                }
-
-            } catch (e) {
-
-            }
-        }
+      
         getUser();
+       
 
         window.addEventListener("resize", function () {
 
@@ -204,15 +235,15 @@ export const Menu = () => {
         changeDarkMode(!valueDarkMode)
         localStorage.setItem("darkMode", !valueDarkMode)
     }
-    async function obtenerNotificaciones() {
-        try {
-            const response = await Api.put("/analisis/cambiarEstado");
-            getAgignaciones()
-        } catch (e) {
-
-        }
-
-    }
+    /*   async function obtenerNotificaciones() {
+          try {
+              const response = await Api.put("/analisis/cambiarEstado");
+              getAgignaciones()
+          } catch (e) {
+  
+          }
+  
+      } */
     function verNotificaciones() {
         changeModalPerfil(false)
         changeModalNotificaciones(!modalNotificaciones)
@@ -456,54 +487,7 @@ export const Menu = () => {
                 </div> : ""}
                 <div></div>
                 <div className="seccion-usuario-notificaciones">
-                    {Object.keys(user).length > 0 ? user.rol == "catador" && user.cargo == "instructor" ?
-                        <div className="notificaciones">
-                            {asignaciones.length > 0 && asignaciones
-                                .filter((notificacion) => notificacion.estado === "no_visto")
-                                .length > 0 &&
-                                <div className="cantidad-notificaciones">
-                                    {asignaciones
-                                        .filter((notificacion) => notificacion.estado === "no_visto")
-                                        .length}
-                                </div>
-                            }
-                            <div className="secccion-notificaciones">
-                                <svg onClick={() => { obtenerNotificaciones(); verNotificaciones() }} className="h-6 w-6 icono-notificaciones" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path>
-                                </svg>
-                                <div style={{ display: !modalNotificaciones ? "none" : "" }}>
-                                    <div className="esquina-notificaciones"></div>
-                                    <div className="contenido-notificaciones">
-                                        <div className="header-notificaciones">
-                                            <h4 className="titulo-notififcaciones">Lista de análisis por registrar</h4>
-                                            <div onClick={verNotificaciones} className="quit-notificaciones">
-                                                X
-                                            </div>
-                                        </div>
-                                        <div className="contenido-analisis">
-                                            <div className="asignaciones-notificaciones">
-                                                {asignaciones.length > 0 ? (
-
-                                                    asignaciones.map((asignacion) => (
-                                                        <div key={asignacion.id} className="notificacion-analisis">
-                                                            <div className="informacion-analisis">
-                                                                <div className="img-analisis">
-                                                                    <img className="img-analisis" src="../../img/analisisPrueba.jpg" alt="" />
-                                                                </div>
-                                                                <h4 className="h4-informacion-notificacion-analisis">Tiene un análisis <span className={`${asignacion.tipo == "asignado" ? "asignado" : "pendiente"}`}>{asignacion.tipo}</span> por realizar</h4>
-                                                            </div>
-                                                            <button className="input-proceder-analisis">Proceder</button>
-                                                        </div>
-                                                    ))
-
-                                                ) : <h4 className="h4-notificaciones-vacias">No hay análisis pendientes por realizar</h4>}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div> : "" : ""}
+                   
                     {Object.keys(user).length > 0 ? (
                         <div className="div-info-usuario">
                             <div className="div-img-perfil-nav">
@@ -563,6 +547,48 @@ export const Menu = () => {
                         </div>
                     )
                         : ""}
+                         {Object.keys(user).length > 0 ? user.rol == "catador" && user.cargo == "instructor" ?
+                        <div className="notificaciones">
+                            {asignaciones.length > 0 && asignaciones ? <div className="cantidad-notificaciones"> {asignaciones.length} </div> : ""
+                            }
+                            <div className="secccion-notificaciones">
+                                <svg onClick={() => { /* obtenerNotificaciones() */; verNotificaciones() }} className="h-6 w-6 icono-notificaciones" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path>
+                                </svg>
+                                <div style={{ display: !modalNotificaciones ? "none" : "" }}>
+                                    <div className="esquina-notificaciones"></div>
+                                    <div className="contenido-notificaciones">
+                                        <div className="header-notificaciones">
+                                            <h4 className="titulo-notififcaciones">Lista de análisis por registrar</h4>
+                                            <div onClick={verNotificaciones} className="quit-notificaciones">
+                                                X
+                                            </div>
+                                        </div>
+                                        <div className="contenido-analisis">
+                                            <div className="asignaciones-notificaciones">
+
+                                                {asignaciones.length > 0 ? (
+
+                                                    asignaciones.map((asignacion) => (
+                                                        <div key={asignacion.id} className="notificacion-analisis">
+                                                            <div className="informacion-analisis">
+                                                                <div className="img-analisis">
+                                                                    <img className="img-analisis" src="../../img/analisisPrueba.jpg" alt="" />
+                                                                </div>
+                                                                <h4 className="h4-informacion-notificacion-analisis">Tiene un análisis <span className={`${asignacion.estado == 2 ? "pendiente" : asignacion.estado == 3 ? "asignado" : ""}`}>{asignacion.estado == 2 ? "Pendiente" : asignacion.estado == 3 ? "Asignado" : ""}</span> por realizar</h4>
+                                                            </div>
+                                                            <button onClick={()=>{localStorage.setItem("analisis_id", asignacion.analisis_id);localStorage.setItem("tipos_analisis_id", asignacion.tipos_analisis_id),location.href = "/dashboard/analisis/registros"}} className="input-proceder-analisis">Proceder</button>
+                                                        </div>
+                                                    ))
+
+                                                ) : <h4 className="h4-notificaciones-vacias">No hay análisis pendientes por realizar</h4>}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div> : "" : ""}
                 </div>
             </nav >
             <div id="contenidoComponent" className="contenido">

@@ -15,12 +15,41 @@ export const Login = () => {
     const [eyes, setEyes] = useState(false);
 
     useEffect(() => {
-        // Cargar el archivo JavaScript después de que el HTML esté completo
-        const script = document.createElement('script');
-        script.src = '../../public/js/login.js';
-        script.async = true;
+        const inputs = document.querySelectorAll('.input-text');
+        const inputsContainer = document.querySelectorAll('.container-input');
+        const spanInputs = document.querySelectorAll('.span-input')
+        const credentialError = document.querySelectorAll('.credentials-error')
+    
+        for (let i = 0; i < inputs.length; i++) {
+    
+            inputs[i].addEventListener('focus', function () {
+                inputs[i].classList.remove('input-error')
+    
+                inputsContainer[i].style.border = '1px solid green'
+                spanInputs[i].classList.add('container-inputs-span')
+                spanInputs[i].classList.remove('span-input')
+                inputs[i].placeholder = ''
+            })
+    
+            inputs[i].addEventListener('blur', function () {
+                if (inputs[i].value == '') {
+                    inputsContainer[i].style.border = '1px solid #ccc'
+                    setTimeout(() => {
+                        if (i == 0) {
+                            inputs[i].placeholder = 'Correo Electronico'
+                        } else {
+                            inputs[i].placeholder = 'Contraseña'
+                        }
+                    }, 100)
+                    spanInputs[i].classList.remove('container-inputs-span')
+                    spanInputs[i].classList.add('span-input')
+    
+                }
+    
+            })
+    
+        }
 
-        document.body.appendChild(script);
     }, []);
 
     const handleSubmit = (e) => {
@@ -32,10 +61,10 @@ export const Login = () => {
         }
         Api.post('/auth/credentials', data)
             .then((response) => {
-   
+
                 if (response.data.errors) {
                     const credentialsError = response.data.errors['credentials_error'];
-                   
+
                     setValidationError(credentialsError);
                 } else {
                     // navigate('/dashboard')
@@ -53,7 +82,7 @@ export const Login = () => {
                     });
                     // alert('ERROR LOGIN')
                 } else {
-                    
+
                 }
 
             })

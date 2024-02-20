@@ -5,6 +5,16 @@ import { Alert } from '../componentes/alert.jsx'
 import { FormResultados } from '../componentes/FormResultados.jsx'
 
 export const Analisis = (userInfo) => {
+    if (userInfo.socket) {
+        const socket = userInfo.socket;
+
+        socket.on("message", (io) => {
+            console.log(io)
+        })
+        socket.on("asignAnalisis", (io) => {
+            getAnalisis()
+        })
+    }
     ///Variables para abrir modal de resultados
     const [modalFormResults, changeModalFormResults] = useState(false);
     const [dataModalAnalisis, setDataModalAnalisis] = useState(false);
@@ -65,6 +75,161 @@ export const Analisis = (userInfo) => {
                 upper_case: true,
                 key: "id"
             },
+
+        }
+    )
+    let [inputsFormatoFisico, setInputsFormatoFisico] = useState(
+        {
+            peso_cps: {
+                type: "number",
+                referencia: "Peso C.P.S",
+                upper_case: true,
+            },
+            humedad: {
+                type: "number",
+                referencia: "Humedad",
+                upper_case: true,
+            },
+            peso_cisco: {
+                type: "number",
+                referencia: "Peso Cisco",
+                upper_case: true,
+            },
+            merma_trilla: {
+                type: "number",
+                referencia: "Merma por Trilla",
+                upper_case: true,
+            },
+            peso_total_almendra: {
+                type: "number",
+                referencia: "Peso total de la almendra",
+                upper_case: true,
+            },
+            porcentaje_almendra_sana: {
+                type: "number",
+                referencia: "Porcentaje de la almendra sana",
+                upper_case: true,
+            },
+            peso_defectos_totales: {
+                type: "number",
+                referencia: "Peso Defectos Totales",
+                upper_case: true,
+            },
+            factor_rendimiento: {
+                type: "number",
+                referencia: "Factor de rendimiento",
+                upper_case: true,
+            },
+            peso_almendra_sana: {
+                type: "number",
+                referencia: "Peso de la Almendra Sana",
+                upper_case: true,
+            },
+            porcentaje_defectos_totales: {
+                type: "number",
+                referencia: "Porcentaje de Defectos Totales",
+                upper_case: true,
+            },
+            negro_total: {
+                type: "number",
+                referencia: "Negro Total o Parcial",
+                upper_case: true,
+            },
+            cardenillo: {
+                type: "number",
+                referencia: "Cardenillo",
+                upper_case: true,
+            },
+            vinagre: {
+                type: "number",
+                referencia: "Vinagre",
+                upper_case: true,
+            },
+            cristalizado: {
+                type: "number",
+                referencia: "Cristalizado",
+                upper_case: true,
+            },
+            veteado: {
+                type: "number",
+                referencia: "Veteado",
+                upper_case: true,
+            },
+            ambar: {
+                type: "number",
+                referencia: "Ámbar o Mantequillo",
+                upper_case: true,
+            },
+            sobresecado: {
+                type: "number",
+                referencia: "Sobresecado",
+                upper_case: true,
+            },
+            mordido: {
+                type: "number",
+                referencia: "Mordido",
+                upper_case: true,
+            },
+            picado_insectos: {
+                type: "number",
+                referencia: "Picado Por Insectos",
+                upper_case: true,
+            },
+            averanado: {
+                type: "number",
+                referencia: "Averanado o Arrugado",
+                upper_case: true,
+            },
+            inmaduro: {
+                type: "number",
+                referencia: "Inmaduro o Paloteado",
+                upper_case: true,
+            },
+            aplastado: {
+                type: "number",
+                referencia: "Aplastado",
+                upper_case: true,
+            },
+            flojo: {
+                type: "number",
+                referencia: "Flojo",
+                upper_case: true,
+            },
+            decolorado: {
+                type: "number",
+                referencia: "Decolorado",
+                upper_case: true,
+            },
+            malla18: {
+                type: "number",
+                referencia: "Malla 18",
+                upper_case: true,
+            },
+            malla15: {
+                type: "number",
+                referencia: "Malla 15",
+                upper_case: true,
+            },
+            malla17: {
+                type: "number",
+                referencia: "Malla17",
+                upper_case: true,
+            },
+            malla14: {
+                type: "number",
+                referencia: "Malla 14",
+                upper_case: true,
+            },
+            malla16: {
+                type: "number",
+                referencia: "Malla16",
+                upper_case: true,
+            },
+            mallas_menores: {
+                type: "number",
+                referencia: "Mallas Menores",
+                upper_case: true,
+            }
 
         }
     )
@@ -189,6 +354,7 @@ export const Analisis = (userInfo) => {
     function xd2(id) {
         setInfoFormato(id, 1)
     }
+   
     async function setInfoFormato(id, tipo) {
         try {
             setTipoAnalisis(tipo)
@@ -200,7 +366,6 @@ export const Analisis = (userInfo) => {
             setDataModalResultado([])
             setDataModalResultadoAnalisis([])
             const response = await Api.post("analisis/buscar/" + id + "");
-            console.log(response, "ahhhhh")
             if (response.data.status == true) {
                 setDataModalAnalisis(response.data.data)
                 const filterFormato = {
@@ -220,19 +385,25 @@ export const Analisis = (userInfo) => {
                     },
                 }
                 const formato = await Api.post("formatos/buscar/not", filterFormato);
-                console.log(formato, "formmaoooooooo")
                 if (formato.data.status == true) {
                     setDataModalResultado(formato.data.data)
                     const resultado = await Api.post("resultado/buscar/" + formato.data.data[0].id + "");
-                    console.log(resultado, formato, "dataaaaaaaaaaaaaaaaaa", formato.data.data[0].id)
                     if (resultado.data.status == true) {
                         setDataModalResultadoAnalisis(resultado.data.data)
                     } else {
 
                     }
 
+                } else if (formato.data.find_error) {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: formato.data.find_error,
+                            "tittle": "Inténtalo de nuevo",
+                        }
+                    )
                 } else {
-
                 }
                 changeModalFormResults(true)
 
@@ -251,6 +422,19 @@ export const Analisis = (userInfo) => {
             console.log(e)
         }
     }
+    useEffect( () => {
+        setTimeout(() => {
+            async function openAsing(){
+                if (localStorage.getItem("analisis_id") && localStorage.getItem("tipos_analisis_id")) {
+                    await setInfoFormato(localStorage.getItem("analisis_id"), localStorage.getItem("tipos_analisis_id"))
+                    localStorage.removeItem("analisis_id")
+                    localStorage.removeItem("tipos_analisis_id")  
+                    console.log(dataModalAnalisis,"annnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
+                }
+            }
+            openAsing()
+        }, 200);
+    }, [])
     async function getusuarios() {
         try {
 
@@ -340,13 +524,13 @@ export const Analisis = (userInfo) => {
     async function getAnalisis() {
         try {
             const response = await Api.post("analisis/listar", dataFilterTable);
-            console.log(response, "anaaalisis")
             if (response.data.status == true) {
                 setUsuarios(response.data.data)
                 setCountRegisters(response.data.count)
             } else if (response.data.find_error) {
                 setCountRegisters(0)
                 setUsuarios(response.data)
+                console.log(response,"ahhhh")
             } else {
                 setUsuarios(response.data)
             }
@@ -625,12 +809,12 @@ export const Analisis = (userInfo) => {
         getAnalisis(dataFilterTable)
 
     }
-    async function setFormatoSca(data, id, tipoRegistro, tipoAnalisis, idAnalisis) {
+    async function setAnalisisFormato(data, id, tipoRegistro, tipoAnalisis, idAnalisis) {
         let route = "";
         let method = "post";
-        console.log(data)
         data["tipos_analisis_id"] = tipoAnalisis ? tipoAnalisis : ""
         data["formatos_id"] = id ? id : ""
+
         if (tipoRegistro == 1) {
             route = "resultado/registrar/"
             data["xd"] = "xd";
@@ -638,9 +822,7 @@ export const Analisis = (userInfo) => {
             method = "put"
             route = "resultado/actualizar/" + id
         }
-
         const axios = await Api[method](route, data);
-        console.log(axios)
         if (axios.data.status == true) {
             setInfoFormato(idAnalisisResult, tipoAnalisis)
             setStatusAlert(true)
@@ -651,7 +833,8 @@ export const Analisis = (userInfo) => {
                     "tittle": "Excelente",
                 }
             )
-            console.log(idAnalisis, tipoAnalisis, "ahhhh")
+        } else if (axios.data.errors) {
+            setErrorsFormato(axios.data.errors)
         } else {
             setStatusAlert(true)
             setdataAlert(
@@ -670,7 +853,6 @@ export const Analisis = (userInfo) => {
 
     async function asignarFormato(idAnalisis, tipo, usuario) {
         try {
-            console.log(idAnalisis, tipo, usuario)
             const data = {
                 "analisis_id": idAnalisis,
                 "tipos_analisis_id": tipo,
@@ -708,7 +890,6 @@ export const Analisis = (userInfo) => {
     }
     async function actualizarFormato(idAnalisis, idFormato, tipo, usuario) {
         try {
-            console.log(idAnalisis, tipo, usuario)
             const data = {
                 "tipos_analisis_id": tipo,
                 "usuarios_id": usuario
@@ -748,7 +929,8 @@ export const Analisis = (userInfo) => {
             <link rel="stylesheet" href="../../public/css/analisis.css" />
 
             <Tablas clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
-            <FormResultados actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setFormatoSca={setFormatoSca} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
+
+            <FormResultados inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

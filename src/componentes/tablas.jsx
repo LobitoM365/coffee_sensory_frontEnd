@@ -14,7 +14,7 @@ export const formatDate = (data) => {
 
 export const Tablas = (array) => {
 
-    console.log('DATA: ');
+
 
     let data = [];
     let print = []
@@ -134,12 +134,9 @@ export const Tablas = (array) => {
     useEffect(() => {
 
         setkeyTable(keyTable + 1)
-    }, [data])
+    }, [array.data])
     useEffect(() => {
-
-
         let contentComponent = document.getElementById("contentComponent")
-
         let ziseTableComponent = 0;
         let svgPlusTable;
         let arrayThQuit = [];
@@ -161,86 +158,85 @@ export const Tablas = (array) => {
 
         function resizeTable() {
             let contentComponent = document.getElementById("contentComponent")
-
             if (contentComponent) {
-
-                console.log(contentComponent.clientWidth, "ahhhh", contentComponent.scrollWidth)
                 let tableComponent = document.querySelectorAll(".table-component")
                 let newDivTable = document.querySelectorAll(".new-div-table");
                 let contentTable = document.querySelectorAll(".content-table")
                 if (newDivTable.length == 0) {
                     arrayThQuit = [];
+                    ziseLess = 0
                 }
                 let thQuit = contentTable[0].querySelectorAll("th");
 
-
-
-                if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
-
-
-                    console.log(thQuit)
-                    if (thQuit.length > 2) {
-
+                if (contentComponent.clientWidth < tableComponent[0].clientWidth) {
+                    if (thQuit.length > 1) {
                         let tBody = contentTable[0].querySelectorAll("tbody")
-                        let trTbody = tBody[0].querySelectorAll(".tr-table")
-                        let nameTd = thQuit[(thQuit.length) - 1].querySelectorAll(".tittle-item-header-table")
-                        let name = nameTd[0].innerHTML
-                        arrayThQuit.push(thQuit[(thQuit.length) - 1])
-                        thQuit[(thQuit.length) - 1].remove();
+                        if (tBody) {
+                            let trTbody = tBody[0].querySelectorAll(".tr-table")
+                            let nameTd = thQuit[(thQuit.length) - 1].querySelectorAll(".tittle-item-header-table")
+                            let name = nameTd[0].innerHTML
+                            arrayThQuit.push(thQuit[(thQuit.length) - 1])
+                            thQuit[(thQuit.length) - 1].remove();
 
-                        for (let tr = 0; tr < trTbody.length; tr++) {
-                            let tdTbody = trTbody[tr].querySelectorAll("td")
-                            let newtr = document.createElement("tr");
-                            let newtd = document.createElement("td");
-                            let newdiv = document.createElement("div");
-                            newtd.setAttribute("colspan", 999999999999999);
-                            newtr.classList.add("new-tr-table")
-                            newtd.classList.add("new-td-table")
-                            newdiv.classList.add("new-div-table")
-                            newtr.setAttribute("data-tr", tr)
+                            for (let tr = 0; tr < trTbody.length; tr++) {
+                                let tdTbody = trTbody[tr].querySelectorAll("td")
+                                if (tdTbody) {
+                                    let newtr = document.createElement("tr");
+                                    let newtd = document.createElement("td");
+                                    let newdiv = document.createElement("div");
+                                    newtd.setAttribute("colspan", 999999999999999);
+                                    newtr.classList.add("new-tr-table")
+                                    newtd.classList.add("new-td-table")
+                                    newdiv.classList.add("new-div-table")
+                                    newtr.setAttribute("data-tr", tr)
 
-                            newtr.appendChild(newtd)
-                            newtd.appendChild(newdiv)
+                                    newtr.appendChild(newtd)
+                                    newtd.appendChild(newdiv)
 
-                            if (ziseLess == 0) {
+                                    if (ziseLess == 0) {
 
 
-                                let td = document.createElement("td")
-                                td.classList.add("td-view-elementos-ocult")
-                                td.innerHTML = '<div class="div-svg-plus-table"> <svg class="svg-plus-table" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" <g><g><g><path fill="#000000" d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z"/></g></g></g></svg> </div>'
+                                        let td = document.createElement("td")
+                                        td.classList.add("td-view-elementos-ocult")
+                                        td.innerHTML = '<div class="div-svg-plus-table"> <svg class="svg-plus-table" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" <g><g><g><path fill="#000000" d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z"/></g></g></g></svg> </div>'
 
-                                trTbody[tr].insertAdjacentElement('afterend', newtr)
-                                trTbody[tr].insertBefore(td, trTbody[tr].children[0]);
-                                let plus = td.querySelectorAll(".svg-plus-table")
-                                plus[0].addEventListener("click", function () {
-                                    if (newtr.style.display == "table-row") {
-                                        newtr.style.display = "";
-                                        newdiv.style.height = "";
-                                    } else {
-                                        newtr.style.display = "table-row";
-                                        newdiv.style.height = "max-content";
+                                        trTbody[tr].insertAdjacentElement('afterend', newtr)
+                                        trTbody[tr].insertBefore(td, trTbody[tr].children[0]);
+                                        let plus = td.querySelectorAll(".svg-plus-table")
+                                        plus[0].addEventListener("click", function () {
+                                            if (newtr.style.display == "table-row") {
+                                                newtr.style.display = "";
+                                                newdiv.style.height = "";
+                                            } else {
+                                                newtr.style.display = "table-row";
+                                                newdiv.style.height = "max-content";
+                                            }
+
+                                        })
                                     }
+                                    let elementsNewTr = document.querySelectorAll(".new-div-table");
+                                    if (elementsNewTr[tr]) {
+                                        let div = document.createElement("div")
+                                        div.classList.add("div-element-add")
+                                        div.innerHTML = "<h4> " + name + "</h4>"
+                                        div.append(tdTbody[(thQuit.length) - 1])
+                                        elementsNewTr[tr].appendChild(div)
+                                    }
+                                }
 
-                                })
                             }
-                            let elementsNewTr = document.querySelectorAll(".new-div-table");
-                            let div = document.createElement("div")
-                            div.classList.add("div-element-add")
-                            div.innerHTML = "<h4> " + name + "</h4>"
-                            div.append(tdTbody[(thQuit.length) - 1])
-                            elementsNewTr[tr].appendChild(div)
-                        }
-                        if (ziseLess == 0) {
-                            let theadTable = document.querySelectorAll(".thead-table")
-                            let th = document.createElement("th")
-                            th.classList.add("th-plus-view-elements-ocult")
-                            th.innerHTML = ''
-                            theadTable[0].insertBefore(th, theadTable[0].children[0]);
-                            ziseLess = 1;
+                            if (ziseLess == 0 && !data.find_error) {
+                                let theadTable = document.querySelectorAll(".thead-table")
+                                let th = document.createElement("th")
+                                th.classList.add("th-plus-view-elements-ocult")
+                                th.innerHTML = ''
+                                theadTable[0].insertBefore(th, theadTable[0].children[0]);
+                                ziseLess = 1;
 
+                            }
+                            ziseTableComponent = tableComponent[0].clientWidth;
+                            resizeTable()
                         }
-                        ziseTableComponent = tableComponent[0].clientWidth;
-                        resizeTable()
                     }
 
                 } else if ((contentComponent.clientWidth - tableComponent[0].scrollWidth) >= 100) {
@@ -337,7 +333,7 @@ export const Tablas = (array) => {
                                 </div>
 
                             </div>
-                            <div style={{ display: modalEstado == false ? "none" : "block" }} className="opciones" >
+                            <div key={keyTable} style={{ display: modalEstado == false ? "none" : "block" }} className="opciones" >
 
                                 <h4 onClick={() => { changeNameEstadoFocus("Estado..."); array.getFilterEstado(false); setPosicionPaginate(0); functionSetLimit(1) }} className='select-option'>Estado...</h4>
 
@@ -412,54 +408,65 @@ export const Tablas = (array) => {
                                                             }
                                                         } else {
                                                             if (print[keys]["conditions"]) {
-                                                                let keysConditions = Object.keys(print[keys]["conditions"])
-                                                                return keysConditions.map((keyC, indexC) => {
+                                                                let keysConditions = Object.keys(print[keys]["conditions"]);
+
+                                                                for (let indexC = 0; indexC < keysConditions.length; indexC++) {
+                                                                    let keyC = keysConditions[indexC];
+
                                                                     if (data[valuesD][keys] == keyC) {
-                                                                        let keysConditionTrue = Object.keys(print[keys]["conditions"][keyC])
-                                                                        return keysConditionTrue.map((keyT, indexT) => {
+
+
+                                                                        let keysConditionTrue = Object.keys(print[keys]["conditions"][keyC]);
+
+                                                                        for (let indexT = 0; indexT < keysConditionTrue.length; indexT++) {
+                                                                            let keyT = keysConditionTrue[indexT];
+
                                                                             if (keyT == "element") {
                                                                                 if (print[keys]["conditions"][keyC][keyT]["type"]) {
                                                                                     let referenciaProcedure = "No registra";
                                                                                     let classProcedure = "";
+
                                                                                     if (print[keys]["conditions"][keyC][keyT]["referencia"]) {
-                                                                                        referenciaProcedure = print[keys]["conditions"][keyC][keyT]["referencia"]
+                                                                                        referenciaProcedure = print[keys]["conditions"][keyC][keyT]["referencia"];
                                                                                     }
                                                                                     if (print[keys]["conditions"][keyC][keyT]["class"]) {
-                                                                                        classProcedure = print[keys]["conditions"][keyC][keyT]["class"]
+                                                                                        classProcedure = print[keys]["conditions"][keyC][keyT]["class"];
                                                                                     }
+
                                                                                     if (print[keys]["conditions"][keyC][keyT]["type"] == "text") {
-                                                                                        return <td key={index}><h4 className={'table-attribute-no-registra ' + classProcedure}>{referenciaProcedure}</h4></td>;
+
+                                                                                        return (<td key={index}><h4 className={'table-attribute-no-registra ' + classProcedure}>{referenciaProcedure}</h4></td>);
                                                                                     } else if (print[keys]["conditions"][keyC][keyT]["type"] == "button") {
                                                                                         let functionProcedure;
                                                                                         let valueFunctionProcedure;
 
                                                                                         if (print[keys]["conditions"][keyC][keyT]["function"]) {
                                                                                             if (print[keys]["conditions"][keyC][keyT]["function"]["value"]) {
-                                                                                                functionProcedure = print[keys]["conditions"][keyC][keyT]["function"]["value"]
+                                                                                                functionProcedure = print[keys]["conditions"][keyC][keyT]["function"]["value"];
                                                                                             }
                                                                                             if (print[keys]["conditions"][keyC][keyT]["function"]["execute"]) {
                                                                                                 if (print[keys]["conditions"][keyC][keyT]["function"]["execute"]["type"]) {
                                                                                                     if (print[keys]["conditions"][keyC][keyT]["function"]["execute"]["type"] == "table") {
                                                                                                         if (print[keys]["conditions"][keyC][keyT]["function"]["execute"]["value"]) {
                                                                                                             if (keysData.includes(print[keys]["conditions"][keyC][keyT]["function"]["execute"]["value"])) {
-
-                                                                                                                valueFunctionProcedure = data[valuesD][print[keys]["conditions"][keyC][keyT]["function"]["execute"]["value"]]
+                                                                                                                valueFunctionProcedure = data[valuesD][print[keys]["conditions"][keyC][keyT]["function"]["execute"]["value"]];
                                                                                                             }
                                                                                                         }
-
                                                                                                     }
                                                                                                 }
                                                                                             }
                                                                                         }
-                                                                                        return <td key={index}><button onClick={() => { functionProcedure ? functionProcedure(valueFunctionProcedure) : "" }} className={'table-attribute-button-condition ' + classProcedure}>{referenciaProcedure}</button></td>;
+                                                                                        return (<td key={index}><button onClick={() => { functionProcedure ? functionProcedure(valueFunctionProcedure) : "" }} className={'table-attribute-button-condition ' + classProcedure}>{referenciaProcedure}</button></td>);
                                                                                     } else {
-                                                                                        return <td key={index}><h4 className='table-attribute-no-registra'>{referenciaProcedure}</h4></td>;
+                                                                                        return (<td key={index}><h4 className='table-attribute-no-registra'>{referenciaProcedure}</h4></td>);
+
                                                                                     }
                                                                                 }
                                                                             }
-                                                                        })
+                                                                        }
                                                                     }
-                                                                })
+                                                                }
+
                                                             } else if (print[keys]["values"]) {
                                                                 let count = 0;
                                                                 let group = ""
@@ -536,10 +543,10 @@ export const Tablas = (array) => {
                         <h4>Mostrando {paginate == 1 || paginate == 0 ? array.count : positionElementPaginate == paginate ? parseFloat(array.count - ((positionElementPaginate - 1) * limit)) : limit} desde {paginate == 0 ? 0 : inicio == 0 ? 1 : inicio + 1} a {positionElementPaginate * limit < array.count ? positionElementPaginate * limit : array.count} para {array.count}</h4>
                     </div>
                     <div className='paginate'>
-                        {paginate > 5 ? <svg onClick={() => { posicionPaginate != 0 ? changePositionPaginate(-1) : "" }} className='chevron-paginate' style={{ rotate: "180deg", cursor: posicionPaginate == 0 ? "unset" : "", fill: posicionPaginate == 0 ? "rgba(152, 152, 152, 0.438)" : " rgb(0, 97, 227)" }} version="1.1" x="0px" y="0px" viewBox="0 0 256 256"  >
+                        {paginate > 5 ? <div className='div-chevron-paginate'><svg onClick={() => { posicionPaginate != 0 ? changePositionPaginate(-1) : "" }} className='chevron-paginate' style={{ rotate: "180deg", cursor: posicionPaginate == 0 ? "unset" : "", fill: posicionPaginate == 0 ? "rgba(152, 152, 152, 0.438)" : " rgb(0, 97, 227)" }} version="1.1" x="0px" y="0px" viewBox="0 0 256 256"  >
 
                             <g><g><path d="M169.3,130.8L61,233.7L73.3,246l109.5-101.6l12.3-12.3L73.2,10L60.8,22.4L169.3,130.8z" /></g></g>
-                        </svg> : "  "}
+                        </svg></div> : "  "}
                         {paginate > 1 ? paginateJson.map((key, index) => (
                             paginate == 5 && index <= 5 ? <div onClick={() => { functionSetLimit(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : index <= 4 ? <div onClick={() => { functionSetLimit(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : ""
 
@@ -548,9 +555,11 @@ export const Tablas = (array) => {
                             <div className='items-overflow-paginate'>
                                 <div className='div-points-paginate'><div className='points-paginate'></div><div className='points-paginate'></div><div className='points-paginate'></div></div>
                                 <div onClick={() => { functionSetLimit(paginate), changePositionElementPaginate(paginate) }} className={`${positionFocusPaginate == paginate ? "item-paginate-focus" : ""} item-paginate-round`}>{paginate}</div>
-                                <svg onClick={() => { posicionPaginate + 5 < paginate ? changePositionPaginate(1) : "" }} style={{ cursor: posicionPaginate + 5 < paginate ? "" : "unset", fill: posicionPaginate + 5 < paginate ? " rgb(0, 97, 227)" : "rgba(152, 152, 152, 0.438)" }} className='chevron-paginate' version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
-                                    <g><g><path d="M169.3,130.8L61,233.7L73.3,246l109.5-101.6l12.3-12.3L73.2,10L60.8,22.4L169.3,130.8z" /></g></g>
-                                </svg>
+                                <div className='div-chevron-paginate'>
+                                    <svg onClick={() => { posicionPaginate + 5 < paginate ? changePositionPaginate(1) : "" }} style={{ cursor: posicionPaginate + 5 < paginate ? "" : "unset", fill: posicionPaginate + 5 < paginate ? " rgb(0, 97, 227)" : "rgba(152, 152, 152, 0.438)" }} className='chevron-paginate' version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
+                                        <g><g><path d="M169.3,130.8L61,233.7L73.3,246l109.5-101.6l12.3-12.3L73.2,10L60.8,22.4L169.3,130.8z" /></g></g>
+                                    </svg>
+                                </div>
                             </div> : "  "}
                     </div>
                 </div>

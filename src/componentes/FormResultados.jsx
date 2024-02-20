@@ -7,9 +7,14 @@ export const FormResultados = forwardRef((data, ref) => {
 
     let elementEdit = [];
     let inputs = []
+    let inputsFormatoFisico = []
+    let elementEditFormatoFisico = []
     let [dataInputs, setDataInputs] = useState({});
+    let [dataInputsFormatoFisico, setDataInputsFormatoFisico] = useState({});
     const [selectsValues, changeSelectsValues] = useState({});
     const [dataSelect, setDataSelects] = useState({});
+    const [statusInputDefault, setStatusInputDefault] = useState(false);
+    const [statusInput, setStatusInput] = useState(true);
 
     const [inputValor, setInputValor] = useState({});
     const [keyDown, setKeydown] = useState();
@@ -90,8 +95,12 @@ export const FormResultados = forwardRef((data, ref) => {
     if (data.inputsForm) {
         inputs = Object.keys(data.inputsForm)
         dataInputs = data.inputsForm
-
         elementEdit = data.elementEdit
+    }
+    if (data.inputsFormatoFisico) {
+        inputsFormatoFisico = Object.keys(data.inputsFormatoFisico)
+        dataInputsFormatoFisico = data.inputsFormatoFisico
+        elementEditFormatoFisico = data.dataModalResultadoAnalisis.length > 0 ? data.dataModalResultadoAnalisis[0] : {}
     }
     function Init() {
         let cloneSlectValue = { ...selectsValues }
@@ -167,9 +176,8 @@ export const FormResultados = forwardRef((data, ref) => {
         })
 
         function resizeModal() {
-            
+
             let modalForm = document.querySelectorAll(".div-modal-form");
-            console.log(modalForm)
             let divContentForm = document.querySelectorAll(".div-content-modal");
             let divFondomodalForm = document.querySelectorAll(".div-fondo-modal ");
 
@@ -253,7 +261,6 @@ export const FormResultados = forwardRef((data, ref) => {
     function setElementsTemplateFormatoSca(idElement, data, setInputs) {
         if (data) {
             let iframe = document.getElementById(idElement);
-            console.log(iframe, "ifrrameee")
             if (iframe) {
 
                 let keysRange = ["fragancia_aroma", "sabor", "sabor_residual", "acidez", "cuerpo", "balance", "puntaje_catador"]
@@ -326,7 +333,6 @@ export const FormResultados = forwardRef((data, ref) => {
                         }
                         if (divElement) {
                             let range = divElement.querySelectorAll(".range-color-intensidad")
-                            console.log(divElement, range, "divvv")
                             if (range.length > 0) {
                                 if (data[0][keysIntensidad[i]]) {
                                     range[0].style.height = "calc(" + ((data[0][keysIntensidad[i]] / (keysIntensidad[i] != "tueste" ? 5 : 4)) * 100) + "%)"
@@ -390,26 +396,29 @@ export const FormResultados = forwardRef((data, ref) => {
 
     }, [idFormato])
     useEffect(() => {
-        let iframeVacio = document.querySelectorAll(".iframe-vacio-formato-sca")
-        if (iframeVacio.length) {
-
-            iframeVacio[0].addEventListener("load", function () {
-                let contentIframe = iframeVacio[0].contentDocument.getElementById("contenidoFormatoSca")
-                if (contentIframe) {
-                    contentIframe.classList.add("content-iframe-vacio")
+        if (data.tipoAnalisis) {
+            if (data.tipoAnalisis == 2) {
+                let iframeVacio = document.querySelectorAll(".iframe-vacio-formato-sca")
+                if (iframeVacio.length) {
+                    iframeVacio[0].addEventListener("load", function () {
+                        let contentIframe = iframeVacio[0].contentDocument.getElementById("contenidoFormatoSca")
+                        if (contentIframe) {
+                            contentIframe.classList.add("content-iframe-vacio")
+                        }
+                    });
                 }
 
-
-            });
-        }
-
-        if (data.dataModalResultadoAnalisis.length > 0) {
-            const iframe = document.getElementById("iframeFormatoSca");
-            iframe.addEventListener("load", function () {
-                setElementsTemplateFormatoSca("iframeFormatoSca", data.dataModalResultadoAnalisis);
-            });
+                if (data.dataModalResultadoAnalisis.length > 0) {
+                    const iframe = document.getElementById("iframeFormatoSca");
+                    iframe.addEventListener("load", function () {
+                        setElementsTemplateFormatoSca("iframeFormatoSca", data.dataModalResultadoAnalisis);
+                    });
+                }
+            }
         }
     }, [data.dataModalResultadoAnalisis]);
+
+
     useEffect(() => {
         const iframe = document.getElementById("iframeFormUpdate");
         if (iframe) {
@@ -447,8 +456,8 @@ export const FormResultados = forwardRef((data, ref) => {
                 }
             }
 
-            if (data.setFormatoSca) {
-                data.setFormatoSca(dataFormatoSca, idFormato, tipo, modeFormato, id)
+            if (data.setAnalisisFormato) {
+                data.setAnalisisFormato(dataFormatoSca, idFormato, tipo, modeFormato, id)
             }
         }
     }
@@ -464,10 +473,35 @@ export const FormResultados = forwardRef((data, ref) => {
             data.setErrorsFormato({})
         }
     }, [data.modalFormResults])
+
+    function registerFormatoFisico(e) {
+        e.preventDefault()
+        let formData = new FormData(e.target);
+        let jsonData = {};
+        console.log(formData, "formmm")
+
+        formData.forEach((value, key) => {
+            if (Object.prototype.hasOwnProperty.call(jsonData, key)) {
+                if (!Array.isArray(jsonData[key])) {
+                    jsonData[key] = [jsonData[key]];
+                }
+                jsonData[key].push(value);
+            } else {
+                jsonData[key] = value;
+            }
+        });
+
+
+        if (data.setAnalisisFormato) {
+            data.setAnalisisFormato(jsonData, idFormato, tipoRegistro, modeFormato)
+        }
+    }
+    useEffect(() => {
+        console.log(data)
+    }, [data])
     return (
         <>
             <link rel="stylesheet" href="../../public/css/form.css" />
-
             <div style={{ display: (!data.modalFormResults) ? "none" : "" }} className="div-modal-form modal-form" id="modalFormResult">
                 <div onClick={() => { setDataSelects({}), data.changeModalFormResults(false) }} className="div-fondo-modal div-fondo-modal-form" id="divFondomodalFormResult">
                 </div>
@@ -532,7 +566,11 @@ export const FormResultados = forwardRef((data, ref) => {
                                                 {
                                                     inputs.length > 0 && data.userInfo.userInfo.rol == "administrador" ?
                                                         inputs.map((key, index) => {
-
+                                                            if (data.dataModalResultado.length > 0) {
+                                                                if (data.dataModalResultado[0]["permission_update"] == "false") {
+                                                                    return;
+                                                                }
+                                                            }
                                                             if (dataInputs[key]["type"] === "select" && dataInputs[key]["visibility"] != false) {
 
                                                                 if (data.statusSelect) {
@@ -565,14 +603,13 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                                         value += nameIndexSelect == 0 ? dataInputs[key]["opciones"][indexSelect][nameSelect] : ", " + dataInputs[key]["opciones"][indexSelect][nameSelect];
                                                                                                     })
                                                                                                 }
-                                                                                                console.log("modalllll", key)
                                                                                                 if (dataInputs[key]["upper_case"]) {
                                                                                                     value = value.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())
                                                                                                 } else if (dataInputs[key]["capital_letter"]) {
                                                                                                     value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
                                                                                                 }
                                                                                                 if (data.dataModalResultado.length > 0) {
-                                                                                                    console.log("ahhhhholaaaaaaaaaaaaaaaaaaaa",statusSelectDefault)
+                                                                                                    console.log("ahhhhholaaaaaaaaaaaaaaaaaaaa", statusSelectDefault)
                                                                                                     if (dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] == data.dataModalResultado[0][key] && statusSelectDefault) {
                                                                                                         selectsValues[key] = value;
                                                                                                         dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
@@ -612,11 +649,13 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <h4 className="label-error-submit-form" htmlFor="">{data.errorsFormato ? data.errorsFormato[key] ? data.errorsFormato[key] : "" : ""}</h4>
+                                                                            <h4 className="label-error-submit-form" htmlFor="">{data.errorsFormatoFormato ? data.errorsFormatoFormato[key] ? data.errorsFormatoFormato[key] : "" : ""}</h4>
 
                                                                         </div>
                                                                         {data.dataModalResultado.length > 0 ?
-                                                                            <button onClick={() => { data.actualizarFormato(data.dataModalAnalisis.length > 0 ? data.dataModalAnalisis[0].id ? data.dataModalAnalisis[0].id : "" : "",data.dataModalResultado[0].id, data.tipoAnalisis, dataSelect["usuarios_id"]) }} type="button" className="button-submit-form">Actualizar</button>
+                                                                            data.dataModalResultado[0]["permission_update"] == "true" ?
+                                                                                <button onClick={() => { data.actualizarFormato(data.dataModalAnalisis.length > 0 ? data.dataModalAnalisis[0].id ? data.dataModalAnalisis[0].id : "" : "", data.dataModalResultado[0].id, data.tipoAnalisis, dataSelect["usuarios_id"]) }} type="button" className="button-submit-form">Actualizar</button>
+                                                                                : ""
                                                                             :
                                                                             <button onClick={() => { data.asignarFormato(data.dataModalAnalisis.length > 0 ? data.dataModalAnalisis[0].id ? data.dataModalAnalisis[0].id : "" : "", data.tipoAnalisis, dataSelect["usuarios_id"]) }} type="button" className="button-submit-form">Asignar</button>
                                                                         }
@@ -747,7 +786,7 @@ export const FormResultados = forwardRef((data, ref) => {
                             </div>
                             <div className="contenido-info-resultado">
 
-                                <h3>Información Sobre el Formato  {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].tipos_analisis_id ? data.dataModalResultado[0].tipos_analisis_id == 1 ? "Físico" : data.dataModalResultado[0].tipos_analisis_id == 2 ? "SCA" : "No disponible" : "No registra" : ""}</h3>
+                                <h3>Información Sobre el Formato {data.tipoAnalisis == 1 ? "Físico" : "Sensorial"}</h3>
                                 {data.dataModalResultado ?
 
                                     data.dataModalResultado.length > 0 ?
@@ -784,23 +823,235 @@ export const FormResultados = forwardRef((data, ref) => {
                                             }
 
                                         })
-                                        : "Error interno"
+                                        : <div> Aún no se ha registrado un formato {data.tipoAnalisis == 1 ? "Físico" : "Sensorial"}</div>
 
                                     : "Error interno"}
                                 {data.dataModalResultadoAnalisis.length > 0 ?
                                     (
-                                        <div>
+                                        <div className="div-content-info-analisis-formato">
                                             <h3>Resultados para el Formato {data.dataModalResultado[0].tipos_analisis_id ? data.dataModalResultado[0].tipos_analisis_id == 1 ? "Físico" : data.dataModalResultado[0].tipos_analisis_id == 2 ? "SCA" : "No disponible" : "No registra"}</h3>
-                                            <iframe id="iframeFormatoSca" className="iframe-formato-sca" src="/src/formatoSca/formatoScaTemplate.html" frameBorder="0"></iframe>
-                                            {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].permission_formato == "true" && data.dataModalResultado[0].permission_formato ? data.dataModalResultado[0].estado == 1 ? <button onClick={() => { setIdFormato(data.dataModalResultado[0].id); setModeFormato(data.dataModalResultado[0].tipos_analisis_id); setTipoRegistro(2); setModalFormNormal(true) }} type="button" className="button-submit-form">Actualizar</button> : "" : "" : ""}
+                                            {data.tipoAnalisis == 1 ?
+                                                <div className="div-table-formato-fisico-template">
+                                                    <table cellSpacing={0} className="table-formato-fisico-template">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colSpan={900000}>Análisis Físico</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Peso C.P.S (g)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["peso_cps"] ? data.dataModalResultadoAnalisis[0]["peso_cps"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td>Humedad (%)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["humedad"] ? data.dataModalResultadoAnalisis[0]["humedad"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Peso Cisco (g)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["peso_cisco"] ? data.dataModalResultadoAnalisis[0]["peso_cisco"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td> Merma por trilla (%) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["merma_trilla"] ? data.dataModalResultadoAnalisis[0]["merma_trilla"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Peso total de la almendra (g) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["peso_total_almendra"] ? data.dataModalResultadoAnalisis[0]["peso_total_almendra"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td>Porcentaje de almendra sana (%)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["porcentaje_almendra_sana"] ? data.dataModalResultadoAnalisis[0]["porcentaje_almendra_sana"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Peso defectos totales (g)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["peso_defectos_totales"] ? data.dataModalResultadoAnalisis[0]["peso_defectos_totales"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td>Factor de rendimiento (Kg C.P.S) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["factor_rendimiento"] ? data.dataModalResultadoAnalisis[0]["factor_rendimiento"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Peso de almendra sana (g) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["peso_almendra_sana"] ? data.dataModalResultadoAnalisis[0]["peso_almendra_sana"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td>Porcentaje de defectos totales (%) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["porcentaje_defectos_totales"] ? data.dataModalResultadoAnalisis[0]["porcentaje_defectos_totales"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Negro total o parcial (g)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["negro_total"] ? data.dataModalResultadoAnalisis[0]["negro_total"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td>Cardenillo (g)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["cardenillo"] ? data.dataModalResultadoAnalisis[0]["cardenillo"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Vinagre (g)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["vinagre"] ? data.dataModalResultadoAnalisis[0]["vinagre"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td>Cristalizado (g)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["cristalizado"] ? data.dataModalResultadoAnalisis[0]["cristalizado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Veteado (g)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["veteado"] ? data.dataModalResultadoAnalisis[0]["veteado"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td>Ámbar o mantequillo (g) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["ambar"] ? data.dataModalResultadoAnalisis[0]["ambar"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Sobresecado (g) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["sobresecado"] ? data.dataModalResultadoAnalisis[0]["sobresecado"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td>Mordido o cortado (g)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["mordido"] ? data.dataModalResultadoAnalisis[0]["mordido"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Picado por insectos (g) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["picado_insectos"] ? data.dataModalResultadoAnalisis[0]["picado_insectos"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td>Averanado o arrugado (g) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["averanado"] ? data.dataModalResultadoAnalisis[0]["averanado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Inmaduro o paloteado(g) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["inmaduro"] ? data.dataModalResultadoAnalisis[0]["inmaduro"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td>Aplastado (g) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["aplastado"] ? data.dataModalResultadoAnalisis[0]["aplastado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Flojo (g) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["flojo"] ? data.dataModalResultadoAnalisis[0]["flojo"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td>Decolorado o reposado (g)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["decolorado"] ? data.dataModalResultadoAnalisis[0]["decolorado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Malla 18 (g) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["malla18"] ? data.dataModalResultadoAnalisis[0]["malla18"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td>Malla 15 (g)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["malla15"] ? data.dataModalResultadoAnalisis[0]["malla15"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Malla 17 (g) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["malla17"] ? data.dataModalResultadoAnalisis[0]["malla17"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td>Malla 14 (g)</td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["malla14"] ? data.dataModalResultadoAnalisis[0]["malla14"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Malla 16 (g) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["malla16"] ? data.dataModalResultadoAnalisis[0]["malla16"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                <td> Mallas menores (g) </td>
+                                                                <td>{data.dataModalResultadoAnalisis[0]["mallas_menores"] ? data.dataModalResultadoAnalisis[0]["mallas_menores"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                : <iframe id="iframeFormatoSca" className="iframe-formato-sca" src="/src/formatoSca/formatoScaTemplate.html" frameBorder="0"></iframe>}
+
+
+                                            {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].permission_formato == "true" && data.dataModalResultado[0].permission_formato ? data.dataModalResultado[0].estado == 1 ? <button onClick={() => { setStatusInputDefault(true); setIdFormato(data.dataModalResultado[0].id); setModeFormato(data.dataModalResultado[0].tipos_analisis_id); setTipoRegistro(2); setModalFormNormal(true) }} type="button" className="button-submit-form">Actualizar</button> : "" : "" : ""}
 
                                         </div>
                                     )
                                     :
                                     (
-                                        <div>
-                                            <iframe id="iframeFormatoSca" className="iframe-vacio-formato-sca iframe-formato-sca" src="/src/formatoSca/formatoScaTemplate.html" frameBorder="0"></iframe>
-                                            {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].permission_formato == "true" ? data.dataModalResultado[0].estado == 2 || data.dataModalResultado[0].estado == 3 ? <button onClick={() => { setIdFormato(data.dataModalResultado[0].id), setModeFormato(data.dataModalResultado[0].tipos_analisis_id); setTipoRegistro(1), setModalFormNormal(true) }} type="button" className="button-submit-form">Analizar</button> : "" : "" : ""}
+                                        <div className="div-content-info-analisis-formato">
+                                          
+
+                                            {data.tipoAnalisis == 1 ?
+                                                <div className="div-table-formato-fisico-template">
+                                                    <table cellSpacing={0} className="table-formato-fisico-template">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colSpan={900000}>Análisis Físico</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Peso C.P.S (g)</td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td>Humedad (%)</td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Peso Cisco (g)</td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td> Merma por trilla (%) </td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Peso total de la almendra (g) </td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td>Porcentaje de almendra sana (%)</td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Peso defectos totales (g)</td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td>Factor de rendimiento (Kg C.P.S) </td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Peso de almendra sana (g) </td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td>Porcentaje de defectos totales (%) </td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Negro total o parcial (g)</td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td>Cardenillo (g)</td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Vinagre (g)</td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td>Cristalizado (g)</td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Veteado (g)</td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td>Ámbar o mantequillo (g) </td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Sobresecado (g) </td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td>Mordido o cortado (g)</td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Picado por insectos (g) </td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td>Averanado o arrugado (g) </td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Inmaduro o paloteado(g) </td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td>Aplastado (g) </td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Flojo (g) </td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td>Decolorado o reposado (g)</td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Malla 18 (g) </td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td>Malla 15 (g)</td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Malla 17 (g) </td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td>Malla 14 (g)</td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Malla 16 (g) </td>
+                                                                <td>{/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                                <td> Mallas menores (g) </td>
+                                                                <td>{/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                :
+
+                                                <iframe id="iframeFormatoSca" className="iframe-vacio-formato-sca iframe-formato-sca" src="/src/formatoSca/formatoScaTemplate.html" frameBorder="0"></iframe>
+                                            }
+
+                                            {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].permission_formato == "true" ? data.dataModalResultado[0].estado == 2 || data.dataModalResultado[0].estado == 3 ? <button onClick={() => { setStatusInput(true);setInputValor({}); setStatusInputDefault(false); setIdFormato(data.dataModalResultado[0].id), setModeFormato(data.dataModalResultado[0].tipos_analisis_id); setTipoRegistro(1), setModalFormNormal(true) }} type="button" className="button-submit-form">Analizar</button> : "" : "" : ""}
                                         </div>
                                     )
 
@@ -818,42 +1069,173 @@ export const FormResultados = forwardRef((data, ref) => {
                 <div onClick={() => { setIdFormato(null), setModeFormato(null); setTipoRegistro(null); setModalFormNormal(false) }} className="div-fondo-modal div-fondo-modal-form" >
                 </div>
                 <div id="contentModal" className="div-content-modal div-content-form">
-                    <form /* onSubmit={chageData} */ action="" >
-                        <div className="header-form">
-                            <h3 className="tittle-form-register">{"Información General Sobre el Análisis"} </h3>
-                            <div onClick={() => { setIdFormato(null), setModeFormato(null); setTipoRegistro(null); setModalFormNormal(false) }} className="icon-quit-svg-form">
-                                <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
-                                    <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                    <g><g><path fill="#000000" d="M150.7,128l90.6-90.7c6.3-6.3,6.3-16.4,0-22.7c-6.3-6.3-16.4-6.3-22.7,0L128,105.3L37.4,14.7c-6.3-6.3-16.4-6.3-22.7,0s-6.3,16.4,0,22.7l90.6,90.6l-90.6,90.6c-6.3,6.3-6.3,16.4,0,22.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7l90.7-90.6l90.6,90.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7c6.3-6.3,6.3-16.4,0-22.7L150.7,128z" /></g></g>
-                                </svg>
-                            </div>
-                        </div>
-                        <div className="div-body-form">
-                            {modeFormato + ", " + tipoRegistro + "," + idFormato}
-                            {modeFormato == 2 ?
-                                (
-                                    <div>
 
-                                        {tipoRegistro == 1 ? (
-                                            <div>
-                                                <iframe id="iframeFormRegister" className="iframe-formato-sca" src="/src/formatoSca/formatoSca.html" frameBorder="0"></iframe>
-                                                <button onClick={() => { registerFormatoSca("iframeFormRegister", 1, data.dataModalAnalisis[0].id) }} type="button" className="button-submit-form">Registrar</button>
-                                            </div>
-                                        ) : (
-                                            <div>
-                                                <iframe id="iframeFormUpdate" className="iframe-formato-sca" src="/src/formatoSca/formatoSca.html" frameBorder="0"></iframe>
-                                                <button onClick={() => { registerFormatoSca("iframeFormUpdate", 2, data.dataModalAnalisis[0].id) }} type="button" className="button-submit-form">Guardar</button>
-                                            </div>
-                                        )}
+                    <div className="header-form">
+                        <h3 className="tittle-form-register">Registro de análisis  {data.tipoAnalisis == 1 ? "Físico" : "Sensorial"}</h3>
+                        <div onClick={() => { setIdFormato(null), setModeFormato(null); setTipoRegistro(null); setModalFormNormal(false) }} className="icon-quit-svg-form">
+                            <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
+                                <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                <g><g><path fill="#000000" d="M150.7,128l90.6-90.7c6.3-6.3,6.3-16.4,0-22.7c-6.3-6.3-16.4-6.3-22.7,0L128,105.3L37.4,14.7c-6.3-6.3-16.4-6.3-22.7,0s-6.3,16.4,0,22.7l90.6,90.6l-90.6,90.6c-6.3,6.3-6.3,16.4,0,22.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7l90.7-90.6l90.6,90.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7c6.3-6.3,6.3-16.4,0-22.7L150.7,128z" /></g></g>
+                            </svg>
+                        </div>
+                    </div>
+                    <div className="div-body-form">
+                        {modeFormato == 2 ?
+                            (
+                                <div>
+
+                                    {tipoRegistro == 1 ? (
+                                        <div>
+                                            <iframe id="iframeFormRegister" className="iframe-formato-sca" src="/src/formatoSca/formatoSca.html" frameBorder="0"></iframe>
+                                            <button onClick={() => { registerFormatoSca("iframeFormRegister", 1, data.dataModalAnalisis[0].id) }} type="button" className="button-submit-form">Registrar</button>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <iframe id="iframeFormUpdate" className="iframe-formato-sca" src="/src/formatoSca/formatoSca.html" frameBorder="0"></iframe>
+                                            <button onClick={() => { registerFormatoSca("iframeFormUpdate", 2, data.dataModalAnalisis[0].id) }} type="button" className="button-submit-form">Guardar</button>
+                                        </div>
+                                    )}
+                                </div>
+                            )
+                            :
+                            <div id="divFormFormatoFisico" className="div-form-formato-fisico">
+                                <form onSubmit={(e) => { registerFormatoFisico(e) }}>
+                                    <div style={{ display: Object.keys(inputsFormatoFisico).length == 1 ? "unset" : "" }} className="form-register-formato-fisico">
+                                        {
+                                            inputsFormatoFisico.map((key, index) => {
+                                                if (dataInputsFormatoFisico[key]["type"] === "text" || dataInputsFormatoFisico[key]["type"] === "email" || dataInputsFormatoFisico[key]["type"] === "number" || dataInputsFormatoFisico[key]["type"] === "ubicacion" || dataInputsFormatoFisico[key]["type"] === "normal") {
+                                                    console.log(statusInputDefault, inputValor[key])
+                                                    if (statusInputDefault && elementEditFormatoFisico) {
+                                                        inputValor[key] = elementEditFormatoFisico[key] ? dataInputsFormatoFisico[key]["upper_case"] ? typeof elementEditFormatoFisico[key] === "string" ? elementEditFormatoFisico[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEditFormatoFisico[key] ?? '' : dataInputsFormatoFisico[key]["capital_letter"] ? typeof elementEditFormatoFisico[key] === "string" ? elementEditFormatoFisico[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEditFormatoFisico[key] ?? '' : elementEditFormatoFisico[key] ?? "" : ""
+                                                    } else if (statusInput) {
+                                                        inputValor[key] = ""
+
+                                                    }
+                                                    return (
+
+                                                        <div key={key} className={`${dataInputsFormatoFisico[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
+                                                            <div className="head-input">
+                                                                <label htmlFor={key} className="label-from-register" >{dataInputsFormatoFisico[key]["referencia"] ? dataInputsFormatoFisico[key]["referencia"] : "Campo"}</label>
+                                                                <input id={key} name={key} autoComplete="false" onChange={(e) => { setStatusInput(false); setStatusInputDefault(false); handleInputChange(e, key, dataInputsFormatoFisico[key]["type"]); }} value={statusInputDefault && elementEdit ? dataInputsFormatoFisico[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputsFormatoFisico[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} className="input-form" type="text" />
+                                                            </div>
+                                                            <h4 className="label-error-submit-form">{data.errorsFormato ? data.errorsFormato[key] ? data.errorsFormato[key] : "" : ""}</h4>
+                                                        </div>
+                                                    );
+
+                                                } else if (dataInputsFormatoFisico[key]["type"] === "select" && dataInputsFormatoFisico[key]["visibility"] != false) {
+
+                                                    if (data.statusSelect) {
+                                                        selectsValues[key] = "";
+                                                        dataSelect[key] = ""
+                                                    }
+
+                                                    return (
+                                                        <div key={key} className="input-content-form-register">
+                                                            <div className="head-input">
+                                                                <label htmlFor={key} className="label-from-register">{dataInputsFormatoFisico[key]["referencia"] ? dataInputsFormatoFisico[key]["referencia"] : "Campo"}</label>
+                                                                <div key={key} className="filter-estado div-select">
+
+                                                                    <div key={index} style={{ display: "none" }} className="opciones opciones-input-select">
+
+                                                                        <h4 onClick={(e) => {
+                                                                            const parentElement = e.target.closest(".div-select");
+                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                            divOptions[0] ? divOptions[0].style.display = "none" : ""
+
+                                                                            data.setStatusSelect(false); data.setStatusSelectDefault(false); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = ""; changeSelectsValues(cloneSelectsValues); dataSelect[key] = "";
+                                                                        }} className='select-option'>Seleccione una opción...</h4>
+
+                                                                        {
+                                                                            dataInputsFormatoFisico[key]["opciones"] ? dataInputsFormatoFisico[key]["opciones"].map((select, indexSelect) => {
+                                                                                let value = ""
+                                                                                if (dataInputsFormatoFisico[key]["values"]) {
+                                                                                    dataInputsFormatoFisico[key]["values"].map((nameSelect, nameIndexSelect) => {
+                                                                                        value += nameIndexSelect == 0 ? dataInputsFormatoFisico[key]["opciones"][indexSelect][nameSelect] : ", " + dataInputsFormatoFisico[key]["opciones"][indexSelect][nameSelect];
+                                                                                    })
+                                                                                }
+
+
+
+                                                                                if (dataInputsFormatoFisico[key]["upper_case"]) {
+                                                                                    value = value.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())
+                                                                                } else if (dataInputsFormatoFisico[key]["capital_letter"]) {
+                                                                                    value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
+                                                                                }
+                                                                                if (elementEdit) {
+                                                                                    if (!data.modalForm && dataInputsFormatoFisico[key]["opciones"][indexSelect][dataInputsFormatoFisico[key]["key"]] == elementEdit[key] && data.statusSelectDefault) {
+                                                                                        selectsValues[key] = value;
+                                                                                        dataSelect[key] = dataInputsFormatoFisico[key]["opciones"][indexSelect][dataInputsFormatoFisico[key]["key"]]
+                                                                                    }
+                                                                                }
+
+
+                                                                                return <h4 key={indexSelect} onClick={(e) => {
+                                                                                    const parentElement = e.target.parentElement.parentElement;
+                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                    divOptions[0] ? divOptions[0].style.display = "none" : ""; let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); data.setStatusSelect(false); data.setStatusSelectDefault(false); dataSelect[key] = dataInputsFormatoFisico[key]["opciones"][indexSelect][dataInputsFormatoFisico[key]["key"]];
+                                                                                }} className={`select-option select-option-${key} ${selectsValues[key] == value ? 'option-focus' : ''}`} value="">
+                                                                                    {value}
+                                                                                </h4>
+                                                                            }) : ""
+                                                                        }
+
+                                                                    </div>
+                                                                    <div className='input-select-estado input-select-search' name="" id="">
+
+                                                                        <input id={key} type="text" className="input-select" onInput={(e) => {
+                                                                            const parentElement = e.target.closest(".div-select");
+                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                            divOptions[0] ? divOptions[0].style.display = "block" : ""
+                                                                            selectSearch(e.target.value, key)
+                                                                        }} placeholder={"Seleccione una opción..."} value={selectsValues[key] != "Seleccione una opción..." ? selectsValues[key] : ""} />
+                                                                        <div onClick={(e) => {
+                                                                            const parentElement = e.target.closest(".div-select");
+                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                            divOptions[0] ? divOptions[0].style.display == "none" ? divOptions[0].style.display = "block" : divOptions[0].style.display = "none" : ""
+                                                                            console.log(parentElement)
+                                                                        }} className="icon-chevron-estado">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
+                                                                                <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                                                                <g><g><path fill="#000000" d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
+                                                                            </svg>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <h4 className="label-error-submit-form" htmlFor="">{data.errorsFormato ? data.errorsFormato[key] ? data.errorsFormato[key] : "" : ""}</h4>
+
+                                                        </div>
+                                                    );
+                                                } else {
+
+                                                    if (index == inputs.length) {
+                                                        return "No hay nada para mostrar " + key;
+                                                    }
+
+                                                }
+
+                                            })
+                                        }
+
                                     </div>
-                                )
-                                : ""}
-                        </div>
+                                    {tipoRegistro == 1 ? (
+                                        <div>
+                                            <button onClick={() => { }} type="submit" className="button-submit-form">Registrar</button>
 
-                    </form>
-                </div>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <button onClick={() => { }} type="submit" className="button-submit-form">Guardar</button>
+                                        </div>
+                                    )}
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </div >
 
-            </div>
+            </div >
 
         </>
     )

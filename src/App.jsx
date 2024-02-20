@@ -25,6 +25,7 @@ import { Variedades } from './pages/variedades.jsx';
 import { Muestras } from './pages/muestras.jsx';
 import { Cafes } from './pages/cafes.jsx';
 import { Analisis } from './pages/analisis.jsx';
+import { io } from 'socket.io-client';
 
 export default function App() {
   const [statusAlert, setStatusAlert] = useState(false);
@@ -32,7 +33,12 @@ export default function App() {
   const responseValidateViews = validateViews();
   const [userInfo, setUserInfo] = useState(null);
   const location = useLocation();
+  const socket = io('http://localhost:3000', {
+    withCredentials: true
+  });
+
   useEffect(() => {
+
     if (!responseValidateViews) {
 
       return;
@@ -95,18 +101,18 @@ export default function App() {
 
 
 
-          <Route path='/dashboard' element={<Menu />}>
+          <Route path='/dashboard' element={<Menu socket={socket} />}>
             <Route path='' element={<Home />} />
             <Route path='profile' element={<Profile />} />
             <Route path="usuarios/registros" element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} /> : ""} />
             <Route path='formulario' element={<FormRegiser />} />
             <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
             <Route path='fincas/registros' element={<Fincas />} />
-            <Route path='analisis/registros' element={<Analisis userInfo={userInfo} />} />
+            <Route path='analisis/registros' element={<Analisis socket={socket} userInfo={userInfo} />} />
             <Route path='cafes/registros' element={<Cafes />} />
             <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} /> : ""} />
             <Route path='municipios/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Municipios} /> : ""} />
-            <Route path='variedades/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Variedades} /> : ""}  />
+            <Route path='variedades/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Variedades} /> : ""} />
             <Route path='muestras/registros' element={<Muestras />} />
             <Route path='lotes/registros' element={<Lotes />} />
             <Route path='muestras/verRegistros' element={<VerRegistros />} />

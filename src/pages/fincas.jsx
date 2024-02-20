@@ -54,8 +54,10 @@ export const Fincas = () => {
                 upper_case: true
             },
             nombre_vereda: {
-                type: "text",
+                type: "select",
                 referencia: "Nombre de la vereda",
+                values: ["nombre"],
+                key: "id",
                 upper_case: true,
 
             }
@@ -115,6 +117,7 @@ export const Fincas = () => {
     useEffect(() => {
         getFincas()
         getMunicipios()
+        getVeredas()
     }, [])
     getUsers()
     async function getFincas() {
@@ -322,6 +325,27 @@ export const Fincas = () => {
         } catch (e) {
         }
     }
+
+    //Obtener Veredas
+    async function getVeredas() {
+        try {
+            const response = await Api.get("veredas/listar");
+            console.log('VEREDAS: ', response);
+            if (response.data.status == true) {
+                let veredas = inputsForm;
+                if (!veredas["veredas_id"]) {
+                    veredas["veredas_id"] = {}
+                }
+                veredas["veredas_id"]["opciones"] = response.data.data
+                setInputsForm(users)
+            } else if (response.data.find_error) {
+
+            } else {
+
+            }
+        } catch (e) {
+        }
+    } 
 
     async function procedureTrue() {
         changeModalForm(false)

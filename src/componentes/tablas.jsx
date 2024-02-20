@@ -42,7 +42,7 @@ export const Tablas = (array) => {
     let paginate = 0;
     let paginateJson = []
     let [posicionPaginate, setPosicionPaginate] = useState(0);
-        
+
     let filtersLimitRegister = [
         "1",
         "2",
@@ -164,7 +164,7 @@ export const Tablas = (array) => {
 
             if (contentComponent) {
 
-                console.log(contentComponent.clientWidth, "ahhhh",contentComponent.scrollWidth)
+                console.log(contentComponent.clientWidth, "ahhhh", contentComponent.scrollWidth)
                 let tableComponent = document.querySelectorAll(".table-component")
                 let newDivTable = document.querySelectorAll(".new-div-table");
                 let contentTable = document.querySelectorAll(".content-table")
@@ -174,7 +174,7 @@ export const Tablas = (array) => {
                 let thQuit = contentTable[0].querySelectorAll("th");
 
 
-                
+
                 if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
 
 

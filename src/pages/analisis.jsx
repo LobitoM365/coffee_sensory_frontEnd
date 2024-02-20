@@ -456,6 +456,7 @@ export const Analisis = (userInfo) => {
                         }
                     }
                     const response = await Api.post("usuarios/listar", filter);
+                    console.log(response,"useeeeeeeeeeeeer")
                     let cafes = inputsForm;
                     let asignar = selectAsignar;
                     if (!cafes["usuario_formato_sca"]) {
@@ -835,12 +836,12 @@ export const Analisis = (userInfo) => {
             )
         } else if (axios.data.errors) {
             setErrorsFormato(axios.data.errors)
-        } else {
+        } else if(axios.data.register_error){
             setStatusAlert(true)
             setdataAlert(
                 {
                     status: "false",
-                    description: axios.data.message,
+                    description: axios.data.register_error,
                     "tittle": "Inténtalo de nuevo",
                     continue: {
 
@@ -848,6 +849,7 @@ export const Analisis = (userInfo) => {
                 }
             )
         }
+        console.log(axios)
 
     }
 
@@ -895,6 +897,7 @@ export const Analisis = (userInfo) => {
                 "usuarios_id": usuario
             }
             const response = await Api.put("formatos/actualizar/" + idFormato, data);
+            console.log(response,"formtoooo")
             if (response.data.status == true) {
                 setInfoFormato(idAnalisis, tipoAnalisis)
                 setStatusAlert(true)

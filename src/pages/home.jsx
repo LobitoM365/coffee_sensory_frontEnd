@@ -15,9 +15,9 @@ export const Home = ({ userInfo }) => {
   console.log(UserId,'USER INICIO')
   return (
     <>
-       <TransformWrapper initialScale={1} initialPositionX={20} initialPositionY={2}>
-       <React.Fragment>
-       <TransformComponent>
+       
+      
+       
         <link rel="stylesheet" href="src/css/graficas.css" />
       <link rel="stylesheet" href="../../public/css/graficos.css" />
 
@@ -48,10 +48,7 @@ export const Home = ({ userInfo }) => {
         </div>
       </div>
 
-        </TransformComponent>
-       </React.Fragment>
-        
-      </TransformWrapper>
+       
     </>
   );
 };

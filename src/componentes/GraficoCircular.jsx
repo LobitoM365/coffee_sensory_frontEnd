@@ -9,17 +9,33 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 export const GraficoCircular = ({ user }) => {
   const [data, setData] = useState([]);
 
+  const [inputValue, setInputValue] = useState({
+    muestras_id: '',
+    fecha: ''
+  });
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setInputValue(prevValues => ({
+      ...prevValues,
+      [name]: value
+    }));
+  };
+
+
+  console.log(inputValue.muestras_id,' valores de los inputs siiiiiiiii')
   useEffect(() => {
     const fetchData = async () => {
       try {
         const VariableIdUser = user;
 
         const dataToSend = {
-          fecha: "2",
-          muestras_id: '1'
-        };
+          muestras_id: inputValue.muestras_id ,
+          fecha: inputValue.fecha
 
-        const response = await Api.post(`analisis/Mes/${VariableIdUser}`, dataToSend);
+        };
+        console.log(inputValue,' valores de los inputs siiiiiiiii')
+        const response = await Api.post(`analisis/Mes/${VariableIdUser}`, inputValue);
         const responseData = response.data;
         console.log(responseData,"No tiene Porque llegar")
         console.log(VariableIdUser,'USER')
@@ -36,7 +52,7 @@ export const GraficoCircular = ({ user }) => {
 
     fetchData();
 
-  }, [user]);
+  }, [user,inputValue]);
 
   const color = data.map(element => {
     if (element.promedio >= 8 && element.promedio < 11) {
@@ -104,13 +120,20 @@ const ejemplo=['Feb', 'Feb', 'Feb', 'Feb', 'Feb'];
 
   return (
     <div>
+
       <link rel="stylesheet" href="../../public/css/graficos.css" />
+
+      <input type="text" onChange={handleInputChange} name="fecha" id="fecha" placeholder='Escribe algo para fecha...' value={inputValue.fecha} />
+        <input type="text" onChange={handleInputChange} name="muestras_id" id="muestras_id" placeholder='Escribe algo para muestras...' value={inputValue.muestras_id} />
+  
       {data && data.length > 0 ?
         <div style={styleCharts}>
+        
+
           <Pie data={chartData}/>
         </div>
         :
-        ""
+        "No hay Datos por Mostrar "
       }
     </div>
   );

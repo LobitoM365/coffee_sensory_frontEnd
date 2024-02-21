@@ -5,6 +5,24 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 export const Home = ({ userInfo }) => {
   const [user, setUser] = useState(userInfo);
+  const [inputValue, setInputValue] = useState({
+    muestras_id: '',
+    fecha: '',
+    anio:'',
+    limite:''
+  });
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+  
+    // Validar si el nombre es 'limite' y si el valor es un número
+    const newValue = name === 'limite' && !isNaN(value) ? parseFloat(value) : value;
+  
+    setInputValue((prevInputValue) => ({
+      ...prevInputValue,
+      [name]: newValue
+    }));
+  };
 
   // Actualiza el estado user cada vez que userInfo cambia
   useEffect(() => {
@@ -12,20 +30,39 @@ export const Home = ({ userInfo }) => {
   }, [userInfo]);
 
   const UserId = user?.id;
-  console.log(UserId,'USER INICIO')
+
+  // Envia los datos actualizados a GraficoCircular cuando cambian
+  useEffect(() => {
+    // Asegúrate de que el componente GraficoCircular tenga una función updateData para actualizar sus datos
+    
+      const updatedData = {
+        userId: UserId,
+        inputData: inputValue
+      };
+      // Llama a una función en GraficoCircular para actualizar los datos en tiempo real
+      // Ejemplo: updateData(updatedData);
+      console.log("Datos actualizados:", updatedData);
+    
+
+    // Llama a la función para enviar los datos actualizados
+    
+  }, [UserId, inputValue]);
+
   return (
     <>
-       
-      
-       
-        <link rel="stylesheet" href="src/css/graficas.css" />
+      <link rel="stylesheet" href="src/css/graficas.css" />
       <link rel="stylesheet" href="../../public/css/graficos.css" />
-
+      <div className='formulario'>
+        <input type="number" className='input' min="1" max="12" step="1" onChange={handleInputChange} name="fecha" id="fecha" placeholder='Mes...' value={inputValue.fecha} />
+        <input type="text" className='input' onChange={handleInputChange} name="muestras_id" id="muestras_id" placeholder='Muestra...' value={inputValue.muestras_id} />
+        <input type="number" className='input' min="1900" max="2900" onChange={handleInputChange} name="anio" id="anio" placeholder='Año...' value={inputValue.anio} />
+        <input type="number" className='input' min="1" max="12" onChange={handleInputChange} name="limite" id="limite" placeholder='Cantidad Resultados...' value={inputValue.limite} />
+      </div>
       <div className='BoxMain'>
         <div className='BoxGraficas'>
           {/* Asegúrate de que Graficos y GraficoCircular reciban los datos correctamente */}
           <Graficos user={UserId} />
-          <GraficoCircular user={user?.id} />
+          <GraficoCircular user={user?.id} inputData={inputValue} />
         </div>
 
         <div className="Tablecolors">
@@ -47,8 +84,6 @@ export const Home = ({ userInfo }) => {
           </div>
         </div>
       </div>
-
-       
     </>
   );
 };

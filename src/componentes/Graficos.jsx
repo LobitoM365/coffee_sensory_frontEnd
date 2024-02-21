@@ -104,18 +104,19 @@ export const Graficos = (user) => {
 
     console.log(color, "colores")
   })
-  
+  const ResultLabel=[]
+  data.map(element => ResultLabel.push(element.fecha.substring(0,3)))
    const chartData={
     
       labels: data.map(element => element.fecha),
       datasets: [
         {
-          label: data.map(element=>element.fecha),
+          label: "Calidad",
           data: data.map(element => element.promedio),
           backgroundColor: color.map(element=>element),
           borderRadius:5,
           datalabels: {
-           display:false,
+           display:true,
           },
         },
       ],

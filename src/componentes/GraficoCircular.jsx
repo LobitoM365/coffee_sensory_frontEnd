@@ -6,40 +6,27 @@ import Api from './Api';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export const GraficoCircular = ({ user }) => {
+export const GraficoCircular = ({ user , inputData}) => {
   const [data, setData] = useState([]);
 
-  const [inputValue, setInputValue] = useState({
-    muestras_id: '',
-    fecha: ''
-  });
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setInputValue(prevValues => ({
-      ...prevValues,
-      [name]: value
-    }));
-  };
-
-
-  console.log(inputValue.muestras_id,' valores de los inputs siiiiiiiii')
   useEffect(() => {
     const fetchData = async () => {
       try {
+
+        console.log(inputData,"todos los datos 111111111111111111112222222222")
         const VariableIdUser = user;
-
-        const dataToSend = {
-          muestras_id: inputValue.muestras_id ,
-          fecha: inputValue.fecha
-
-        };
-        console.log(inputValue,' valores de los inputs siiiiiiiii')
-        const response = await Api.post(`analisis/Mes/${VariableIdUser}`, inputValue);
+        const SetDataInput={
+          "muestras_id":inputData.muestras_id,
+          "fecha":inputData.fecha,
+          "anio":inputData.anio,
+          "limite":inputData.limite
+        }
+        
+        const response = await Api.post(`analisis/Mes/${VariableIdUser}`, SetDataInput);
         const responseData = response.data;
         console.log(responseData,"No tiene Porque llegar")
         console.log(VariableIdUser,'USER')
-        console.log(dataToSend,'info')
+        
         if (responseData.status === true) {
           setData(responseData.data);
         } else {
@@ -52,7 +39,7 @@ export const GraficoCircular = ({ user }) => {
 
     fetchData();
 
-  }, [user,inputValue]);
+  }, [user]);
 
   const color = data.map(element => {
     if (element.promedio >= 8 && element.promedio < 11) {
@@ -66,8 +53,7 @@ export const GraficoCircular = ({ user }) => {
   const ResultLabel=[]
   data.map(element => ResultLabel.push(element.fecha.substring(0,3)))
 
-  console.log(ResultLabel,"lo logreeeeeeeeeeeeeeee")
-const ejemplo=['Feb', 'Feb', 'Feb', 'Feb', 'Feb'];
+
   const chartData = {
     labels:ResultLabel,
     datasets: [
@@ -114,7 +100,7 @@ const ejemplo=['Feb', 'Feb', 'Feb', 'Feb', 'Feb'];
     } else if (windowSize.width >= 320 && windowSize.width <= 480) {
       setStyleCharts({ width: '100px', height: '50px' });
     } else {
-      setStyleCharts({ width: '1500px', height: '320px',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"50px"});
+      setStyleCharts({ width: '1500px', height: '320px',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"2  0px"});
     }
   }, [windowSize]);
 
@@ -122,9 +108,8 @@ const ejemplo=['Feb', 'Feb', 'Feb', 'Feb', 'Feb'];
     <div>
 
       <link rel="stylesheet" href="../../public/css/graficos.css" />
-
-      <input type="text" onChange={handleInputChange} name="fecha" id="fecha" placeholder='Escribe algo para fecha...' value={inputValue.fecha} />
-        <input type="text" onChange={handleInputChange} name="muestras_id" id="muestras_id" placeholder='Escribe algo para muestras...' value={inputValue.muestras_id} />
+      
+        
   
       {data && data.length > 0 ?
         <div style={styleCharts}>

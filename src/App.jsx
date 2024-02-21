@@ -120,7 +120,9 @@ export default function App() {
             <Route path='muestras/verRegistros' element={<VerRegistros />} />
           </Route>
         </Route>
+        <Route path='*' element={<NotFound />} />
       </Routes>
+      
     </>
   )
 }

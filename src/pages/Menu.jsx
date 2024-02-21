@@ -274,8 +274,8 @@ export const Menu = (data) => {
 
         <div className="main-content">
 
-            <link rel="stylesheet" href="../../public/css/menu.css" />
-            <link rel="stylesheet" href="../../public/css/loader.css" />
+            <link rel="stylesheet" href="/public/css/menu.css" />
+            <link rel="stylesheet" href="/public/css/loader.css" />
 
 
             <nav id="navHorizontal" className="nav-main nav-horizontal" style={{ backgroundColor: !valueDarkMode ? "green" : "" }}>

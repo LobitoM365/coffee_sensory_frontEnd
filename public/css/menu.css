@@ -307,6 +307,8 @@ body {
     border-radius: 100%;
     top: 2px;
     left: 8px;
+    color: white;
+    font-weight: bolder;
 }
 
 .nav-main .esquina-notificaciones {

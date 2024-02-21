@@ -649,7 +649,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <h4 className="label-error-submit-form" htmlFor="">{data.errorsFormatoFormato ? data.errorsFormatoFormato[key] ? data.errorsFormatoFormato[key] : "" : ""}</h4>
+                                                                            <h4 className="label-error-submit-form" htmlFor="">{data.errorsFormato ? data.errorsFormato[key] ? data.errorsFormato[key] : "" : ""}</h4>
 
                                                                         </div>
                                                                         {data.dataModalResultado.length > 0 ?

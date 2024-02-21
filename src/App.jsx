@@ -26,6 +26,7 @@ import { Muestras } from './pages/muestras.jsx';
 import { Cafes } from './pages/cafes.jsx';
 import { Analisis } from './pages/analisis.jsx';
 import { io } from 'socket.io-client';
+import { PruebaPdf } from './pages/PruebaPdf.jsx';
 
 export default function App() {
   const [statusAlert, setStatusAlert] = useState(false);
@@ -92,6 +93,7 @@ export default function App() {
 
       <Routes>
         <Route path='*' element={<NotFound />} />
+        <Route path='pruebaPdf' element={<PruebaPdf />} />
         <Route path='/' element={<Loader />}>
           <Route path='/modalfinca' element={<ModalFinca />}></Route>
           <Route path='/' element={<MenuInicio userInfo={userInfo} />}>

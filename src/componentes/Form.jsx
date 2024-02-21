@@ -209,11 +209,9 @@ export const Form = forwardRef((data, ref) => {
         let keysJson = Object.keys(json);
 
         keysJson.map((key, value) => {
-
             if (json[key]) {
                 json[key] = json[key].toString().trimEnd().toLowerCase()
             }
-
         })
 
 

@@ -14,23 +14,13 @@
     "axios": "^1.5.1",
     "chart.js": "^4.4.1",
     "esbuild": "^0.19.9",
-<<<<<<< HEAD
-    "jspdf": "^2.5.1",
-    "jspdf-autotable": "^3.8.2",
-=======
     "faker": "^6.6.6",
->>>>>>> devLCPA
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0",
-<<<<<<< HEAD
-    "recharts": "^2.10.3",
-    "socket.io-client": "^4.7.4"
-=======
     "react-zoom-pan-pinch": "^3.4.2",
     "recharts": "^2.10.3"
->>>>>>> devLCPA
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

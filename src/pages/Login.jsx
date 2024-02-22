@@ -19,18 +19,18 @@ export const Login = () => {
         const inputsContainer = document.querySelectorAll('.container-input');
         const spanInputs = document.querySelectorAll('.span-input')
         const credentialError = document.querySelectorAll('.credentials-error')
-    
+
         for (let i = 0; i < inputs.length; i++) {
-    
+
             inputs[i].addEventListener('focus', function () {
                 inputs[i].classList.remove('input-error')
-    
+
                 inputsContainer[i].style.border = '1px solid green'
                 spanInputs[i].classList.add('container-inputs-span')
                 spanInputs[i].classList.remove('span-input')
                 inputs[i].placeholder = ''
             })
-    
+
             inputs[i].addEventListener('blur', function () {
                 if (inputs[i].value == '') {
                     inputsContainer[i].style.border = '1px solid #ccc'
@@ -43,13 +43,47 @@ export const Login = () => {
                     }, 100)
                     spanInputs[i].classList.remove('container-inputs-span')
                     spanInputs[i].classList.add('span-input')
-    
+
                 }
-    
+
             })
-    
+
         }
 
+        // Change beteewn login form and recovery form
+        const botsForms = document.querySelectorAll('.bots-form');
+        const btnChange = document.querySelectorAll('.recover-password');
+
+        function changeForms(it) {
+
+            for (let i = 0; i < botsForms.length; i++) {
+                botsForms[i].style.marginBottom = "-160px";
+                setTimeout(() => {
+                    botsForms[i].style.opacity = "0";
+                }, 50)
+
+                setTimeout(() => {
+                    botsForms[it == 0 ? 1 : 0].style.display = 'flex';
+                }, 90)
+
+                setTimeout(() => {
+                    // loginRecovery.style.transition = "margin-bottom 0.3s, opacity 0.5s";
+                    botsForms[it == 0 ? 1 : 0].style.opacity = "1";
+                    botsForms[it == 0 ? 1 : 0].style.zIndex = '1';
+                    botsForms[it == 0 ? 0 : 1].style.display = 'none';
+                    botsForms[i].style.marginBottom = "0px";
+                }, 300)
+
+            }
+
+        }
+
+        for (let x = 0; x < btnChange.length; x++) {
+            btnChange[x].addEventListener('click', function () {
+                changeForms(x)
+            })
+
+        }
     }, []);
 
     const handleSubmit = (e) => {
@@ -99,8 +133,8 @@ export const Login = () => {
 
             </div>
             <div className="login-container">
-                <div className="login-form-container">
-                    <form className="login-form" onSubmit={handleSubmit}>
+                <div className="login-form-container" id="containerForms">
+                    <form className="login-form bots-form" id="loginForm" onSubmit={handleSubmit}>
                         <h3 className='title-login'>Inicio de Sesión</h3>
                         <div className="container-inputs">
                             <span className='span-input'>Correo Electronico</span>
@@ -145,7 +179,32 @@ export const Login = () => {
                             {validationError && <div className="credentials-error"> {validationError}</div>}
                         </div>
                         <button type="submit">Iniciar sesión</button>
+                        <span className="recover-password">¿Olvidó su contraseña? <br />
+                            <p href="" id="btnRecovery">Click aqui para restablecer.</p>
+                        </span>
+
                     </form>
+                    <form className="login-form bots-form" id="recoveryForm" onSubmit={handleSubmit}>
+                        <h3 className='title-login'>Recuperar Contraseña</h3>
+                        <div className="container-inputs">
+                            <span className='span-input'>Correo Electronico</span>
+                            <div className="container-input">
+                                <input
+                                    className='input-text'
+                                    type="text"
+                                    placeholder='Correo Electronico'
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                            </div>
+                            {validationError && <div className="credentials-error"> {validationError}</div>}
+                        </div>
+
+                        <button type="submit">Envíar</button>
+                        <span className="recover-password" id="btnLogin"><p>Iniciar Sesion</p></span>
+
+                    </form>
+
                 </div>
                 <div className="login-image-container">
                     <img src="../../public/img/login/login_size.jpg" className='login-image' alt="Imagen de inicio de sesión" />

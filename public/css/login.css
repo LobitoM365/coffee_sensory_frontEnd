@@ -69,10 +69,13 @@ img {
 }
 
 .login-form {
+  background-color: white;
+  transition: margin-bottom 0.5s, opacity 0.1s;
+  position: fixed;
   display: flex;
   flex-direction: column;
   gap: 30px;
-  width: 85%;
+  width: 310px;
 }
 
 .container-inputs {
@@ -112,7 +115,7 @@ img {
   /* border: 1px solid #ccc; */
 }
 
-.input-password{
+.input-password {
   width: 72% !important;
 }
 
@@ -178,8 +181,28 @@ img {
   width: 47px !important;
 }
 
-.container-input{
-
+.container-input {
   border-radius: 3px;
   border: 0.2px solid #ccc;
+}
+
+.recover-password {
+  font-weight: 600;
+}
+
+.recover-password p {
+  cursor: pointer;
+  font-size: 0.8em;
+  text-decoration: none;
+  font-weight: 300;
+  color: rgb(0, 0, 152);
+}
+
+#recoveryForm {
+  z-index: -1;
+  display: none;
+}
+
+#recoveryForm:hover {
+  margin-bottom: 0;
 }

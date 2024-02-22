@@ -11,6 +11,7 @@ export const Home = ({ userInfo }) => {
     anio:'',
     limite:''
   });
+  const [dataUpdate,setDataUpdate]= useState({})
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -42,27 +43,32 @@ export const Home = ({ userInfo }) => {
       // Llama a una función en GraficoCircular para actualizar los datos en tiempo real
       // Ejemplo: updateData(updatedData);
       console.log("Datos actualizados:", updatedData);
-    
+      setDataUpdate(updatedData.inputData)
 
     // Llama a la función para enviar los datos actualizados
     
-  }, [UserId, inputValue]);
+  }, [UserId,  inputValue]);
+
+  console.log(dataUpdate, "se actualizan los datos")
 
   return (
     <>
       <link rel="stylesheet" href="src/css/graficas.css" />
       <link rel="stylesheet" href="../../public/css/graficos.css" />
-      <div className='formulario'>
+      
+      <div className='BoxMain'>
+      
+        <div className='BoxGraficas'>
+        <div className='formulario'>
         <input type="number" className='input' min="1" max="12" step="1" onChange={handleInputChange} name="fecha" id="fecha" placeholder='Mes...' value={inputValue.fecha} />
         <input type="text" className='input' onChange={handleInputChange} name="muestras_id" id="muestras_id" placeholder='Muestra...' value={inputValue.muestras_id} />
         <input type="number" className='input' min="1900" max="2900" onChange={handleInputChange} name="anio" id="anio" placeholder='Año...' value={inputValue.anio} />
-        <input type="number" className='input' min="1" max="12" onChange={handleInputChange} name="limite" id="limite" placeholder='Cantidad Resultados...' value={inputValue.limite} />
+        <input type="number" className='input limit' min="1" max="12" step="1" onChange={handleInputChange} name="limite" id="limite" placeholder='Cantidad Resultados...' value={inputValue.limite} />
       </div>
-      <div className='BoxMain'>
-        <div className='BoxGraficas'>
+
           {/* Asegúrate de que Graficos y GraficoCircular reciban los datos correctamente */}
-          <Graficos user={UserId} />
-          <GraficoCircular user={user?.id} inputData={inputValue} />
+          <Graficos user={user?.id} inputData={dataUpdate}/>
+          <GraficoCircular user={user?.id} inputData={dataUpdate} />
         </div>
 
         <div className="Tablecolors">

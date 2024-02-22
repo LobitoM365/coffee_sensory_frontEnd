@@ -65,24 +65,31 @@
     justify-content: center;
     align-items: center;
    
-    margin: 20px 0px 0px 0px;
+   margin: auto;
 }
 .input{
-    padding: 5px;
-    font-size: 0.9em;
+    padding: 7px;
+    font-size: 1em;
     font-family: Arial, Helvetica, sans-serif;
-    margin: 4px;
+    margin: 10px;
     outline: none;
-    border:1px solid gray;
-    
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom:1px solid gray;
     border-radius: 3px;
 }
 .input:focus {
     transition: border 2px linear;
-    animation: colores 4s infinite; /* 4s para hacer que el ciclo completo de colores dure 4 segundos */
+    animation: colores 10s infinite; /* 4s para hacer que el ciclo completo de colores dure 4 segundos */
+    background-color: rgb(233, 236, 236);
     border-left: none;
     border-right: none;
     border-top: none;
+}
+.limit{
+    width: 150px;
+    
 }
 
 @keyframes colores {

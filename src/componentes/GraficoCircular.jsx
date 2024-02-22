@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useRef} from 'react';
 import axios from 'axios';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
@@ -8,12 +8,37 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const GraficoCircular = ({ user , inputData}) => {
   const [data, setData] = useState([]);
+  const chartRef = useRef(null);
+  const [nuevoDato, setNuevoDato] = useState([]);
+
+  // Esta función se llamará cuando los datos se actualicen
+  const updateData = (newData) => {
+    // Actualiza el gráfico con los nuevos datos
+    // Utiliza la referencia al gráfico o cualquier método que utilices para actualizar el gráfico
+    console.log('Actualizando gráfico con nuevos datos:', newData);
+    setNuevoDato(newData);
+  };
+  
+  // Actualiza el gráfico cuando los datos cambian
+  useEffect(() => {
+    if (inputData) {
+      updateData(inputData);
+    }
+  }, [inputData]);
+  
+  // Utiliza un useEffect adicional para observar cambios en el estado nuevoDato
+  useEffect(() => {
+    // Acciones que deseas realizar después de que nuevoDato se haya actualizado
+    console.log(nuevoDato, "aquiiiiiiiiiiiiiiii");
+    // Puedes realizar otras acciones aquí
+  }, [nuevoDato]);
+  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
 
-        console.log(inputData,"todos los datos 111111111111111111112222222222")
+        console.log(nuevoDato,"todos los datos 111111111111111111112222222222")
         const VariableIdUser = user;
         const SetDataInput={
           "muestras_id":inputData.muestras_id,
@@ -39,15 +64,17 @@ export const GraficoCircular = ({ user , inputData}) => {
 
     fetchData();
 
-  }, [user]);
+  }, [user,nuevoDato]);
 
   const color = data.map(element => {
     if (element.promedio >= 8 && element.promedio < 11) {
       return "rgb(244, 50, 50)";
-    } else if (element.promedio >= 4 && element.promedio < 8) {
+    } else if (element.promedio >= 6 && element.promedio < 8) {
       return "#4ec74e";
-    } else {
-      return "rgba(0, 0, 0, 0)";
+    } else if(element.promedio >= 4 && element.promedio < 6) {
+      return "rgb(39, 11, 174)";
+    }else{
+      return "rgb(255, 174, 0)";
     }
   });
   const ResultLabel=[]
@@ -100,7 +127,7 @@ export const GraficoCircular = ({ user , inputData}) => {
     } else if (windowSize.width >= 320 && windowSize.width <= 480) {
       setStyleCharts({ width: '100px', height: '50px' });
     } else {
-      setStyleCharts({ width: '1500px', height: '320px',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"2  0px"});
+      setStyleCharts({ width: '1500px', height: '320px',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"20px"});
     }
   }, [windowSize]);
 

@@ -14,20 +14,38 @@ ChartJS.register(
   Legend
 );
 
-export const Graficos = (user) => {
+export const Graficos = ({user,inputData}) => {
   const [data, setData] = useState([]);
   const [key, setKey] = useState(0);
-  const [fecha,setFecha]=useState([]);
-  const [muestras,setMuestra]=useState([]);
+  const [nuevoDato, setNuevoDato] = useState([]);
+
+  // Esta función se llamará cuando los datos se actualicen
+  const updateData = (newData) => {
+    // Actualiza el gráfico con los nuevos datos
+    // Utiliza la referencia al gráfico o cualquier método que utilices para actualizar el gráfico
+    console.log('Actualizando gráfico con nuevos datos:', newData);
+    setNuevoDato(newData);
+  };
+  
+  // Actualiza el gráfico cuando los datos cambian
   useEffect(() => {
-    const getfecha = async ()=>{
-        
+    if (inputData) {
+      updateData(inputData);
     }
-
-
+  }, [inputData]);
+  
+  // Utiliza un useEffect adicional para observar cambios en el estado nuevoDato
+  useEffect(() => {
+    // Acciones que deseas realizar después de que nuevoDato se haya actualizado
+    console.log(nuevoDato, "aquiiiiiiiiiiiiiiii");
+    // Puedes realizar otras acciones aquí
+  }, [nuevoDato]);
+  
+  useEffect(() => {
+    console.log(nuevoDato,"desde graficos siii")
     const fetchData = async () => {
       try {
-        let VariableIdUser=user.user;
+        let VariableIdUser=user;
         console.log(VariableIdUser,'Hola desde graficos')
        /*  let UserIdSesion = user?.user?.userInfo || 0;
         console.log(UserIdSesion,"Inicio Sesion");
@@ -36,8 +54,8 @@ export const Graficos = (user) => {
           return;
         }  */
         const dataToSend ={
-          muestras_id: '1',
-          limit:5
+          muestras_id: nuevoDato.muestras_id,
+          anio:nuevoDato.anio
         };
         const response = await Api.post(`analisis/total/${VariableIdUser}`,dataToSend);
         const responseData = response.data;
@@ -63,7 +81,7 @@ export const Graficos = (user) => {
       setKey(key + 1)
       console.log(key + 1)
     })
-  }, [user ]);
+  }, [user,nuevoDato ]);
  
   const options = {
     responsive: true,
@@ -98,8 +116,12 @@ export const Graficos = (user) => {
   data.forEach(element=>{
     if (element.promedio>=8 && element.promedio < 11) {
       color.push ("rgb(244, 50, 50)")
-    }else if (element.promedio>=4 && element.promedio < 8) {
+    }else if (element.promedio>=6 && element.promedio < 8) {
       color.push("#4ec74e")
+    }else if(element.promedio>=4 && element.promedio < 6){
+      color.push("rgb(39, 11, 174)")
+    }else{
+      color.push("rgb(255, 174, 0)")
     }
 
     console.log(color, "colores")
@@ -162,7 +184,7 @@ export const Graficos = (user) => {
         } else if (windowSize.width >= 320 && windowSize.width <= 480) {
           setStilyCharts({ width: '100px', height: '50px' });
         }else{
-          setStilyCharts({ width: '1200px', height: '300px' ,marginLeft:'50px'});
+          setStilyCharts({ width: '1200px', height: '300px' ,marginLeft:'50px', marginTop:'20px'});
         }
       }, [windowSize]);
 

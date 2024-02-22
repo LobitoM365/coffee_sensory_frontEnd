@@ -127,7 +127,7 @@ export const RegistrosUsuarios = () => {
     }, [])
 
     async function getusuarios() {
-        try {   
+        try {
             const response = await Api.post("usuarios/listar", dataFilterTable);
             if (response.data.status == true) {
                 setUsuarios(response.data.data)
@@ -189,7 +189,7 @@ export const RegistrosUsuarios = () => {
                     }
                 )
             }
-   
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -279,7 +279,7 @@ export const RegistrosUsuarios = () => {
                     }
                 )
             }
-     
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -411,10 +411,17 @@ export const RegistrosUsuarios = () => {
         getusuarios(dataFilterTable)
 
     }
-
+    function getDataPdf(data) {
+        let dataPdf = {
+            data: data,
+            table: keys
+        }
+        localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
+        window.open('/dashboard/generatePdfTable', '_blank')
+    }
     return (
         <>
-            <Tablas clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas getDataPdf={getDataPdf} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

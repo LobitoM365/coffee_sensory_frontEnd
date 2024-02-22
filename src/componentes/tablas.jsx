@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Form } from './Form.jsx';
-
+import { json } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 export const formatDate = (data) => {
 
     let date = new Date(data);
@@ -295,6 +296,9 @@ export const Tablas = (array) => {
                     <div className='div-tittle'>
                         <h2> {array.tittle ? array.tittle : "Tabla de registros"}</h2>
                         <button style={{ display: array.hidden && array.hidden.includes('register') ? 'none' : '' }} onClick={() => { array.clearInputs ? array.clearInputs() : ""; setClearClick(); array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>
+                        <button onClick={() => { array.getDataPdf ? array.getDataPdf(data) : "" }} className='button-register-table'>PDF</button>
+
+
                     </div>
 
                     <div className='content-filters'>

@@ -27,6 +27,7 @@ import { Cafes } from './pages/cafes.jsx';
 import { Analisis } from './pages/analisis.jsx';
 import { io } from 'socket.io-client';
 import { PruebaPdf } from './pages/PruebaPdf.jsx';
+import { GeneratePdfTable } from './pages/generatePdfTable.jsx';
 
 export default function App() {
   const [statusAlert, setStatusAlert] = useState(false);
@@ -94,15 +95,14 @@ export default function App() {
       <Routes>
         <Route path='*' element={<NotFound />} />
         <Route path='pruebaPdf' element={<PruebaPdf />} />
+        <Route path='/dashboard/generatePdfTable/' element={<GeneratePdfTable />} />
+
         <Route path='/' element={<Loader />}>
           <Route path='/modalfinca' element={<ModalFinca />}></Route>
           <Route path='/' element={<MenuInicio userInfo={userInfo} />}>
             <Route path='/' element={<Inicio />} />
             <Route path='login' element={<Login />} />
           </Route>
-
-
-
           <Route path='/dashboard' element={<Menu socket={socket} />}>
             <Route path='' element={<Home />} />
             <Route path='profile' element={<Profile />} />

@@ -23,7 +23,6 @@ export const PruebaPdf = () => {
             // Crear una URL para el Blob
             const pdfURL = URL.createObjectURL(blob);
 
-            // Abrir el PDF en una nueva pestaña
             window.open(pdfURL, '_blank');
 
             // Actualizar el estado con la URL

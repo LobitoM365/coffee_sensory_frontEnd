@@ -1,0 +1,116 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.BoxMain{
+    width: 100%;
+    height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+h2{
+    color: white;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: bolder;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+}
+.component{
+    width: 100%;
+    height: calc(100% - 40px);
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    overflow: hidden;
+}
+.BoxMain {
+  width: calc(100%);
+  height: 80vh;
+  
+  display: grid;
+  grid-template-areas:
+    'grafica colores'
+    /* Puedes ajustar las proporciones según tus necesidades */
+  ;
+  grid-template-columns: 80% 20% ;
+  gap: 5px;
+  padding-left: 15px;
+}
+.BoxGraficas {
+   
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: auto;
+  width: 100%;
+  height: 60vh;
+  
+  grid-area: grafica;
+}
+
+.Tablecolors {
+  width: 60%;
+ padding: 5px;
+  margin-top: 50%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  grid-area: colores;
+  
+  border-radius: 5px;
+  border: 1px solid rgb(37, 36, 36);
+  box-shadow:-2px -2px 7px 2px rgb(80, 80, 80);
+}
+
+
+@media only screen and (min-width: 768px) and (max-width: 1240px) {
+    .component {
+      width: 100%;
+      height: calc(100% - 40px);
+      background-color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      padding: 10px;
+      overflow: auto;
+    }
+    .BoxMain {
+        width: 100%;
+        height: 60vh;
+        
+        display: grid;
+        grid-template-areas:
+          'grafica colores'
+          /* Puedes ajustar las proporciones según tus necesidades */
+        ;
+        grid-template-columns: 80% 20%;
+        gap: 5px;
+        padding-left: 15px;
+      }
+      
+      .BoxGraficas {
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 60vh;
+        grid-area: grafica;
+      }
+      
+      .Tablecolors {
+        height: 20rem;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        grid-area: colores;
+      }
+      
+      
+
+  }
+  

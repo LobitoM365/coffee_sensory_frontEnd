@@ -25,10 +25,14 @@ import { Variedades } from './pages/variedades.jsx';
 import { Muestras } from './pages/muestras.jsx';
 import { Cafes } from './pages/cafes.jsx';
 import { Analisis } from './pages/analisis.jsx';
+<<<<<<< HEAD
 import { io } from 'socket.io-client';
 import { PruebaPdf } from './pages/PruebaPdf.jsx';
 import { GeneratePdfTable } from './pages/generatePdfTable.jsx';
 
+=======
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+>>>>>>> devLCPA
 export default function App() {
   const [statusAlert, setStatusAlert] = useState(false);
   const [dataAlert, setdataAlert] = useState({});
@@ -90,9 +94,11 @@ export default function App() {
   }, [location.pathname])
   return (
     <>
+     
       <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
 
       <Routes>
+      
         <Route path='*' element={<NotFound />} />
         <Route path='pruebaPdf' element={<PruebaPdf />} />
         <Route path='/dashboard/generatePdfTable/' element={<GeneratePdfTable />} />
@@ -103,8 +109,16 @@ export default function App() {
             <Route path='/' element={<Inicio />} />
             <Route path='login' element={<Login />} />
           </Route>
+<<<<<<< HEAD
           <Route path='/dashboard' element={<Menu socket={socket} />}>
             <Route path='' element={<Home />} />
+=======
+
+
+
+          <Route path='/dashboard' element={<Menu />}>
+            <Route path='' element={<Home userInfo={userInfo}/>} />
+>>>>>>> devLCPA
             <Route path='profile' element={<Profile />} />
             <Route path="usuarios/registros" element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} /> : ""} />
             <Route path='formulario' element={<FormRegiser />} />
@@ -120,7 +134,11 @@ export default function App() {
             <Route path='muestras/verRegistros' element={<VerRegistros />} />
           </Route>
         </Route>
+<<<<<<< HEAD
         <Route path='*' element={<NotFound />} />
+=======
+       
+>>>>>>> devLCPA
       </Routes>
       
     </>

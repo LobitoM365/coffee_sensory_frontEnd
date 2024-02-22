@@ -1,5 +1,4 @@
 .graphicBox{
-    margin: auto;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -21,13 +20,7 @@
     text-transform: uppercase;
     padding: 5px;
 }
-.Tablecolors{
-    width: 15rem;
-    height: 20rem;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;    
-}
+
 .BoxOptions{
     width: max-content;
     display: flex;
@@ -39,8 +32,7 @@
 .BoxOptions:hover{
     background-color: rgba(123, 124, 124, 0.542);
     border-radius: 7px;
-    padding: 2px 15px;
-    transition: padding 0.3s ;
+    padding-right: 10px;
 }
 .colors{
     width: 1.5rem;
@@ -58,4 +50,62 @@
 }
 .bueno{
    background-color: rgb(255, 174, 0);
+}
+.barras{
+    width: 20px !important;
+    height: 10%;
+}
+
+.BocCharts{
+    width: '1000px';
+    height: '500px';
+}
+.formulario{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+   margin: auto;
+}
+.input{
+    padding: 7px;
+    font-size: 1em;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 10px;
+    outline: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom:1px solid gray;
+    border-radius: 3px;
+}
+.input:focus {
+    transition: border 2px linear;
+    animation: colores 10s infinite; /* 4s para hacer que el ciclo completo de colores dure 4 segundos */
+    background-color: rgb(233, 236, 236);
+    border-left: none;
+    border-right: none;
+    border-top: none;
+}
+.limit{
+    width: 150px;
+    
+}
+
+@keyframes colores {
+    0% {
+        border-bottom: 2px solid red;
+    }
+    25% {
+        border-bottom: 2px solid green;
+    }
+    50% {
+        border-bottom: 2px solid blue;
+    }
+    75% {
+        border-bottom: 2px solid yellow;
+    }
+    100% {
+        border-bottom: 2px solid grey;
+    }
 }

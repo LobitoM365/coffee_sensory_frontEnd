@@ -473,6 +473,7 @@ export const Menu = (data) => {
                     </ul>
                 </div>
             </nav >
+<<<<<<< HEAD
             <nav className="nav-main nav-vertical" style={{ backgroundColor: !valueDarkMode ? "green" : "" }}>
                 {queryMenu ? <div className="header-nav hamburguer-centered">
 
@@ -485,6 +486,9 @@ export const Menu = (data) => {
                         </g>
                     </svg>
                 </div> : ""}
+=======
+            <nav className="nav-main nav-vertical" style={{ backgroundColor: !valueDarkMode ? "white" : "" }}>
+>>>>>>> devLCPA
                 <div></div>
                 <div className="seccion-usuario-notificaciones">
                    

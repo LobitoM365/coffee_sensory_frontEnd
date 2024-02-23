@@ -58,7 +58,7 @@ export const Login = () => {
             setValidationError('')
 
             for (let i = 0; i < botsForms.length; i++) {
-                botsForms[i].style.marginBottom = "-160px";
+                botsForms[i].style.marginBottom = "-145px";
                 setTimeout(() => {
                     botsForms[i].style.opacity = "0";
                 }, 50)

@@ -14,7 +14,7 @@ export const Menu = (data) => {
         data.socket.on('ok', (message) => {
             console.log("oaskdkasdkas",message)  
         });
-        data.socket.on("asignAnalisis", (io)=>{
+        data.socket.on("asignAnalisis", (message)=>{
             getAgignaciones()
         })
     }

@@ -20,7 +20,7 @@ export const GeneratePdfTable = () => {
             if (!data.data && !data.table) {
                 window.close()
             }
-            localStorage.removeItem("dataGeneratePdfTable")
+   /*          localStorage.removeItem("dataGeneratePdfTable") */
         } else {
             window.close()
         }

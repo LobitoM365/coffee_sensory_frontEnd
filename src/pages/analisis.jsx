@@ -366,6 +366,8 @@ export const Analisis = (userInfo) => {
             setDataModalResultado([])
             setDataModalResultadoAnalisis([])
             const response = await Api.post("analisis/buscar/" + id + "");
+        console.log(response, "buscarrrrr111111111111111111111111111111111111111111111111111111111111")
+
             if (response.data.status == true) {
                 setDataModalAnalisis(response.data.data)
                 const filterFormato = {
@@ -395,14 +397,7 @@ export const Analisis = (userInfo) => {
                     }
 
                 } else if (formato.data.find_error) {
-                    setStatusAlert(true)
-                    setdataAlert(
-                        {
-                            status: "false",
-                            description: formato.data.find_error,
-                            "tittle": "Inténtalo de nuevo",
-                        }
-                    )
+                    
                 } else {
                 }
                 changeModalFormResults(true)
@@ -627,6 +622,7 @@ export const Analisis = (userInfo) => {
         try {
 
             const axios = await Api.post("analisis/registrar/", data);
+            console.log(axios,"analisis")
 
             if (axios.data.status == true) {
                 getAnalisis();

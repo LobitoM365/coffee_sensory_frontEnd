@@ -53,9 +53,9 @@ export const Fincas = () => {
                 key: "id",
                 upper_case: true
             },
-            nombre_vereda: {
+            veredas_id: {
                 type: "select",
-                referencia: "Nombre de la vereda",
+                referencia: "Vereda",
                 values: ["nombre"],
                 key: "id",
                 upper_case: true,
@@ -214,6 +214,7 @@ export const Fincas = () => {
     async function setFinca(data) {
         try {
             const axios = await Api.post("finca/registrar/", data);
+            console.log(axios,"ahhh")
             if (axios.data.status == true) {
                 getFincas();
                 setErrors({})
@@ -310,6 +311,7 @@ export const Fincas = () => {
     async function getMunicipios() {
         try {
             const response = await Api.post("municipio/listar");
+            console.log(response,"muniiii")
             if (response.data.status == true) {
                 let municipios = inputsForm;
                 if (!municipios["municipios_id"]) {
@@ -329,7 +331,7 @@ export const Fincas = () => {
     //Obtener Veredas
     async function getVeredas() {
         try {
-            const response = await Api.get("veredas/listar");
+            const response = await Api.post("veredas/listar");
             console.log('VEREDAS: ', response);
             if (response.data.status == true) {
                 let veredas = inputsForm;

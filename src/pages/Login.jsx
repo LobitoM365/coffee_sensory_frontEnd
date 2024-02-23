@@ -93,7 +93,7 @@ export const Login = () => {
             correo_electronico: email,
             user_password: password
         }
-        Api.post('/auth/sendEmail', data)
+        Api.post('/auth/credentials', data)
             .then((response) => {
 
                 if (response.data.errors) {

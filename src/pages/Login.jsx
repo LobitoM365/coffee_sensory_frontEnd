@@ -13,12 +13,12 @@ export const Login = () => {
     const [dataAlert, setdataAlert] = useState({});
     const navigate = useNavigate();
     const [eyes, setEyes] = useState(false);
+    const [loader, serLoader] = useState(false);
 
     useEffect(() => {
         const inputs = document.querySelectorAll('.input-text');
         const inputsContainer = document.querySelectorAll('.container-input');
         const spanInputs = document.querySelectorAll('.span-input')
-        const credentialError = document.querySelectorAll('.credentials-error')
 
         for (let i = 0; i < inputs.length; i++) {
 
@@ -35,7 +35,7 @@ export const Login = () => {
                 if (inputs[i].value == '') {
                     inputsContainer[i].style.border = '1px solid #ccc'
                     setTimeout(() => {
-                        if (i == 0) {
+                        if (i == 0 || i == 2) {
                             inputs[i].placeholder = 'Correo Electronico'
                         } else {
                             inputs[i].placeholder = 'Contraseña'
@@ -53,8 +53,9 @@ export const Login = () => {
         // Change beteewn login form and recovery form
         const botsForms = document.querySelectorAll('.bots-form');
         const btnChange = document.querySelectorAll('.recover-password');
-
         function changeForms(it) {
+
+            setValidationError('')
 
             for (let i = 0; i < botsForms.length; i++) {
                 botsForms[i].style.marginBottom = "-160px";
@@ -97,6 +98,7 @@ export const Login = () => {
             .then((response) => {
 
                 if (response.data.errors) {
+
                     const credentialsError = response.data.errors['credentials_error'];
 
                     setValidationError(credentialsError);
@@ -120,8 +122,59 @@ export const Login = () => {
                 }
 
             })
-
     };
+
+
+    const handleRecovery = async (event) => {
+        setValidationError('')
+
+        event.preventDefault();
+        const formData = new FormData(event.target)
+        const data = { link: 'http://localhost:5173/recovery' }
+        const form = Object.fromEntries(formData);
+
+        data.email = form.email;
+        try {
+
+            serLoader(true);
+            const response = await Api.post('auth/sendEmail', data);
+
+            if (response.data.errors) {
+                serLoader(false);
+                const credentialsError = response.data.errors['email'];
+                setValidationError(credentialsError);
+            } else if (response.data.status == true) {
+                serLoader(false);
+
+                setStatusAlert(true);
+                setdataAlert({
+                    status: "true",
+                    description: response.data.message,
+                    "tittle": "Proceso realizado con exito!",
+                });
+            } else {
+                serLoader(false);
+
+                setStatusAlert(true);
+                setdataAlert({
+                    status: "false",
+                    description: 'Por favor intentelo de nuevo más tarde. Si el problema persiste porfavor contatese con el administrador.',
+                    "tittle": "Ah ocurrido un error!",
+                });
+            }
+
+            console.log('RESPONSE EMAIL: ', response.data.token);
+            // console.log('ERROR LOADED: ', validationError);
+        } catch (error) {
+            setStatusAlert(true);
+            setdataAlert({
+                status: "false",
+                description: 'Por favor intentelo de nuevo más tarde. Si el problema persiste porfavor contatese con el administrador.',
+                "tittle": "Ah ocurrido un error!",
+            });
+            console.log('ERROR EMAIL: ', error);
+        }
+    }
 
     return (
         <div className="main-container">
@@ -184,8 +237,9 @@ export const Login = () => {
                         </span>
 
                     </form>
-                    <form className="login-form bots-form" id="recoveryForm" onSubmit={handleSubmit}>
-                        <h3 className='title-login'>Recuperar Contraseña</h3>
+                    <form className="login-form bots-form recoveryForm" onSubmit={handleRecovery}>
+                        <h3 className='title-login texr-recovery'>Reestablecer Contraseña</h3>
+                        <div className="text-info">Para recuperar su contraseña, porfavor ingrese un correo de su propiedad valido. Ahí recibirá el acceso al restablecimiento de su contraseña con una vigencia de 10 minutos.</div>
                         <div className="container-inputs">
                             <span className='span-input'>Correo Electronico</span>
                             <div className="container-input">
@@ -193,17 +247,38 @@ export const Login = () => {
                                     className='input-text'
                                     type="text"
                                     placeholder='Correo Electronico'
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    name="email"
+                                // value={email}
+                                // onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
                             {validationError && <div className="credentials-error"> {validationError}</div>}
                         </div>
 
-                        <button type="submit">Envíar</button>
-                        <span className="recover-password" id="btnLogin"><p>Iniciar Sesion</p></span>
+                        {!loader ?
+                            (
+                                <>
+                                    <button type="submit">
+                                        Envíar
+                                    </button>
+                                    <span className="recover-password" id="btnLogin"><p>Iniciar Sesion</p></span>
 
+                                </>
+                            )
+                            :
+                            (
+                                <>
+                                    <div className="container-loader">
+                                        <div className="container-loader-mini">
+                                            <div className="loader-bold"></div>
+                                        </div>
+                                    </div>
+                                    <span className="recover-password"><p></p></span>
+                                </>
+                            )
+                        }
                     </form>
+
 
                 </div>
                 <div className="login-image-container">
@@ -211,7 +286,7 @@ export const Login = () => {
                 </div>
             </div>
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
-        </div>
+        </div >
     );
 };
 

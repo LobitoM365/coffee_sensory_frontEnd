@@ -2,6 +2,8 @@
   margin: 0;
   padding: 0;
   color: black;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
 }
 
 input {
@@ -132,10 +134,11 @@ img {
   margin-top: 15px;
   background-color: green;
   color: #fff;
-  font-weight: 700;
+  font-weight: 600;
   border: none;
   border-radius: 30px;
   cursor: pointer;
+  letter-spacing: 1px;
 }
 
 .login-form button:hover {
@@ -212,8 +215,7 @@ img {
   display: none;
 }
 
-.texr-recovery {
-  font-size: 1.684em;
+.text-recovery {
   margin-bottom: 0px;
 }
 
@@ -226,7 +228,7 @@ img {
   background-color: rgb(249, 249, 249);
 }
 
-.container-loader{
+.container-loader {
   padding: 15px;
   margin-bottom: 25px;
   border: none;
@@ -264,6 +266,7 @@ img {
   from {
     transform: rotate(0deg) translateX(5px);
   }
+
   to {
     transform: rotate(360deg) translateX(5px);
   }

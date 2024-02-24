@@ -28,6 +28,7 @@ import { Analisis } from './pages/analisis.jsx';
 import { io } from 'socket.io-client';
 import { PruebaPdf } from './pages/PruebaPdf.jsx';
 import { GeneratePdfTable } from './pages/generatePdfTable.jsx';
+import { RecoveryPassword } from './pages/recovery.jsx';
 
 export default function App() {
   const [statusAlert, setStatusAlert] = useState(false);
@@ -66,7 +67,7 @@ export default function App() {
         const response = await Api.post('auth/protectViews', {});
 
         if (!response.data.authorized) {
-          if (location.pathname !== '/' && location.pathname !== '/login') {
+          if (location.pathname.includes('dashboard')) {
             window.location.href = '/login';
           }
         } else {
@@ -90,14 +91,15 @@ export default function App() {
   }, [location.pathname])
   return (
     <>
-     
+
       <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
 
       <Routes>
-      
         <Route path='*' element={<NotFound />} />
         <Route path='pruebaPdf' element={<PruebaPdf />} />
         <Route path='/dashboard/generatePdfTable/' element={<GeneratePdfTable />} />
+        <Route path='/recover' element={<RecoveryPassword />} />
+
 
         <Route path='/' element={<Loader />}>
           <Route path='/modalfinca' element={<ModalFinca />}></Route>
@@ -109,7 +111,7 @@ export default function App() {
 
 
           <Route path='/dashboard' element={<Menu socket={socket} />}>
-            <Route path='' element={<Home userInfo={userInfo}/>} />
+            <Route path='' element={<Home userInfo={userInfo} />} />
             <Route path='profile' element={<Profile />} />
             <Route path="usuarios/registros" element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} /> : ""} />
             <Route path='formulario' element={<FormRegiser />} />
@@ -125,9 +127,9 @@ export default function App() {
             <Route path='muestras/verRegistros' element={<VerRegistros />} />
           </Route>
         </Route>
-       
+
       </Routes>
-      
+
     </>
   )
 }

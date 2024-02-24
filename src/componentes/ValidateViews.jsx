@@ -9,9 +9,12 @@ export const validateViews = () => {
             try {
                 const response = await Api.post('auth/protectViews', {});
                 if (!response.data.authorized) {
-                    if (location.pathname !== '/' && location.pathname !== '/login') {
+                    if (location.pathname.includes('dashboard')) {
                         window.location.href = '/login';
                     }
+                    // if (location.pathname !== '/' && location.pathname !== '/login') {
+                    //     window.location.href = '/login';
+                    // }
                 } else {
                     if (location.pathname === '/login') {
                         window.history.go(-1);

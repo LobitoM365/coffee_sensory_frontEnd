@@ -43,6 +43,8 @@ export const Analisis = (userInfo) => {
     const [modalForm, changeModalForm] = useState(false);
     const [tipoAnalisis, setTipoAnalisis] = useState(null);
     const [idAnalisisResult, setIdAnalisisResult] = useState(null);
+
+
     let idAnalisis = 0;
 
     let [inputsForm, setInputsForm] = useState(
@@ -76,6 +78,43 @@ export const Analisis = (userInfo) => {
                 key: "id"
             },
 
+        }
+    )
+    let [inputsDocumento, setinputsDocumento] = useState(
+        {
+            "fecha": {
+                inputs: {
+                    desde_registro: {
+                        type: "date",
+                        referencia: "Desde",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "certificar" }, { nombre: "practica" }],
+                        upper_case: true,
+                        key: "nombre"
+                    },
+                    hasta_registro: {
+                        type: "date",
+                        referencia: "Hasta",
+                        values: ["numero_documento", "nombre_completo", "finca", "lote", "mu_id"],
+                        upper_case: true,
+                        key: "id"
+                    }
+                },
+                referencia: "Filtrar por fecha de registro"
+            },
+            "estado": {
+                inputs: {
+                    estado: {
+                        type: "select",
+                        referencia: "Estado",
+                        values: ["nombre"],
+                        opciones: [ { nombre: "activo", value: "1" }, { nombre: "inactivo", value: "0" }, { nombre: "pendiente", value: "2" }],
+                        upper_case: true,
+                        key: "value"
+                    }
+                },
+                referencia: "Filtrar por estado"
+            }
         }
     )
     let [inputsFormatoFisico, setInputsFormatoFisico] = useState(
@@ -354,7 +393,7 @@ export const Analisis = (userInfo) => {
     function xd2(id) {
         setInfoFormato(id, 1)
     }
-   
+
     async function setInfoFormato(id, tipo) {
         try {
             setTipoAnalisis(tipo)
@@ -366,7 +405,7 @@ export const Analisis = (userInfo) => {
             setDataModalResultado([])
             setDataModalResultadoAnalisis([])
             const response = await Api.post("analisis/buscar/" + id + "");
-        console.log(response, "buscarrrrr111111111111111111111111111111111111111111111111111111111111")
+            console.log(response, "buscarrrrr111111111111111111111111111111111111111111111111111111111111")
 
             if (response.data.status == true) {
                 setDataModalAnalisis(response.data.data)
@@ -397,7 +436,7 @@ export const Analisis = (userInfo) => {
                     }
 
                 } else if (formato.data.find_error) {
-                    
+
                 } else {
                 }
                 changeModalFormResults(true)
@@ -417,14 +456,14 @@ export const Analisis = (userInfo) => {
             console.log(e)
         }
     }
-    useEffect( () => {
+    useEffect(() => {
         setTimeout(() => {
-            async function openAsing(){
+            async function openAsing() {
                 if (localStorage.getItem("analisis_id") && localStorage.getItem("tipos_analisis_id")) {
                     await setInfoFormato(localStorage.getItem("analisis_id"), localStorage.getItem("tipos_analisis_id"))
                     localStorage.removeItem("analisis_id")
-                    localStorage.removeItem("tipos_analisis_id")  
-                    console.log(dataModalAnalisis,"annnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
+                    localStorage.removeItem("tipos_analisis_id")
+                    console.log(dataModalAnalisis, "annnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
                 }
             }
             openAsing()
@@ -451,7 +490,7 @@ export const Analisis = (userInfo) => {
                         }
                     }
                     const response = await Api.post("usuarios/listar", filter);
-                    console.log(response,"useeeeeeeeeeeeer")
+                    console.log(response, "useeeeeeeeeeeeer")
                     let cafes = inputsForm;
                     let asignar = selectAsignar;
                     if (!cafes["usuario_formato_sca"]) {
@@ -526,7 +565,7 @@ export const Analisis = (userInfo) => {
             } else if (response.data.find_error) {
                 setCountRegisters(0)
                 setUsuarios(response.data)
-                console.log(response,"ahhhh")
+                console.log(response, "ahhhh")
             } else {
                 setUsuarios(response.data)
             }
@@ -622,7 +661,7 @@ export const Analisis = (userInfo) => {
         try {
 
             const axios = await Api.post("analisis/registrar/", data);
-            console.log(axios,"analisis")
+            console.log(axios, "analisis")
 
             if (axios.data.status == true) {
                 getAnalisis();
@@ -832,7 +871,7 @@ export const Analisis = (userInfo) => {
             )
         } else if (axios.data.errors) {
             setErrorsFormato(axios.data.errors)
-        } else if(axios.data.register_error){
+        } else if (axios.data.register_error) {
             setStatusAlert(true)
             setdataAlert(
                 {
@@ -893,7 +932,7 @@ export const Analisis = (userInfo) => {
                 "usuarios_id": usuario
             }
             const response = await Api.put("formatos/actualizar/" + idFormato, data);
-            console.log(response,"formtoooo")
+            console.log(response, "formtoooo")
             if (response.data.status == true) {
                 setInfoFormato(idAnalisis, tipoAnalisis)
                 setStatusAlert(true)
@@ -923,11 +962,46 @@ export const Analisis = (userInfo) => {
             console.log(e)
         }
     }
+
+    async function getReporte(tipo, filter) {
+        try {
+
+            let filterReport = {
+                "filter": {
+                    "where": {
+
+                    }
+                }
+            }
+            console.log(filter)
+            if (filter.estado != "" && filter.estado) {
+                filterReport["filter"]["where"]["an.estado"] = {
+
+                    "value": filter.estado ? filter.estado : "",
+                    "operador": "=",
+                    "require": "and"
+
+                }
+            }
+            console.log(tipo, filter, filterReport)
+            const response = await Api.post("analisis/listar", filterReport);
+            console.log(response, "reponseee")
+            let dataPdf = {
+                data: response.data.data,
+                table: keys
+            }
+            localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
+            window.open('/dashboard/generatePdfTable', '_blank')
+
+        } catch (e) {
+            console.log(e)
+        }
+    }
     return (
         <>
             <link rel="stylesheet" href="../../public/css/analisis.css" />
 
-            <Tablas clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <FormResultados inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />

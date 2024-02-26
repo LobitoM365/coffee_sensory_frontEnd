@@ -6,6 +6,7 @@ import { validateViews } from "../componentes/ValidateViews.jsx";
 
 
 export const Menu = (data) => {
+
     if (data.socket) {
         data.socket.on('perfilChange', (message) => {
             console.log("el perfil cambioooo",message)  
@@ -151,6 +152,17 @@ export const Menu = (data) => {
         window.addEventListener("click", function (event) {
             let divSelect = document.querySelectorAll(".div-select")
             let optionsInputs = document.querySelectorAll(".opciones-input-select")
+            for (let o = 0; o < divSelect.length; o++) {
+                if (event.target !== divSelect[o] && !divSelect[o].contains(event.target)) {
+                    if (optionsInputs[o]) {
+                        optionsInputs[o].style.display = "none"
+                    }
+                }
+            }
+        })
+        window.addEventListener("click", function (event) {
+            let divSelect = document.querySelectorAll(".father-div-modal")
+            let optionsInputs = document.querySelectorAll(".child-div-modal")
             for (let o = 0; o < divSelect.length; o++) {
                 if (event.target !== divSelect[o] && !divSelect[o].contains(event.target)) {
                     if (optionsInputs[o]) {

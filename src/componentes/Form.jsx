@@ -121,8 +121,6 @@ export const Form = forwardRef((data, ref) => {
         changeSelectsValues(cloneSlectValue)
 
         setDataSelects(cloneDataSelect)
-
-
     }
     function clearElementsClick() {
         /*  changeModalSelect({}) */

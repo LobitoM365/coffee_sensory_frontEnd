@@ -19,10 +19,14 @@ export const Login = () => {
         const inputs = document.querySelectorAll('.input-text');
         const inputsContainer = document.querySelectorAll('.container-input');
         const spanInputs = document.querySelectorAll('.span-input')
+        let originalPlaceholder = {};
 
         for (let i = 0; i < inputs.length; i++) {
 
+            // Cuando el input toma el foco
             inputs[i].addEventListener('focus', function () {
+                // originalPlaceholder.inputs[i].getAttribute('name') = inputs[i].getAttribute('placeholder');
+                originalPlaceholder[inputs[i].getAttribute('placeholder')] = inputs[i].getAttribute('placeholder');
                 inputs[i].classList.remove('input-error')
 
                 inputsContainer[i].style.border = '1px solid green'
@@ -31,14 +35,21 @@ export const Login = () => {
                 inputs[i].placeholder = ''
             })
 
+            // Cuando el input pierde el foco
             inputs[i].addEventListener('blur', function () {
                 if (inputs[i].value == '') {
                     inputsContainer[i].style.border = '1px solid #ccc'
                     setTimeout(() => {
-                        if (i == 0 || i == 2) {
-                            inputs[i].placeholder = 'Correo Electronico'
-                        } else {
-                            inputs[i].placeholder = 'Contraseña'
+                        
+                        let nameInput = inputs[i].getAttribute('data-place');
+                        
+                        console.log('OBJECT: ', originalPlaceholder);
+                        console.log('NAME: ', nameInput);
+                        console.log('HOLDER: ', originalPlaceholder[nameInput]);
+
+                        if (nameInput == originalPlaceholder[nameInput]) {
+                            console.log('XD');
+                            inputs[i].placeholder = nameInput;
                         }
                     }, 100)
                     spanInputs[i].classList.remove('container-inputs-span')
@@ -58,7 +69,7 @@ export const Login = () => {
             setValidationError('')
 
             for (let i = 0; i < botsForms.length; i++) {
-                botsForms[i].style.marginBottom = "-145px";
+                botsForms[i].style.marginBottom = "-100px";
                 setTimeout(() => {
                     botsForms[i].style.opacity = "0";
                 }, 50)
@@ -200,6 +211,8 @@ export const Login = () => {
                                     placeholder='Correo Electronico'
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
+                                    name="email"
+                                    data-place="Correo Electronico"
                                 />
                             </div>
                             {validationError && <div className="credentials-error"> {validationError}</div>}
@@ -213,6 +226,8 @@ export const Login = () => {
                                     type={eyes ? 'text' : 'password'}
                                     value={password}
                                     placeholder='Contraseña'
+                                    name="password"
+                                    data-place="Contraseña"
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>
@@ -241,7 +256,20 @@ export const Login = () => {
                     </form>
                     <form className="login-form bots-form recoveryForm" onSubmit={handleRecovery}>
                         <h3 className='title-login text-recovery'>Recupere su cuenta</h3>
-                        <div className="text-info">Para recuperar su contraseña, porfavor ingrese un correo de su propiedad valido. Ahí recibirá el acceso al restablecimiento de su contraseña con una vigencia de 10 minutos.</div>
+                        <div className="text-info">Porfavor ingrese su numero de indentificación y un correo de su propiedad valido. A dicho correo recibirá el acceso al restablecimiento de su contraseña con una vigencia de 10 minutos.</div>
+                        <div className="container-inputs">
+                            <span className='span-input'>Indentificación</span>
+                            <div className="container-input">
+                                <input
+                                    className='input-text'
+                                    type="text"
+                                    placeholder='Indentificación'
+                                    name="identificacion"
+                                    data-place="Indentificación"
+                                />
+                            </div>
+                            {validationError && <div className="credentials-error"> {validationError}</div>}
+                        </div>
                         <div className="container-inputs">
                             <span className='span-input'>Correo Electronico</span>
                             <div className="container-input">
@@ -250,8 +278,7 @@ export const Login = () => {
                                     type="text"
                                     placeholder='Correo Electronico'
                                     name="email"
-                                // value={email}
-                                // onChange={(e) => setEmail(e.target.value)}
+                                    data-place="Correo Electronico"
                                 />
                             </div>
                             {validationError && <div className="credentials-error"> {validationError}</div>}
@@ -260,7 +287,7 @@ export const Login = () => {
                         {!loader ?
                             (
                                 <>
-                                    <button type="submit">
+                                    <button type="submit" style={{'marginTop': '0'}}>
                                         Envíar
                                     </button>
                                     <span className="recover-password" id="btnLogin"><p>Iniciar Sesion</p></span>

@@ -35,6 +35,8 @@ export const Tablas = (array) => {
     const [modalFilter, changeModalFilter] = useState(false)
     const [nameLimitRegisters, changeNameModalLimitRegisters] = useState(5)
     const [positionElementPaginate, changePositionElementPaginate] = useState(1)
+    const [modalReporte, setStatusModalReporte] = useState(false)
+    const [tipoReporte, setTipoReporte] = useState("")
     const formRef = useRef(null);
     let [limit, setLimit] = useState(5);
     let [inicio, setInicio] = useState(0);
@@ -142,7 +144,7 @@ export const Tablas = (array) => {
         let svgPlusTable;
         let arrayThQuit = [];
         let ziseLess = 0;
-
+        let lastHeightBeforeScroll = 0
 
         const resizeObserver = new ResizeObserver(entries => {
             for (let entry of entries) {
@@ -157,6 +159,40 @@ export const Tablas = (array) => {
         }, [200])
 
 
+        function compareElements(elementOne, elementTwo, appendOne, appendTwo, father) {
+            let sizeOne = 0
+            if (father) {
+                father.style.width = "max-content"
+            }
+            let sizeTwo = 0
+            if (elementOne) {
+                if (appendOne) {
+                    father.append(elementOne)
+                    sizeOne = getMinSize(elementOne)
+                    elementOne.remove()
+                } else {
+                    sizeOne = getMinSize(elementOne)
+                }
+            }
+            if (elementTwo) {
+                if (appendTwo) {
+                    father.append(elementTwo)
+                    sizeTwo = getMinSize(elementTwo)
+                    elementTwo.remove()
+                } else {
+                    sizeTwo = getMinSize(elementTwo)
+                }
+            }
+            father.style.width = ""
+            return sizeOne > sizeTwo ? sizeOne : sizeTwo
+        }
+        function getMinSize(element) {
+            let min = 0;
+            element.style.width = "0px"
+            min = Math.ceil(element.scrollWidth + 11)
+            element.style.width = ""
+            return min
+        }
         function resizeTable() {
             let contentComponent = document.getElementById("contentComponent")
             if (contentComponent) {
@@ -169,13 +205,22 @@ export const Tablas = (array) => {
                 }
                 let thQuit = contentTable[0].querySelectorAll("th");
 
-                if (contentComponent.clientWidth < tableComponent[0].clientWidth) {
+                if (contentTable[0].scrollHeight >= contentTable[0].clientHeight) {
+                    lastHeightBeforeScroll = contentTable[0].scrollWidth
+                }
+
+
+                if (contentComponent.clientWidth < (tableComponent[0].clientWidth + (Math.ceil(contentTable[0].offsetWidth) - Math.ceil(contentTable[0].clientWidth)))) {
                     if (thQuit.length > 1) {
                         let tBody = contentTable[0].querySelectorAll("tbody")
                         if (tBody) {
                             let trTbody = tBody[0].querySelectorAll(".tr-table")
                             let nameTd = thQuit[(thQuit.length) - 1].querySelectorAll(".tittle-item-header-table")
-                            let name = nameTd[0].innerHTML
+                            let name = ""
+                            if (nameTd.length > 0) {
+                                name = nameTd[0].innerHTML
+                            }
+
                             arrayThQuit.push(thQuit[(thQuit.length) - 1])
                             thQuit[(thQuit.length) - 1].remove();
 
@@ -198,7 +243,7 @@ export const Tablas = (array) => {
 
 
                                         let td = document.createElement("td")
-                                        td.classList.add("td-view-elementos-ocult")
+                                        td.classList.add("td-view-elementos-ocult", "td-table-print")
                                         td.innerHTML = '<div class="div-svg-plus-table"> <svg class="svg-plus-table" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" <g><g><g><path fill="#000000" d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z"/></g></g></g></svg> </div>'
 
                                         trTbody[tr].insertAdjacentElement('afterend', newtr)
@@ -220,6 +265,7 @@ export const Tablas = (array) => {
                                         let div = document.createElement("div")
                                         div.classList.add("div-element-add")
                                         div.innerHTML = "<h4> " + name + "</h4>"
+                                        tdTbody[(thQuit.length) - 1].style.wordBreak = "break-all";
                                         div.append(tdTbody[(thQuit.length) - 1])
                                         elementsNewTr[tr].appendChild(div)
                                     }
@@ -229,7 +275,7 @@ export const Tablas = (array) => {
                             if (ziseLess == 0 && !data.find_error) {
                                 let theadTable = document.querySelectorAll(".thead-table")
                                 let th = document.createElement("th")
-                                th.classList.add("th-plus-view-elements-ocult")
+                                th.classList.add("th-plus-view-elements-ocult", "th-table-print")
                                 th.innerHTML = ''
                                 theadTable[0].insertBefore(th, theadTable[0].children[0]);
                                 ziseLess = 1;
@@ -237,15 +283,38 @@ export const Tablas = (array) => {
                             }
                             ziseTableComponent = tableComponent[0].clientWidth;
                             resizeTable()
+                            return
                         }
                     }
 
-                } else if ((contentComponent.clientWidth - tableComponent[0].scrollWidth) >= 100) {
-                    let theadTable = document.querySelectorAll(".thead-table")
-
-
+                } else {
                     let elementsNewDivTable = document.querySelectorAll(".div-element-add");
+                    let thTable = document.querySelectorAll(".th-table-print")
+                    let tdTable = document.querySelectorAll(".td-table-print")
+                    let height = 0;
+                    let heightGroup = 0;
 
+                    for (let x = 0; x < newDivTable.length; x++) {
+                        let none = false;
+                        let divNewDivTable = newDivTable[x].querySelectorAll(".div-element-add");
+                        if (divNewDivTable[divNewDivTable.length - 1]) {
+                            let divNewDivTableTd = divNewDivTable[divNewDivTable.length - 1].querySelectorAll("td");
+                            
+                            if (divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display == "none" || divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display == "") {
+                                none = true
+                            }
+                            divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display = "table-row";
+
+                            height = parseFloat(compareElements(divNewDivTableTd[0], arrayThQuit[arrayThQuit.length - 1], false, true, tableComponent[0])) > height ? parseFloat(compareElements(divNewDivTableTd[0], arrayThQuit[arrayThQuit.length - 1], false, true, tableComponent[0])) : height
+                            if (none) {
+                                divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display = "none";
+                            }
+                        }
+
+                    }
+                    for (let x = 0; x < thTable.length; x++) {
+                        heightGroup = heightGroup + parseFloat(compareElements(thTable[x], tdTable[x], false, false, tableComponent[0]))
+                    }
                     if (elementsNewDivTable.length == 0) {
                         let newTrTable = document.querySelectorAll(".new-tr-table");
                         let tdPlus = document.querySelectorAll(".td-view-elementos-ocult");
@@ -262,23 +331,37 @@ export const Tablas = (array) => {
 
                         ziseLess = 0
                     }
+                    let styleTable = window.getComputedStyle(tableComponent[0])
+                
 
+                    let extraSize = parseFloat(styleTable.paddingLeft.match(/\d+/)[0]) + parseFloat(styleTable.paddingRight.match(/\d+/)[0]) + parseFloat(styleTable.marginLeft.match(/\d+/)[0]) + parseFloat(styleTable.marginRight.match(/\d+/)[0] + (Math.ceil(contentTable[0].offsetWidth) - Math.ceil(contentTable[0].clientWidth)))
+
+                    
                     if (arrayThQuit.length > 0) {
-                        let newDivTable = document.querySelectorAll(".new-div-table");
-                        let trTable = document.querySelectorAll(".tr-table");
-                        theadTable[0].append(arrayThQuit[arrayThQuit.length - 1])
-                        arrayThQuit.pop()
-                        for (let x = 0; x < newDivTable.length; x++) {
-                            let divNewDivTable = newDivTable[x].querySelectorAll(".div-element-add");
-                            let divNewDivTableTd = divNewDivTable[divNewDivTable.length - 1].querySelectorAll("td");
-                            trTable[x].append(divNewDivTableTd[0])
-                            divNewDivTable[divNewDivTable.length - 1].remove()
+                        if (((heightGroup + height) + extraSize) <= contentComponent.clientWidth) {
+
+                            let theadTable = document.querySelectorAll(".thead-table")
+                            if (arrayThQuit.length > 0) {
+                                let trTable = document.querySelectorAll(".tr-table");
+                                theadTable[0].append(arrayThQuit[arrayThQuit.length - 1])
+                                arrayThQuit.pop()
+                                for (let x = 0; x < newDivTable.length; x++) {
+                                    let divNewDivTable = newDivTable[x].querySelectorAll(".div-element-add");
+                                    if (divNewDivTable.length > 0) {
+
+                                        let divNewDivTableTd = divNewDivTable[divNewDivTable.length - 1].querySelectorAll("td");
+                                        if (trTable[x]) {
+                                            trTable[x].append(divNewDivTableTd[0])
+                                            divNewDivTable[divNewDivTable.length - 1].remove()
+                                        }
+                                    }
+                                }
+                                resizeTable()
+                                return
+                            }
 
                         }
-                        resizeTable()
                     }
-
-
                 }
 
                 if (document.getElementById("loadTable")) {
@@ -287,6 +370,129 @@ export const Tablas = (array) => {
             }
         }
     }, [keyTable])
+
+
+    let [keysInputsDocumento, setKeysInputsDocumento] = useState({});
+    const [selectsValuesDocumento, changeSelectsValuesDocumento] = useState({});
+    const [dataSelectDocumento, setDataSelectsDocumento] = useState({});
+    const [inputValorDocumento, setInputValorDocumento] = useState({});
+    const [keyDown, setKeydown] = useState();
+    const [selectsValues, changeSelectsValues] = useState({});
+    let [dataInputs, setDataInputs] = useState({});
+
+    const handleInputChange = (e, key, type) => {
+        if (type === "text") {
+            e.target.value = e.target.value.replace("  ", " ").replace(/[@!#$%^¨¨.&*()-+=[{}|;:'",_<>/?`~¡¿´´°ç-]/, "").replace(/\d+/g, "").replace("]", "").replace("[", "").trimStart()
+        } else if (type === "number") {
+            e.target.value = e.target.value.replace(/\s/g, "").replace(/[^\w°'".-]/g, "").replace(/--+/g, '-').replace(/\.\.+/g, '.').trim();
+            if (e.target.value.indexOf('-', 1) !== -1) {
+                let primerValor = e.target.value.charAt(0); r
+                let restoCadena = e.target.value.substring(1);
+                restoCadena = restoCadena.replace("-", "")
+                e.target.value = primerValor + restoCadena
+            }
+        } else if (type === "ubicacion") {
+            if (!/^-?(\d+(?:\.\d*)?)°?(?:\s?(\d+(?:\.\d*)?)'?(?:\s?(\d+(?:\.\d*)?)")?)?([nsNSWEwe](?!\.))?$/i.test(e.target.value)) {
+
+                if (typeof keyDown === 'string' && !/^"?\d+"?$/.test(keyDown)) {
+
+                    if (/[a-zA-Z°'"]\./.test(e.target.value)) {
+                        e.target.value = e.target.value.replace(/[a-zA-Z°'"]\./g, function (match) {
+                            return match.charAt(0) + match.charAt(2);
+                        });
+
+                    } else {
+
+                        if (keyDown == ".") {
+                            e.target.value = e.target.value.replace(keyDown, ".").replace(/\./, '')
+                            alert("xd")
+                        } else if (keyDown == "-") {
+                            if (e.target.value != "-") {
+                                e.target.value = e.target.value.replace(/-(?=\D*$)/, "").replace("--", "-").replace(/(?<!^)-/g, "")
+                            }
+
+                        }
+                        else {
+                            e.target.value = e.target.value.replace(keyDown, "")
+                        }
+                        e.target.value = e.target.value.replace("..", ".")
+                    }
+                } else if (/^(-?\d+(?:\.\d+)?)°?(?:\s?(\d+(?:\.\d+)?)'?(?:\s?(\d+(?:\.\d+)?)")(\d+)?)?([nsNS])?$/.test(e.target.value)) {
+
+                    e.target.value = e.target.value.replace(/"\d+/g, '"')
+                }
+                e.target.value = e.target.value.replace(/[NSns]\d+/g, function (match) {
+                    return match[0];
+                });
+            }
+        } else if (type === "email") {
+            let [beforeAt, afterAt] = e.target.value.split('@');
+            if (afterAt != undefined) {
+                afterAt = afterAt.replace("..", ".")
+                e.target.value = beforeAt + "@" + afterAt
+            } else {
+                afterAt = ""
+            }
+            e.target.value = e.target.value.replace(/@(?=[^@]*@)/g, "").replace(/(@[^@.]*\.[^@.]*\.[^@.]*\.[^@.]*)\./, "$1");
+        } else if (type === "normal") {
+            e.target.value = e.target.value.replace("  ", " ").trimStart()
+        }
+        let value = "";
+        let cloneInputValueDocumento = { ...inputValorDocumento }
+        cloneInputValueDocumento[key] = e.target.value
+        setInputValorDocumento(cloneInputValueDocumento)
+    };
+
+    if (array.dataDocumento) {
+        keysInputsDocumento = Object.keys(array.dataDocumento)
+    }
+    function selectSearch(value, key, father) {
+        let cloneDataSelect = { ...dataSelectDocumento }
+        let selectOptions = document.querySelectorAll(".select-option-" + key)
+        let cloneSlectValue = { ...selectsValues }
+        cloneSlectValue[key] = value
+
+
+        for (let s = 0; s < selectOptions.length; s++) {
+            if (selectOptions[s].innerHTML.toLocaleLowerCase().includes(value.toLocaleLowerCase())) {
+                selectOptions[s].style.display = ""
+            } else {
+                selectOptions[s].style.display = "none"
+            }
+            if (selectOptions[s].innerHTML.toLocaleLowerCase() == value.toLocaleLowerCase()) {
+                cloneSlectValue[key] = selectOptions[s].innerHTML
+                cloneDataSelect[key] = array.dataDocumento[father]["inputs"][key]["opciones"][s][array.dataDocumento[father]["inputs"][key]["key"]]
+                break
+            } else {
+                cloneDataSelect[key] = ""
+            }
+
+        }
+        changeSelectsValuesDocumento(cloneSlectValue)
+        setDataSelectsDocumento(cloneDataSelect)
+    }
+    const chageData = (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const json = Object.fromEntries(formData);
+
+        let objectSelect = Object.keys(dataSelectDocumento);
+        objectSelect.map((key, value) => {
+            json[key] = dataSelectDocumento[key]
+        })
+        let keysJson = Object.keys(json);
+
+        keysJson.map((key, value) => {
+            if (json[key]) {
+                json[key] = json[key].toString().trimEnd().toLowerCase()
+            }
+        })
+
+        if (array.getReporte) {
+            array.getReporte(tipoReporte, json)
+        }
+
+    };
     return (
 
         <div id='contentComponent'>
@@ -296,7 +502,166 @@ export const Tablas = (array) => {
                     <div className='div-tittle'>
                         <h2> {array.tittle ? array.tittle : "Tabla de registros"}</h2>
                         <button style={{ display: array.hidden && array.hidden.includes('register') ? 'none' : '' }} onClick={() => { array.clearInputs ? array.clearInputs() : ""; setClearClick(); array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>
-                        <button onClick={() => { array.getDataPdf ? array.getDataPdf(data) : "" }} className='button-register-table'>PDF</button>
+                        <div className='div-generar-documento father-div-modal'>
+                            <button onClick={(e) => {
+                                let divModal = e.target.parentElement.querySelectorAll(".child-div-modal")
+                                if (divModal[0]) {
+                                    divModal[0].style.display = divModal[0].style.display == "none" ? "block" : "none"
+                                }
+
+                            }} className='button-register-table'>Reporte
+                            </button>
+
+                            <div style={{ display: "none" }} className='div-input-documento child-div-modal'>
+                                <form onSubmit={(e) => { chageData(e) }}>
+                                    <div className='div-body-reporte'>
+                                        {
+
+                                            array.dataDocumento ?
+
+                                                keysInputsDocumento.map((keyInput, index) => {
+                                                    let keysInputs = []
+                                                    let dataInputs = {}
+                                                    if (array.dataDocumento[keyInput]["inputs"]) {
+                                                        keysInputs = Object.keys(array.dataDocumento[keyInput]["inputs"])
+                                                        dataInputs = array.dataDocumento[keyInput]["inputs"]
+                                                    }
+                                                    let titleRefer = array.dataDocumento[keyInput]["referencia"] ? array.dataDocumento[keyInput]["referencia"] : "Campo"
+
+                                                    return <div key={keyInput}>
+                                                        <h4 className='title-reporte-group'>{titleRefer}</h4>
+                                                        <div className='content-div-inputs-group'>
+                                                            {keysInputs.map((key, indexInput) => {
+
+                                                                if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "ubicacion" || dataInputs[key]["type"] === "normal") {
+                                                                    if (data.statusInput) {
+                                                                        inputValor[key] = ""
+
+                                                                    }
+                                                                    return (
+
+                                                                        <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
+                                                                            <div className="head-input">
+                                                                                <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
+                                                                                <input id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); setStatusInput(false) }} value={inputValor[key]} className="input-form" type="text" />
+                                                                            </div>
+                                                                            <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
+                                                                        </div>
+                                                                    );
+
+                                                                } else if (dataInputs[key]["type"] === "select" && dataInputs[key]["visibility"] != false) {
+
+                                                                    if (data.statusSelect) {
+                                                                        selectsValuesDocumento[key] = "";
+                                                                        dataSelectDocumento[key] = ""
+                                                                    }
+
+                                                                    return (
+                                                                        <div key={key} className="input-content-form-register">
+                                                                            <div className="head-input">
+                                                                                <label htmlFor={key} className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
+                                                                                <div key={key} className="filter-estado div-select">
+
+                                                                                    <div key={index} style={{ display: "none" }} className="opciones opciones-input-select">
+
+                                                                                        <h4 onClick={(e) => {
+                                                                                            const parentElement = e.target.closest(".div-select");
+                                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                            divOptions[0] ? divOptions[0].style.display = "none" : ""
+
+                                                                                            setStatusSelect(false); let cloneselectsValues = { ...selectsValuesDocumento }; cloneselectsValues[key] = ""; changeSelectsValuesDocumento(cloneselectsValues); dataSelectDocumento[key] = "";
+                                                                                        }} className='select-option'>Seleccione una opción...</h4>
+
+                                                                                        {
+                                                                                            dataInputs[key]["opciones"] ? dataInputs[key]["opciones"].map((select, indexSelect) => {
+                                                                                                let value = ""
+                                                                                                if (dataInputs[key]["values"]) {
+                                                                                                    dataInputs[key]["values"].map((nameSelect, nameIndexSelect) => {
+                                                                                                        value += nameIndexSelect == 0 ? dataInputs[key]["opciones"][indexSelect][nameSelect] : ", " + dataInputs[key]["opciones"][indexSelect][nameSelect];
+                                                                                                    })
+                                                                                                }
+
+
+
+                                                                                                if (dataInputs[key]["upper_case"]) {
+                                                                                                    value = value.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())
+                                                                                                } else if (dataInputs[key]["capital_letter"]) {
+                                                                                                    value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
+                                                                                                }
+
+
+                                                                                                return <h4 key={indexSelect} onClick={(e) => {
+                                                                                                    const parentElement = e.target.parentElement.parentElement;
+                                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                                    divOptions[0] ? divOptions[0].style.display = "none" : ""; let cloneSelectsValues = { ...selectsValuesDocumento }; cloneSelectsValues[key] = value; changeSelectsValuesDocumento(cloneSelectsValues); setStatusSelect(false); dataSelectDocumento[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]];
+                                                                                                }} className={`select-option select-option-${key} ${selectsValuesDocumento[key] == value ? 'option-focus' : ''}`} value="">
+                                                                                                    {value}
+                                                                                                </h4>
+                                                                                            }) : ""
+                                                                                        }
+
+                                                                                    </div>
+                                                                                    <div className='input-select-estado input-select-search' name="" id="">
+
+                                                                                        <input id={key} type="text" className="input-select" onInput={(e) => {
+                                                                                            const parentElement = e.target.closest(".div-select");
+                                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                            divOptions[0] ? divOptions[0].style.display = "block" : ""
+                                                                                            selectSearch(e.target.value, key, keyInput)
+                                                                                        }} placeholder={"Seleccione una opción..."} value={selectsValuesDocumento[key] != "Seleccione una opción..." ? selectsValuesDocumento[key] : ""} />
+                                                                                        <div onClick={(e) => {
+                                                                                            const parentElement = e.target.closest(".div-select");
+                                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                            divOptions[0] ? divOptions[0].style.display == "none" ? divOptions[0].style.display = "block" : divOptions[0].style.display = "none" : ""
+                                                                                        }} className="icon-chevron-estado">
+                                                                                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
+                                                                                                <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                                                                                <g><g><path fill="#000000" d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
+                                                                                            </svg>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
+
+                                                                        </div>
+                                                                    );
+                                                                } else if (dataInputs[key]["type"] === "date" && dataInputs[key]["visibility"] != false) {
+                                                                    return (
+
+                                                                        <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
+                                                                            <div className="head-input">
+                                                                                <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
+                                                                                <input id={key} name={key} className='input-date' type="date" />
+                                                                            </div>
+
+                                                                        </div>
+                                                                    );
+                                                                } else {
+                                                                    return "No hay nada para mostrar " + key;
+                                                                }
+
+                                                            })
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                })
+                                                :
+                                                ""
+                                        }
+                                    </div>
+                                    <div className='footer-get-reporte'>
+                                        <button type='submit' onClick={() => { setTipoReporte("pdf") }} className='button-get-reporte get-repote-pdf'>PDF</button>
+                                        <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-excel'>EXCEL</button>
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
 
 
                     </div>
@@ -369,7 +734,7 @@ export const Tablas = (array) => {
                             <tr className='thead-table'>
                                 {keysPrint.map((keys, index) => {
 
-                                    return <th key={index}>
+                                    return <th className='th-table-print' key={index}>
                                         <div className="items-header-table">
                                             <h4 className='tittle-item-header-table'>   {print[keys]["referencia"]} </h4>
                                             <svg onClick={() => functionCancheFilterRotate(keys)} style={{ rotate: filterRotate[keys] ? filterRotate[keys]["value"] == "desc" ? "0deg" : "180deg" : "0deg", fill: filterRotate[keys] ? "blue" : "" }} className="filter-asc-desc" version="1.0" viewBox="0 0 512.000000 512.000000">
@@ -398,17 +763,17 @@ export const Tablas = (array) => {
                                             keysPrint.map((keys, index) => {
                                                 if (keysData.includes(keys)) {
                                                     if (data[valuesD][keys] === "" || data[valuesD][keys] == null || data[valuesD][keys] == undefined) {
-                                                        return <td key={index}><h4 className='table-attribute-no-registra'>No registra</h4></td>;
+                                                        return <td className="td-table-print" key={index}><h4 className='table-attribute-no-registra'>No registra</h4></td>;
                                                     } else {
                                                         if (keys == "estado") {
                                                             if (data[valuesD][keys] == 0) {
-                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-0'>Inactivo</h4></td>;
+                                                                return <td className="td-table-print" key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-0'>Inactivo</h4></td>;
                                                             } else if (data[valuesD][keys] == 1) {
-                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-1'>Activo</h4></td>;
+                                                                return <td className="td-table-print" key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-1'>Activo</h4></td>;
                                                             } else if (data[valuesD][keys] == 2) {
-                                                                return <td key={index}><h4 className='estado-2'>Pendiente</h4></td>;
+                                                                return <td className="td-table-print" key={index}><h4 className='estado-2'>Pendiente</h4></td>;
                                                             } else if (data[valuesD][keys] == 3 || data[valuesD][keys] == 4) {
-                                                                return <td key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-3'>Aginado</h4></td>;
+                                                                return <td className="td-table-print" key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-3'>Aginado</h4></td>;
                                                             }
                                                         } else {
                                                             if (print[keys]["conditions"]) {
@@ -439,7 +804,7 @@ export const Tablas = (array) => {
 
                                                                                     if (print[keys]["conditions"][keyC][keyT]["type"] == "text") {
 
-                                                                                        return (<td key={index}><h4 className={'table-attribute-no-registra ' + classProcedure}>{referenciaProcedure}</h4></td>);
+                                                                                        return (<td className="td-table-print" key={index}><h4 className={'table-attribute-no-registra ' + classProcedure}>{referenciaProcedure}</h4></td>);
                                                                                     } else if (print[keys]["conditions"][keyC][keyT]["type"] == "button") {
                                                                                         let functionProcedure;
                                                                                         let valueFunctionProcedure;
@@ -460,9 +825,9 @@ export const Tablas = (array) => {
                                                                                                 }
                                                                                             }
                                                                                         }
-                                                                                        return (<td key={index}><button onClick={() => { functionProcedure ? functionProcedure(valueFunctionProcedure) : "" }} className={'table-attribute-button-condition ' + classProcedure}>{referenciaProcedure}</button></td>);
+                                                                                        return (<td className="td-table-print" key={index}><button onClick={() => { functionProcedure ? functionProcedure(valueFunctionProcedure) : "" }} className={'table-attribute-button-condition ' + classProcedure}>{referenciaProcedure}</button></td>);
                                                                                     } else {
-                                                                                        return (<td key={index}><h4 className='table-attribute-no-registra'>{referenciaProcedure}</h4></td>);
+                                                                                        return (<td className="td-table-print" key={index}><h4 className='table-attribute-no-registra'>{referenciaProcedure}</h4></td>);
 
                                                                                     }
                                                                                 }
@@ -486,27 +851,27 @@ export const Tablas = (array) => {
                                                                 })
                                                                 if (group != "") {
                                                                     if (print[keys]["upper_case"]) {
-                                                                        return <td key={index}><h4>{group.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h4></td>;
+                                                                        return <td className="td-table-print" key={index}><h4>{group.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h4></td>;
                                                                     } else if (print[keys]["capital_letter"]) {
-                                                                        return <td key={index}><h4>{group.toString().replace(/^[a-z]/, match => match.toUpperCase())}</h4></td>;
+                                                                        return <td className="td-table-print" key={index}><h4>{group.toString().replace(/^[a-z]/, match => match.toUpperCase())}</h4></td>;
                                                                     } else {
-                                                                        return <td key={index}><h4>{group}</h4></td>;
+                                                                        return <td className="td-table-print" key={index}><h4>{group}</h4></td>;
 
                                                                     }
                                                                 } else {
-                                                                    return <td key={index}><h4>No registra</h4></td>;
+                                                                    return <td className="td-table-print" key={index}><h4>No registra</h4></td>;
                                                                 }
                                                             } else if (print[keys]["format"]) {
 
-                                                                return <td key={index}><h4>{formatDate(data[valuesD][keys])}</h4></td>;
+                                                                return <td className="td-table-print" key={index}><h4>{formatDate(data[valuesD][keys])}</h4></td>;
 
                                                             } else {
                                                                 if (print[keys]["upper_case"]) {
-                                                                    return <td key={index}><h4>{data[valuesD][keys].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h4></td>;
+                                                                    return <td className="td-table-print" key={index}><h4>{data[valuesD][keys].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h4></td>;
                                                                 } else if (print[keys]["capital_letter"]) {
-                                                                    return <td key={index}><h4>{data[valuesD][keys].toString().replace(/^[a-z]/, match => match.toUpperCase())}</h4></td>;
+                                                                    return <td className="td-table-print" key={index}><h4>{data[valuesD][keys].toString().replace(/^[a-z]/, match => match.toUpperCase())}</h4></td>;
                                                                 } else {
-                                                                    return <td key={index}><h4>{data[valuesD][keys]}</h4></td>;
+                                                                    return <td className="td-table-print" key={index}><h4>{data[valuesD][keys]}</h4></td>;
                                                                 }
 
                                                             }
@@ -516,7 +881,7 @@ export const Tablas = (array) => {
                                                         }
                                                     }
                                                 } else {
-                                                    return <td key={index}><h4 className='table-attribute-no-registra'>No registra</h4></td>;
+                                                    return <td className="td-table-print" key={index}><h4 className='table-attribute-no-registra'>No registra</h4></td>;
                                                 }
                                             })
                                         }
@@ -567,12 +932,12 @@ export const Tablas = (array) => {
                             </div> : "  "}
                     </div>
                 </div>
-            </div>
+            </div >
 
 
 
             <Form imgForm={array.imgForm} ref={formRef} setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} tittle={array.tittle} />
-        </div>
+        </div >
 
     )
 }

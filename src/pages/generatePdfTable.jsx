@@ -13,6 +13,15 @@ export const GeneratePdfTable = () => {
     let keysData = Object.keys(data ? data.data[0] ? data.data[0] : [] : [])
     let print = data ? data.table ? data.table : [] : []
 
+    const formatDate = (data) => {
+
+        let date = new Date(data);
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+
+        return `${day < 10 ? '0' + day : day} / ${month < 10 ? '0' + month : month} / ${year} `
+    }
 
     useEffect(() => {
 
@@ -20,22 +29,22 @@ export const GeneratePdfTable = () => {
             if (!data.data && !data.table) {
                 window.close()
             }
-   /*          localStorage.removeItem("dataGeneratePdfTable") */
+            /*          localStorage.removeItem("dataGeneratePdfTable") */
         } else {
             window.close()
         }
         setDataPdf(data)
-    
+
     }, [])
-    useEffect(()=>{
-        console.log(dataPdf,"ahhhh")
+    useEffect(() => {
+        console.log(dataPdf, "ahhhh")
 
         keysPrint = Object.keys(dataPdf ? dataPdf.table ? dataPdf.table : [] : [])
         keysData = Object.keys(dataPdf ? dataPdf.data[0] ? dataPdf.data[0] : [] : [])
         print = dataPdf ? dataPdf.table ? dataPdf.table : [] : []
-        console.log(dataPdf,"ahhhh",keysPrint,keysData,print)
+        console.log(dataPdf, "ahhhh", keysPrint, keysData, print)
 
-    },[dataPdf])
+    }, [dataPdf])
 
     const estyle = StyleSheet.create({
         page: {
@@ -241,10 +250,14 @@ export const GeneratePdfTable = () => {
                         <View style={[estyle.containerBody, estyle.body]} >
 
 
-                            {console.log(keysPrint, "prinnttt", data, dataPdf)}
+
                             <View style={estyle.tableRowStyle} fixed>
                                 {keysPrint.map((keys, index) => {
-                                    return <View key={keys} style={[estyle.tableColHeaderStyle, estyle.colTable]}>
+                                    let styleElement = estyle.tableColHeaderStyle;
+                                    if (index == 0) {
+                                        styleElement = estyle.firstTableColHeaderStyle;
+                                    }
+                                    return <View key={keys} style={[styleElement, estyle.colTable]}>
                                         <Text style={estyle.tableCellHeaderStyle}>  {print[keys]["referencia"]} </Text>
                                     </View>
                                 })}
@@ -255,25 +268,31 @@ export const GeneratePdfTable = () => {
                                     <View key={keysD} style={[estyle.tableRowStyle, estyle.tableBody]}>
                                         {
 
+
                                             keysPrint.map((keys, index) => {
+                                                let styleElement = estyle.tableColStyle;
+                                                if (index == 0) {
+                                                    styleElement = estyle.firstTableColStyle;
+                                                }
+
                                                 if (keysData.includes(keys)) {
                                                     if (keysData.includes(keys)) {
                                                         if (data.data[valuesD][keys] === "" || data.data[valuesD][keys] == null || data.data[valuesD][keys] == undefined) {
-                                                            return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                            return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                                 <Text style={estyle.tableCellStyle}>No registra</Text></View>
                                                         } else {
                                                             if (keys == "estado") {
                                                                 if (data.data[valuesD][keys] == 0) {
-                                                                    return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                                    return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                                         <Text style={estyle.tableCellStyle}>Inactivo</Text></View>;
                                                                 } else if (data.data[valuesD][keys] == 1) {
-                                                                    return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                                    return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                                         <Text style={estyle.tableCellStyle}>Activo</Text></View>;
                                                                 } else if (data.data[valuesD][keys] == 2) {
-                                                                    return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                                    return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                                         <Text style={estyle.tableCellStyle}>Pendiente</Text></View>;
                                                                 } else if (data.data[valuesD][keys] == 3 || data.data[valuesD][keys] == 4) {
-                                                                    return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                                    return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                                         <Text style={estyle.tableCellStyle}>Aginado</Text></View>;
                                                                 }
                                                             } else {
@@ -292,36 +311,36 @@ export const GeneratePdfTable = () => {
                                                                     })
                                                                     if (group != "") {
                                                                         if (print[keys]["upper_case"]) {
-                                                                            return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                                            return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                                                 <Text style={estyle.tableCellStyle}>{group.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</Text></View>;
                                                                         } else if (print[keys]["capital_letter"]) {
-                                                                            return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                                            return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                                                 <Text style={estyle.tableCellStyle}>{group.toString().replace(/^[a-z]/, match => match.toUpperCase())}</Text></View>;
                                                                         } else {
-                                                                            return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                                            return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                                                 <Text style={estyle.tableCellStyle}>{group}</Text></View>;
 
                                                                         }
                                                                     } else {
-                                                                        return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                                        return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                                             <Text style={estyle.tableCellStyle}>No registra</Text></View>;
                                                                     }
                                                                 } else if (print[keys]["format"]) {
 
-                                                                    return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                                    return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                                         <Text style={estyle.tableCellStyle}>{formatDate(data.data[valuesD][keys])}</Text></View>;
 
                                                                 } else {
                                                                     if (print[keys]["upper_case"]) {
-                                                                        return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                                        return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                                             <Text style={estyle.tableCellStyle}>{data.data[valuesD][keys].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</Text></View>
                                                                             ;
                                                                     } else if (print[keys]["capital_letter"]) {
-                                                                        return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                                        return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                                             <Text style={estyle.tableCellStyle}>{data.data[valuesD][keys].toString().replace(/^[a-z]/, match => match.toUpperCase())}</Text></View>
                                                                             ;
                                                                     } else {
-                                                                        return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                                        return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                                             <Text style={estyle.tableCellStyle}>{data.data[valuesD][keys]}</Text></View>
 
                                                                     }
@@ -331,7 +350,7 @@ export const GeneratePdfTable = () => {
                                                         }
                                                     }
                                                 } else {
-                                                    return <View key={keys} style={[estyle.firstTableColStyle, estyle.colTable]}>
+                                                    return <View key={keys} style={[styleElement, estyle.colTable]}>
                                                         <Text style={estyle.tableCellStyle}>No registra</Text></View>;
                                                 }
                                             })

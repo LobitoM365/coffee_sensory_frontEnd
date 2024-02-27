@@ -24,7 +24,43 @@ export const Municipios = () => {
     const [modalForm, changeModalForm] = useState(false);
 
     let idFincaCambiarEstado = 0;
-
+    let [inputsDocumento, setinputsDocumento] = useState(
+        {
+            "fecha": {
+                inputs: {
+                    desde_registro: {
+                        type: "date",
+                        referencia: "Desde",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "certificar" }, { nombre: "practica" }],
+                        upper_case: true,
+                        key: "nombre"
+                    },
+                    hasta_registro: {
+                        type: "date",
+                        referencia: "Hasta",
+                        values: ["numero_documento", "nombre_completo", "finca", "lote", "mu_id"],
+                        upper_case: true,
+                        key: "id"
+                    }
+                },
+                referencia: "Filtrar por fecha de registro"
+            },
+            "estado": {
+                inputs: {
+                    estado: {
+                        type: "select",
+                        referencia: "Estado",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "activo", value: "1" }, { nombre: "inactivo", value: "0" }, { nombre: "pendiente", value: "2" }],
+                        upper_case: true,
+                        key: "value"
+                    }
+                },
+                referencia: "Filtrar por estado"
+            }
+        }
+    )
     let [inputsForm, setInputsForm] = useState(
         {
             nombre: {
@@ -73,7 +109,7 @@ export const Municipios = () => {
     async function getEntities() {
         try {
             const response = await Api.post("municipio/listar", dataFilterTable);
-            console.log(dataFilterTable,"filterrrrrrrrrrrrr")
+            console.log(dataFilterTable, "filterrrrrrrrrrrrr")
             if (response.data.status == true) {
                 setEntities(response.data.data)
                 setCountRegisters(response.data.count)
@@ -373,9 +409,46 @@ export const Municipios = () => {
     useEffect(() => {
         getDepartamentos()
     }, [])
+    async function getReporte(tipo, filter) {
+        try {
+
+            let filterReport = {
+                "filter": {
+                    "where": {
+
+                    }
+                },
+                "limit": {
+                    
+                }
+            }
+            console.log(filter)
+            if (filter.estado != "") {
+                filterReport["filter"]["where"]["an.estado"] = {
+
+                    "value": filter.estado ? filter.estado : "",
+                    "operador": "=",
+                    "require": "and"
+
+                }
+            }
+            console.log(tipo, filter, filterReport)
+            const response = await Api.post("municipio/listar", filterReport);
+            console.log(response, "reponseee")
+            let dataPdf = {
+                data: response.data.data,
+                table: keys
+            }
+            localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
+            window.open('/dashboard/generatePdfTable', '_blank')
+
+        } catch (e) {
+            console.log(e)
+        }
+    }
     return (
         <>
-            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} hidden={['status', 'register','update']} tittle={"Municipio"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} hidden={['status', 'register', 'update']} tittle={"Municipio"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

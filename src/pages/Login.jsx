@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [validationError, setValidationError] = useState(null);
+    const [validationError, setValidationError] = useState({});
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
     const navigate = useNavigate();
@@ -40,9 +40,9 @@ export const Login = () => {
                 if (inputs[i].value == '') {
                     inputsContainer[i].style.border = '1px solid #ccc'
                     setTimeout(() => {
-                        
+
                         let nameInput = inputs[i].getAttribute('data-place');
-                        
+
                         console.log('OBJECT: ', originalPlaceholder);
                         console.log('NAME: ', nameInput);
                         console.log('HOLDER: ', originalPlaceholder[nameInput]);
@@ -110,7 +110,7 @@ export const Login = () => {
 
                 if (response.data.errors) {
 
-                    const credentialsError = response.data.errors['credentials_error'];
+                    const credentialsError = response.data.errors;
 
                     setValidationError(credentialsError);
                 } else {
@@ -141,18 +141,18 @@ export const Login = () => {
 
         event.preventDefault();
         const formData = new FormData(event.target)
-        const data = { link: 'http://localhost:5173/recovery' }
         const form = Object.fromEntries(formData);
+        form.link = 'http://localhost:5173/recover';
 
-        data.email = form.email;
+        console.log('FOMR DATA: ', form);
         try {
 
             serLoader(true);
-            const response = await Api.post('auth/sendEmail', data);
+            const response = await Api.post('auth/sendEmail', form);
 
             if (response.data.errors) {
                 serLoader(false);
-                const credentialsError = response.data.errors['email'];
+                const credentialsError = response.data.errors;
                 setValidationError(credentialsError);
             } else if (response.data.status == true) {
                 serLoader(false);
@@ -169,13 +169,13 @@ export const Login = () => {
                 setStatusAlert(true);
                 setdataAlert({
                     status: "false",
-                    description: 'Por favor inténtelo de nuevo más tarde. Si el problema persiste porfavor contáctese con el administrador.',
-                    "tittle": "Ah ocurrido un error!",
+                    description: response.data.message,
+                    "tittle": response.data.title,
                 });
             }
 
-            console.log('RESPONSE EMAIL: ', response.data.token);
-            // console.log('ERROR LOADED: ', validationError);
+            console.log('RESPONSE EMAIL: ', response.data);
+            console.log('ERROR VALIDATION: ', validationError);
         } catch (error) {
             serLoader(false);
 
@@ -215,7 +215,7 @@ export const Login = () => {
                                     data-place="Correo Electronico"
                                 />
                             </div>
-                            {validationError && <div className="credentials-error"> {validationError}</div>}
+                            {validationError.credentials_error && <div className="credentials-error"> {validationError.credentials_error}</div>}
                         </div>
 
                         <div className="container-inputs">
@@ -246,7 +246,7 @@ export const Login = () => {
                                     <g><g><g><path fill="#292929" d="M15.9,104.9c-3.1,2.5-3.3,5.3-0.8,9.2l1.8,2.8l-3.2,3.4c-3.5,3.6-4.4,5.6-3.5,7.9c1,2.6,3,3.9,5.8,3.9c2.3,0,2.9-0.3,6-3.3l3.5-3.3l4.7,3.1c2.6,1.8,4.8,3.4,4.8,3.6c0,0.2-0.6,1.9-1.5,3.8c-2,4.5-1.9,6.9,0.2,9.1c1.4,1.3,2.3,1.7,4.1,1.7c3.1,0,5-1.6,6.6-5.7c0.8-1.9,1.5-3.6,1.8-3.9c0.2-0.3,2.9-0.1,6.1,0.6l5.6,1.1v4.3c0,4.6,0.9,7.3,2.9,8.4c2.1,1.1,5.2,0.7,6.9-0.8c1.5-1.3,1.6-1.8,1.9-6.6l0.3-5.2l5.1-1c2.8-0.5,5.4-1.2,5.6-1.4c0.3-0.2,1.4,1.6,2.5,4.1c1.1,2.4,2.5,4.8,3.2,5.3c2,1.4,5.8,1.1,7.6-0.6c2.2-2.2,2.3-4.1,0.4-9.1c-1.5-3.8-1.6-4.5-0.8-4.9c0.5-0.3,2.6-1.6,4.7-3.1c2.1-1.4,4-2.6,4.2-2.6c0.2,0,1.9,1.5,3.6,3.2c2.8,2.9,3.5,3.2,5.6,3.2c3.1,0,5.4-1.7,5.9-4.4c0.5-2.9-0.1-4.1-3.7-7.6l-3.3-3.2l1.8-2.5c2.5-3.4,2.6-6.4,0.2-8.8c-1.4-1.4-2.2-1.7-4.2-1.7c-2.2,0-2.8,0.3-4.6,2.4c-8.2,9.5-13.3,13.5-21.3,16.9c-8.2,3.4-18.9,4.6-27.3,3c-11.7-2.2-20.9-7.8-30.6-18.9c-2.7-3-3.2-3.4-5.3-3.4C18.1,103.9,16.6,104.3,15.9,104.9z" /><path fill="#292929" d="M143.2,105.6c-2.4,2.4-2.4,5.4,0.1,8.8l1.8,2.5l-3.6,3.8c-3.6,3.7-3.6,3.9-3.4,6.3c0.5,3.3,2.5,5.1,5.9,5.1c2.2,0,2.8-0.4,5.7-3.2c1.8-1.8,3.4-3.2,3.6-3.2c0.2,0,2.1,1.2,4.3,2.6c2.2,1.4,4.3,2.8,4.8,3.1c0.7,0.4,0.6,1.2-0.8,4.9c-1.9,5-1.9,6.9,0.4,9.1c1.8,1.7,5.6,2.1,7.6,0.6c0.7-0.5,2.1-2.9,3.1-5.3c1.5-3.4,2.2-4.3,2.9-4c0.5,0.2,3.1,0.8,5.6,1.3l4.8,0.9l0.3,5.2c0.3,4.8,0.4,5.3,1.9,6.6c1.8,1.5,4.9,1.9,6.9,0.8c1.9-1.1,2.9-3.8,2.9-8.4v-4.3l5.6-1.1c3.1-0.6,5.7-1,5.8-0.9c0.1,0.1,1,1.9,1.9,4.1c2,4.5,3.6,5.8,6.8,5.8c1.7,0,2.7-0.4,4-1.7c2.2-2.2,2.2-4.1,0.2-9.2c-0.9-2.1-1.5-3.9-1.4-4.1c0.1-0.1,2.3-1.6,4.8-3.3l4.6-3.1l3.5,3.3c3.1,3,3.7,3.3,6,3.3c2.8,0,4.8-1.4,5.8-3.9c0.9-2.3,0-4.4-3.5-7.9l-3.2-3.4l1.8-2.8c2.5-3.9,2.3-6.7-0.8-9.2c-1.4-1.1-4.5-1.4-6.2-0.5c-0.5,0.3-2.6,2.5-4.6,4.9c-6,7.2-13.4,12.3-22.5,15.3c-5.2,1.8-6.1,1.9-14.4,1.9c-7.5,0.1-9.5-0.1-13.4-1.3c-8.9-2.6-17.1-7.6-22.8-14.2c-6.1-7.1-6.2-7.1-8.8-7.1C145.5,103.9,144.6,104.2,143.2,105.6z" /></g></g></g>
                                 </svg>}
                             </div>
-                            {validationError && <div className="credentials-error"> {validationError}</div>}
+                            {validationError.credentials_error && <div className="credentials-error"> {validationError.credentials_error}</div>}
                         </div>
                         <button type="submit">Iniciar sesión</button>
                         <span className="recover-password">¿Olvidó su contraseña? <br />
@@ -268,7 +268,7 @@ export const Login = () => {
                                     data-place="Indentificación"
                                 />
                             </div>
-                            {validationError && <div className="credentials-error"> {validationError}</div>}
+                            {validationError.identificacion && <div className="credentials-error"> {validationError.identificacion}</div>}
                         </div>
                         <div className="container-inputs">
                             <span className='span-input'>Correo Electronico</span>
@@ -281,13 +281,13 @@ export const Login = () => {
                                     data-place="Correo Electronico"
                                 />
                             </div>
-                            {validationError && <div className="credentials-error"> {validationError}</div>}
+                            {validationError.email && <div className="credentials-error"> {validationError.email}</div>}
                         </div>
 
                         {!loader ?
                             (
                                 <>
-                                    <button type="submit" style={{'marginTop': '0'}}>
+                                    <button type="submit" style={{ 'marginTop': '0' }}>
                                         Envíar
                                     </button>
                                     <span className="recover-password" id="btnLogin"><p>Iniciar Sesion</p></span>

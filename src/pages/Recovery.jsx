@@ -10,7 +10,43 @@ export const RecoveryPassword = () => {
     const [validationError, setValidationError] = useState({});
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
-    const location = useLocation();
+    const url = useLocation();
+
+    useEffect(() => {
+        ProtectRecover();
+    }, [])
+
+
+    const ProtectRecover = async () => {
+        try {
+            const searchParams = new URLSearchParams(url.search);
+            const token = searchParams.get('key');
+            const data = {};
+            
+            data.token = token;
+            const response = await Api.post('auth/protect/recover', data);
+            console.log('RESPONSE: ', response);
+            if (response.data.authorized == false) {
+                setStatusAlert(true);
+                setdataAlert({
+                    status: 'false',
+                    description: 'NO ECONTRADO!',
+                    "tittle": '404',
+                });
+
+                location.href = '/login'
+            }
+        } catch (error) {
+            setStatusAlert(true);
+            setdataAlert({
+                status: 'false',
+                description: 'NO ECONTRADO!',
+                "tittle": '404',
+            });
+            location.href = '/login'
+            console.log('ERROR PROTECT: ', error);
+        }
+    }
 
     const updatePassword = async (event) => {
         event.preventDefault();
@@ -19,15 +55,13 @@ export const RecoveryPassword = () => {
             let data = Object.fromEntries(dataForm);
 
             // Obtener el token de la url
-            const searchParams = new URLSearchParams(location.search);
+            const searchParams = new URLSearchParams(url.search);
             const token = searchParams.get('key');
 
             // Setear el valor del token
             data.token = token;
 
             const response = await Api.put('auth/recoverPassword', data);
-            console.log('DATA FORM: ', data);
-            console.log('RESPONSE: ', response);
 
             if (response.data.errors) {
                 const credentialsError = response.data.errors;
@@ -37,10 +71,16 @@ export const RecoveryPassword = () => {
 
                 setStatusAlert(true);
                 setdataAlert({
-                    status: response.data.status.toString(),
+                    status: response.data.statusAlert,
                     description: response.data.message,
                     "tittle": response.data.title,
                 });
+
+                setTimeout(() => {
+                    if (response.data.update == true || response.data.authorized == false) {
+                        location.href = '/login';
+                    }
+                }, 2500)
             }
             console.log('VALIDATION : ', validationError);
 

@@ -633,7 +633,7 @@ export const Tablas = (array) => {
                                                                         <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
                                                                             <div className="head-input">
                                                                                 <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                                                                <input id={key} name={key} className='input-date' type="date" />
+                                                                                <input id={key} name={key} className='input-date' type="datetime-local" />
                                                                             </div>
 
                                                                         </div>

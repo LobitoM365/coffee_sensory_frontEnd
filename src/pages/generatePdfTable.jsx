@@ -10,7 +10,7 @@ export const GeneratePdfTable = () => {
     const [dataPdf, setDataPdf] = useState();
     let data = JSON.parse(localStorage.getItem("dataGeneratePdfTable"))
     let keysPrint = Object.keys(data ? data.table ? data.table : [] : [])
-    let keysData = Object.keys(data ? data.data[0] ? data.data[0] : [] : [])
+    let keysData = Object.keys(data.data ? data.data[0] ? data.data[0] : [] : [])
     let print = data ? data.table ? data.table : [] : []
 
     const formatDate = (data) => {
@@ -36,15 +36,7 @@ export const GeneratePdfTable = () => {
         setDataPdf(data)
 
     }, [])
-    useEffect(() => {
-        console.log(dataPdf, "ahhhh")
 
-        keysPrint = Object.keys(dataPdf ? dataPdf.table ? dataPdf.table : [] : [])
-        keysData = Object.keys(dataPdf ? dataPdf.data[0] ? dataPdf.data[0] : [] : [])
-        print = dataPdf ? dataPdf.table ? dataPdf.table : [] : []
-        console.log(dataPdf, "ahhhh", keysPrint, keysData, print)
-
-    }, [dataPdf])
 
     const estyle = StyleSheet.create({
         page: {
@@ -263,7 +255,7 @@ export const GeneratePdfTable = () => {
                                 })}
                             </View>
 
-                            {data ? data.data.length > 0 ? (
+                            {data.data ? data.data.length > 0 ? (
                                 data.data.map((keysD, valuesD) => (
                                     <View key={keysD} style={[estyle.tableRowStyle, estyle.tableBody]}>
                                         {

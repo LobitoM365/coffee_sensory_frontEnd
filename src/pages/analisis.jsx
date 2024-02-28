@@ -108,7 +108,7 @@ export const Analisis = (userInfo) => {
                         type: "select",
                         referencia: "Estado",
                         values: ["nombre"],
-                        opciones: [ { nombre: "activo", value: "1" }, { nombre: "inactivo", value: "0" }, { nombre: "pendiente", value: "2" }],
+                        opciones: [{ nombre: "activo", value: "1" }, { nombre: "inactivo", value: "0" }, { nombre: "pendiente", value: "2" }],
                         upper_case: true,
                         key: "value"
                     }
@@ -559,6 +559,7 @@ export const Analisis = (userInfo) => {
     async function getAnalisis() {
         try {
             const response = await Api.post("analisis/listar", dataFilterTable);
+            console.log(response,"annnnnnnnnnnnnnnnnnnn")
             if (response.data.status == true) {
                 setUsuarios(response.data.data)
                 setCountRegisters(response.data.count)
@@ -970,17 +971,21 @@ export const Analisis = (userInfo) => {
                 "filter": {
                     "where": {
 
+                    },
+                    "date": {
+                        "an.fecha_creacion": {
+                            "desde": filter.desde_registro ? filter.desde_registro : "",
+                            "hasta": filter.hasta_registro  ? filter.hasta_registro  : ""
+                        }
                     }
                 }
             }
             console.log(filter)
             if (filter.estado != "" && filter.estado) {
                 filterReport["filter"]["where"]["an.estado"] = {
-
                     "value": filter.estado ? filter.estado : "",
                     "operador": "=",
                     "require": "and"
-
                 }
             }
             console.log(tipo, filter, filterReport)

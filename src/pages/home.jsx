@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Graficos } from '../componentes/Graficos';
 import { GraficoCircular } from '../componentes/GraficoCircular';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import {SelectComponent} from "../componentes/SelectComponent"
+
 
 export const Home = ({ userInfo }) => {
   const [user, setUser] = useState(userInfo);
@@ -65,7 +67,7 @@ export const Home = ({ userInfo }) => {
         <input type="number" className='input' min="1900" max="2900" onChange={handleInputChange} name="anio" id="anio" placeholder='Año...' value={inputValue.anio} />
         <input type="number" className='input limit' min="1" max="12" step="1" onChange={handleInputChange} name="limite" id="limite" placeholder='Cantidad Resultados...' value={inputValue.limite} />
       </div>
-
+          <SelectComponent/>
           {/* Asegúrate de que Graficos y GraficoCircular reciban los datos correctamente */}
           <Graficos user={user?.id} inputData={dataUpdate}/>
           <GraficoCircular user={user?.id} inputData={dataUpdate} />

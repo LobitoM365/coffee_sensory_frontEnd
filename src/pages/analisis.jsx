@@ -19,6 +19,7 @@ export const Analisis = (userInfo) => {
     const [modalFormResults, changeModalFormResults] = useState(false);
     const [dataModalAnalisis, setDataModalAnalisis] = useState(false);
     const [dataModalResultado, setDataModalResultado] = useState(false);
+    const [filterPdfLimit, setFilterPdflimit] = useState({ status: false });
     const [dataModalResultadoAnalisis, setDataModalResultadoAnalisis] = useState(false);
 
 
@@ -88,19 +89,13 @@ export const Analisis = (userInfo) => {
                         type: "date",
                         referencia: "Desde",
                         values: ["nombre"],
-                        opciones: [{ nombre: "certificar" }, { nombre: "practica" }],
-                        upper_case: true,
-                        key: "nombre"
                     },
                     hasta_registro: {
                         type: "date",
                         referencia: "Hasta",
-                        values: ["numero_documento", "nombre_completo", "finca", "lote", "mu_id"],
-                        upper_case: true,
-                        key: "id"
                     }
                 },
-                referencia: "Filtrar por fecha de registro"
+                referencia: "Filtrar por fecha de creación"
             },
             "estado": {
                 inputs: {
@@ -111,7 +106,7 @@ export const Analisis = (userInfo) => {
                         opciones: [{ nombre: "activo", value: "1" }, { nombre: "inactivo", value: "0" }, { nombre: "pendiente", value: "2" }],
                         upper_case: true,
                         key: "value"
-                    }
+                    },
                 },
                 referencia: "Filtrar por estado"
             }
@@ -559,7 +554,7 @@ export const Analisis = (userInfo) => {
     async function getAnalisis() {
         try {
             const response = await Api.post("analisis/listar", dataFilterTable);
-            console.log(response,"annnnnnnnnnnnnnnnnnnn")
+            console.log(response, "annnnnnnnnnnnnnnnnnnn")
             if (response.data.status == true) {
                 setUsuarios(response.data.data)
                 setCountRegisters(response.data.count)
@@ -975,12 +970,15 @@ export const Analisis = (userInfo) => {
                     "date": {
                         "an.fecha_creacion": {
                             "desde": filter.desde_registro ? filter.desde_registro : "",
-                            "hasta": filter.hasta_registro  ? filter.hasta_registro  : ""
+                            "hasta": filter.hasta_registro ? filter.hasta_registro : ""
                         }
+                    },
+                    "limit": {
+                        inicio: 0,
+                        fin: 100
                     }
                 }
             }
-            console.log(filter)
             if (filter.estado != "" && filter.estado) {
                 filterReport["filter"]["where"]["an.estado"] = {
                     "value": filter.estado ? filter.estado : "",
@@ -988,9 +986,11 @@ export const Analisis = (userInfo) => {
                     "require": "and"
                 }
             }
-            console.log(tipo, filter, filterReport)
+
             const response = await Api.post("analisis/listar", filterReport);
-            console.log(response, "reponseee")
+            if (response.data.count > 100) {
+                setFilterPdflimit({ status: true, max: response.data.count })
+            }
             let dataPdf = {
                 data: response.data.data,
                 table: keys
@@ -1006,7 +1006,7 @@ export const Analisis = (userInfo) => {
         <>
             <link rel="stylesheet" href="../../public/css/analisis.css" />
 
-            <Tablas getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <FormResultados inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />

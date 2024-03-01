@@ -299,7 +299,7 @@ export const Tablas = (array) => {
                         let divNewDivTable = newDivTable[x].querySelectorAll(".div-element-add");
                         if (divNewDivTable[divNewDivTable.length - 1]) {
                             let divNewDivTableTd = divNewDivTable[divNewDivTable.length - 1].querySelectorAll("td");
-                            
+
                             if (divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display == "none" || divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display == "") {
                                 none = true
                             }
@@ -332,11 +332,11 @@ export const Tablas = (array) => {
                         ziseLess = 0
                     }
                     let styleTable = window.getComputedStyle(tableComponent[0])
-                
+
 
                     let extraSize = parseFloat(styleTable.paddingLeft.match(/\d+/)[0]) + parseFloat(styleTable.paddingRight.match(/\d+/)[0]) + parseFloat(styleTable.marginLeft.match(/\d+/)[0]) + parseFloat(styleTable.marginRight.match(/\d+/)[0] + (Math.ceil(contentTable[0].offsetWidth) - Math.ceil(contentTable[0].clientWidth)))
 
-                    
+
                     if (arrayThQuit.length > 0) {
                         if (((heightGroup + height) + extraSize) <= contentComponent.clientWidth) {
 
@@ -545,7 +545,7 @@ export const Tablas = (array) => {
                                                                                 <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
                                                                                 <input id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); setStatusInput(false) }} value={inputValor[key]} className="input-form" type="text" />
                                                                             </div>
-                                                                            <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
+                                                                            {/*                                                                             <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4> */}
                                                                         </div>
                                                                     );
 
@@ -623,7 +623,7 @@ export const Tablas = (array) => {
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
+                                                                            {/*                                 <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4> */}
 
                                                                         </div>
                                                                     );
@@ -651,6 +651,64 @@ export const Tablas = (array) => {
                                                 ""
                                         }
                                     </div>
+                                    {
+                                        array.filterPdfLimit ?
+                                            array.filterPdfLimit.status ?
+                                                <div className='limit-generate-documento'>
+                                                    <h4>Debes elegir un máximo de 100 registros para el documento. Sin especificación, se usarán los primeros 100 registros. Si optas por iniciar en el registro 100, se incluirán del 100 al 199, y así sucesivamente.</h4>
+
+                                                    <div className="limit-generate-documento-maximo">
+                                                        <label htmlFor="limit" className="label-from-register">Número de registros:</label> <h4>{array.filterPdfLimit.max ? array.filterPdfLimit.max : 100} </h4>
+                                                    </div>
+                                                    <div className='div-input-limit-generate-documento'>
+
+                                                        <div className="head-input">
+                                                            <label htmlFor="limit" className="label-from-register">Desde</label>
+                                                            <input onInput={(e) => {
+                                                                let limit = 100;
+                                                                let hastaLimit = document.getElementById("hastaLimit");
+                                                                let cantidadLimit = document.getElementById("cantidadLimit");
+                                                                if (array.filterPdfLimit.max) {
+                                                                    limit = array.filterPdfLimit.max
+                                                                };
+                                                                if (e.target.value <= 0 && e.target.value != "") {
+                                                                    e.target.value = 1
+                                                                }
+                                                                if (e.target.value > limit) {
+                                                                    e.target.value = limit
+                                                                }
+                                                                if (e.target.value.toString().length == 1) {
+                                                                    e.target.value = e.target.value.replace(/\D/g, 1)
+                                                                } else {
+                                                                    e.target.value = e.target.value.replace(/\D/g, "")
+                                                                }
+                                                                if (parseFloat(e.target.value) + 99 <= limit) {
+                                                                    hastaLimit.innerHTML = parseFloat(e.target.value) + 99
+                                                                } else if (parseFloat(e.target.value) + 99 > limit) {
+                                                                    hastaLimit.innerHTML = limit
+                                                                }
+                                                                if (e.target.value != "") {
+                                                                    cantidadLimit.innerHTML = parseFloat(hastaLimit.innerHTML) - parseFloat(e.target.value) + 1
+                                                                } else {
+                                                                    cantidadLimit.innerHTML = 100
+                                                                    hastaLimit.innerHTML = 100
+                                                                }
+                                                            }} defaultValue={1} id="limit" name="limit" autoComplete="false" className="input-form" type="text" />
+                                                        </div>
+                                                        <div className="head-input div-hasta-limit-generate-documento">
+                                                            <label htmlFor="limit" className="label-from-register">Hasta:</label>
+                                                            <h4 id='hastaLimit'>100</h4>
+                                                        </div>
+                                                        <div className="head-input div-hasta-limit-generate-documento">
+                                                            <label htmlFor="limit" className="label-from-register">Cantidad:</label>
+                                                            <h4 id='cantidadLimit'>100</h4>
+                                                        </div>
+                                                    </div>
+                                                </div> :
+                                                "" :
+                                            " "
+                                    }
+
                                     <div className='footer-get-reporte'>
                                         <button type='submit' onClick={() => { setTipoReporte("pdf") }} className='button-get-reporte get-repote-pdf'>PDF</button>
                                         <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-excel'>EXCEL</button>

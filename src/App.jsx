@@ -29,6 +29,7 @@ import { io } from 'socket.io-client';
 import { PruebaPdf } from './pages/PruebaPdf.jsx';
 import { GeneratePdfTable } from './pages/generatePdfTable.jsx';
 import { RecoveryPassword } from './pages/recovery.jsx';
+import { GenerateReporteAnalisis } from './pages/generateReporteAnalisis.jsx';
 
 export default function App() {
   const [statusAlert, setStatusAlert] = useState(false);
@@ -98,6 +99,7 @@ export default function App() {
         <Route path='*' element={<NotFound />} />
         <Route path='pruebaPdf' element={<PruebaPdf />} />
         <Route path='/dashboard/generatePdfTable/' element={<GeneratePdfTable />} />
+        <Route path='/dashboard/GenerateReporteAnalisis/:id' element={<GenerateReporteAnalisis />} />
         <Route path='/recover' element={<RecoveryPassword />} />
 
 

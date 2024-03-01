@@ -49,7 +49,7 @@
     top: 0;
     padding-top: 20px;
     background-color: white;
-
+    z-index: 1;
 }
 
 .table-component .items-header-table {
@@ -485,10 +485,16 @@
     position: absolute;
     z-index: 99;
     background-color: white;
-    padding: 10px;
+    padding: 20px;
     border: 1px solid rgb(219, 219, 219);
     border-radius: 8px;
-    width: max-content;
+    width: 500px;
+}
+
+.div-input-documento form {
+    gap: 40px;
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -526,6 +532,7 @@
     font-weight: bolder;
     width: 100px;
     max-width: 100%;
+    cursor: pointer;
 }
 
 .get-repote-pdf {
@@ -553,6 +560,58 @@
 .input-date:focus {
     outline: none;
 }
-.td-table-print{
+
+.td-table-print {
     word-break: break-all;
+}
+
+.limit-generate-documento {
+    width: 100%;
+}
+
+.limit-generate-documento {
+    font-size: 0.8em;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.limit-generate-documento-maximo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+}
+
+.div-input-limit-generate-documento {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 30px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    height: 100%;
+}
+
+.div-input-limit-generate-documento>div {
+    flex-direction: unset;
+    gap: 30px;
+    align-items: center;
+}
+
+.div-input-limit-generate-documento input {
+    width: unset;
+}
+
+.div-hasta-limit-generate-documento h4 {
+    background-color: rgb(255, 146, 4);
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 15px;
+    color: white;
+    border-radius: 4px;
+    font-weight: bolder;
 }

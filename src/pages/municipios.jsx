@@ -22,42 +22,22 @@ export const Municipios = () => {
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
     const [modalForm, changeModalForm] = useState(false);
+    const [filterPdfLimit, setFilterPdflimit] = useState({ status: false });
 
     let idFincaCambiarEstado = 0;
     let [inputsDocumento, setinputsDocumento] = useState(
         {
-            "fecha": {
+            "departamento": {
                 inputs: {
-                    desde_registro: {
-                        type: "date",
-                        referencia: "Desde",
+                    departamentos_id: {
+                        type: "select",
+                        referencia: "Departamento",
                         values: ["nombre"],
-                        opciones: [{ nombre: "certificar" }, { nombre: "practica" }],
-                        upper_case: true,
-                        key: "nombre"
-                    },
-                    hasta_registro: {
-                        type: "date",
-                        referencia: "Hasta",
-                        values: ["numero_documento", "nombre_completo", "finca", "lote", "mu_id"],
                         upper_case: true,
                         key: "id"
                     }
                 },
-                referencia: "Filtrar por fecha de registro"
-            },
-            "estado": {
-                inputs: {
-                    estado: {
-                        type: "select",
-                        referencia: "Estado",
-                        values: ["nombre"],
-                        opciones: [{ nombre: "activo", value: "1" }, { nombre: "inactivo", value: "0" }, { nombre: "pendiente", value: "2" }],
-                        upper_case: true,
-                        key: "value"
-                    }
-                },
-                referencia: "Filtrar por estado"
+                referencia: "Filtrar por departamento"
             }
         }
     )
@@ -68,7 +48,7 @@ export const Municipios = () => {
                 referencia: "Nombre",
                 upper_case: true,
             },
-            departamentos_Id: {
+            departamentos_id: {
                 type: "select",
                 referencia: "Departamento",
                 values: ["nombre"],
@@ -266,14 +246,25 @@ export const Municipios = () => {
 
     async function getDepartamentos() {
         try {
-            const response = await Api.post("departamento/listar");
+            let filter = {
+                "filter": {
+                    "limit": {
+                        "inicio": 0,
+                        "fin": 4444
+                    }
+                }
+            }
+            const response = await Api.post("departamento/listar", filter);
             if (response.data.status == true) {
                 let users = inputsForm;
-                if (!users["departamentos_Id"]) {
-                    users["departamentos_Id"] = {}
+                let depPdf = inputsDocumento
+                if (!users["departamentos_id"]) {
+                    users["departamentos_id"] = {}
                 }
-                users["departamentos_Id"]["opciones"] = response.data.data
+                users["departamentos_id"]["opciones"] = response.data.data
+                depPdf.departamento.inputs.departamentos_id["opciones"] = response.data.data
                 setInputsForm(users)
+                setinputsDocumento(depPdf)
             } else if (response.data.find_error) {
 
             } else {
@@ -416,31 +407,46 @@ export const Municipios = () => {
                 "filter": {
                     "where": {
 
+                    },
+                    "limit": {
+
                     }
-                },
-                "limit": {
-                    
                 }
             }
             console.log(filter)
-            if (filter.estado != "") {
-                filterReport["filter"]["where"]["an.estado"] = {
+            if (filter.departamentos_id != "" && filter.departamentos_id != undefined) {
+                console.log(filter.departamentos_id,"hahsdhashdahsd")
+                filterReport["filter"]["where"]["mu.departamentos_id"] = {
 
-                    "value": filter.estado ? filter.estado : "",
+                    "value": filter.departamentos_id ? filter.departamentos_id : "",
                     "operador": "=",
                     "require": "and"
 
                 }
             }
-            console.log(tipo, filter, filterReport)
+
             const response = await Api.post("municipio/listar", filterReport);
-            console.log(response, "reponseee")
-            let dataPdf = {
-                data: response.data.data,
-                table: keys
+            console.log(response,"muniiiiiiiiiiiiiiii")
+            if (response.data.count <= 100 && filterPdfLimit.status == true) {
+                localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
+                window.open('/dashboard/generatePdfTable', '_blank')
+                setFilterPdflimit({ status: false })
+            } else if (response.data.count > 100 && filterPdfLimit.status == false) {
+                setFilterPdflimit({ status: true, max: response.data.count })
+            } else {
+                filterReport.filter.limit = {
+                    inicio: filter.limit ? (filter.limit - 1) : 0,
+                    fin: 100
+                };
+                const response = await Api.post("municipio/listar", filterReport);
+                let dataPdf = {
+                    data: response.data.data,
+                    table: keys
+                }
+                localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
+                window.open('/dashboard/generatePdfTable', '_blank')
             }
-            localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
-            window.open('/dashboard/generatePdfTable', '_blank')
+
 
         } catch (e) {
             console.log(e)
@@ -448,7 +454,7 @@ export const Municipios = () => {
     }
     return (
         <>
-            <Tablas getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} hidden={['status', 'register', 'update']} tittle={"Municipio"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} hidden={['status', 'register', 'update']} tittle={"Municipio"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

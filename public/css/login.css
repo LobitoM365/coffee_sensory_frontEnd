@@ -65,19 +65,20 @@ img {
 
 .login-form-container {
   height: 100%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .login-form {
+  padding: 0px 23px 0px 23px;
   background-color: white;
   transition: margin-bottom 0.5s, opacity 0.1s;
-  position: fixed;
   display: flex;
   flex-direction: column;
   gap: 30px;
-  width: 310px;
+  width: 100%;
 }
 
 .container-inputs {
@@ -270,4 +271,37 @@ img {
   to {
     transform: rotate(360deg) translateX(5px);
   }
+}
+
+
+@media screen and (max-width:760px) {
+  .login-container {
+    width: 90%;
+    grid-template: 553px/ 1fr 0fr;
+    /* padding: 50px 0px; */
+  }
+
+  .title-login {
+    margin-bottom: 0;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width:400px) {
+  .title-login {
+    font-size: 1.4em;
+  }
+
+  .login-form input {
+    font-size: 0.8em;
+  }
+
+  .eyes-container{
+    width: 35px;
+  }
+
+  .svg-eyes-two svg{
+    width: 17px;
+  }
+
 }

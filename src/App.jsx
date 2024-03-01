@@ -101,8 +101,6 @@ export default function App() {
         <Route path='/dashboard/generatePdfTable/' element={<GeneratePdfTable />} />
         <Route path='/dashboard/GenerateReporteAnalisis/:id' element={<GenerateReporteAnalisis />} />
         <Route path='/recover' element={<RecoveryPassword />} />
-
-
         <Route path='/' element={<Loader />}>
           <Route path='/modalfinca' element={<ModalFinca />}></Route>
           <Route path='/' element={<MenuInicio userInfo={userInfo} />}>

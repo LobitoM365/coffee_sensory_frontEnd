@@ -256,8 +256,8 @@ export const Login = () => {
                     </form>
                     <form className="login-form bots-form recoveryForm" onSubmit={handleRecovery}>
                         <h3 className='title-login text-recovery'>Recupere su cuenta</h3>
-                        <div className="text-info">Porfavor ingrese su numero de indentificación y un correo de su propiedad valido. A dicho correo recibirá el acceso al restablecimiento de su contraseña con una vigencia de 10 minutos.</div>
-                        <div className="container-inputs">
+                        <div className="text-info">Por favor, ingrese el correo eléctronico con el cual usted fue registrado. A dicho correo recibirá el acceso al restablecimiento de su contraseña con una vigencia de 10 minutos.</div>
+                        {/* <div className="container-inputs">
                             <span className='span-input'>Indentificación</span>
                             <div className="container-input">
                                 <input
@@ -269,7 +269,7 @@ export const Login = () => {
                                 />
                             </div>
                             {validationError.identificacion && <div className="credentials-error"> {validationError.identificacion}</div>}
-                        </div>
+                        </div> */}
                         <div className="container-inputs">
                             <span className='span-input'>Correo Electronico</span>
                             <div className="container-input">

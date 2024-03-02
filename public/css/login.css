@@ -277,7 +277,7 @@ img {
 @media screen and (max-width:760px) {
   .login-container {
     width: 90%;
-    grid-template: 553px/ 1fr 0fr;
+    grid-template: 490px/ 1fr 0fr;
     /* padding: 50px 0px; */
   }
 
@@ -292,15 +292,19 @@ img {
     font-size: 1.4em;
   }
 
+  .login-container {
+    grid-template: 450px/ 1fr 0fr;
+  }
+
   .login-form input {
     font-size: 0.8em;
   }
 
-  .eyes-container{
+  .eyes-container {
     width: 35px;
   }
 
-  .svg-eyes-two svg{
+  .svg-eyes-two svg {
     width: 17px;
   }
 

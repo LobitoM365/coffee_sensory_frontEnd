@@ -64,6 +64,9 @@ export const Cafes = () => {
         },
         "estado": {
             "referencia": "Estado"
+        },
+        "actualizar": {
+            "referencia": "actualizar"
         }
     }
     const filterEstado = {

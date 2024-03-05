@@ -112,6 +112,9 @@ export const RegistrosUsuarios = () => {
         },
         "estado": {
             "referencia": "Estado"
+        },
+        "actualizar": {
+            "referencia": "actualizar"
         }
     }
     const filterEstado = {

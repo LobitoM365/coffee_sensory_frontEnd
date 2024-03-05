@@ -128,6 +128,9 @@ export const Muestras = () => {
         },
         "estado": {
             "referencia": "Estado"
+        },
+        "actualizar": {
+            "referencia": "actualizar"
         }
     }
     const filterEstado = {

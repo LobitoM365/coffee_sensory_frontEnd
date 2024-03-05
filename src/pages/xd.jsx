@@ -1,5 +1,5 @@
 import React from 'react'
-import '../../public/css/xd.css'
+/* import '../../public/css/xd.css' */
 
 export const ModalFinca = () => {
     return (

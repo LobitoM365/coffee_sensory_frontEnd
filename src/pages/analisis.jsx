@@ -363,6 +363,42 @@ export const Analisis = (userInfo) => {
         },
         "estado": {
             "referencia": "Estado"
+        },
+        "actualizar": {
+            "referencia": "actualizar"
+        },
+        "reporte": {
+            "normal": true,
+            "referencia": "Reporte",
+            "inputs": {
+                /* "reporte": {
+                    "type": "button",
+                    "referencia": "PDF",
+                    "class": "button-table-pdf",
+                    "function": {
+                        "value": xd,
+                        "execute": {
+                            "type": "table",
+                            "value": "an_id"
+                        }
+                    }
+                }, */
+                "pdf": {
+                    "type": "free",
+                    "element": "icon-pdf",
+                    "redirect-value": {
+                        "type" : "new-window",
+                        "value": "/dashboard/generateReporteAnalisis",
+                        "execute": {
+                            "type": "table",
+                            "value": "an_id"
+                        }
+                    },
+                    "class": "div-icon-reporte-pdf",
+                }
+            },
+            "class": "div-reporte-pdf",
+            "upper_case": true
         }
     }
     const filterEstado = {
@@ -400,7 +436,6 @@ export const Analisis = (userInfo) => {
             setDataModalResultado([])
             setDataModalResultadoAnalisis([])
             const response = await Api.post("analisis/buscar/" + id + "");
-            console.log(response, "buscarrrrr111111111111111111111111111111111111111111111111111111111111")
 
             if (response.data.status == true) {
                 setDataModalAnalisis(response.data.data)

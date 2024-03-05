@@ -278,7 +278,7 @@ export const FormResultados = forwardRef((data, ref) => {
                 let notas = content.getElementById("div-notas")
                 let textNotas = content.getElementById("notas")
                 if (textNotas) {
-
+                    textNotas.innerHTML = data[0].notas
                 }
 
                 let valuePuntajeTotal = ((data[0].fragancia_aroma ? data[0].fragancia_aroma : 0) + (data[0].sabor ? data[0].sabor : 0) + (data[0].sabor_residual ? data[0].sabor_residual : 0) + (data[0].acidez ? data[0].acidez : 0) + (data[0].cuerpo ? data[0].cuerpo : 0) + (data[0].uniformidad ? data[0].uniformidad : 0) + (data[0].taza_limpia ? data[0].taza_limpia : 0) + (data[0].balance ? data[0].balance : 0) + (data[0].dulzor ? data[0].dulzor : 0) + (data[0].puntaje_catador ? data[0].puntaje_catador : 0))
@@ -942,7 +942,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                     :
                                     (
                                         <div className="div-content-info-analisis-formato">
-                                          
+
 
                                             {data.tipoAnalisis == 1 ?
                                                 <div className="div-table-formato-fisico-template">
@@ -1051,7 +1051,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                 <iframe id="iframeFormatoSca" className="iframe-vacio-formato-sca iframe-formato-sca" src="/src/formatoSca/formatoScaTemplate.html" frameBorder="0"></iframe>
                                             }
 
-                                            {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].permission_formato == "true" ? data.dataModalResultado[0].estado == 2 || data.dataModalResultado[0].estado == 3 ? <button onClick={() => { setStatusInput(true);setInputValor({}); setStatusInputDefault(false); setIdFormato(data.dataModalResultado[0].id), setModeFormato(data.dataModalResultado[0].tipos_analisis_id); setTipoRegistro(1), setModalFormNormal(true) }} type="button" className="button-submit-form">Analizar</button> : "" : "" : ""}
+                                            {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].permission_formato == "true" ? data.dataModalResultado[0].estado == 2 || data.dataModalResultado[0].estado == 3 ? <button onClick={() => { setStatusInput(true); setInputValor({}); setStatusInputDefault(false); setIdFormato(data.dataModalResultado[0].id), setModeFormato(data.dataModalResultado[0].tipos_analisis_id); setTipoRegistro(1), setModalFormNormal(true) }} type="button" className="button-submit-form">Analizar</button> : "" : "" : ""}
                                         </div>
                                     )
 

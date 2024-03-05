@@ -73,6 +73,9 @@ export const Lotes = () => {
         },
         "estado": {
             "referencia": "Estado"
+        },
+        "actualizar": {
+            "referencia": "actualizar"
         }
     }
     const filterEstado = {

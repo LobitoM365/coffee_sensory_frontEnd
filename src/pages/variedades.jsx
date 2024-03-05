@@ -45,6 +45,9 @@ export const Variedades = () => {
         "fecha_creacion": {
             "referencia": "Fecha creación",
             "format": true
+        },
+        "actualizar": {
+            "referencia": "actualizar"
         }
     }
     const filterEstado = {

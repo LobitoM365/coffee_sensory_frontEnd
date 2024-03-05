@@ -5,7 +5,7 @@ export const Alert = (data) => {
 
     return (
         <>
-            <link rel="stylesheet" href="../../public/css/alert.css" />
+            <link rel="stylesheet" href="/../public/css/alert.css" />
 
             <div style={{ display: !data.statusAlert ? "none" : "" }} className="div-alert">
                 <div className="alert">

@@ -409,7 +409,7 @@ export const Municipios = () => {
 
                     },
                     "limit": {
-
+                        fin : 100
                     }
                 }
             }
@@ -427,13 +427,17 @@ export const Municipios = () => {
 
             const response = await Api.post("municipio/listar", filterReport);
             console.log(response,"muniiiiiiiiiiiiiiii")
-            if (response.data.count <= 100 && filterPdfLimit.status == true) {
+            if (response.data.count <= 100) {
+                let dataPdf = {
+                    data: response.data.data,
+                    table: keys
+                }
                 localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
                 window.open('/dashboard/generatePdfTable', '_blank')
                 setFilterPdflimit({ status: false })
             } else if (response.data.count > 100 && filterPdfLimit.status == false) {
                 setFilterPdflimit({ status: true, max: response.data.count })
-            } else {
+            } else if (response.data.count > 100 && filterPdfLimit.status == true) {
                 filterReport.filter.limit = {
                     inicio: filter.limit ? (filter.limit - 1) : 0,
                     fin: 100

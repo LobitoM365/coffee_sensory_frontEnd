@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Form } from './Form.jsx';
 import { json } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { elements } from 'chart.js';
 export const formatDate = (data) => {
 
     let date = new Date(data);
@@ -11,7 +12,12 @@ export const formatDate = (data) => {
 
     return `${day < 10 ? '0' + day : day} / ${month < 10 ? '0' + month : month} / ${year} `
 }
+const TemporaryStyles = () => {
+    return (
+        <link rel="stylesheet" href="/public/css/tableComponent.css" />
 
+    );
+};
 
 export const Tablas = (array) => {
 
@@ -336,7 +342,7 @@ export const Tablas = (array) => {
 
                     let extraSize = parseFloat(styleTable.paddingLeft.match(/\d+/)[0]) + parseFloat(styleTable.paddingRight.match(/\d+/)[0]) + parseFloat(styleTable.marginLeft.match(/\d+/)[0]) + parseFloat(styleTable.marginRight.match(/\d+/)[0] + (Math.ceil(contentTable[0].offsetWidth) - Math.ceil(contentTable[0].clientWidth)))
 
-
+                    console.log(heightGroup + height, height, "hahsdashd")
                     if (arrayThQuit.length > 0) {
                         if (((heightGroup + height) + extraSize) <= contentComponent.clientWidth) {
 
@@ -496,6 +502,7 @@ export const Tablas = (array) => {
     return (
 
         <div id='contentComponent'>
+            <TemporaryStyles />
             <link rel="stylesheet" href="/public/css/tableComponent.css" />
             <div className="div-table">
                 <div className="div-filters">
@@ -795,7 +802,7 @@ export const Tablas = (array) => {
                                     return <th className='th-table-print' key={index}>
                                         <div className="items-header-table">
                                             <h4 className='tittle-item-header-table'>   {print[keys]["referencia"]} </h4>
-                                            <svg onClick={() => functionCancheFilterRotate(keys)} style={{ rotate: filterRotate[keys] ? filterRotate[keys]["value"] == "desc" ? "0deg" : "180deg" : "0deg", fill: filterRotate[keys] ? "blue" : "" }} className="filter-asc-desc" version="1.0" viewBox="0 0 512.000000 512.000000">
+                                            {keys != "actualizar" ? <svg onClick={() => functionCancheFilterRotate(keys)} style={{ rotate: filterRotate[keys] ? filterRotate[keys]["value"] == "desc" ? "0deg" : "180deg" : "0deg", fill: filterRotate[keys] ? "blue" : "" }} className="filter-asc-desc" version="1.0" viewBox="0 0 512.000000 512.000000">
 
                                                 <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" stroke="none">
                                                     <path d="M680 4341 c-66 -23 -140 -97 -158 -158 -39 -131 13 -259 133 -322 l40 -21 1478 0 c1633 0 1508 -5 1587 67 58 51 80 102 80 186 0 109 -42 183 -132 233 l-53 29 -1460 2 c-1411 2 -1462 2 -1515 -16z" />
@@ -803,12 +810,13 @@ export const Tablas = (array) => {
                                                     <path d="M3490 3317 c-47 -14 -883 -842 -911 -902 -23 -49 -25 -161 -5 -210 42 -101 135 -161 246 -159 98 1 132 23 327 217 l172 171 3 -740 c3 -699 4 -741 22 -774 34 -64 63 -95 117 -125 45 -25 65 -29 124 -29 80 0 129 21 184 76 74 74 71 26 71 858 l0 745 178 -177 c198 -198 233 -221 326 -222 85 -1 146 24 199 84 72 80 88 190 43 285 -34 70 -829 864 -896 894 -50 23 -141 26 -200 8z" />
                                                     <path d="M698 2300 c-155 -47 -233 -220 -164 -365 28 -60 66 -97 126 -124 44 -20 63 -21 620 -21 639 0 611 -2 692 69 56 49 81 120 76 208 -4 64 -10 80 -42 127 -24 35 -54 63 -89 82 l-52 29 -570 2 c-314 1 -582 -2 -597 -7z" />
                                                 </g>
-                                            </svg>
+                                            </svg> : ""}
+
 
                                         </div>
                                     </th>
                                 })}
-                                <th style={{ display: array.hidden && array.hidden.includes('update') ? 'none' : '' }}><h4 className='tittle-item-header-table' >Actualizar</h4></th>
+                                {/* <th style={{ display: array.hidden && array.hidden.includes('update') ? 'none' : '' }}><h4 className='tittle-item-header-table' >Actualizar</h4></th> */}
                             </tr>
                         </thead >
                         <tbody key={"tBody"}>
@@ -819,7 +827,150 @@ export const Tablas = (array) => {
 
                                         {
                                             keysPrint.map((keys, index) => {
-                                                if (keysData.includes(keys)) {
+                                                if (keys == "actualizar") {
+                                                    return <td key={index} className='td-update' style={{ display: array.hidden && array.hidden.includes('update') ? 'none' : '' }}>
+                                                        <div className="center-update">
+                                                            <button onClick={() => { setClearClick(); array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} title='actualizar' {...data[valuesD]["estado"] == 0 ? { disabled: true, title: 'Inactivo - No se puede actualizar' } : ''} className={`item-options option-update ${data[valuesD]['estado'] == 0 ? 'btn-disabled' : ""}`}>
+                                                                <svg version="1.0" viewBox="0 0 478.000000 522.000000" >
+
+                                                                    <g transform="translate(0.000000,522.000000) scale(0.100000,-0.100000)" stroke="none">
+                                                                        <path d="M2110 5203 c-33 -12 -40 -36 -40 -138 l0 -101 -137 -27 c-610 -121 -1166 -501 -1512 -1032 -315 -483 -442 -1101 -345 -1670 128 -750 594 -1380 1276 -1722 74 -38 144 -66 161 -66 51 0 77 63 40 95 -10 8 -70 40 -133 70 -679 330 -1147 987 -1241 1743 -16 127 -16 411 0 535 50 391 197 763 424 1066 291 389 674 661 1137 808 114 36 267 71 363 82 31 4 62 14 69 22 7 8 15 48 18 89 l5 74 187 -128 c102 -70 186 -132 187 -138 0 -5 -84 -74 -187 -152 l-187 -143 -5 86 c-4 60 -9 88 -20 94 -62 39 -423 -59 -669 -181 -408 -203 -723 -514 -922 -911 -263 -524 -289 -1134 -72 -1680 19 -47 43 -94 53 -103 25 -22 59 -16 82 16 19 26 19 26 -5 85 -165 395 -200 810 -102 1219 58 246 181 503 339 710 258 339 638 590 1065 701 140 36 131 41 131 -74 0 -72 4 -103 16 -120 32 -46 54 -34 355 193 156 119 290 227 297 241 21 39 1 59 -175 178 -87 59 -213 145 -280 191 -125 86 -147 97 -173 88z" />
+                                                                        <path d="M3280 4797 c-13 -7 -26 -21 -30 -32 -15 -42 5 -60 151 -132 681 -337 1133 -972 1235 -1733 18 -139 18 -410 -1 -557 -86 -658 -449 -1234 -1010 -1603 -121 -79 -364 -194 -515 -244 -119 -39 -367 -96 -419 -96 -10 0 -29 -8 -42 -19 -21 -17 -23 -26 -21 -91 2 -43 -1 -71 -7 -68 -19 7 -380 253 -381 260 0 3 86 72 190 152 l190 145 0 -55 c0 -105 24 -121 151 -99 584 102 1107 471 1417 1003 34 59 62 119 62 133 0 35 -31 61 -66 57 -24 -3 -36 -17 -81 -96 -243 -430 -606 -741 -1053 -899 -117 -41 -294 -85 -304 -75 -4 3 -6 44 -6 92 0 71 -3 90 -18 103 -30 27 -55 20 -128 -34 -295 -221 -514 -393 -519 -410 -15 -45 -16 -44 503 -396 51 -35 99 -63 108 -63 8 0 26 11 39 25 23 22 25 31 25 123 l0 99 77 13 c43 7 133 27 201 46 889 244 1553 972 1708 1874 61 348 37 750 -62 1077 -189 624 -617 1139 -1186 1427 -158 80 -179 87 -208 73z" />
+                                                                        <path d="M1311 3944 l-21 -27 0 -1316 c0 -1175 2 -1319 16 -1339 l15 -22 1093 0 c1005 0 1095 1 1107 17 12 13 15 130 17 647 1 347 0 641 -3 653 -12 51 -67 70 -98 35 -15 -16 -17 -46 -17 -208 0 -195 -13 -291 -45 -354 -27 -52 -92 -107 -148 -126 -56 -19 -193 -25 -263 -11 -33 7 -45 5 -64 -11 -23 -18 -23 -20 -12 -108 21 -159 -17 -283 -106 -351 -83 -63 -81 -63 -759 -63 l-613 0 0 1245 0 1245 1003 -2 1002 -3 3 -155 3 -154 -258 -258 -258 -258 -587 0 c-650 0 -623 3 -616 -64 5 -56 4 -56 568 -56 l515 0 -180 -180 -180 -180 -340 0 c-375 0 -385 -2 -385 -59 0 -59 9 -61 313 -61 152 0 277 -3 277 -7 0 -4 -21 -28 -46 -54 -44 -45 -47 -52 -111 -265 -56 -185 -71 -225 -100 -257 -38 -43 -41 -69 -13 -97 28 -28 59 -25 96 11 27 26 68 42 260 100 l228 68 613 613 c407 407 620 627 633 654 24 49 26 127 4 180 -19 46 -125 158 -180 190 -22 13 -61 27 -87 30 l-46 7 -3 169 c-3 165 -4 170 -27 189 -23 18 -55 19 -1101 19 l-1079 0 -20 -26z m2297 -488 c15 -8 53 -41 85 -74 51 -54 57 -65 57 -104 l0 -43 -582 -582 -583 -583 -112 112 c-62 62 -113 115 -113 119 0 4 901 907 955 957 2 2 38 -30 81 -72 81 -80 110 -92 146 -59 33 30 22 55 -62 138 l-80 80 53 53 c71 74 103 85 155 58z m-1223 -1356 c49 -49 87 -91 84 -94 -8 -8 -250 -78 -254 -74 -6 6 68 258 75 258 3 0 46 -40 95 -90z m1035 -485 l0 -254 -260 -3 c-143 -2 -260 -2 -260 0 0 2 11 18 24 35 60 80 86 166 86 285 l0 82 63 0 c114 0 236 37 306 91 13 11 28 19 32 19 5 0 9 -115 9 -255z" />
+                                                                        <path d="M1722 3494 c-26 -18 -30 -65 -6 -88 14 -14 89 -16 683 -16 539 0 671 3 685 13 26 19 24 67 -4 89 -21 17 -60 18 -679 18 -578 0 -659 -2 -679 -16z" />
+                                                                    </g>
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                } else if (print[keys]["normal"]) {
+                                                    let tableData = []
+                                                    let classProcedure = "";
+                                                    if (print[keys]["class"]) {
+                                                        classProcedure = print[keys]["class"];
+                                                    }
+                                                    if (print[keys]["inputs"]) {
+                                                        let keysInputs = Object.keys(print[keys]["inputs"])
+                                                        let indexInputs = Object.keys(print[keys]["inputs"]).length > 5 ? 5 : Object.keys(print[keys]["inputs"]).length
+                                                        for (let x = 0; x < indexInputs; x++) {
+                                                            let referenciaButton = keysInputs[x];
+                                                            let classProcedure = "";
+                                                            if (print[keys]["inputs"][keysInputs[x]]["class"]) {
+                                                                classProcedure = print[keys]["inputs"][keysInputs[x]]["class"];
+                                                            }
+
+                                                            if (print[keys]["inputs"][keysInputs[x]]["referencia"]) {
+                                                                referenciaButton = print[keys]["inputs"][keysInputs[x]]["referencia"]
+                                                            }
+
+                                                            if (print[keys]["inputs"][keysInputs[x]]["type"]) {
+
+                                                                if (print[keys]["inputs"][keysInputs[x]]["type"] == "button") {
+
+                                                                    let functionProcedure;
+                                                                    let valueFunctionProcedure;
+
+                                                                    if (print[keys]["inputs"][keysInputs[x]]["function"]) {
+                                                                        if (print[keys]["inputs"][keysInputs[x]]["function"]["value"]) {
+                                                                            functionProcedure = print[keys]["inputs"][keysInputs[x]]["function"]["value"];
+                                                                        }
+                                                                        if (print[keys]["inputs"][keysInputs[x]]["function"]["execute"]) {
+                                                                            if (print[keys]["inputs"][keysInputs[x]]["function"]["execute"]["type"]) {
+                                                                                if (print[keys]["inputs"][keysInputs[x]]["function"]["execute"]["type"] == "table") {
+                                                                                    if (print[keys]["inputs"][keysInputs[x]]["function"]["execute"]["value"]) {
+                                                                                        if (keysData.includes(print[keys]["inputs"][keysInputs[x]]["function"]["execute"]["value"])) {
+                                                                                            valueFunctionProcedure = data[valuesD][print[keys]["inputs"][keysInputs[x]]["function"]["execute"]["value"]];
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    tableData.push(<button key={x} onClick={() => { functionProcedure ? functionProcedure(valueFunctionProcedure) : "" }} className={'button-table-normal table-attribute-button-condition ' + classProcedure}>{referenciaButton}</button>);
+
+                                                                } else if (print[keys]["inputs"][keysInputs[x]]["type"] == "free") {
+                                                                    if (print[keys]["inputs"][keysInputs[x]]["element"]) {
+                                                                        let functionProcedure;
+                                                                        let valueFunctionProcedure;
+
+                                                                        if (print[keys]["inputs"][keysInputs[x]]["function"]) {
+                                                                            if (print[keys]["inputs"][keysInputs[x]]["function"]["value"]) {
+                                                                                functionProcedure = print[keys]["inputs"][keysInputs[x]]["function"]["value"];
+                                                                            }
+                                                                            if (print[keys]["inputs"][keysInputs[x]]["function"]["execute"]) {
+                                                                                if (print[keys]["inputs"][keysInputs[x]]["function"]["execute"]["type"]) {
+                                                                                    if (print[keys]["inputs"][keysInputs[x]]["function"]["execute"]["type"] == "table") {
+                                                                                        if (print[keys]["inputs"][keysInputs[x]]["function"]["execute"]["value"]) {
+                                                                                            if (keysData.includes(print[keys]["inputs"][keysInputs[x]]["function"]["execute"]["value"])) {
+                                                                                                valueFunctionProcedure = data[valuesD][print[keys]["inputs"][keysInputs[x]]["function"]["execute"]["value"]];
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        } else if (print[keys]["inputs"][keysInputs[x]]["redirect-value"]) {
+                                                                            functionProcedure = function procedure() {
+                                                                                let direction = ""
+                                                                                let value = ""
+                                                                                if (print[keys]["inputs"][keysInputs[x]]["redirect-value"]["value"]) {
+                                                                                    direction = print[keys]["inputs"][keysInputs[x]]["redirect-value"]["value"];
+                                                                                }
+                                                                                if (print[keys]["inputs"][keysInputs[x]]["redirect-value"]["execute"]) {
+                                                                                    if (print[keys]["inputs"][keysInputs[x]]["redirect-value"]["execute"]["type"]) {
+                                                                                        if (print[keys]["inputs"][keysInputs[x]]["redirect-value"]["execute"]["type"] == "table") {
+                                                                                            if (print[keys]["inputs"][keysInputs[x]]["redirect-value"]["execute"]["value"]) {
+                                                                                                if (keysData.includes(print[keys]["inputs"][keysInputs[x]]["redirect-value"]["execute"]["value"])) {
+                                                                                                    value = data[valuesD][print[keys]["inputs"][keysInputs[x]]["redirect-value"]["execute"]["value"]];
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                                if (print[keys]["inputs"][keysInputs[x]]["redirect-value"]["type"]) {
+                                                                                    if (print[keys]["inputs"][keysInputs[x]]["redirect-value"]["type"] == "new-window") {
+                                                                                        window.open(direction + "/" + value, "_blank")
+                                                                                    } else {
+                                                                                        if (direction != "") {
+                                                                                            location.href = direction + "/" + value
+                                                                                        }
+                                                                                    }
+                                                                                } else {
+                                                                                    if (direction != "") {
+                                                                                        location.href = direction + "/" + value
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        tableData.push(
+                                                                            <div onClick={() => { functionProcedure ? functionProcedure(valueFunctionProcedure) : "" }} className={"div-element-free " + classProcedure} key={x}>{print[keys]["inputs"][keysInputs[x]]["element"] == "icon-pdf" ? <svg className='icon-pdf-table' xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 358.000000 438.000000" preserveAspectRatio="xMidYMid meet">
+                                                                                <metadata>
+                                                                                    Created by potrace 1.16, written by Peter Selinger 2001-2019
+                                                                                </metadata>
+                                                                                <g transform="translate(0.000000,438.000000) scale(0.100000,-0.100000)" stroke="none">
+                                                                                    <path d="M301 4330 c-103 -37 -193 -119 -239 -218 l-27 -57 0 -1870 0 -1870 30 -60 c40 -82 119 -159 202 -198 l68 -32 1410 -3 c1027 -2 1426 0 1470 8 123 24 234 110 291 225 l29 60 3 1543 2 1544 -26 58 c-22 50 -76 108 -422 452 -369 368 -401 397 -455 417 -58 21 -59 21 -1170 21 -1077 -1 -1114 -1 -1166 -20z m2293 -124 c21 -9 181 -161 415 -395 302 -304 383 -389 391 -419 8 -26 10 -489 8 -1542 l-3 -1505 -22 -41 c-26 -48 -88 -107 -140 -131 -36 -17 -122 -18 -1428 -21 -950 -2 -1406 1 -1440 8 -81 17 -147 68 -184 141 l-31 62 0 1817 c0 2002 -4 1864 62 1944 18 23 57 50 92 67 l61 29 1093 0 c919 0 1098 -2 1126 -14z" />
+                                                                                    <path d="M1652 3444 c-75 -53 -78 -227 -6 -442 19 -57 34 -110 34 -118 0 -29 -113 -312 -181 -454 l-70 -145 -117 -55 c-207 -97 -330 -192 -354 -272 -17 -56 8 -101 68 -124 82 -31 167 2 269 105 79 81 156 181 215 283 l45 76 101 32 c56 17 164 45 238 61 l137 31 52 -40 c79 -60 133 -91 206 -120 56 -21 83 -25 179 -26 l114 -1 29 33 c62 69 18 153 -100 189 -63 19 -250 24 -389 9 l-82 -8 -58 62 c-63 68 -164 206 -192 260 -17 34 -17 37 12 135 62 215 72 363 30 457 -34 77 -123 113 -180 72z m80 -15 c25 -13 48 -67 48 -112 0 -79 -63 -367 -80 -367 -4 0 -19 35 -33 78 -63 191 -60 368 7 400 28 14 34 14 58 1z m208 -907 c35 -40 61 -74 59 -76 -2 -1 -42 -10 -89 -20 -47 -10 -132 -31 -190 -48 -58 -17 -113 -33 -123 -36 -16 -4 -15 3 11 54 24 48 118 278 146 358 5 15 18 1 65 -70 33 -49 87 -122 121 -162z m512 -82 c77 -22 101 -98 49 -151 -46 -45 -125 -40 -249 17 -46 22 -143 87 -161 108 -11 13 -9 16 11 20 74 17 298 20 350 6z m-1062 -216 c0 -19 -123 -188 -183 -251 -84 -88 -144 -121 -187 -103 -33 14 -46 45 -36 85 15 61 118 141 295 232 80 41 111 51 111 37z" />
+                                                                                    <path d="M1100 935 l0 -315 50 0 50 0 0 115 0 115 51 0 c158 0 249 105 218 252 -9 40 -21 62 -50 90 -49 47 -90 58 -216 58 l-103 0 0 -315z m224 213 c30 -13 46 -48 46 -101 -1 -69 -44 -107 -124 -107 l-46 0 0 116 0 117 50 -7 c28 -4 61 -12 74 -18z" />
+                                                                                    <path d="M1580 935 l0 -317 123 3 c112 4 126 6 169 31 89 53 134 132 145 258 7 81 -16 179 -56 234 -15 22 -52 54 -82 70 -51 29 -62 31 -176 35 l-123 3 0 -317z m239 210 c46 -23 79 -70 91 -131 18 -86 -3 -197 -48 -248 -26 -29 -92 -56 -139 -56 l-43 0 0 225 0 225 55 0 c31 0 69 -7 84 -15z" />
+                                                                                    <path d="M2140 935 l0 -315 50 0 50 0 0 135 0 135 105 0 105 0 0 45 0 45 -105 0 -105 0 0 90 0 90 116 0 115 0 -3 43 -3 42 -162 3 -163 2 0 -315z" />
+                                                                                </g>
+                                                                            </svg> : print[keys]["inputs"][keysInputs[x]]["element"]}</div>
+                                                                        );
+                                                                    }
+                                                                } else if (print[keys]["type"] == "text") {
+
+                                                                    tableData.push(<h4 key={x} className={'text-table-normal table-attribute-no-registra ' + classProcedure}>{referenciaButton}</h4>);
+                                                                } else {
+                                                                    tableData.push(<h4 key={x} className='text-table-normal table-attribute-no-registra'>{referenciaButton}</h4>);
+                                                                }
+                                                            } else {
+                                                                tableData.push(<h4 key={x} className={'text-table-normal table-attribute-no-registra '}>{referenciaButton}</h4>);
+                                                            }
+                                                        }
+                                                    } else {
+                                                        tableData.push((<h4 key={x} className='text-table-normal table-attribute-no-registra'>No registra</h4>))
+                                                    }
+                                                    return <td className={'td-inputs-table ' + classProcedure} key={index}><div className='div-td-inputs-table'>{tableData}</div></td>
+                                                } else if (keysData.includes(keys)) {
                                                     if (data[valuesD][keys] === "" || data[valuesD][keys] == null || data[valuesD][keys] == undefined) {
                                                         return <td className="td-table-print" key={index}><h4 className='table-attribute-no-registra'>No registra</h4></td>;
                                                     } else {
@@ -833,7 +984,9 @@ export const Tablas = (array) => {
                                                             } else if (data[valuesD][keys] == 3 || data[valuesD][keys] == 4) {
                                                                 return <td className="td-table-print" key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-3'>Aginado</h4></td>;
                                                             }
+
                                                         } else {
+
                                                             if (print[keys]["conditions"]) {
                                                                 let keysConditions = Object.keys(print[keys]["conditions"]);
 
@@ -894,6 +1047,7 @@ export const Tablas = (array) => {
                                                                     }
                                                                 }
 
+
                                                             } else if (print[keys]["values"]) {
                                                                 let count = 0;
                                                                 let group = ""
@@ -924,6 +1078,7 @@ export const Tablas = (array) => {
                                                                 return <td className="td-table-print" key={index}><h4>{formatDate(data[valuesD][keys])}</h4></td>;
 
                                                             } else {
+
                                                                 if (print[keys]["upper_case"]) {
                                                                     return <td className="td-table-print" key={index}><h4>{data[valuesD][keys].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h4></td>;
                                                                 } else if (print[keys]["capital_letter"]) {
@@ -943,21 +1098,7 @@ export const Tablas = (array) => {
                                                 }
                                             })
                                         }
-                                        <td className='td-update' style={{ display: array.hidden && array.hidden.includes('update') ? 'none' : '' }}>
-                                            <div className="center-update">
-                                                <button onClick={() => { setClearClick(); array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} title='actualizar' {...data[valuesD]["estado"] == 0 ? { disabled: true, title: 'Inactivo - No se puede actualizar' } : ''} className={`item-options option-update ${data[valuesD]['estado'] == 0 ? 'btn-disabled' : ""}`}>
-                                                    <svg version="1.0" viewBox="0 0 478.000000 522.000000" >
 
-                                                        <g transform="translate(0.000000,522.000000) scale(0.100000,-0.100000)" stroke="none">
-                                                            <path d="M2110 5203 c-33 -12 -40 -36 -40 -138 l0 -101 -137 -27 c-610 -121 -1166 -501 -1512 -1032 -315 -483 -442 -1101 -345 -1670 128 -750 594 -1380 1276 -1722 74 -38 144 -66 161 -66 51 0 77 63 40 95 -10 8 -70 40 -133 70 -679 330 -1147 987 -1241 1743 -16 127 -16 411 0 535 50 391 197 763 424 1066 291 389 674 661 1137 808 114 36 267 71 363 82 31 4 62 14 69 22 7 8 15 48 18 89 l5 74 187 -128 c102 -70 186 -132 187 -138 0 -5 -84 -74 -187 -152 l-187 -143 -5 86 c-4 60 -9 88 -20 94 -62 39 -423 -59 -669 -181 -408 -203 -723 -514 -922 -911 -263 -524 -289 -1134 -72 -1680 19 -47 43 -94 53 -103 25 -22 59 -16 82 16 19 26 19 26 -5 85 -165 395 -200 810 -102 1219 58 246 181 503 339 710 258 339 638 590 1065 701 140 36 131 41 131 -74 0 -72 4 -103 16 -120 32 -46 54 -34 355 193 156 119 290 227 297 241 21 39 1 59 -175 178 -87 59 -213 145 -280 191 -125 86 -147 97 -173 88z" />
-                                                            <path d="M3280 4797 c-13 -7 -26 -21 -30 -32 -15 -42 5 -60 151 -132 681 -337 1133 -972 1235 -1733 18 -139 18 -410 -1 -557 -86 -658 -449 -1234 -1010 -1603 -121 -79 -364 -194 -515 -244 -119 -39 -367 -96 -419 -96 -10 0 -29 -8 -42 -19 -21 -17 -23 -26 -21 -91 2 -43 -1 -71 -7 -68 -19 7 -380 253 -381 260 0 3 86 72 190 152 l190 145 0 -55 c0 -105 24 -121 151 -99 584 102 1107 471 1417 1003 34 59 62 119 62 133 0 35 -31 61 -66 57 -24 -3 -36 -17 -81 -96 -243 -430 -606 -741 -1053 -899 -117 -41 -294 -85 -304 -75 -4 3 -6 44 -6 92 0 71 -3 90 -18 103 -30 27 -55 20 -128 -34 -295 -221 -514 -393 -519 -410 -15 -45 -16 -44 503 -396 51 -35 99 -63 108 -63 8 0 26 11 39 25 23 22 25 31 25 123 l0 99 77 13 c43 7 133 27 201 46 889 244 1553 972 1708 1874 61 348 37 750 -62 1077 -189 624 -617 1139 -1186 1427 -158 80 -179 87 -208 73z" />
-                                                            <path d="M1311 3944 l-21 -27 0 -1316 c0 -1175 2 -1319 16 -1339 l15 -22 1093 0 c1005 0 1095 1 1107 17 12 13 15 130 17 647 1 347 0 641 -3 653 -12 51 -67 70 -98 35 -15 -16 -17 -46 -17 -208 0 -195 -13 -291 -45 -354 -27 -52 -92 -107 -148 -126 -56 -19 -193 -25 -263 -11 -33 7 -45 5 -64 -11 -23 -18 -23 -20 -12 -108 21 -159 -17 -283 -106 -351 -83 -63 -81 -63 -759 -63 l-613 0 0 1245 0 1245 1003 -2 1002 -3 3 -155 3 -154 -258 -258 -258 -258 -587 0 c-650 0 -623 3 -616 -64 5 -56 4 -56 568 -56 l515 0 -180 -180 -180 -180 -340 0 c-375 0 -385 -2 -385 -59 0 -59 9 -61 313 -61 152 0 277 -3 277 -7 0 -4 -21 -28 -46 -54 -44 -45 -47 -52 -111 -265 -56 -185 -71 -225 -100 -257 -38 -43 -41 -69 -13 -97 28 -28 59 -25 96 11 27 26 68 42 260 100 l228 68 613 613 c407 407 620 627 633 654 24 49 26 127 4 180 -19 46 -125 158 -180 190 -22 13 -61 27 -87 30 l-46 7 -3 169 c-3 165 -4 170 -27 189 -23 18 -55 19 -1101 19 l-1079 0 -20 -26z m2297 -488 c15 -8 53 -41 85 -74 51 -54 57 -65 57 -104 l0 -43 -582 -582 -583 -583 -112 112 c-62 62 -113 115 -113 119 0 4 901 907 955 957 2 2 38 -30 81 -72 81 -80 110 -92 146 -59 33 30 22 55 -62 138 l-80 80 53 53 c71 74 103 85 155 58z m-1223 -1356 c49 -49 87 -91 84 -94 -8 -8 -250 -78 -254 -74 -6 6 68 258 75 258 3 0 46 -40 95 -90z m1035 -485 l0 -254 -260 -3 c-143 -2 -260 -2 -260 0 0 2 11 18 24 35 60 80 86 166 86 285 l0 82 63 0 c114 0 236 37 306 91 13 11 28 19 32 19 5 0 9 -115 9 -255z" />
-                                                            <path d="M1722 3494 c-26 -18 -30 -65 -6 -88 14 -14 89 -16 683 -16 539 0 671 3 685 13 26 19 24 67 -4 89 -21 17 -60 18 -679 18 -578 0 -659 -2 -679 -16z" />
-                                                        </g>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </td>
                                     </tr>
                                 ))
                             ) : data.find_error ? <tr><td colSpan={1000000} className='table-error'>{data.find_error}</td></tr> : <tr><td colSpan={1000000} className='table-error'>Error interno</td></tr>}

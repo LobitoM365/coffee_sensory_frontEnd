@@ -3,7 +3,7 @@ import React from "react";
 export const NotFound = () => {
     return (
         <>
-            <link rel="stylesheet" href="../../public/css/pageNotFound.css" />
+            <link rel="stylesheet" href="/../public/css/pageNotFound.css" />
 
             <div style={{ position: "fixed", width: "calc(100% - 40px)", height: "calc(100% - 40px)", backgroundColor: "rgb(18,38,75)", display: "flex", justifyContent: "center", alignItems: "center", padding : "20px" }} className="div-content">
                 <div style={{width : "max-content", maxWidth : "calc(100% - 40px)",display : "flex" , justifyContent:"center" , alignItems : "center", flexDirection : "column", gap : "20px"}} className="page-not-found">

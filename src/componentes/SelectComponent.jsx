@@ -5,23 +5,50 @@ import { useState, useEffect } from 'react';
 
 
 
-export const SelectComponent = () => {
-    const data = [
-        {value:'Opcion1',label: 'Opción 1' },
-        {value:'Opcion2',label: 'Opción 2' },
-        {value:'Opcion3',label: 'Opción 3' },
-        {value:'Opcion4',label: 'Opción 4' },
-        {value:'Opcion5',label: 'Opción 5' },
-        {value:'Opcion6',label: 'Opción 6' },
-      ];
-    
+export const SelectComponent = (props) => {
+  const [error, setError] = useState(null);
+  const [opciones,setOpciones]=useState([])
+  useEffect(()=>{
+    const fechData= async ()=>{
+      try {
+        const response = await Api.post(props.url);
+        const muestraData = response.data.data;
+          if (response.data.data && response.data.data.length > 0) {
+            
+            let valorOption = props.opcion
+            const nuevosDatos= muestraData.map(items=>({
+              value:items.id,
+              label:`${items.id} . ${items[valorOption]}`
+            }))
+            console.log(nuevosDatos,"estos tienen todos los datos")
+            setOpciones(nuevosDatos);
+          } else {
+            setError("No se encontraron datos válidos en la respuesta de la API.");
+          }
+          
+        
+        
+      } catch (error) {
+        console.error("Error al obtener datos:", error);
+        setError("Error al obtener datos. Inténtalo de nuevo más tarde.");
+      }
+    }
+    console.log(opciones,"estas son las opciones")
+
+
+    fechData()
+  },[])
+
       return (
         <div>
           
           <Select
-            options={data}
-            placeholder="Seleccione Una Opcion"
-            
+            options={opciones}
+            name={props.name}
+            id={props.id}
+            placeholder={props.placeholder}
+            onChange={props.onChange} 
+            value={props.value}
           />
         </div>
       );
@@ -32,36 +59,3 @@ export const SelectComponent = () => {
 
 
 
- /* const [data, setData] = useState([]);
-  const [selectedOption, setSelectedOption] = useState({label: "" });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await Api.post(`muestra/listar`);
-        setData(response.data.data[0]); // Asegúrate de que data[0] sea un objeto
-        console.log(data, "desde select");
-
-        const option = {
-          label: data, // Ajusta según la propiedad que desees mostrar como etiqueta
-        };
-
-        setSelectedOption(option);
-      } catch (error) {
-        console.error("Error al obtener datos:", error);
-      }
-    };
-
-    fetchData();
-  }, []); // Dependencia vacía para que se ejecute solo una vez al montar el componente
-
-  return (
-    <div>
-      <label>Selecciona una opción:</label>
-      <Select
-        options={[selectedOption]}  // Debe ser un array de opciones
-        value={selectedOption.id}
-        
-      />
-    </div>
-  ); */

@@ -17,15 +17,17 @@ export const Home = ({ userInfo }) => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-  
-    // Validar si el nombre es 'limite' y si el valor es un número
-    const newValue = name === 'limite' && !isNaN(value) ? parseFloat(value) : value;
+    const num = ''
+    // Validar si el nombre es 'limite' y si el valor es un número válido
+    const newValue = name === 'limite' && (!isNaN(value) || value === null) ? parseFloat(value) || num : value || 5;
+
   
     setInputValue((prevInputValue) => ({
       ...prevInputValue,
       [name]: newValue
     }));
   };
+  
 
   // Actualiza el estado user cada vez que userInfo cambia
   useEffect(() => {
@@ -63,11 +65,18 @@ export const Home = ({ userInfo }) => {
         <div className='BoxGraficas'>
         <div className='formulario'>
         <input type="number" className='input' min="1" max="12" step="1" onChange={handleInputChange} name="fecha" id="fecha" placeholder='Mes...' value={inputValue.fecha} />
-        <input type="text" className='input' onChange={handleInputChange} name="muestras_id" id="muestras_id" placeholder='Muestra...' value={inputValue.muestras_id} />
+        <SelectComponent 
+           name="muestras_id" 
+           id="muestras_id"
+           placeholder="Muestra..."
+           onChange={(selectedOption) => handleInputChange({ target: { name: "muestras_id", value: selectedOption.value } })}
+           url="muestra/listar"
+           opcion="codigo_muestra"
+          />
         <input type="number" className='input' min="1900" max="2900" onChange={handleInputChange} name="anio" id="anio" placeholder='Año...' value={inputValue.anio} />
         <input type="number" className='input limit' min="1" max="12" step="1" onChange={handleInputChange} name="limite" id="limite" placeholder='Cantidad Resultados...' value={inputValue.limite} />
       </div>
-          <SelectComponent/>
+          
           {/* Asegúrate de que Graficos y GraficoCircular reciban los datos correctamente */}
           <Graficos user={user?.id} inputData={dataUpdate}/>
           <GraficoCircular user={user?.id} inputData={dataUpdate} />

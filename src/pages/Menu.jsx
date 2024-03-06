@@ -9,18 +9,18 @@ export const Menu = (data) => {
 
     if (data.socket) {
         data.socket.on('perfilChange', (message) => {
-            console.log("el perfil cambioooo",message)  
+            console.log("el perfil cambioooo", message)
             getUser();
         });
         data.socket.on('ok', (message) => {
-            console.log("oaskdkasdkas",message)  
+            console.log("oaskdkasdkas", message)
         });
-        data.socket.on("asignAnalisis", (message)=>{
+        data.socket.on("asignAnalisis", (message) => {
             getAgignaciones()
         })
     }
 
-     
+
     const [pageLoad, setPageLoad] = useState({});
     const [queryMenu, setQueryMenu] = useState(document.body.scrollWidth <= 610 ? true : false)
     let responseValidate = validateViews();
@@ -37,7 +37,6 @@ export const Menu = (data) => {
     if (!localStorage.getItem("darkMode")) {
         localStorage.setItem("darkMode", false)
     }
-    const [valueDarkMode, changeDarkMode] = useState(JSON.parse(localStorage.getItem("darkMode")));
 
     function selectedLi(location) {
         changeSelected(location)
@@ -199,9 +198,9 @@ export const Menu = (data) => {
             }
         }
         getAgignaciones();
-      
+
         getUser();
-       
+
 
         window.addEventListener("resize", function () {
 
@@ -244,8 +243,8 @@ export const Menu = (data) => {
     }, [queryMenu])
 
     function darkMode() {
-        changeDarkMode(!valueDarkMode)
-        localStorage.setItem("darkMode", !valueDarkMode)
+        data.changeDarkMode(!data.valueDarkMode)
+        localStorage.setItem("darkMode", !data.valueDarkMode)
     }
     /*   async function obtenerNotificaciones() {
           try {
@@ -284,17 +283,18 @@ export const Menu = (data) => {
 
     return (
 
-        <div className="main-content">
+        <div className={"main-content " + (!data.valueDarkMode ? "lightMode" : "darkMode")}>
 
             <link rel="stylesheet" href="/public/css/menu.css" />
             <link rel="stylesheet" href="/public/css/loader.css" />
 
 
-            <nav id="navHorizontal" className="nav-main nav-horizontal" style={{ backgroundColor: !valueDarkMode ? "green" : "" }}>
+            <nav id="navHorizontal" className="nav-main nav-horizontal">
                 <div className="div-img-nav">
                     <img className="logo-menu" src="/img/logoENCC.png" alt="" />
 
-                    <img className="img-nav" src="/img/fondoMenuVertical2.webp" alt="" />
+                    <img className="img-nav" src={!data.valueDarkMode ? "/img/fondoMenuVertical2.webp" : "/public/img/imgDarkMenu.jpg"} alt="" />
+
                 </div>
                 <div id="divHeaderNav" className="div-header-nav">
                     {!queryMenu ? <div className="header-nav hamburguer-centered">
@@ -470,7 +470,7 @@ export const Menu = (data) => {
                         <li onClick={darkMode} className=" hamburguer-centered">
                             <div className="content-1-footer-nav-horizontal">
                                 <svg className="icon-li-dark-mode-nav-horizontal icon-moon-li-dark-mode-nav-horizontal" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 256 256"  >
-                                    {valueDarkMode ? (<g><g><g><path d="M149.1,10.2c-8.3,0.8-20,3.3-27.8,5.8c-40,13-69.8,46.5-79.1,88.8c-2.1,9.8-2.1,36,0,46c8,37.7,31,67.3,65.7,84.2c15.3,7.4,31.9,11,50.8,11c18.5-0.1,33.6-3.4,50-11.1l6.6-3.1l-5.8-1.9c-8.1-2.7-22.3-10.2-29.4-15.4c-40.7-30.2-54.7-85.2-33.5-131.6c6.9-15.1,21.3-32.5,34.8-42c7.5-5.3,20-11.7,28.1-14.4l5.8-1.9l-6.6-3.2c-8.1-3.9-20.2-7.7-29.6-9.4C172,10.5,155,9.6,149.1,10.2z" /></g></g></g>
+                                    {data.valueDarkMode ? (<g><g><g><path d="M149.1,10.2c-8.3,0.8-20,3.3-27.8,5.8c-40,13-69.8,46.5-79.1,88.8c-2.1,9.8-2.1,36,0,46c8,37.7,31,67.3,65.7,84.2c15.3,7.4,31.9,11,50.8,11c18.5-0.1,33.6-3.4,50-11.1l6.6-3.1l-5.8-1.9c-8.1-2.7-22.3-10.2-29.4-15.4c-40.7-30.2-54.7-85.2-33.5-131.6c6.9-15.1,21.3-32.5,34.8-42c7.5-5.3,20-11.7,28.1-14.4l5.8-1.9l-6.6-3.2c-8.1-3.9-20.2-7.7-29.6-9.4C172,10.5,155,9.6,149.1,10.2z" /></g></g></g>
                                     ) : (<g><g><g><path d="M117.4,29.7v19.7H128h10.6V29.7V10H128h-10.6V29.7z" /><path d="M68.8,25.6c-4.9,2.8-8.8,5.3-8.8,5.7c0,0.3,4.4,8.2,9.7,17.3c9.1,15.6,9.8,16.5,11.9,15.4c1.3-0.7,5.5-3.2,9.5-5.4l7.1-4.3L94.9,49c-1.7-3.1-6.1-10.6-9.7-17c-3.6-6.3-6.9-11.4-7.2-11.4C77.7,20.6,73.6,22.9,68.8,25.6z" /><path d="M170.7,32c-3.6,6.4-8,13.9-9.8,17l-3.2,5.5l9.3,5.3c5.1,3,9.6,5,10,4.6c1.1-1.2,19-32.5,19-33.2c0-0.6-17.2-10.6-18.2-10.6C177.5,20.6,174.3,25.7,170.7,32z" /><path d="M25.5,69c-2.9,5-5,9.3-4.8,9.5c0.8,0.7,32.2,18.8,33.1,19c1.3,0.3,11.5-17.8,10.6-18.6C63.4,77.8,32.1,60,31.4,60C31,60,28.4,64,25.5,69z" /><path d="M207.2,69.6c-9.3,5.4-15.8,10-15.6,10.7c0.2,0.7,2.6,5.1,5.2,9.7l4.8,8.2l3.4-2c1.8-1.2,9.2-5.5,16.6-9.7s13.5-7.8,13.7-8.1c0.7-0.6-10-18.5-11.1-18.4C223.7,60.1,216,64.4,207.2,69.6z" /><path d="M112.2,67.9C91,73.9,73.5,91.6,68,112.7c-1,3.6-1.7,10.6-1.7,15.5c0,26.1,15.8,48.7,40.9,58.3c7.9,3,24.7,4,33.8,2.1c17.1-3.5,33.9-16.7,42-32.7c5.5-11.2,7-18.2,6.4-31.6c-0.6-11.9-3-19.6-9.1-29.2c-7.1-11.5-18.3-20.4-31.6-25.5C140.4,66.3,120.9,65.5,112.2,67.9z" /><path d="M10,128v10.6h19.7h19.7V128v-10.6H29.7H10V128z" /><path d="M206.7,128v10.6h19.7H246V128v-10.6h-19.7h-19.7L206.7,128L206.7,128z" /><path d="M38.7,166.9c-8.5,5-16.1,9.5-16.9,10c-1.3,0.6-0.6,2.6,3.5,9.7c2.9,4.9,5.3,9.1,5.5,9.4c0.4,0.4,32-17.3,33.6-18.9c0.7-0.6-7.4-16.1-9.7-18.4C54.4,158.3,47.2,162,38.7,166.9z" /><path d="M196.1,167c-3,5.1-5,9.6-4.6,10c1.6,1.6,33.2,19.3,33.6,18.9c1.3-1.5,10.4-18.2,10.1-18.5c-0.2-0.2-6.4-3.8-13.7-8s-14.8-8.5-16.7-9.7l-3.3-2L196.1,167z" /><path d="M74.7,198.4c-2.4,4.3-6.8,11.8-9.6,16.6c-2.9,4.9-5.2,9.3-5.2,9.6c0,0.9,18.1,11.3,18.5,10.7c0.2-0.2,3.8-6.4,8.1-13.7c4.1-7.3,8.6-14.8,9.7-16.6l2-3.4l-7.1-4.1C78.1,189.8,79.8,189.7,74.7,198.4z" /><path d="M167.3,195.9c-5,2.9-8.9,5.6-8.8,6.2c0.2,0.8,18.2,32.3,19,33.2c0.2,0.3,16.9-8.8,18.4-10.1c0.4-0.4-17.3-32-18.9-33.6C176.7,191.1,172.2,193.2,167.3,195.9z" /><path d="M117.4,226.3V246H128h10.6v-19.7v-19.7H128h-10.6V226.3z" /></g></g></g>)}
 
                                 </svg>
@@ -478,14 +478,14 @@ export const Menu = (data) => {
                             </div>
                             <h4 className="change-hamburguer-quit">Dark Mode</h4>
                             <div className="change-hamburguer-quit toogle-footer-nav-horizontal">
-                                <div style={{ marginLeft: !valueDarkMode ? "0%" : "calc(100% - 20px)" }} className="circle-footer-nav-horizontal"></div>
+                                <div style={{ marginLeft: !data.valueDarkMode ? "0%" : "calc(100% - 20px)" }} className="circle-footer-nav-horizontal"></div>
                             </div>
                         </li>
 
                     </ul>
                 </div>
             </nav >
-            <nav className="nav-main nav-vertical" style={{ backgroundColor: !valueDarkMode ? "green" : "" }}>
+            <nav className="nav-main nav-vertical" >
                 {queryMenu ? <div className="header-nav hamburguer-centered">
 
                     <svg id="iconHamburguer" className="icon-hamburguer-li-nav-horizontal icon-li-nav-horizontal" version="1.0" viewBox="0 0 1024.000000 1024.000000" preserveAspectRatio="xMidYMid meet">
@@ -499,7 +499,7 @@ export const Menu = (data) => {
                 </div> : ""}
                 <div></div>
                 <div className="seccion-usuario-notificaciones">
-                   
+
                     {Object.keys(user).length > 0 ? (
                         <div className="div-info-usuario">
                             <div className="div-img-perfil-nav">
@@ -559,7 +559,7 @@ export const Menu = (data) => {
                         </div>
                     )
                         : ""}
-                         {Object.keys(user).length > 0 ? user.rol == "catador" && user.cargo == "instructor" ?
+                    {Object.keys(user).length > 0 ? user.rol == "catador" && user.cargo == "instructor" ?
                         <div className="notificaciones">
                             {asignaciones.length > 0 && asignaciones ? <div className="cantidad-notificaciones"> {asignaciones.length} </div> : ""
                             }
@@ -589,7 +589,7 @@ export const Menu = (data) => {
                                                                 </div>
                                                                 <h4 className="h4-informacion-notificacion-analisis">Tiene un análisis <span className={`${asignacion.estado == 2 ? "pendiente" : asignacion.estado == 3 ? "asignado" : ""}`}>{asignacion.estado == 2 ? "Pendiente" : asignacion.estado == 3 ? "Asignado" : ""}</span> por realizar</h4>
                                                             </div>
-                                                            <button onClick={()=>{localStorage.setItem("analisis_id", asignacion.analisis_id);localStorage.setItem("tipos_analisis_id", asignacion.tipos_analisis_id),location.href = "/dashboard/analisis/registros"}} className="input-proceder-analisis">Proceder</button>
+                                                            <button onClick={() => { localStorage.setItem("analisis_id", asignacion.analisis_id); localStorage.setItem("tipos_analisis_id", asignacion.tipos_analisis_id), location.href = "/dashboard/analisis/registros" }} className="input-proceder-analisis">Proceder</button>
                                                         </div>
                                                     ))
 

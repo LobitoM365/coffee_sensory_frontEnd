@@ -31,12 +31,15 @@ import { GeneratePdfTable } from './pages/generatePdfTable.jsx';
 import { RecoveryPassword } from './pages/recovery.jsx';
 import { GenerateReporteAnalisis } from './pages/generateReporteAnalisis.jsx';
 
+
+
 export default function App() {
   const [statusAlert, setStatusAlert] = useState(false);
   const [dataAlert, setdataAlert] = useState({});
   const responseValidateViews = validateViews();
   const [userInfo, setUserInfo] = useState(null);
   const location = useLocation();
+  const [valueDarkMode, changeDarkMode] = useState(JSON.parse(localStorage.getItem("darkMode")));
   const socket = io('http://localhost:3000', {
     withCredentials: true
   });
@@ -110,9 +113,9 @@ export default function App() {
 
 
 
-          <Route path='/dashboard' element={<Menu socket={socket} />}>
+          <Route path='/dashboard' element={<Menu socket={socket} valueDarkMode={valueDarkMode} changeDarkMode={changeDarkMode} />}>
             <Route path='' element={<Home userInfo={userInfo} />} />
-            <Route path='profile' element={<Profile />} />
+            <Route path='profile' element={<Profile valueDarkMode={valueDarkMode} />} />
             <Route path="usuarios/registros" element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} /> : ""} />
             <Route path='formulario' element={<FormRegiser />} />
             <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />

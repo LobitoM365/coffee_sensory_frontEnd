@@ -650,42 +650,6 @@
         flex-wrap: wrap;
     }
 
-    .nav-main .header-nav {
-        width: auto;
-    }
-
-    .main-content {
-        grid-template-columns: 1fr;
-    }
-
-    #navHorizontal {
-        position: absolute;
-        z-index: 9;
-        right: 0;
-        transition: transform 0.5s;
-    }
-
-    .nav-vertical {
-        grid-template-columns: 1fr 1fr 1fr;
-        padding: 10px 10px;
-
-    }
-
-    #iconHamburguer {
-        fill: black;
-    }
-
-    #iconHamburguer:hover {
-        background-color: #00000012;
-    }
-
-    .header-nav {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        margin-bottom: 0 !important;
-    }
 }
 
 @media screen and (max-width:240px) {

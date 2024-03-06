@@ -29,6 +29,7 @@
     width: 100%;
     height: auto;
     border-radius: 4px;
+    min-height: 80px;
 }
 
 .info-profile,
@@ -40,7 +41,7 @@
 }
 
 .form-profile {
-    position: absolute;
+    /* position: absolute; */
     width: calc(100% - 40px);
 }
 
@@ -149,6 +150,9 @@
     width: 100%;
     position: relative;
 }
-.component{
-    max-width: 1000px;
+
+.component {
+    width: 1000px;
+    max-width: 100%;
+    padding: 25px;
 }

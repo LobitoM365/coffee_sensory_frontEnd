@@ -4,7 +4,7 @@ import { Menu } from './Menu.jsx'
 import { Loader } from '../componentes/loader.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
-export const Profile = () => {
+export const Profile = (data) => {
 
     const [user, setUser] = useState({ "nombre": "" });
     const [form, changeForm] = useState(0);
@@ -70,7 +70,7 @@ export const Profile = () => {
         window.addEventListener("load", function () {
             if (heightForm.current) {
                 const height = heightForm.current.scrollHeight
-           
+
                 changeHeightForm(height);
             }
         })
@@ -87,7 +87,7 @@ export const Profile = () => {
                 "correo_electronico": correo_electronico.current.value,
                 "numero_documento": numero_documento.current.value
             }
-           
+
             const response = await Api.put("usuarios/actualizarPerfil", data);
             if (response.data.errors) {
                 setErrors(response.data.errors)
@@ -150,10 +150,10 @@ export const Profile = () => {
                     "tittle": "Contraseña Actualizada Correctamente!",
                 });
             }
-   
+
 
         } catch (e) {
-            
+
             console.error("Error" + e)
         }
     }
@@ -170,7 +170,9 @@ export const Profile = () => {
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
             <link rel="stylesheet" href="../../public/css/profile.css" />
             <div className="header-profile">
-                <img className='img-head-profile' src="https://static.vecteezy.com/system/resources/previews/008/277/939/non_2x/background-with-mountains-nature-mountain-in-green-color-free-vector.jpg" alt="" />
+                <img className='img-head-profile' src={!data.valueDarkMode ? "/public/img/imgLightModeProfile.jpg" : "/public/img/imgDarkProfile.jpg"} alt="" />
+
+
                 <div className="contenido-profile">
                     <div className="info-profile head-info-profile">
                         <div className="div-img-perfil-usuario">

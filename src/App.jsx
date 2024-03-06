@@ -28,11 +28,9 @@ import { Analisis } from './pages/analisis.jsx';
 import { io } from 'socket.io-client';
 import { PruebaPdf } from './pages/PruebaPdf.jsx';
 import { GeneratePdfTable } from './pages/generatePdfTable.jsx';
-import { RecoveryPassword } from './pages/recovery.jsx';
+import { RecoveryPassword } from './pages/recoveryPassword.jsx';
 import { GenerateReporteAnalisis } from './pages/generateReporteAnalisis.jsx';
-
-
-
+import { host } from './componentes/Api.jsx';
 export default function App() {
   const [statusAlert, setStatusAlert] = useState(false);
   const [dataAlert, setdataAlert] = useState({});
@@ -40,7 +38,7 @@ export default function App() {
   const [userInfo, setUserInfo] = useState(null);
   const location = useLocation();
   const [valueDarkMode, changeDarkMode] = useState(JSON.parse(localStorage.getItem("darkMode")));
-  const socket = io('http://localhost:3000', {
+  const socket = io('http://' + host + ':3000', {
     withCredentials: true
   });
 

@@ -124,7 +124,7 @@ export const Graficos = ({user,inputData}) => {
       color.push("rgb(255, 174, 0)")
     }
 
-    console.log(color, "colores")
+    /* console.log(color, "colores") */
   })
   const ResultLabel=[]
   data.map(element => ResultLabel.push(element.fecha.substring(0,3)))
@@ -179,12 +179,17 @@ export const Graficos = ({user,inputData}) => {
     
       useEffect(() => {
         // Actualizar el estado de StilyCharts según el tamaño de la pantalla
-        if (windowSize.width >= 768 && windowSize.width <= 1244) {
-          setStilyCharts({ width: '400px', height: '200px' ,margin:'10px'});
-        } else if (windowSize.width >= 320 && windowSize.width <= 480) {
-          setStilyCharts({ width: '100px', height: '50px' });
-        }else{
-          setStilyCharts({ width: '1200px', height: '300px' ,marginLeft:'50px', marginTop:'20px'});
+        /* if (windowSize.width >= 1035 && windowSize.width <= 1263) {
+          setStilyCharts({ width: '100vh', height: '40vh' ,marginLeft:'5%', marginTop:'2%'});
+        } */ if (windowSize.width >= 768 && windowSize.width <= 920) {
+          setStilyCharts({ width: '30vh', height: '25vh' ,marginLeft:'5%', marginTop:'2%'});
+        } if (windowSize.width >= 920 && windowSize.width <= 1024) {
+          setStilyCharts({ width: '50vh', height: '25vh' ,marginLeft:'5%', marginTop:'2%'});
+        }  
+        else if ( windowSize.width <= 768) {
+          setStilyCharts({ width: '20vh', height: '20vh',marginLeft:'5%', marginTop:'0%' });
+        }else {
+          setStilyCharts({ width: '100vh', height: '35vh' ,marginLeft:'5%', marginTop:'0%'});
         }
       }, [windowSize]);
 

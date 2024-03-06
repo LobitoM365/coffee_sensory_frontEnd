@@ -123,11 +123,17 @@ export const GraficoCircular = ({ user , inputData}) => {
 
   useEffect(() => {
     if (windowSize.width >= 768 && windowSize.width <= 1244) {
-      setStyleCharts({ width: '400px', height: '200px', margin: '10px' });
-    } else if (windowSize.width >= 320 && windowSize.width <= 480) {
-      setStyleCharts({ width: '100px', height: '50px' });
+      setStyleCharts({ width: '70vh', height: '25vh',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"3%"});
+    } if (windowSize.width >= 768 && windowSize.width <= 920) {
+      setStyleCharts({ width: '50vh', height: '25vh',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"3%"});
+    } if (windowSize.width >= 920 && windowSize.width <= 1100) {
+      setStyleCharts({ width: '60vh', height: '25vh',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"3%"});
+    } 
+    
+    else if ( windowSize.width <= 768) {
+      setStyleCharts({ width: '20vh', height: '20vh' ,display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"1%" });
     } else {
-      setStyleCharts({ width: '1500px', height: '320px',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"20px"});
+      setStyleCharts({ width: '100vh', height: '32vh',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"1%"});
     }
   }, [windowSize]);
 

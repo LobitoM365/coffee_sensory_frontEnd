@@ -18,17 +18,18 @@ h2{
 
 }
 h3{
-    
+    font-size: 1em;
     text-transform: uppercase;
     text-align: center;
     font-size: bolder;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    overflow: hidden;
 }
 .component{
-    width: 100%;
+    width: calc(100%);
     height: calc(100% - 40px);
     background-color: white;
-    border-radius: 10px;
+    border-radius: 7px;
     padding: 20px;
     overflow: hidden;
 }
@@ -59,9 +60,10 @@ h3{
 }
 
 .Tablecolors {
-  width: 60%;
- padding: 5px;
-  margin-top: 50%;
+  width:60%;
+  padding: 5px;
+  margin-right: -20%;
+
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -70,6 +72,9 @@ h3{
   border-radius: 5px;
   border: 1px solid rgb(37, 36, 36);
   box-shadow:-2px -2px 7px 2px rgb(80, 80, 80);
+  position: relative;
+  top: 5%;
+  right: 40%;
 }
 
 
@@ -111,14 +116,19 @@ h3{
       
       .Tablecolors {
         display: flex;
-        justify-content: center;
         flex-direction: column;
         grid-area: colores;
         width: auto; /* Ancho máximo del contenedor */
         overflow: hidden;
-        
+      margin: 3PX;
+        position: relative;
+        top: 5px;
+        left: 8%;
+        bottom: unset;
       }
-      
+      h3{
+        overflow: hidden;
+      }
       
 
   }

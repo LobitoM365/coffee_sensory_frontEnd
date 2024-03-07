@@ -73,6 +73,21 @@ export const Home = ({ userInfo }) => {
               value={inputValue.fecha}
             />
             <SelectComponent
+              metodos="post"
+              name="fecha"
+              id="fecha"
+              placeholder="Mes..."
+              onChange={(selectedOption) =>
+                handleInputChange({
+                  target: { name: 'fecha', value: selectedOption.value },
+                })
+              }
+              url={`http://localhost:3000/api//analisis/total/${user?.id}`}
+              opcion="fecha"
+              className="select2"
+            />
+            <SelectComponent
+              metodos="post"
               name="muestras_id"
               id="muestras_id"
               placeholder="Muestra..."

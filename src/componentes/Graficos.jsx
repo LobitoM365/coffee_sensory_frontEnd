@@ -186,10 +186,10 @@ export const Graficos = ({user,inputData}) => {
         } if (windowSize.width >= 920 && windowSize.width <= 1024) {
           setStilyCharts({ width: '50vh', height: '25vh' ,marginLeft:'5%', marginTop:'2%'});
         } */ if (windowSize.width >= 720 && windowSize.width <= 1280) {
-          setStilyCharts({ width: '100vh', height: '23vh',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"1%"});
+          setStilyCharts({ width: '50vh', height: '23vh',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"1%"});
         }// portatil
         else if ( windowSize.width <= 720) {
-          setStilyCharts({ width: '20vh', height: '20vh',marginLeft:'5%', marginTop:'0%' });
+          setStilyCharts({ width: '40vh', height: '20vh',marginLeft:'5%', marginTop:'0%' });
           //celular
         }else {
           setStilyCharts({ width: '100vh', height: '35vh' ,marginLeft:'5%', marginTop:'0%'});

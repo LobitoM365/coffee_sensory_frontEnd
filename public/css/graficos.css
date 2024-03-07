@@ -127,6 +127,8 @@
     }
     h3{
         font-size: 0.8em;
+        overflow: hidden;
+       
     }
     .select2{
         

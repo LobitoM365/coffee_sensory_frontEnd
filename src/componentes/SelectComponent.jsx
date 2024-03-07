@@ -11,11 +11,14 @@ export const SelectComponent = (props) => {
   useEffect(()=>{
     const fechData= async ()=>{
       try {
-        const response = await Api.post(props.url);
+        const response = await Api[props.metodos](props.url);
         const muestraData = response.data.data;
+
+        console.log(muestraData,"si consume desde select")
           if (response.data.data && response.data.data.length > 0) {
             
             let valorOption = props.opcion
+            console.log(props.opcion, "esto es una opcion")
             const nuevosDatos= muestraData.map(items=>({
               value:items.id,
               label:`${items.id} . ${items[valorOption]}`

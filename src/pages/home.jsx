@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Graficos } from '../componentes/Graficos';
 import { GraficoCircular } from '../componentes/GraficoCircular';
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import {SelectComponent} from "../componentes/SelectComponent"
+import { SelectComponent } from '../componentes/SelectComponent';
 
 
 export const Home = ({ userInfo }) => {
@@ -10,24 +9,26 @@ export const Home = ({ userInfo }) => {
   const [inputValue, setInputValue] = useState({
     muestras_id: '',
     fecha: '',
-    anio:'',
-    limite:''
+    anio: '',
+    limite: '',
   });
-  const [dataUpdate,setDataUpdate]= useState({})
+  const [dataUpdate, setDataUpdate] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado del modal
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    const num = ''
-    // Validar si el nombre es 'limite' y si el valor es un número válido
-    const newValue = name === 'limite' && (!isNaN(value) || value === null) ? parseFloat(value) || num : value || 5;
+    const num = '';
 
-  
+    const newValue =
+      name === 'limite' && (!isNaN(value) || value === null)
+        ? parseFloat(value) || num
+        : value || num;
+
     setInputValue((prevInputValue) => ({
       ...prevInputValue,
-      [name]: newValue
+      [name]: newValue,
     }));
   };
-  
 
   // Actualiza el estado user cada vez que userInfo cambia
   useEffect(() => {
@@ -38,47 +39,79 @@ export const Home = ({ userInfo }) => {
 
   // Envia los datos actualizados a GraficoCircular cuando cambian
   useEffect(() => {
-    // Asegúrate de que el componente GraficoCircular tenga una función updateData para actualizar sus datos
-    
-      const updatedData = {
-        userId: UserId,
-        inputData: inputValue
-      };
-      // Llama a una función en GraficoCircular para actualizar los datos en tiempo real
-      // Ejemplo: updateData(updatedData);
-      console.log("Datos actualizados:", updatedData);
-      setDataUpdate(updatedData.inputData)
+    const updatedData = {
+      userId: UserId,
+      inputData: inputValue,
+    };
 
-    // Llama a la función para enviar los datos actualizados
-    
-  }, [UserId,  inputValue]);
+    console.log('Datos actualizados:', updatedData);
+    setDataUpdate(updatedData.inputData);
+  }, [UserId, inputValue]);
 
-  console.log(dataUpdate, "se actualizan los datos")
+ 
 
   return (
     <>
       <link rel="stylesheet" href="src/css/graficas.css" />
       <link rel="stylesheet" href="../../public/css/graficos.css" />
-      
-      <div className='BoxMain'>
-      
-        <div className='BoxGraficas'>
-        <div className='formulario'>
-        <input type="number" className='input' min="1" max="12" step="1" onChange={handleInputChange} name="fecha" id="fecha" placeholder='Mes...' value={inputValue.fecha} />
-        <SelectComponent 
-           name="muestras_id" 
-           id="muestras_id"
-           placeholder="Muestra..."
-           onChange={(selectedOption) => handleInputChange({ target: { name: "muestras_id", value: selectedOption.value } })}
-           url="muestra/listar"
-           opcion="codigo_muestra"
-          />
-        <input type="number" className='input' min="1900" max="2900" onChange={handleInputChange} name="anio" id="anio" placeholder='Año...' value={inputValue.anio} />
-        <input type="number" className='input limit' min="1" max="12" step="1" onChange={handleInputChange} name="limite" id="limite" placeholder='Cantidad Resultados...' value={inputValue.limite} />
-      </div>
-          
+
+      <div className="BoxMain">
+        <div className="BoxGraficas">
+           
+          <div className="formulario">
+
+            <input
+              type="number"
+              className="input"
+              min="1"
+              max="12"
+              step="1"
+              onChange={handleInputChange}
+              name="fecha"
+              id="fecha"
+              placeholder="Mes..."
+              value={inputValue.fecha}
+            />
+            <SelectComponent
+              name="muestras_id"
+              id="muestras_id"
+              placeholder="Muestra..."
+              onChange={(selectedOption) =>
+                handleInputChange({
+                  target: { name: 'muestras_id', value: selectedOption.value },
+                })
+              }
+              url="muestra/listar"
+              opcion="codigo_muestra"
+              className="select2"
+            />
+            <input
+              type="number"
+              className="input"
+              min="1900"
+              max="2900"
+              onChange={handleInputChange}
+              name="anio"
+              id="anio"
+              placeholder="Año..."
+              value={inputValue.anio}
+            />
+            <input
+              type="number"
+              className="input limit"
+              min="1"
+              max="12"
+              step="1"
+              onChange={handleInputChange}
+              name="limite"
+              id="limite"
+              placeholder="Cantidad Resultados..."
+              value={inputValue.limite}
+            />
+          </div>
+
           {/* Asegúrate de que Graficos y GraficoCircular reciban los datos correctamente */}
-          <Graficos user={user?.id} inputData={dataUpdate}/>
+          <Graficos user={user?.id} inputData={dataUpdate} />
           <GraficoCircular user={user?.id} inputData={dataUpdate} />
         </div>
 
@@ -100,6 +133,8 @@ export const Home = ({ userInfo }) => {
             <h3>Bueno</h3>
           </div>
         </div>
+
+        
       </div>
     </>
   );

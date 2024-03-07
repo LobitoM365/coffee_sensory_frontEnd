@@ -17,6 +17,13 @@ h2{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 
 }
+h3{
+    
+    text-transform: uppercase;
+    text-align: center;
+    font-size: bolder;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
 .component{
     width: 100%;
     height: calc(100% - 40px);
@@ -88,8 +95,8 @@ h2{
           /* Puedes ajustar las proporciones según tus necesidades */
         ;
         grid-template-columns: 80% 20%;
-        gap: 5px;
-        padding-left: 15px;
+        gap: 2px;
+        margin-right: 5%;
       }
       
       .BoxGraficas {
@@ -103,11 +110,13 @@ h2{
       }
       
       .Tablecolors {
-        height: 20rem;
         display: flex;
         justify-content: center;
         flex-direction: column;
         grid-area: colores;
+        width: auto; /* Ancho máximo del contenedor */
+        overflow: hidden;
+        
       }
       
       

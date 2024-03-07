@@ -42,13 +42,14 @@ export const SelectComponent = (props) => {
       return (
         <div>
           
-          <Select
+          <Select 
             options={opciones}
             name={props.name}
             id={props.id}
             placeholder={props.placeholder}
             onChange={props.onChange} 
             value={props.value}
+            className={props.className}
           />
         </div>
       );

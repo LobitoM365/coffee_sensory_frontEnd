@@ -70,7 +70,7 @@
 }
 .input{
     
-    padding: 7px;
+    padding: 10px;
     font-size: 1em;
     font-family: Arial, Helvetica, sans-serif;
     margin: 10px;
@@ -82,7 +82,7 @@
     border-radius: 3px;
     
 }
-.input:focus {
+.input:hover{
     transition: border 2px linear;
     animation: colores 10s infinite; /* 4s para hacer que el ciclo completo de colores dure 4 segundos */
     background-color: rgb(239, 245, 245);
@@ -90,8 +90,11 @@
     border-right: none;
     border-top: none;
 }
+.input:focus{
+    border: 0.7px solid rgb(38, 132, 255);
+}
 .limit{
-    width: 150px;
+    width: 100px;
     
 }
 

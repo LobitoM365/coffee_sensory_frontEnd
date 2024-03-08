@@ -55,6 +55,43 @@ export const SelectComponent = (props) => {
             onChange={props.onChange} 
             value={props.value}
             className={props.className}
+            styles={{
+              control: (provided) => ({
+                ...provided,
+                margin: '10px',
+                border: 'none',
+                borderBottom:'1px solid gray',
+                transition: 'border 0.3s linear',
+                textAlign:"center",
+                '&:hover': {
+                  borderBottom: '1px solid blue', // Cambiar el color del borde en hover
+                  backgroundColor: 'rgb(239, 245, 245)', // Cambiar el color de fondo en hover
+                  border: '2px solid linear', // Agregar el borde en hover
+                  borderLeft: 'none',
+                  borderRight: 'none',
+                  borderTop: 'none',
+                  animation: 'colores 10s infinite', // Agregar la animación en hover
+                },
+                '@keyframes colores': {
+                  '0%': {
+                    borderBottom: '2px solid red',
+                  },
+                  '25%': {
+                    borderBottom: '2px solid green',
+                  },
+                  '50%': {
+                    borderBottom: '2px solid blue',
+                  },
+                  '75%': {
+                    borderBottom: '2px solid yellow',
+                  },
+                  '100%': {
+                    borderBottom: '2px solid grey',
+                  },
+                },
+              }),
+            }}
+            
           />
         </div>
       );

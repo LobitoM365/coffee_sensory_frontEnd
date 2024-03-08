@@ -5,6 +5,11 @@ import { SelectComponent } from '../componentes/SelectComponent';
 
 
 export const Home = ({ userInfo }) => {
+
+  if (!userInfo) {
+    console.log(userInfo,"no llega nada");
+  }
+
   const [user, setUser] = useState(userInfo);
   const [inputValue, setInputValue] = useState({
     muestras_id: '',
@@ -15,9 +20,25 @@ export const Home = ({ userInfo }) => {
   const [dataUpdate, setDataUpdate] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado del modal
   const [selectComponentUrl, setSelectComponentUrl] = useState('');
-  const [id, setId] = useState('');
+  const [urlId,setUrl]=useState()
+  const [urlIdReady, setUrlIdReady] = useState(false);
   
+  useEffect(() => {
+    setUser(userInfo);
+  }, [userInfo]);
 
+  useEffect(() => {
+    const IdUsuario = async () => {
+      if (user?.id !== null && user?.id !== undefined) {
+       
+        setUrl(`/analisis/total/${user.id}`);
+        setUrlIdReady(true);
+      }
+    };
+
+    IdUsuario();
+  }, [user]);
+    console.log(urlId,"url")
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     const num = '';
@@ -34,18 +55,16 @@ export const Home = ({ userInfo }) => {
   };
 
    // Actualiza el estado user con userInfo directamente
-   useEffect(() => {
-    setUser(userInfo);
-  }, [userInfo]);
-
+  
+  console.log(inputValue,"valores del input")
   // Actualiza la URL de SelectComponent cuando cambia el usuario
   
 
-    
-    
+  
 
+ 
 
-
+ 
   return (
     <>
       <link rel="stylesheet" href="src/css/graficas.css" />
@@ -56,39 +75,28 @@ export const Home = ({ userInfo }) => {
            
           <div className="formulario">
 
-            <input
-              type="number"
-              className="input"
-              min="1"
-              max="12"
-              step="1"
-              onChange={handleInputChange}
-              name="fecha"
-              id="fecha"
-              placeholder="Mes..."
-              value={inputValue.fecha}
-            />
-            <SelectComponent
-              metodos="post"
-              name="fecha"
-              id="fecha"
-              placeholder="Mes..."
-              onChange={(selectedOption) =>
-                handleInputChange({
-                  target: { name: 'fecha', value: selectedOption.value },
-                })
-              }
             
-              url={`/analisis/total/` }
-              idUser={userInfo?.id}
-              opcion="fecha"
-              className="select2"
-            />
-            {/* <SelectComponent
+             {urlIdReady && (
+        <SelectComponent
+          metodos="post"
+          name="fecha"
+          id="fecha"
+          placeholder="Mes"
+          onChange={(selectedOption) =>
+            handleInputChange({
+              target: { name: 'fecha', value: selectedOption.value },
+            })
+          }
+          url={urlId}
+          opcion="fecha"
+          className="select2"
+        />
+      )}
+            <SelectComponent
               metodos="post"
               name="muestras_id"
               id="muestras_id"
-              placeholder="Muestra..."
+              placeholder="Muestra"
               onChange={(selectedOption) =>
                 handleInputChange({
                   target: { name: 'muestras_id', value: selectedOption.value },
@@ -97,7 +105,7 @@ export const Home = ({ userInfo }) => {
               url="muestra/listar"
               opcion="codigo_muestra"
               className="select2"
-            /> */}
+            /> 
             <input
               type="number"
               className="input"
@@ -106,7 +114,7 @@ export const Home = ({ userInfo }) => {
               onChange={handleInputChange}
               name="anio"
               id="anio"
-              placeholder="Año..."
+              placeholder="Año"
               value={inputValue.anio}
             />
             <input
@@ -118,14 +126,14 @@ export const Home = ({ userInfo }) => {
               onChange={handleInputChange}
               name="limite"
               id="limite"
-              placeholder="Cantidad Resultados..."
+              placeholder="Cantidad"
               value={inputValue.limite}
             />
           </div>
 
           {/* Asegúrate de que Graficos y GraficoCircular reciban los datos correctamente */}
-          <Graficos user={user?.id} inputData={dataUpdate} />
-          <GraficoCircular user={user?.id} inputData={dataUpdate} />
+          <Graficos user={user?.id} inputData={inputValue} />
+          <GraficoCircular user={user?.id} inputData={inputValue} />
         </div>
 
         <div className="Tablecolors">

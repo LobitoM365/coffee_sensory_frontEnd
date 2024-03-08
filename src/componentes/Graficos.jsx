@@ -92,7 +92,7 @@ export const Graficos = ({user,inputData}) => {
       title: {
         display: true,
         text: "GRAFICA DE BARRAS",
-        fontSize: 20, // Tamaño de fuente
+        fontSize: 15, // Tamaño de fuente
         fontColor: 'blue', // Color del texto
         fontStyle: 'italic', 
       },
@@ -105,7 +105,7 @@ export const Graficos = ({user,inputData}) => {
         beginAtZero: true,
       },
     },
-    barThickness: 60, // Ajusta este valor según tus necesidades
+    barThickness: 50, // Ajusta este valor según tus necesidades
     responsive: true,
     maintainAspectRatio: false,
   
@@ -186,7 +186,7 @@ export const Graficos = ({user,inputData}) => {
         } if (windowSize.width >= 920 && windowSize.width <= 1024) {
           setStilyCharts({ width: '50vh', height: '25vh' ,marginLeft:'5%', marginTop:'2%'});
         } */ if (windowSize.width >= 720 && windowSize.width <= 1280) {
-          setStilyCharts({ width: '50vh', height: '23vh',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"1%"});
+          setStilyCharts({ width: '70vh', height: '23vh',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"1%"});
         }// portatil
         else if ( windowSize.width <= 720) {
           setStilyCharts({ width: '40vh', height: '20vh',marginLeft:'5%', marginTop:'0%' });

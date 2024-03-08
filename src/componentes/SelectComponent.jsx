@@ -12,6 +12,8 @@ export const SelectComponent = (props) => {
     const fechData= async ()=>{
       try {
         const response = await Api[props.metodos](props.url);
+        
+        console.log("llego metodos ", props.metodos, "llego la url ", props.url)
         const muestraData = response.data.data;
 
         console.log(muestraData,"si consume desde select")

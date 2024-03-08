@@ -14,6 +14,9 @@ export const Home = ({ userInfo }) => {
   });
   const [dataUpdate, setDataUpdate] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado del modal
+  const [selectComponentUrl, setSelectComponentUrl] = useState('');
+  const [id, setId] = useState('');
+  
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -30,25 +33,18 @@ export const Home = ({ userInfo }) => {
     }));
   };
 
-  // Actualiza el estado user cada vez que userInfo cambia
-  useEffect(() => {
+   // Actualiza el estado user con userInfo directamente
+   useEffect(() => {
     setUser(userInfo);
   }, [userInfo]);
 
-  const UserId = user?.id;
+  // Actualiza la URL de SelectComponent cuando cambia el usuario
+  
 
-  // Envia los datos actualizados a GraficoCircular cuando cambian
-  useEffect(() => {
-    const updatedData = {
-      userId: UserId,
-      inputData: inputValue,
-    };
+    
+    
 
-    console.log('Datos actualizados:', updatedData);
-    setDataUpdate(updatedData.inputData);
-  }, [UserId, inputValue]);
 
- 
 
   return (
     <>
@@ -82,11 +78,13 @@ export const Home = ({ userInfo }) => {
                   target: { name: 'fecha', value: selectedOption.value },
                 })
               }
-              url={`http://localhost:3000/api//analisis/total/${user?.id}`}
+            
+              url={`/analisis/total/` }
+              idUser={userInfo?.id}
               opcion="fecha"
               className="select2"
             />
-            <SelectComponent
+            {/* <SelectComponent
               metodos="post"
               name="muestras_id"
               id="muestras_id"
@@ -99,7 +97,7 @@ export const Home = ({ userInfo }) => {
               url="muestra/listar"
               opcion="codigo_muestra"
               className="select2"
-            />
+            /> */}
             <input
               type="number"
               className="input"

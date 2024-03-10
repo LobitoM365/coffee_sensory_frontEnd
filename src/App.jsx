@@ -30,25 +30,21 @@ import { PruebaPdf } from './pages/PruebaPdf.jsx';
 import { GeneratePdfTable } from './pages/generatePdfTable.jsx';
 import { RecoveryPassword } from './pages/recoveryPassword.jsx';
 import { GenerateReporteAnalisis } from './pages/generateReporteAnalisis.jsx';
-import { host } from './componentes/Api.jsx';
-export default function App() {
+export default function App(data) {
   const [statusAlert, setStatusAlert] = useState(false);
   const [dataAlert, setdataAlert] = useState({});
   const responseValidateViews = validateViews();
   const [userInfo, setUserInfo] = useState(null);
   const location = useLocation();
   const [valueDarkMode, changeDarkMode] = useState(JSON.parse(localStorage.getItem("darkMode")));
-  const socket = io('http://' + host + ':3000', {
-    withCredentials: true
-  });
 
   useEffect(() => {
 
     if (!responseValidateViews) {
-
-      return;
+ 
+      return;   
     }
-
+  
 
     if (responseValidateViews.data !== undefined) {
       setUserInfo(responseValidateViews.data.user);
@@ -62,7 +58,7 @@ export default function App() {
     }
   }, [responseValidateViews]);
 
-  async function validateViewsxd() {
+  async function validateViewsxd() {    
     let responseValidate;
     const authorized = async () => {
       try {
@@ -111,14 +107,14 @@ export default function App() {
 
 
 
-          <Route path='/dashboard' element={<Menu socket={socket} valueDarkMode={valueDarkMode} changeDarkMode={changeDarkMode} />}>
+          <Route path='/dashboard' element={<Menu socket={data.socket} valueDarkMode={valueDarkMode} changeDarkMode={changeDarkMode} />}>
             <Route path='' element={<Home userInfo={userInfo} />} />
             <Route path='profile' element={<Profile valueDarkMode={valueDarkMode} />} />
             <Route path="usuarios/registros" element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} /> : ""} />
             <Route path='formulario' element={<FormRegiser />} />
             <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
             <Route path='fincas/registros' element={<Fincas />} />
-            <Route path='analisis/registros' element={<Analisis socket={socket} userInfo={userInfo} />} />
+            <Route path='analisis/registros' element={<Analisis socket={data.socket} userInfo={userInfo} />} />
             <Route path='cafes/registros' element={<Cafes />} />
             <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} /> : ""} />
             <Route path='municipios/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Municipios} /> : ""} />

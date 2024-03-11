@@ -7,19 +7,35 @@ import { validateViews } from "../componentes/ValidateViews.jsx";
 
 export const Menu = (data) => {
 
-    if (data.socket) {
-        data.socket.on('perfilChange', (message) => {
-            console.log("el perfil cambioooo", message)
-            getUser();
-        });
-        data.socket.on('ok', (message) => {
-            console.log("oaskdkasdkas", message)
-        });
-        data.socket.on("asignAnalisis", (message) => {
-            getAgignaciones()
-        })
-    }
+    useEffect(() => {
+        const { socket } = data;
+        
+        if (socket) {
+            const perfilChange = (message) => {
+                console.log("el perfil cambioooo", message)
+                getUser();
+            };
 
+            const ok = (message) => {
+                console.log("oaskdkasdkas", message)
+            };
+
+            const asignAnalisis = (message) => {
+                getAgignaciones();
+            };
+
+            socket.on('perfilChange', perfilChange);
+            socket.on('ok', ok);
+            socket.on("asignAnalisis", asignAnalisis);
+
+            // Limpiar los suscriptores de eventos cuando el componente se desmonte
+            return () => {
+                socket.off('perfilChange', perfilChange);
+                socket.off('ok', ok);
+                socket.off('asignAnalisis', asignAnalisis);
+            };
+        }
+    }, [data.socket]);
 
     const [pageLoad, setPageLoad] = useState({});
     const [queryMenu, setQueryMenu] = useState(document.body.scrollWidth <= 610 ? true : false)

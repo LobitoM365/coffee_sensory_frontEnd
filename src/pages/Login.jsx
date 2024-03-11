@@ -113,6 +113,13 @@ export const Login = () => {
                     const credentialsError = response.data.errors;
 
                     setValidationError(credentialsError);
+                } else if (response.data.status == false) {
+                    setStatusAlert(true);
+                    setdataAlert({
+                        status: "false",
+                        description: response.data.message,
+                        "tittle": "Ocurró un error! ",
+                    });
                 } else {
                     // navigate('/dashboard')
                     location.href = '/dashboard';

@@ -5,7 +5,7 @@ import { Alert } from "../componentes/alert";
 import { useNavigate } from "react-router-dom";
 import { host } from "../componentes/Api";
 
-export const Login = () => {
+export const Login = (data) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [validationError, setValidationError] = useState({});
@@ -14,6 +14,14 @@ export const Login = () => {
     const navigate = useNavigate();
     const [eyes, setEyes] = useState(false);
     const [loader, serLoader] = useState(false);
+
+
+
+    // useEffect(() => {
+        
+
+    // }, [data.socket]);
+
 
     useEffect(() => {
         const inputs = document.querySelectorAll('.input-text');
@@ -43,12 +51,8 @@ export const Login = () => {
 
                         let nameInput = inputs[i].getAttribute('data-place');
 
-                        console.log('OBJECT: ', originalPlaceholder);
-                        console.log('NAME: ', nameInput);
-                        console.log('HOLDER: ', originalPlaceholder[nameInput]);
-
                         if (nameInput == originalPlaceholder[nameInput]) {
-                            console.log('XD');
+                
                             inputs[i].placeholder = nameInput;
                         }
                     }, 100)
@@ -101,11 +105,12 @@ export const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const data = {
+        const form = {
             correo_electronico: email,
-            user_password: password
+            user_password: password,
+            socket_user: data.socket.id
         }
-        Api.post('/auth/credentials', data)
+        Api.post('/auth/credentials', form)
             .then((response) => {
 
                 if (response.data.errors) {
@@ -134,6 +139,7 @@ export const Login = () => {
                         description: 'Intente acceder de nuevo más tarde.',
                         "tittle": "Error interno del servidor! ",
                     });
+                    console.error('ERROR LOGIN: ', error);
                     // alert('ERROR LOGIN')
                 } else {
 

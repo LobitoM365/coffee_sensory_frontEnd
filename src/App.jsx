@@ -102,7 +102,7 @@ export default function App(data) {
           <Route path='/modalfinca' element={<ModalFinca />}></Route>
           <Route path='/' element={<MenuInicio userInfo={userInfo} />}>
             <Route path='/' element={<Inicio />} />
-            <Route path='login' element={<Login />} />
+            <Route path='login' element={<Login socket={data.socket} />} />
           </Route>
 
 

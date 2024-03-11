@@ -9,7 +9,7 @@ export const Menu = (data) => {
 
     useEffect(() => {
         const { socket } = data;
-        
+
         if (socket) {
             const perfilChange = (message) => {
                 console.log("el perfil cambioooo", message)
@@ -36,6 +36,8 @@ export const Menu = (data) => {
             };
         }
     }, [data.socket]);
+
+    console.log("DATA OC", data.socket);
 
     const [pageLoad, setPageLoad] = useState({});
     const [queryMenu, setQueryMenu] = useState(document.body.scrollWidth <= 610 ? true : false)

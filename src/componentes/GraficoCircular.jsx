@@ -134,7 +134,7 @@ export const GraficoCircular = ({ user , inputData}) => {
       setStyleCharts({ width: '20vh', height: '20vh' ,display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"1%" });
     } // celular
      else {
-      setStyleCharts({ width: '100vh', height: '32vh',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"1%"});
+      setStyleCharts({ width: '100vh', height: '28vh',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"1%"});
     }//tamaño grande 
   }, [windowSize]);
 

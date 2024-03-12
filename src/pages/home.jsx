@@ -21,7 +21,11 @@ export const Home = ({ userInfo }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado del modal
   const [selectComponentUrl, setSelectComponentUrl] = useState('');
   const [urlId,setUrl]=useState()
+ 
   const [urlIdReady, setUrlIdReady] = useState(false);
+  const [muestrasId, setMuestrasId] = useState(null);
+  
+  
   
   useEffect(() => {
     setUser(userInfo);
@@ -30,14 +34,28 @@ export const Home = ({ userInfo }) => {
   useEffect(() => {
     const IdUsuario = async () => {
       if (user?.id !== null && user?.id !== undefined) {
+        
+          setUrl(`/analisis/total/${user.id}`);
+          
+          setMuestrasId(inputValue.muestras_id); // Establece muestrasId
+          setUrlIdReady(true);
+          console.log(muestrasId,"opcion 2")
+        
        
-        setUrl(`/analisis/total/${user.id}`);
-        setUrlIdReady(true);
       }
     };
-
+  
     IdUsuario();
-  }, [user]);
+  }, [user, inputValue.muestras_id]);
+  
+
+  useEffect(() => {
+    if (inputValue.muestras_id) {
+      setUrlIdReady(true);
+    }
+  }, [inputValue.muestras_id]);
+  
+
     console.log(urlId,"url")
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -89,7 +107,7 @@ export const Home = ({ userInfo }) => {
           }
           url={urlId}
           opcion="fecha"
-          className="select2"
+         
         />
       )}
             <SelectComponent
@@ -104,7 +122,7 @@ export const Home = ({ userInfo }) => {
               }
               url="muestra/listar"
               opcion="codigo_muestra"
-              className="select2"
+              
             /> 
             <input
               type="number"

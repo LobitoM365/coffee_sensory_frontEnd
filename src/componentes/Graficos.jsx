@@ -192,7 +192,7 @@ export const Graficos = ({user,inputData}) => {
           setStilyCharts({ width: '40vh', height: '20vh',marginLeft:'5%', marginTop:'0%' });
           //celular
         }else {
-          setStilyCharts({ width: '100vh', height: '35vh' ,marginLeft:'5%', marginTop:'0%'});
+          setStilyCharts({ width: '100vh', height: '32vh' ,marginLeft:'5%', marginTop:'0%'});
           //Pantalla grande 
         }
       }, [windowSize]);

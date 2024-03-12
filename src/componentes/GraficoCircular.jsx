@@ -139,7 +139,7 @@ export const GraficoCircular = ({ user , inputData}) => {
   }, [windowSize]);
 
   return (
-    <div>
+    <div id='graficos'>
 
       <link rel="stylesheet" href="../../public/css/graficos.css" />
       

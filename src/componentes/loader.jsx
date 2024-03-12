@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
 
-export const Loader = () => {
+export const Loader = (data) => {
     const location = useLocation();
     let [cloneDivLoader, setCloneDivLoader] = useState("");
     useEffect(() => {
@@ -40,26 +40,26 @@ export const Loader = () => {
 
             }, timeTransition);
         }
-        
-        getInterval();
-       function removeLoader(){
-        setTimeout(() => {
-            if (divLoader) {
-                divLoader.remove()
-            }
 
-            clearInterval(interval)
-            iconLoader[lastPositionLoader].style.bottom = "0";
-            positionIconLoader = -1;
-        }, 400);
-       }
-       window.addEventListener('load', removeLoader());
+        getInterval();
+        function removeLoader() {
+            setTimeout(() => {
+                if (divLoader) {
+                    divLoader.remove()
+                }
+
+                clearInterval(interval)
+                iconLoader[lastPositionLoader].style.bottom = "0";
+                positionIconLoader = -1;
+            }, 400);
+        }
+        window.addEventListener('load', removeLoader());
     }, [location.pathname]);
 
 
     return (
         <>
-            <div id="divContentMainLoader">
+            <div id="divContentMainLoader" className={data.valueDarkMode ? "darkModeLoader" : "lightModeLoder"}>
                 <div style={{
                     position: "fixed",
                     display: "flex",
@@ -67,9 +67,10 @@ export const Loader = () => {
                     alignItems: "center",
                     width: "100%",
                     height: "100%",
-                    backgroundColor: "white",
+                    backgroundColor: data.valueDarkMode ? "rgb(22, 26, 43)" : "white",
                     left: "0", top: "0",
-                    zIndex: "9999999999999"
+                    zIndex: "9999999999999",
+
                 }} id="divLoader" className="div-loader">
                     <div style={{
                         position: "relative",

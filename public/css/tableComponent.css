@@ -133,13 +133,16 @@
 }
 
 .div-filters {
-    gap: 60px;
+    gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     padding: 20px;
     background-color: white;
     width: calc(100% - 40px);
     border-radius: 8px;
-    display: grid;
-    grid-template-columns: 1fr auto;
+   /*  display: grid;
+    grid-template-columns: 1fr auto; */
     align-items: center;
     height: max-content;
 }
@@ -358,6 +361,7 @@
     display: flex;
     gap: 20px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .button-register-table {

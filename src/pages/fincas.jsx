@@ -46,13 +46,13 @@ export const Fincas = () => {
                 upper_case: true,
                 key: "id"
             },
-            municipios_id: {
+/*             municipios_id: {
                 type: "select",
                 referencia: "Municipio",
                 values: ["nombre"],
                 key: "id",
                 upper_case: true
-            },
+            }, */
             veredas_id: {
                 type: "select",
                 referencia: "Vereda",
@@ -313,7 +313,16 @@ export const Fincas = () => {
     }
     async function getMunicipios() {
         try {
-            const response = await Api.post("municipio/listar");
+            let filterReport = {
+                "filter": {
+
+                    "limit": {
+                        inicio: 0,
+                        fin: 4444
+                    }
+                }
+            }
+            const response = await Api.post("municipio/listar",filterReport);
             console.log(response,"muniiii")
             if (response.data.status == true) {
                 let municipios = inputsForm;
@@ -334,7 +343,16 @@ export const Fincas = () => {
     //Obtener Veredas
     async function getVeredas() {
         try {
-            const response = await Api.post("veredas/listar");
+            let filterReport = {
+                "filter": {
+
+                    "limit": {
+                        inicio: 0,
+                        fin: 4444
+                    }
+                }
+            }
+            const response = await Api.post("veredas/listar",filterReport);
             console.log('VEREDAS: ', response);
             if (response.data.status == true) {
                 let veredas = inputsForm;

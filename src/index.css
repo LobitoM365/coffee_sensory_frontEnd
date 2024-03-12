@@ -117,10 +117,12 @@
 .darkMode .div-select svg {
     fill: white;
 }
+
 .darkMode #divContentFormResult svg {
     fill: white;
 }
-.darkMode .table-attribute-button-condition  {
+
+.darkMode .table-attribute-button-condition {
     background-color: rgb(203, 141, 7);
 }
 
@@ -133,5 +135,32 @@
 
 .darkMode .input-select-search::placeholder {
     background-color: rgb(22, 26, 43);
+    color: white;
+}
+
+.darkMode #divContentForm,
+.darkMode #divForm {
+    background-color: rgb(22, 26, 43);
+    color: white;
+}
+
+.darkMode .icon-quit-svg-form {
+    fill: white;
+}
+
+.darkMode .load-table {
+    background-color: rgb(31, 38, 60);
+    color: white;
+}
+
+.darkMode .svg-plus-table {
+    fill: white;
+}
+
+.darkMode .component{
+    background-color: unset;
+}
+.darkMode #graficos {
+    background-color: rgb(31, 38, 60);
     color: white;
 }

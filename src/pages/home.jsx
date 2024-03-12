@@ -70,8 +70,8 @@ export const Home = ({ userInfo }) => {
       <link rel="stylesheet" href="src/css/graficas.css" />
       <link rel="stylesheet" href="../../public/css/graficos.css" />
 
-      <div className="BoxMain">
-        <div className="BoxGraficas">
+      <div id='graficos' className="BoxMain">
+        <div  className="BoxGraficas">
            
           <div className="formulario">
 

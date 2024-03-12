@@ -202,7 +202,7 @@ export const Graficos = ({user,inputData}) => {
   //==============================================
 
     return ( 
-      <div key={key}>
+      <div id="graficos" key={key}>
         <link rel="stylesheet" href="../../public/css/graficos.css" />
           {data ? data.length > 0 ? 
         <div  style={StilyCharts} >

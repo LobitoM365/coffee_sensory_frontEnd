@@ -211,7 +211,10 @@ export const Graficos = ({user,inputData}) => {
           
         </div>
           :   
-          "No hay nada para mostrar" 
+          <div id="graficos">
+              
+
+          </div>
           : "No hay nada para mostrar" }
           
       </div>

@@ -44,15 +44,23 @@ export const Fincas = () => {
                 referencia: "Usuario",
                 values: ["numero_documento", "nombre"],
                 upper_case: true,
-                key: "id"
+                key: "id",
+                visibility: false
             },
-/*             municipios_id: {
+            departamentos_id: {
+                type: "select",
+                referencia: "Departamentos",
+                values: ["nombre"],
+                key: "id",
+                upper_case: true
+            },
+            municipios_id: {
                 type: "select",
                 referencia: "Municipio",
                 values: ["nombre"],
                 key: "id",
                 upper_case: true
-            }, */
+            },
             veredas_id: {
                 type: "select",
                 referencia: "Vereda",
@@ -120,6 +128,7 @@ export const Fincas = () => {
     useEffect(() => {
         getFincas()
         getMunicipios()
+        getDepartamentos();
         getVeredas()
     }, [])
     getUsers()
@@ -177,7 +186,7 @@ export const Fincas = () => {
                     }
                 )
             }
-        
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -217,7 +226,7 @@ export const Fincas = () => {
     async function setFinca(data) {
         try {
             const axios = await Api.post("finca/registrar/", data);
-            console.log(axios,"ahhh")
+            console.log(axios, "ahhh")
             if (axios.data.status == true) {
                 getFincas();
                 setErrors({})
@@ -268,7 +277,7 @@ export const Fincas = () => {
                     }
                 )
             }
-         
+
 
         } catch (e) {
             setStatusAlert(true)
@@ -295,7 +304,7 @@ export const Fincas = () => {
                     }
                 }
             }
-            const response = await Api.post("usuarios/listar",filter);
+            const response = await Api.post("usuarios/listar", filter);
             if (response.data.status == true) {
                 let users = inputsForm;
                 if (!users["usuarios_id"]) {
@@ -311,6 +320,36 @@ export const Fincas = () => {
         } catch (e) {
         }
     }
+
+    async function getDepartamentos() {
+        try {
+            let filterReport = {
+                "filter": {
+
+                    "limit": {
+                        inicio: 0,
+                        fin: 4444
+                    }
+                }
+            }
+            const response = await Api.post("departamento/listar", filterReport);
+            console.log('DEPARTAMETS: ', response)
+            if (response.data.status == true) {
+                let departamentos = inputsForm;
+                if (!departamentos["departamentos_id"]) {
+                    departamentos["departamentos_id"] = {}
+                }
+                departamentos["departamentos_id"]["opciones"] = response.data.data
+                setInputsForm(users)
+            } else if (response.data.find_error) {
+
+            } else {
+
+            }
+        } catch (e) {
+        }
+    }
+
     async function getMunicipios() {
         try {
             let filterReport = {
@@ -322,8 +361,8 @@ export const Fincas = () => {
                     }
                 }
             }
-            const response = await Api.post("municipio/listar",filterReport);
-            console.log(response,"muniiii")
+            const response = await Api.post("municipio/listar", filterReport);
+            console.log(response, "muniiii")
             if (response.data.status == true) {
                 let municipios = inputsForm;
                 if (!municipios["municipios_id"]) {
@@ -352,7 +391,7 @@ export const Fincas = () => {
                     }
                 }
             }
-            const response = await Api.post("veredas/listar",filterReport);
+            const response = await Api.post("veredas/listar", filterReport);
             console.log('VEREDAS: ', response);
             if (response.data.status == true) {
                 let veredas = inputsForm;
@@ -368,7 +407,7 @@ export const Fincas = () => {
             }
         } catch (e) {
         }
-    } 
+    }
 
     async function procedureTrue() {
         changeModalForm(false)

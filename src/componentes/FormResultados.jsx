@@ -1,5 +1,6 @@
 import { object, string } from "prop-types";
 import React, { forwardRef, useEffect, useState } from "react";
+import { formatDate } from "./tablas";
 
 
 
@@ -807,14 +808,14 @@ export const FormResultados = forwardRef((data, ref) => {
                                         data.dataModalResultado.map((key, index) => {
                                             if (index == 0) {
                                                 return <div className="cotent-info-analisis" key={key.id}>
-                                                    <div className="div-info-analisis">
+                                                    <div className="div-info-analisis div-table-analisis">
                                                         <div>
                                                             <h4>Id del Formato</h4>
                                                             <p>{key.id ? key.id : "No registra"}</p>
                                                         </div>
                                                         <div>
                                                             <h4>Fecha de registro</h4>
-                                                            <p>{key.fecha_creacion ? key.fecha_creacion : "No registra"}</p>
+                                                            <p>{formatDate(key.fecha_creacion ? key.fecha_creacion : 'No registra')}</p>
                                                         </div>
                                                         <div>
                                                             <h4>Fecha de Análisis</h4>

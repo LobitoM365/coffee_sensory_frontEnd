@@ -9,6 +9,10 @@
     gap: 20px;
 }
 
+.div-table-analisis {
+    width: 600px !important;
+    background-color: rgba(220, 220, 220, 0.331);
+}
 
 #divContentFormResult {
     width: max-content;
@@ -42,11 +46,13 @@
 .iframe-vacio-formato-sca {
     background-color: #00000021;
     cursor: not-allowed;
-
     border-radius: 4px;
 }
 
 .cotent-info-analisis {
+    /* display: flex; */
+    /* justify-content: center; */
+    margin-bottom: 15px;
     width: 100%;
 }
 
@@ -78,6 +84,7 @@
 }
 
 .table-formato-fisico-template {
+    margin-bottom: 10px;
     width: 100%;
 }
 
@@ -127,6 +134,14 @@
 
 .contenido-info-resultado {
     max-width: 100%;
+}
+
+.contenido-info-resultado h3 {
+    padding: 10px;
+    border-radius: 20px;
+    background-color: rgb(255, 169, 116);
+    margin-bottom: 20px;
+    width: 100%;
 }
 
 @media screen and (max-width: 1360px) {

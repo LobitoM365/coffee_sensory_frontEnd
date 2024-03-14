@@ -141,9 +141,10 @@ export const Tablas = (array) => {
     }, [inicio, limit, posicionPaginate])
 
     useEffect(() => {
-
         setkeyTable(keyTable + 1)
     }, [array.data])
+    const [statusResize, setStatusResize] = useState(false);
+    
     useEffect(() => {
         let contentComponent = document.getElementById("contentComponent")
         let ziseTableComponent = 0;
@@ -152,17 +153,22 @@ export const Tablas = (array) => {
         let ziseLess = 0;
         let lastHeightBeforeScroll = 0
 
-        const resizeObserver = new ResizeObserver(entries => {
-            for (let entry of entries) {
-                resizeTable()
+        if (!statusResize) {
 
-            }
-        });
+            const resizeObserver = new ResizeObserver(entries => {
+                console.log("qjweqjwehjqwhje---------------")
 
+                for (let entry of entries) {
+                    resizeTable()
+                }
+                /* setStatusResize(true) */
+            });
+            setTimeout(() => {
+                resizeObserver.observe(contentComponent);
+            }, [200])
+            setStatusResize(true)
+        }
 
-        setTimeout(() => {
-            resizeObserver.observe(contentComponent);
-        }, [200])
 
 
         function compareElements(elementOne, elementTwo, appendOne, appendTwo, father) {
@@ -200,7 +206,6 @@ export const Tablas = (array) => {
             return min
         }
         function resizeTable() {
-
             let contentComponent = document.getElementById("contentComponent")
             if (contentComponent) {
                 let tableComponent = document.querySelectorAll(".table-component")
@@ -248,11 +253,11 @@ export const Tablas = (array) => {
                                     newtd.appendChild(newdiv)
 
                                     if (ziseLess == 0) {
-                                        if(!document.querySelectorAll(".td-view-elementos-ocult")[tr]){
+                                        if (!document.querySelectorAll(".td-view-elementos-ocult")[tr]) {
                                             let td = document.createElement("td")
                                             td.classList.add("td-view-elementos-ocult", "td-table-print")
                                             td.innerHTML = '<div class="div-svg-plus-table"> <svg class="svg-plus-table" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" <g><g><g><path  d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z"/></g></g></g></svg> </div>'
-    
+
                                             trTbody[tr].insertAdjacentElement('afterend', newtr)
                                             trTbody[tr].insertBefore(td, trTbody[tr].children[0]);
                                             let plus = td.querySelectorAll(".svg-plus-table")
@@ -264,10 +269,10 @@ export const Tablas = (array) => {
                                                     newtr.style.display = "table-row";
                                                     newdiv.style.height = "max-content";
                                                 }
-    
+
                                             })
                                         }
-                                        
+
                                     }
                                     let elementsNewTr = document.querySelectorAll(".new-div-table");
                                     if (elementsNewTr[tr]) {
@@ -275,7 +280,7 @@ export const Tablas = (array) => {
                                         div.classList.add("div-element-add")
                                         div.innerHTML = "<h4> " + name + "</h4>"
                                         if (tdTbody[(thQuit.length) - 1]) {
-                                           /*  tdTbody[(thQuit.length) - 1].style.wordBreak = "break-all"; */
+                                            /*  tdTbody[(thQuit.length) - 1].style.wordBreak = "break-all"; */
                                             div.append(tdTbody[(thQuit.length) - 1])
                                             elementsNewTr[tr].appendChild(div)
                                         }
@@ -284,15 +289,15 @@ export const Tablas = (array) => {
 
                             }
                             if (ziseLess == 0 && !data.find_error) {
-                                
-                                if(document.querySelectorAll(".th-plus-view-elements-ocult").length == 0){
+
+                                if (document.querySelectorAll(".th-plus-view-elements-ocult").length == 0) {
                                     let theadTable = document.querySelectorAll(".thead-table")
                                     let th = document.createElement("th")
                                     th.classList.add("th-plus-view-elements-ocult", "th-table-print")
                                     th.innerHTML = ''
                                     theadTable[0].insertBefore(th, theadTable[0].children[0]);
                                     ziseLess = 1;
-                                }     
+                                }
                             }
                             ziseTableComponent = tableComponent[0].clientWidth;
                             resizeTable()
@@ -301,7 +306,7 @@ export const Tablas = (array) => {
                     }
 
                 } else {
-                    
+
                     let elementsNewDivTable = document.querySelectorAll(".div-element-add");
                     let thTable = document.querySelectorAll(".th-table-print")
                     let tdTable = document.querySelectorAll(".td-table-print")
@@ -334,7 +339,7 @@ export const Tablas = (array) => {
                         let tdPlus = document.querySelectorAll(".td-view-elementos-ocult");
                         let thPlus = document.querySelectorAll(".th-plus-view-elements-ocult");
                         for (let x = 0; x < newTrTable.length; x++) {
-                            newTrTable[x].remove() 
+                            newTrTable[x].remove()
                         }
                         for (let x = 0; x < tdPlus.length; x++) {
                             tdPlus[x].remove()
@@ -369,7 +374,7 @@ export const Tablas = (array) => {
                                             divNewDivTable[divNewDivTable.length - 1].remove()
                                         }
                                     }
-                                } 
+                                }
                                 resizeTable()
                                 return
                             }
@@ -377,12 +382,15 @@ export const Tablas = (array) => {
                         }
                     }
                 }
-
-                if (document.getElementById("loadTable")) {
-                    document.getElementById("loadTable").remove()
-                }
+                setTimeout(() => {
+                    if (document.getElementById("loadTable")) {
+                        document.getElementById("loadTable").remove()
+                    }
+                }, [200])
+            
             }
         }
+        resizeTable()
     }, [keyTable])
 
 

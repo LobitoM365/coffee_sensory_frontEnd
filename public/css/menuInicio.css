@@ -10,7 +10,7 @@
     padding: 15px;
     background-color: transparent;
     position: fixed;
-    z-index: 999;
+    z-index: -1;
     width: calc(100% - 30px);
 }
 

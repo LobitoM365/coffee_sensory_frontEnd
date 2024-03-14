@@ -1736,6 +1736,16 @@ function ajustPoints() {
         puntos[x].style.width = (lastWidthPoint * lessPorcent) + "px"
     }
 }
+
+let puntosMapa = document.querySelectorAll(".svg-ubicacion-cafe")
+for (let i = 0; i < puntosMapa.length; i++) {
+    puntosMapa[i].addEventListener('click', function () {
+        alert(i)
+    })
+
+}
+
+
 window.addEventListener("scroll", function () {
     console.log("xdd")
 })
@@ -1768,9 +1778,9 @@ function mouseScroll(event) {
         mainDivMapa.style.zoom = zoomNow + "%"
         for (let x = 0; x < puntos.length; x++) {
             let width = parseFloat(puntos[x].style.width)
-            
+
             console.log(Math.floor((widthPoint / (mainDivMapa.style.zoom.replace("%", "") / zoom))))
-            puntos[x].style.zoom = (widthPoint / ((mainDivMapa.style.zoom.replace("%", "") / zoom) )) + "%"
+            puntos[x].style.zoom = (widthPoint / ((mainDivMapa.style.zoom.replace("%", "") / zoom))) + "%"
         }
     } else {
         mainDivMapa.style.zoom = 5 + "%"
@@ -1781,3 +1791,35 @@ function mouseScroll(event) {
 
 // Agregar un event listener para el evento de desplazamiento del ratón
 document.addEventListener('wheel', mouseScroll);
+
+function resizeModal() {
+
+    let modalForm = document.querySelectorAll(".div-modal-form");
+    let divContentForm = document.querySelectorAll(".div-content-modal");
+    let divFondomodalForm = document.querySelectorAll(".div-fondo-modal ");
+
+    for (let m = 0; m < modalForm.length; m++) {
+        if ((divContentForm[m].scrollHeight + 100) > document.body.clientHeight) {
+            modalForm[m].style.justifyContent = "unset"
+            modalForm[m].style.padding = "20px 20px"
+            modalForm[m].style.height = "calc(100% - 40px)"
+            modalForm[m].style.width = "calc(100% - 40px)"
+            divFondomodalForm[m].style.height = divContentForm[m].clientHeight + 40 + "px"
+            divFondomodalForm[m].style.width = modalForm[m].clientWidth + "px"
+        } else {
+
+            divFondomodalForm[m].style.height = "100vh"
+            divFondomodalForm[m].style.width = "100vw"
+            modalForm[m].style.alignItems = "center"
+            modalForm[m].style.justifyContent = ""
+            modalForm[m].style.padding = ""
+            modalForm[m].style.height = "100%"
+            modalForm[m].style.width = "100%"
+        }
+
+    }
+}
+resizeModal()
+window.addEventListener("resize", function () {
+    resizeModal()
+})

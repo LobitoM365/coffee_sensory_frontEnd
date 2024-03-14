@@ -104,7 +104,14 @@ export const Home = ({ userInfo }) => {
             // Actualizar el estado para que SelectComponent muestre las nuevas fechas
             setFechas(nuevasFechas);
           } else {
-            console.error("No se encontraron fechas válidas para el muestras_id");
+            console.log(Data,"data de error12345")
+            return(
+              <>
+                <Graficos user={user?.id} inputData={inputValue} />
+                <GraficoCircular user={user?.id} inputData={inputValue} />
+              </>
+              
+            )
           }
         } catch (error) {
           console.error("Error al obtener fechas:", error.message);
@@ -137,22 +144,106 @@ export const Home = ({ userInfo }) => {
     cargarFechas();
   }, [urlId, urlIdReady]);
 
-  console.log(fechas2,'mamahuevo')
   
-  if (urlData && (Data === undefined || Data.length === 0)) {
+  if (Data === undefined||Data.length === 0 ) {
+    
     console.log(Data,"aqui va un componente")
     return(
-      <>
-        <link rel="stylesheet" href="src/css/graficas.css" />
-        <link rel="stylesheet" href="../../public/css/graficos.css" />
-        <div id='graficos' >
-          {/* <div className='BoxGraficas'> */}
-            <img src={Logo} className="SinGraficos2"  alt="No Hay Graficas" />
-          {/* </div> */}
-          {/* <div className='Tablecolors'> */}
-              <h3 className="text-Graphic-none">Lo Siento en este momento no tienes graficas disponibles </h3>
-         {/*  </div> */}
+    <>
+      <link rel="stylesheet" href="src/css/graficas.css" />
+      <link rel="stylesheet" href="../../public/css/graficos.css" />
+      <div id='graficos' >
+      <div className='Graphic-none'>
+        <div className="formulario">
+            
+                        
+            {urlIdReady && (
+          <SelectComponent
+          metodos="post"
+          name="fecha"
+          id="fecha2"
+          placeholder="Mes"
+          onChange={(selectedOption) =>
+          handleInputChange({
+            target: { name: 'fecha', value: selectedOption.value },
+          })
+          }
+          url={urlId}
+          opcion="fecha"
+          /* options={fechas && fechas.length > 0 ? fechas.map(fecha => ({ value: fecha.value, label: fecha.label })) : []} */
+          options={fechas && fechas.length > 0 ? fechas.map(fecha => ({ value: fecha.value, label: fecha.label })) : null} 
+
+          inputValueMuestras={inputValue.muestras_id}
+          readonly
+
+          />
+          )}
+          <SelectComponent
+            metodos="post"
+            name="muestras_id"
+            id="muestras_id2"
+            placeholder="Muestra"
+            onChange={(selectedOption) =>
+              handleInputChange({
+                target: { name: 'muestras_id', value: selectedOption.value },
+              })
+            }
+            url="muestra/listar"
+            opcion="codigo_muestra"
+            readonly
+          /> 
+          <input
+            type="number"
+            className="input"
+            min="1900"
+            max="2900"
+            onChange={handleInputChange}
+            name="anio"
+            id="anio2"
+            placeholder="Año"
+            value={inputValue.anio}
+            readonly
+          />
+          <input
+            type="number"
+            className="input limit"
+            min="1"
+            max="12"
+            step="1"
+            onChange={handleInputChange}
+            name="limite"
+            id="limite2"
+            placeholder="Cantidad"
+            value={inputValue.limite}
+            readonly
+          />
+          </div>
+           
+              <Graficos user={user?.id} inputData={inputValue} />
+              <GraficoCircular user={user?.id} inputData={inputValue} />
+           </div>
+           
         </div>
+        <div className="Tablecolors2">
+            <div className="BoxOptions-none">
+              <div className="colors extraordinario"></div>
+              <h3>Extraordinario</h3>
+            </div>
+            <div className="BoxOptions-none">
+              <div className="colors excelente"></div>
+              <h3>Excelente</h3>
+            </div>
+            <div className="BoxOptions-none">
+              <div className="colors MyBueno"></div>
+              <h3>Muy Bueno</h3>
+            </div>
+            <div className="BoxOptions-none">
+              <div className="colors bueno"></div>
+              <h3>Bueno</h3>
+            </div>
+          </div>
+  
+        
       </>
     )
   }else{

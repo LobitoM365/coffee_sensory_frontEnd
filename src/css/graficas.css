@@ -31,7 +31,11 @@ h3{
     background-color: white;
     border-radius: 7px;
     padding: 20px;
-    overflow: hidden;
+   /*  overflow: hidden; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
 }
 .BoxMain {
   width: calc(100%);
@@ -76,6 +80,23 @@ h3{
   top: 20%;
   right: 10%;
 }
+.Tablecolors2{
+  max-width: 100%;
+  padding: 5px;
+  
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  grid-area: colores;
+  
+  border-radius: 5px;
+  border: 1px solid rgb(37, 36, 36);
+  box-shadow:0px 0px 3px 0.5px rgb(80, 80, 80);
+  position: relative;
+  top: 20%;
+  right: 25%;
+}
 
 
 @media only screen and (min-width: 768px) and (max-width: 1240px) {
@@ -86,6 +107,7 @@ h3{
       display: flex;
       justify-content: center;
       align-items: center;
+     /*  margin: auto; */
       border-radius: 10px;
       padding: 10px;
       overflow: auto;

@@ -227,7 +227,7 @@ export const Profile = (data) => {
                                                 {data.userInfo != null ?
                                                     (data.userInfo.rol === 'administrador' ?
                                                         <input ref={numero_documento} className='input-update-profile' type="text" name="" id="numero_de_documento" />
-                                                        : <div >{dni}</div>)
+                                                        : <div ref={numero_documento}>{dni}</div>)
                                                     : <input ref={numero_documento} className='input-update-profile' type="text" name="" id="numero_de_documento" />
                                                 }
                                                 <div className='div-input-error'>

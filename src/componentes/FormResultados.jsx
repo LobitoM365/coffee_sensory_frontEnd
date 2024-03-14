@@ -502,6 +502,7 @@ export const FormResultados = forwardRef((data, ref) => {
     return (
         <>
             <link rel="stylesheet" href="../../public/css/form.css" />
+            <link rel="stylesheet" href="../../public/css/analisis.css" />
             <div style={{ display: (!data.modalFormResults) ? "none" : "" }} className="div-modal-form modal-form" id="modalFormResult">
                 <div onClick={() => { setDataSelects({}), data.changeModalFormResults(false) }} className="div-fondo-modal div-fondo-modal-form" id="divFondomodalFormResult">
                 </div>
@@ -513,14 +514,17 @@ export const FormResultados = forwardRef((data, ref) => {
                             <div onClick={() => { setDataSelects({}), data.changeModalFormResults(false) }} className="icon-quit-svg-form">
                                 <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                    <g><g><path  d="M150.7,128l90.6-90.7c6.3-6.3,6.3-16.4,0-22.7c-6.3-6.3-16.4-6.3-22.7,0L128,105.3L37.4,14.7c-6.3-6.3-16.4-6.3-22.7,0s-6.3,16.4,0,22.7l90.6,90.6l-90.6,90.6c-6.3,6.3-6.3,16.4,0,22.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7l90.7-90.6l90.6,90.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7c6.3-6.3,6.3-16.4,0-22.7L150.7,128z" /></g></g>
+                                    <g><g><path d="M150.7,128l90.6-90.7c6.3-6.3,6.3-16.4,0-22.7c-6.3-6.3-16.4-6.3-22.7,0L128,105.3L37.4,14.7c-6.3-6.3-16.4-6.3-22.7,0s-6.3,16.4,0,22.7l90.6,90.6l-90.6,90.6c-6.3,6.3-6.3,16.4,0,22.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7l90.7-90.6l90.6,90.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7c6.3-6.3,6.3-16.4,0-22.7L150.7,128z" /></g></g>
                                 </svg>
                             </div>
                         </div>
                         <div className="div-body-form">
                             <div className="div-contenido-info-analisis">
                                 <div className="info-analisis info-catador">
-                                    <h3>Información sobre el catador</h3>
+                                    <h3 className="title-info">Información sobre el catador  <div className="title-svg"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" xml:space="preserve">
+                                        <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                        <g> <path fill="#3d2b1f" d="M222.4,233.4H33.6C21.5,233.4,10,222,10,209.9v-3.6c0-3,2.4-5.4,5.4-5.5l225.1-0.1c1.5,0,2.8,0.6,3.9,1.6 c1,1,1.6,2.4,1.6,3.8v3.6C246,222.2,234.8,233.4,222.4,233.4L222.4,233.4z M21.1,211.7c1.1,5.5,7,10.8,12.5,10.8h188.8 c5.7,0,11.5-5.2,12.5-10.9L21.1,211.7z" /> <path fill="#3d2b1f" d="M200.6,99.8v27.3c0,35.7-20.7,74-66.3,74h-19.5c-45.5,0-66.3-38.4-66.3-74V99.8H200.6 M200.6,90.8h-152 c-5,0-9.1,4.1-9.1,9.1v27.3c0,40,23.6,83.1,75.3,83.1h19.5c51.8,0,75.3-43.1,75.3-83.1V99.8C209.7,94.8,205.7,90.8,200.6,90.8z" /> <path fill="#3d2b1f" d="M209.6,144.6h-8.9v-8.9h8.9c10.9,0,17.9-7,17.9-17.9s-7-17.9-17.9-17.9h-8.9v-8.9h8.9 c15.8,0,26.8,11,26.8,26.8C236.4,133.6,225.4,144.6,209.6,144.6z M152.9,137.9c-6.6-16.2-23-24.8-36.6-19.3 c-13.6,5.5-19.4,23.2-12.8,39.4s23,24.8,36.6,19.3C153.7,171.7,159.5,154.1,152.9,137.9z M138.6,169c-0.2,0.3-0.4,0.4-0.6,0.6 c-0.3,0.1-0.7,0.1-1,0c-0.6-0.2-0.9-0.9-0.8-1.5c0.1-0.3,1.5-8.7-10.4-18.5c-13.1-10.8-6.4-23.3-6.3-23.4c0.3-0.6,1-0.8,1.6-0.6 c0.6,0.2,1,0.8,0.9,1.5c-0.1,0.4-1.2,9,10.4,18.5C145.9,156.6,138.7,168.8,138.6,169z M222.4,232.5H33.6c-11.7,0-22.7-11-22.7-22.6 v-3.6c0-2.5,2-4.5,4.5-4.5l225.1-0.1c1.2,0,2.3,0.5,3.2,1.3c0.8,0.8,1.3,2,1.3,3.2v3.6C245.1,221.7,234.3,232.5,222.4,232.5z  M20,210.8c0.6,6.3,7.3,12.6,13.6,12.6h188.8c6.6,0,13-6.2,13.6-12.7L20,210.8z M126,77.8c-1.4,0-2.8-0.7-3.7-1.9 c-1.5-2.1-0.9-4.9,1.1-6.3c1.7-1.2,6.5-5.5,6.6-9.6c0-0.8,0.1-3.1-3.5-6.1c-6-5-7.2-10.3-7.2-13.9c0-9,7.5-15.7,8.4-16.4 c1.9-1.6,4.8-1.4,6.4,0.5c1.6,1.9,1.4,4.8-0.5,6.4c-1.5,1.2-5.2,5.4-5.2,9.5c0,2.4,1.3,4.7,4,6.9c5.8,4.9,6.9,10,6.7,13.4 c-0.4,9.3-9.5,15.9-10.5,16.6C127.7,77.5,126.9,77.8,126,77.8z M168.7,77.8c-1.4,0-2.8-0.7-3.7-1.9c-1.5-2.1-0.9-4.9,1.1-6.3 c1.7-1.2,6.5-5.5,6.6-9.6c0-0.8,0.1-3.1-3.5-6.1c-6-5-7.2-10.3-7.2-13.9c0-9,7.5-15.7,8.4-16.4c1.9-1.6,4.8-1.4,6.4,0.5 c1.6,1.9,1.4,4.8-0.5,6.4c-1.5,1.2-5.2,5.4-5.2,9.5c0,2.4,1.3,4.7,4,6.9c5.8,4.9,6.9,10,6.7,13.4c-0.4,9.3-9.5,15.9-10.5,16.6 C170.5,77.5,169.6,77.8,168.7,77.8z M83.2,77.8c-1.4,0-2.8-0.7-3.7-1.9c-1.5-2.1-0.9-4.9,1.1-6.3c1.7-1.2,6.5-5.5,6.6-9.6 c0-0.8,0.1-3.1-3.5-6.1c-6-5-7.2-10.3-7.2-13.9c0-9,7.5-15.7,8.4-16.4c1.9-1.6,4.8-1.4,6.4,0.5c1.6,1.9,1.4,4.8-0.5,6.4 c-1.5,1.2-5.2,5.4-5.2,9.5c0,2.4,1.3,4.7,4,6.9c5.8,4.9,6.9,10,6.7,13.4C96,69.7,86.9,76.3,85.9,77C85,77.5,84.1,77.8,83.2,77.8z" /></g>
+                                    </svg></div></h3>
                                     {data.dataModalResultado ?
                                         (
                                             <div>{
@@ -530,28 +534,28 @@ export const FormResultados = forwardRef((data, ref) => {
                                                             return <div key={key.id + "catador"}>
                                                                 <div className="div-info-analisis">
                                                                     <div>
-                                                                        <h4>Nombre</h4>
-                                                                        <h3>{key.nombre_catador ? key.nombre_catador : "No registra"}</h3>
+                                                                        <h4>Nombre:</h4>
+                                                                        <p>{key.nombre_catador ? key.nombre_catador : "No registra"}</p>
                                                                     </div>
                                                                     <div>
-                                                                        <h4>Documento</h4>
-                                                                        <h3>{key.catador_documento ? key.catador_documento : "No registra"}</h3>
+                                                                        <h4>Documento:</h4>
+                                                                        <p>{key.catador_documento ? key.catador_documento : "No registra"}</p>
                                                                     </div>
                                                                     <div>
-                                                                        <h4>Teléfono</h4>
-                                                                        <h3>{key.catador_telefono ? key.catador_telefono : "No registra"}</h3>
+                                                                        <h4>Teléfono:</h4>
+                                                                        <p>{key.catador_telefono ? key.catador_telefono : "No registra"}</p>
                                                                     </div>
                                                                     <div>
-                                                                        <h4>Correo</h4>
-                                                                        <h3>{key.catador_correo ? key.catador_correo : "No registra"}</h3>
+                                                                        <h4>Correo:</h4>
+                                                                        <span>{key.catador_correo ? key.catador_correo : "No registra"}</span>
                                                                     </div>
                                                                     <div>
-                                                                        <h4>Rol</h4>
-                                                                        <h3>{key.catador_rol ? key.catador_rol : "No registra"}</h3>
+                                                                        <h4>Rol:</h4>
+                                                                        <p>{key.catador_rol ? key.catador_rol : "No registra"}</p>
                                                                     </div>
                                                                     <div>
-                                                                        <h4>Cargo</h4>
-                                                                        <h3>{key.catador_cargo ? key.catador_cargo : "No registra"}</h3>
+                                                                        <h4>Cargo:</h4>
+                                                                        <p>{key.catador_cargo ? key.catador_cargo : "No registra"}</p>
                                                                     </div>
 
                                                                 </div>
@@ -642,7 +646,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                         }} className="icon-chevron-estado">
                                                                                             <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                                                                                 <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                                                                                <g><g><path  d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
+                                                                                                <g><g><path d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
                                                                                             </svg>
                                                                                         </div>
 
@@ -671,7 +675,10 @@ export const FormResultados = forwardRef((data, ref) => {
                                         : "Error interno"}
                                 </div>
                                 <div className="info-analisis">
-                                    <h3>Información sobre el análisis</h3>
+                                    <h3 className="title-info">Información sobre el análisis<div className="title-svg"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" xml:space="preserve">
+                                        <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                        <g><g><path fill="#000000" d="M48.9,10h107.9c2.5,0,4.9,1,6.4,2.5l66,65.5c2,2,2.5,4.4,2.5,6.4l0,0v137.5c0,6.4-2.5,12.8-7.4,17.2l0,0l0,0c-4.4,4.4-10.4,6.9-17.2,6.9H48.9c-6.9,0-12.8-3-17.2-7.4l0,0c-4.4-3.4-7.4-9.8-7.4-16.8V34.2c0-6.9,3-12.8,7.4-17.2C35.6,13,42,10,48.9,10L48.9,10z M163.7,129.2L163.7,129.2L163.7,129.2c9.4,9.4,15.3,22.2,15.3,36c0,14.3-5.9,27.1-15.3,36c-9.4,9.4-22.2,15.3-36,15.3s-27.1-5.9-36-15.3l0,0c-9.4-9.4-15.3-22.2-15.3-36c0-14.3,5.9-27.1,15.3-36l0.5-0.5C112,109,144,109.5,163.7,129.2L163.7,129.2z M65.7,106.1L65.7,106.1c-3,0-5.4-2.5-5.4-5.4c0-3,2.5-5.4,5.4-5.4h19.7c3,0,5.4,2.5,5.4,5.4c0,3-2.5,5.4-5.4,5.4H65.7L65.7,106.1z M65.7,83.9L65.7,83.9c-3,0-5.4-2.5-5.4-5.4c0-3,2.5-5.4,5.4-5.4h63.6c3,0,5.4,2.5,5.4,5.4c0,3-2.5,5.4-5.4,5.4H65.7L65.7,83.9z M65.7,62.2L65.7,62.2c-3,0-5.4-2.5-5.4-5.4c0-3,2.5-5.4,5.4-5.4h63.6c3,0,5.4,2.5,5.4,5.4c0,3-2.5,5.4-5.4,5.4H65.7L65.7,62.2z M133.2,125.3L133.2,125.3v36.9l32,18.2c2-4.9,3-9.8,3-15.3c0-10.8-4.4-20.7-11.3-28.1l-0.5-0.5C149.9,130.7,142,126.8,133.2,125.3L133.2,125.3z M159.3,189.9L159.3,189.9l-34-19.7c-2-1-3.4-2.5-3.4-4.9v-39.9c-8.9,1-16.8,5.4-22.7,11.3l-0.5,0.5c-7.4,7.4-11.8,17.2-11.8,28.6s4.4,21.2,11.8,28.6l0,0c7.4,7.4,17.2,11.8,28.6,11.8c10.8,0,21.2-4.4,28.6-11.8C157.3,192.8,158.3,191.3,159.3,189.9L159.3,189.9z M213,90.3L213,90.3h-41.4c-5.9,0-10.8-2.5-14.8-5.9v-0.5c-3.4-3.9-5.9-8.9-5.9-14.3V28.2h-102c-2,0-3.4,0.5-4.4,2c-1.5,1-2,2.5-2,3.9v187.7c0,1.5,0.5,3.4,2,4.4l0,0c1,1,2.5,2,4.4,2h158.2c1.5,0,3.4-1,4.4-2l0,0c1-1,2-2.5,2-4.4V90.3H213z M203.6,79.5L203.6,79.5l-41.9-41.9v32c0,2.5,1,4.9,2.5,6.9l0.5,0.5c2,2,4.4,3,6.9,3h32L203.6,79.5L203.6,79.5z" /></g></g>
+                                    </svg></div></h3>
                                     {data.dataModalAnalisis ?
 
                                         data.dataModalAnalisis.map((key, index) => {
@@ -679,20 +686,20 @@ export const FormResultados = forwardRef((data, ref) => {
                                                 return <div key={key.id}>
                                                     <div className="div-info-analisis">
                                                         <div>
-                                                            <h4>Id del análisis</h4>
-                                                            <h3>{key.id ? key.id : "No registra"}</h3>
+                                                            <h4>Id del análisis:</h4>
+                                                            <p>{key.id ? key.id : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Tipo de proceso </h4>
-                                                            <h3>{key.proceso ? key.proceso : "No registra"}</h3>
+                                                            <h4>Tipo de proceso: </h4>
+                                                            <p>{key.proceso ? key.proceso : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Calidad </h4>
-                                                            <h3>{key.calidad && key.calidad != 0 ? key.calidad : "No registra"}</h3>
+                                                            <h4>Calidad: </h4>
+                                                            <p>{key.calidad && key.calidad != 0 ? key.calidad : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Fecha de Registro</h4>
-                                                            <h3>{key.fecha_creacion ? key.proceso : "No registra"}</h3>
+                                                            <h4>Fecha de Registro:</h4>
+                                                            <p>{key.fecha_creacion ? key.proceso : "No registra"}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -702,7 +709,10 @@ export const FormResultados = forwardRef((data, ref) => {
                                         : "Error interno"}
                                 </div>
                                 <div className="info-analisis">
-                                    <h3>Información de la ubicación</h3>
+                                    <h3 className="title-info">Información de la ubicación<div className="title-svg"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" xml:space="preserve">
+                                        <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                        <g><g><g><path fill="#000000" d="M118.3,10.4c-2.2,0.2-6.5,1-9.4,1.7c-30.4,6.8-55,29.6-63.9,59.4C42,81,41.6,84.7,41.6,97.9c0,12.2,0.5,16.9,2.7,26.9c8.8,40.4,37,83,77.8,117.3c5.9,5,5.5,4.9,9.5,1.6c30.8-24.9,58.4-60.5,71.5-92.4c10.3-25.2,13.9-51.7,9.6-72.2c-6.7-32.2-31.4-58.2-63-66.4C140.5,10.4,127.2,9.4,118.3,10.4z M138.1,29.1c12.8,2.2,25,8.3,34.5,17.2c8.2,7.6,14.3,17.1,17.9,27.4c2.2,6.4,3.2,11.9,3.5,19.3c0.8,19.5-6.1,37-20.1,50.8c-9.4,9.3-21.7,15.8-35.3,18.4c-5.9,1.2-18.2,1.2-24.1,0c-27.8-5.5-48.3-25.7-54.4-53.7c-1.2-5.6-1.2-20.2,0-25.9c3-13.7,8.9-24.6,18.7-34.5c11-11,23.1-17.1,39.2-19.5C121.7,28.1,134.1,28.3,138.1,29.1z" /><path fill="#000000" d="M124.5,67c-3.4,5.3-6.2,9.7-6.1,9.8c0.6,0.6,5.8-2,8.1-4.1c3.6-3.3,4.6-5.9,4.4-11.2l-0.1-4.1L124.5,67z" /><path fill="#000000" d="M111.6,58.7c-4.5,1.6-7.5,4.3-9.3,8.5c-0.6,1.4-1.4,9.2-0.8,9.2c0.1,0,2.7-3.4,5.8-7.7c3.1-4.2,6.1-8.4,6.7-9.2c1-1.4,1.1-1.5,0.3-1.5C113.7,58.1,112.5,58.4,111.6,58.7z" /><path fill="#000000" d="M149.9,59.1c-5.2,2-8.5,6.7-9.3,13.2c-0.6,5.2,0,4.8,6.9-4.7c3.5-4.8,6.5-9,6.5-9.2C154.3,57.7,152.6,58,149.9,59.1z" /><path fill="#000000" d="M92.8,98.3c0,20.5,0,20.7,3.8,24.1c1.7,1.6,3,2.3,4.8,2.6c1.7,0.4,9.7,0.5,25.9,0.4l23.4-0.1l2.3-1.4c1.4-0.9,2.8-2.3,3.7-3.7c1.2-1.9,1.4-2.8,1.6-6.5l0.2-4.2h2.5c3,0,5.2-1.3,6.5-3.8c0.7-1.4,0.9-2.9,0.9-9.2c0-5.1-0.2-7.9-0.6-8.7c-1-2.1-2.9-3.1-6.2-3.3l-3.1-0.2v-1.8v-1.8h-32.8H92.8V98.3z M163.6,88.7c0.7,1.3,0.6,14.8-0.1,15.5c-0.3,0.3-1.6,0.6-2.8,0.6h-2.3v-8.5v-8.5h2.4C162.5,87.8,163.2,88,163.6,88.7z" /><path fill="#000000" d="M80.6,128.9c-0.8,0.8-0.7,1.7,0.2,2c0.4,0.1,3.3,0.3,6.4,0.3c5.1,0,5.6,0.1,5.6,0.9c0,2-0.2,2,32.8,2c33,0,32.8,0,32.8-2c0-0.8,0.6-0.9,7.9-0.9c8.3,0,9.7-0.3,8.8-1.7c-0.5-0.8-3.1-0.8-47.2-1C91.9,128.4,81,128.5,80.6,128.9z" /></g></g></g>
+                                    </svg></div></h3>
                                     {data.dataModalAnalisis ?
 
                                         data.dataModalAnalisis.map((key, index) => {
@@ -710,32 +720,32 @@ export const FormResultados = forwardRef((data, ref) => {
                                                 return <div key={key.id}>
                                                     <div className="div-info-analisis">
                                                         <div>
-                                                            <h4>Departamento</h4>
-                                                            <h3>{key.departamento ? key.departamento : "No registra"}</h3>
+                                                            <h4>Departamento:</h4>
+                                                            <p>{key.departamento ? key.departamento : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Municipio</h4>
-                                                            <h3>{key.municipio ? key.municipio : "No registra"}</h3>
+                                                            <h4>Municipio:</h4>
+                                                            <p>{key.municipio ? key.municipio : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Vereda</h4>
-                                                            <h3>{key.nombre_vereda ? key.nombre_vereda : "No registra"}</h3>
+                                                            <h4>Vereda:</h4>
+                                                            <p>{key.nombre_vereda ? key.nombre_vereda : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Lote </h4>
-                                                            <h3>{key.lote ? key.lote : "No registra"}</h3>
+                                                            <h4>Lote: </h4>
+                                                            <p>{key.lote ? key.lote : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Finca</h4>
-                                                            <h3>{key.finca ? key.finca : "No registra"}</h3>
+                                                            <h4>Finca:</h4>
+                                                            <p>{key.finca ? key.finca : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Latitud del Lote</h4>
-                                                            <h3>{key.latitud_lote ? key.latitud_lote : "No registra"}</h3>
+                                                            <h4>Latitud del Lote:</h4>
+                                                            <p>{key.latitud_lote ? key.latitud_lote : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Longitud del Lote </h4>
-                                                            <h3>{key.longitud_lote ? key.longitud_lote : "No registra"}</h3>
+                                                            <h4>Longitud del Lote: </h4>
+                                                            <p>{key.longitud_lote ? key.longitud_lote : "No registra"}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -745,7 +755,11 @@ export const FormResultados = forwardRef((data, ref) => {
                                         : "Error interno"}
                                 </div>
                                 <div className="info-analisis">
-                                    <h3>Información sobre la muestra</h3>
+                                    <h3 className="title-info">Información sobre la muestra <div className="title-svg ">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" xml:space="preserve">
+                                            <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                            <g><g><g><path fill="#000000" d="M183.4,3.9c-10.9,2.1-20.1,10.8-23.6,22.4c-6.2,20.1,4.2,46.6,24.1,61.7c4.6,3.5,14.1,8.1,19.5,9.4c5.6,1.4,13.6,1.5,18.3,0.3c5.7-1.5,10.1-4,14.2-8.1c8.8-8.8,12.1-22.1,9-36.9C238.6,22.3,209-1.2,183.4,3.9z M184.5,24.9c2.2,6.8,6.5,11,22.7,22.4c9.6,6.7,13.2,9.9,16.5,14.6c5.5,7.9,5.7,16.4,0.5,23.8c-1.4,2-2.1,2.4-1.8,0.9c0.4-1.6-0.8-6.5-2.4-9.8c-2-4.1-8.5-10.7-13.8-13.9c-12.6-7.6-20.5-14.2-24.4-20.4c-6-9.5-6-19.5,0.1-28.4l1.3-1.9l0.3,5.6C183.9,20.9,184.2,24,184.5,24.9z" /><path fill="#000000" d="M51.8,10.4c-5.3,0.5-9.4,1.7-14.4,4.1c-23,11.2-33,44.1-24.4,79.8c6.9,28.4,24.1,53.9,45.7,67.6l1.3,0.9l2.5-5.1C68,146.9,74.5,137.6,82,130c2.5-2.6,4.5-4.8,4.5-5c0-0.5-3.8-6.1-6.1-8.8c-1.1-1.4-5.2-5.8-9.1-9.8C54.8,89.2,46.2,75.4,43.2,60.5c-1.2-5.8-0.7-14.4,1-19.6c1.7-5,4.4-9.7,8-13.4c4.3-4.7,4.5-4.6,3.5,0.4c-2,9.8-1.7,17.8,1.1,25c2.9,7.7,8.2,14.9,24.6,34.1c10.3,12.1,16,19.6,18.1,24c0.5,1,1,1.9,1.2,1.9s2.1-1.1,4.2-2.4c8.1-5,16.3-8.6,24.6-10.7c6.2-1.6,6-1.3,4.1-9.6c-4.7-21.1-15.5-41.6-29.7-56.3C87.5,17.1,69.2,8.8,51.8,10.4z" /><path fill="#000000" d="M150.2,103.3c-12.1,1.3-25.9,6.5-37.1,14c-30.1,20-51,55.7-51,87.1c0,24.6,12.6,42.2,34,47.5c5.3,1.3,17.5,1.2,24-0.2c24.1-5.4,46.9-21.8,63.2-45.5c10.8-15.7,17.5-33.8,18.4-49.8c1-17.5-3-30.6-12.3-40.4c-7.1-7.5-15.4-11.5-26.4-12.8C157.9,102.6,155.7,102.6,150.2,103.3z M174.7,129c3.6,0.6,9.4,2.3,9.4,2.8c0,0.2-1.8,0.8-3.9,1.4c-11.8,3.3-19.8,8.7-25.5,17.3c-4.2,6.4-7.1,12.5-15.4,33c-6.1,14.9-8.5,20-12.6,26.3c-6,9-13.1,15.1-21,17.9c-3.6,1.3-4.9,1.5-9.1,1.5c-5,0-7.6-0.5-11.6-2.2l-2.3-1L86,225c12.9-4.1,23.5-17.2,29.9-36.7c10.3-31.7,23.5-50.5,39.9-56.9C162.4,128.8,168.5,128.1,174.7,129z" /></g></g></g>
+                                        </svg></div></h3>
                                     {data.dataModalAnalisis ?
 
                                         data.dataModalAnalisis.map((key, index) => {
@@ -753,28 +767,28 @@ export const FormResultados = forwardRef((data, ref) => {
                                                 return <div key={key.id}>
                                                     <div className="div-info-analisis">
                                                         <div>
-                                                            <h4>Id del análisis</h4>
-                                                            <h3>{key.id ? key.id : "No registra"}</h3>
+                                                            <h4>Id del análisis:</h4>
+                                                            <p>{key.id ? key.id : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Código de la muestra</h4>
-                                                            <h3>{key.mu_id ? key.mu_id : "No registra"}</h3>
+                                                            <h4>Código de la muestra:</h4>
+                                                            <p>{key.mu_id ? key.mu_id : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Cantidad </h4>
-                                                            <h3>{key.cantidad ? key.cantidad : "No registra"}</h3>
+                                                            <h4>Cantidad: </h4>
+                                                            <p>{key.cantidad ? key.cantidad : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Variedad</h4>
-                                                            <h3>{key.variedad ? key.variedad : "No registra"}</h3>
+                                                            <h4>Variedad:</h4>
+                                                            <p>{key.variedad ? key.variedad : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Calidad </h4>
-                                                            <h3>{key.calidad && key.calidad != 0 ? key.calidad : "No registra"}</h3>
+                                                            <h4>Calidad: </h4>
+                                                            <p>{key.calidad && key.calidad != 0 ? key.calidad : "No registra"}</p>
                                                         </div>
                                                         <div>
-                                                            <h4>Propietario </h4>
-                                                            <h3>{key.nombre_propietario ? key.nombre_propietario : "No registra"}</h3>
+                                                            <h4>Propietario: </h4>
+                                                            <p>{key.nombre_propietario ? key.nombre_propietario : "No registra"}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -796,27 +810,27 @@ export const FormResultados = forwardRef((data, ref) => {
                                                     <div className="div-info-analisis">
                                                         <div>
                                                             <h4>Id del Formato</h4>
-                                                            <h3>{key.id ? key.id : "No registra"}</h3>
+                                                            <p>{key.id ? key.id : "No registra"}</p>
                                                         </div>
                                                         <div>
                                                             <h4>Fecha de registro</h4>
-                                                            <h3>{key.fecha_creacion ? key.fecha_creacion : "No registra"}</h3>
+                                                            <p>{key.fecha_creacion ? key.fecha_creacion : "No registra"}</p>
                                                         </div>
                                                         <div>
                                                             <h4>Fecha de Análisis</h4>
-                                                            <h3>{key.fecha_analisis ? key.fecha_analisis : "No registra"}</h3>
+                                                            <p>{key.fecha_analisis ? key.fecha_analisis : "No registra"}</p>
                                                         </div>
                                                         <div>
                                                             <h4>Fecha de actualización</h4>
-                                                            <h3>{key.fecha_analisis ? key.fecha_analisis : "No registra"}</h3>
+                                                            <p>{key.fecha_analisis ? key.fecha_analisis : "No registra"}</p>
                                                         </div>
                                                         <div>
                                                             <h4>Tipo de análisis</h4>
-                                                            <h3>{key.tipos_analisis_id ? key.tipos_analisis_id == 1 ? "Físico" : key.tipos_analisis_id == 2 ? "Sensorial" : "No disponible" : "No registra"}</h3>
+                                                            <p>{key.tipos_analisis_id ? key.tipos_analisis_id == 1 ? "Físico" : key.tipos_analisis_id == 2 ? "Sensorial" : "No disponible" : "No registra"}</p>
                                                         </div>
                                                         <div>
                                                             <h4>Estado</h4>
-                                                            <h3>{key.estado ? key.estado == 1 ? "Registrado" : key.estado == 2 ? "Pendiente" : key.estado == 3 ? "Asignado" : "No disponible" : "No registra"}</h3>
+                                                            <p>{key.estado ? key.estado == 1 ? "Registrado" : key.estado == 2 ? "Pendiente" : key.estado == 3 ? "Asignado" : "No disponible" : "No registra"}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1075,7 +1089,7 @@ export const FormResultados = forwardRef((data, ref) => {
                         <div onClick={() => { setIdFormato(null), setModeFormato(null); setTipoRegistro(null); setModalFormNormal(false) }} className="icon-quit-svg-form">
                             <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                 <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                <g><g><path  d="M150.7,128l90.6-90.7c6.3-6.3,6.3-16.4,0-22.7c-6.3-6.3-16.4-6.3-22.7,0L128,105.3L37.4,14.7c-6.3-6.3-16.4-6.3-22.7,0s-6.3,16.4,0,22.7l90.6,90.6l-90.6,90.6c-6.3,6.3-6.3,16.4,0,22.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7l90.7-90.6l90.6,90.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7c6.3-6.3,6.3-16.4,0-22.7L150.7,128z" /></g></g>
+                                <g><g><path d="M150.7,128l90.6-90.7c6.3-6.3,6.3-16.4,0-22.7c-6.3-6.3-16.4-6.3-22.7,0L128,105.3L37.4,14.7c-6.3-6.3-16.4-6.3-22.7,0s-6.3,16.4,0,22.7l90.6,90.6l-90.6,90.6c-6.3,6.3-6.3,16.4,0,22.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7l90.7-90.6l90.6,90.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7c6.3-6.3,6.3-16.4,0-22.7L150.7,128z" /></g></g>
                             </svg>
                         </div>
                     </div>
@@ -1196,7 +1210,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         }} className="icon-chevron-estado">
                                                                             <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                                                                 <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                                                                <g><g><path  d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
+                                                                                <g><g><path d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
                                                                             </svg>
                                                                         </div>
 

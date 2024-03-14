@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-import axios from 'axios';
 import Api from './Api.jsx';
 
 export const SelectComponent = (props) => {
@@ -11,18 +10,16 @@ export const SelectComponent = (props) => {
     const fetchData = async () => {
       try {
         const response = await Api[props.metodos](props.url);
-        console.log(response.data.data,"Aqui van Lsa muestras")
+        console.log(response.data.data, "Aquí van las muestras");
+
         if (response.data.data && response.data.data.length > 0) {
           const valorOption = props.opcion;
-          console.log(props.opcion, 'esto es una opción');
 
           const nuevosDatos = response.data.data.map((item) => ({
             value: item.id,
             label: `${item.id}. ${item[valorOption]}`,
           }));
 
-          // Actualizar el estado o hacer algo con nuevosDatos
-          // Por ejemplo, puedes almacenarlos en un estado si estás trabajando con React
           setOpciones(nuevosDatos);
         } else {
           console.error("No se encontraron datos válidos en la respuesta");
@@ -32,17 +29,18 @@ export const SelectComponent = (props) => {
         setError('Error al obtener datos. Inténtalo de nuevo más tarde.');
       }
     };
-
-    console.log(opciones, 'estas son las opciones');
+    
     fetchData();
   }, [props.metodos, props.url, props.opcion]);
- /*  console.log(props.options,"opciones23456") */
-  return (
-    
 
+  // Seleccciones toma las opciones pasadas como props o las opciones obtenidas de la API
+  const Seleccciones = !props.inputValueMuestras ? opciones : props.options;
+  console.log(Seleccciones, "Estas son las opciones");
+
+  return (
     <div>
       <Select
-        options={(props.options !== undefined ? props.options : opciones)}
+        options={Seleccciones}
         name={props.name}
         id={props.id}
         placeholder={props.placeholder}

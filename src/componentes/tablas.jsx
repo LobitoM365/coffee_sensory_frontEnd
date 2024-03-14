@@ -200,6 +200,7 @@ export const Tablas = (array) => {
             return min
         }
         function resizeTable() {
+
             let contentComponent = document.getElementById("contentComponent")
             if (contentComponent) {
                 let tableComponent = document.querySelectorAll(".table-component")
@@ -216,7 +217,8 @@ export const Tablas = (array) => {
                 }
 
 
-                if (contentComponent.clientWidth < (tableComponent[0].clientWidth + (Math.ceil(contentTable[0].offsetWidth) - Math.ceil(contentTable[0].clientWidth)))) {
+                if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
+
                     if (thQuit.length > 1) {
                         let tBody = contentTable[0].querySelectorAll("tbody")
                         if (tBody) {
@@ -246,46 +248,51 @@ export const Tablas = (array) => {
                                     newtd.appendChild(newdiv)
 
                                     if (ziseLess == 0) {
-
-
-                                        let td = document.createElement("td")
-                                        td.classList.add("td-view-elementos-ocult", "td-table-print")
-                                        td.innerHTML = '<div class="div-svg-plus-table"> <svg class="svg-plus-table" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" <g><g><g><path  d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z"/></g></g></g></svg> </div>'
-
-                                        trTbody[tr].insertAdjacentElement('afterend', newtr)
-                                        trTbody[tr].insertBefore(td, trTbody[tr].children[0]);
-                                        let plus = td.querySelectorAll(".svg-plus-table")
-                                        plus[0].addEventListener("click", function () {
-                                            if (newtr.style.display == "table-row") {
-                                                newtr.style.display = "";
-                                                newdiv.style.height = "";
-                                            } else {
-                                                newtr.style.display = "table-row";
-                                                newdiv.style.height = "max-content";
-                                            }
-
-                                        })
+                                        if(!document.querySelectorAll(".td-view-elementos-ocult")[tr]){
+                                            let td = document.createElement("td")
+                                            td.classList.add("td-view-elementos-ocult", "td-table-print")
+                                            td.innerHTML = '<div class="div-svg-plus-table"> <svg class="svg-plus-table" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" <g><g><g><path  d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z"/></g></g></g></svg> </div>'
+    
+                                            trTbody[tr].insertAdjacentElement('afterend', newtr)
+                                            trTbody[tr].insertBefore(td, trTbody[tr].children[0]);
+                                            let plus = td.querySelectorAll(".svg-plus-table")
+                                            plus[0].addEventListener("click", function () {
+                                                if (newtr.style.display == "table-row") {
+                                                    newtr.style.display = "";
+                                                    newdiv.style.height = "";
+                                                } else {
+                                                    newtr.style.display = "table-row";
+                                                    newdiv.style.height = "max-content";
+                                                }
+    
+                                            })
+                                        }
+                                        
                                     }
                                     let elementsNewTr = document.querySelectorAll(".new-div-table");
                                     if (elementsNewTr[tr]) {
                                         let div = document.createElement("div")
                                         div.classList.add("div-element-add")
                                         div.innerHTML = "<h4> " + name + "</h4>"
-                                        tdTbody[(thQuit.length) - 1].style.wordBreak = "break-all";
-                                        div.append(tdTbody[(thQuit.length) - 1])
-                                        elementsNewTr[tr].appendChild(div)
+                                        if (tdTbody[(thQuit.length) - 1]) {
+                                           /*  tdTbody[(thQuit.length) - 1].style.wordBreak = "break-all"; */
+                                            div.append(tdTbody[(thQuit.length) - 1])
+                                            elementsNewTr[tr].appendChild(div)
+                                        }
                                     }
                                 }
 
                             }
                             if (ziseLess == 0 && !data.find_error) {
-                                let theadTable = document.querySelectorAll(".thead-table")
-                                let th = document.createElement("th")
-                                th.classList.add("th-plus-view-elements-ocult", "th-table-print")
-                                th.innerHTML = ''
-                                theadTable[0].insertBefore(th, theadTable[0].children[0]);
-                                ziseLess = 1;
-
+                                
+                                if(document.querySelectorAll(".th-plus-view-elements-ocult").length == 0){
+                                    let theadTable = document.querySelectorAll(".thead-table")
+                                    let th = document.createElement("th")
+                                    th.classList.add("th-plus-view-elements-ocult", "th-table-print")
+                                    th.innerHTML = ''
+                                    theadTable[0].insertBefore(th, theadTable[0].children[0]);
+                                    ziseLess = 1;
+                                }     
                             }
                             ziseTableComponent = tableComponent[0].clientWidth;
                             resizeTable()
@@ -294,6 +301,7 @@ export const Tablas = (array) => {
                     }
 
                 } else {
+                    
                     let elementsNewDivTable = document.querySelectorAll(".div-element-add");
                     let thTable = document.querySelectorAll(".th-table-print")
                     let tdTable = document.querySelectorAll(".td-table-print")
@@ -326,7 +334,7 @@ export const Tablas = (array) => {
                         let tdPlus = document.querySelectorAll(".td-view-elementos-ocult");
                         let thPlus = document.querySelectorAll(".th-plus-view-elements-ocult");
                         for (let x = 0; x < newTrTable.length; x++) {
-                            newTrTable[x].remove()
+                            newTrTable[x].remove() 
                         }
                         for (let x = 0; x < tdPlus.length; x++) {
                             tdPlus[x].remove()
@@ -342,9 +350,9 @@ export const Tablas = (array) => {
 
                     let extraSize = parseFloat(styleTable.paddingLeft.match(/\d+/)[0]) + parseFloat(styleTable.paddingRight.match(/\d+/)[0]) + parseFloat(styleTable.marginLeft.match(/\d+/)[0]) + parseFloat(styleTable.marginRight.match(/\d+/)[0] + (Math.ceil(contentTable[0].offsetWidth) - Math.ceil(contentTable[0].clientWidth)))
 
-                    // console.log(heightGroup + height, height, "hahsdashd")
                     if (arrayThQuit.length > 0) {
                         if (((heightGroup + height) + extraSize) <= contentComponent.clientWidth) {
+                            console.log("asdasdhash")
 
                             let theadTable = document.querySelectorAll(".thead-table")
                             if (arrayThQuit.length > 0) {
@@ -361,7 +369,7 @@ export const Tablas = (array) => {
                                             divNewDivTable[divNewDivTable.length - 1].remove()
                                         }
                                     }
-                                }
+                                } 
                                 resizeTable()
                                 return
                             }
@@ -623,7 +631,7 @@ export const Tablas = (array) => {
                                                                                         }} className="icon-chevron-estado">
                                                                                             <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                                                                                 <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                                                                                <g><g><path  d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
+                                                                                                <g><g><path d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
                                                                                             </svg>
                                                                                         </div>
 
@@ -741,7 +749,7 @@ export const Tablas = (array) => {
                                     <div className="icon-chevron-estado">
                                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                             <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                            <g><g><path  d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
+                                            <g><g><path d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
                                         </svg>
                                     </div>
 
@@ -762,7 +770,7 @@ export const Tablas = (array) => {
                                 <div className="icon-chevron-estado">
                                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                         <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                        <g><g><path  d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
+                                        <g><g><path d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
                                     </svg>
                                 </div>
 
@@ -781,7 +789,7 @@ export const Tablas = (array) => {
                             <div className="icon-search" onClick={() => { array.filterSeacth(valueSearch); setPosicionPaginate(0); functionSetLimit(1) }}>
                                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256"     >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                    <g><g><g><path d="M93,10.1c-0.7,0.1-3.3,0.4-5.6,0.7c-28.3,3.5-54.3,22-67.7,48.1c-6.9,13.4-9.8,25.4-9.8,41c0,15.5,2.9,27.6,9.8,41c13.2,25.8,37,43,66.3,48c6.4,1.1,21.1,1.1,27.5,0c14.9-2.5,28.9-8.4,39.6-16.5l2.8-2.1l4.5,4.5l4.6,4.5l-1.1,1.7c-2.5,3.6-2.8,9.8-0.7,13.8c0.8,1.5,8.8,9.9,24.2,25.5c26,26.4,25.5,26,31.8,25.9c5.5,0,6.9-0.9,16.4-10.4c9.5-9.6,10.4-10.9,10.4-16.4c0.1-6,0.3-5.8-25.7-32.1c-25.1-25.4-25-25.3-30.5-25.6c-3.6-0.2-6.2,0.4-8.6,2.1l-1.8,1.2l-4.6-4.6l-4.5-4.5l2-2.6c8-10.5,13.9-24.7,16.4-39.5c1.1-6.4,1.1-21.1,0-27.5c-3.3-18.9-11.2-34.9-23.8-48.2C151,23.3,133.7,14.3,113.8,11C109.5,10.3,95.8,9.6,93,10.1z M109.7,25.9c16.4,2.1,30.9,9.3,42.8,21.2c25.8,25.8,29.2,66.3,8,96.1c-4,5.6-11.7,13.3-17.4,17.4c-22.7,16.1-52,18.4-76.8,6c-7.5-3.7-13.4-8.1-19.4-14c-11.9-11.9-19.1-26.5-21.2-42.8c-3.1-23.4,4.6-46,21.2-62.6C63.7,30.5,86.3,22.8,109.7,25.9z" /><path  d="M52.8,70.1c-5.6,8.6-9,19.6-9,29.5c0,19.7,11.8,38.7,29.4,47.6c9,4.5,15.4,6,25.4,6c7.4,0,11.9-0.7,17.9-2.7c3-1,10.8-4.8,10.8-5.1c0-0.1-2.9-0.1-6.4,0c-18.1,0.7-34.6-5.6-47.6-18.2c-9.7-9.4-15.7-20.4-18.6-33.9c-1-4.9-1.2-19.2-0.3-23.3c0.3-1.4,0.5-2.6,0.4-2.7C54.7,67.3,53.9,68.5,52.8,70.1z" /></g></g></g>
+                                    <g><g><g><path d="M93,10.1c-0.7,0.1-3.3,0.4-5.6,0.7c-28.3,3.5-54.3,22-67.7,48.1c-6.9,13.4-9.8,25.4-9.8,41c0,15.5,2.9,27.6,9.8,41c13.2,25.8,37,43,66.3,48c6.4,1.1,21.1,1.1,27.5,0c14.9-2.5,28.9-8.4,39.6-16.5l2.8-2.1l4.5,4.5l4.6,4.5l-1.1,1.7c-2.5,3.6-2.8,9.8-0.7,13.8c0.8,1.5,8.8,9.9,24.2,25.5c26,26.4,25.5,26,31.8,25.9c5.5,0,6.9-0.9,16.4-10.4c9.5-9.6,10.4-10.9,10.4-16.4c0.1-6,0.3-5.8-25.7-32.1c-25.1-25.4-25-25.3-30.5-25.6c-3.6-0.2-6.2,0.4-8.6,2.1l-1.8,1.2l-4.6-4.6l-4.5-4.5l2-2.6c8-10.5,13.9-24.7,16.4-39.5c1.1-6.4,1.1-21.1,0-27.5c-3.3-18.9-11.2-34.9-23.8-48.2C151,23.3,133.7,14.3,113.8,11C109.5,10.3,95.8,9.6,93,10.1z M109.7,25.9c16.4,2.1,30.9,9.3,42.8,21.2c25.8,25.8,29.2,66.3,8,96.1c-4,5.6-11.7,13.3-17.4,17.4c-22.7,16.1-52,18.4-76.8,6c-7.5-3.7-13.4-8.1-19.4-14c-11.9-11.9-19.1-26.5-21.2-42.8c-3.1-23.4,4.6-46,21.2-62.6C63.7,30.5,86.3,22.8,109.7,25.9z" /><path d="M52.8,70.1c-5.6,8.6-9,19.6-9,29.5c0,19.7,11.8,38.7,29.4,47.6c9,4.5,15.4,6,25.4,6c7.4,0,11.9-0.7,17.9-2.7c3-1,10.8-4.8,10.8-5.1c0-0.1-2.9-0.1-6.4,0c-18.1,0.7-34.6-5.6-47.6-18.2c-9.7-9.4-15.7-20.4-18.6-33.9c-1-4.9-1.2-19.2-0.3-23.3c0.3-1.4,0.5-2.6,0.4-2.7C54.7,67.3,53.9,68.5,52.8,70.1z" /></g></g></g>
                                 </svg>
                             </div>
                             <div className="div-search">
@@ -1135,7 +1143,7 @@ export const Tablas = (array) => {
 
 
 
-            <Form imgForm={array.imgForm} ref={formRef} setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} tittle={array.tittle} />
+            <Form userInfo={array.userInfo} imgForm={array.imgForm} ref={formRef} setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} tittle={array.tittle} />
         </div >
 
     )

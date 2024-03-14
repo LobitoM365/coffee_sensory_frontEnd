@@ -60,9 +60,9 @@ h3{
 }
 
 .Tablecolors {
-  width:60%;
+  max-width: 100%;
   padding: 5px;
-  margin-right: -20%;
+  
 
   display: flex;
   justify-content: center;
@@ -71,10 +71,10 @@ h3{
   
   border-radius: 5px;
   border: 1px solid rgb(37, 36, 36);
-  box-shadow:-2px -2px 7px 2px rgb(80, 80, 80);
+  box-shadow:0px 0px 3px 0.5px rgb(80, 80, 80);
   position: relative;
-  top: 5%;
-  right: 40%;
+  top: 20%;
+  right: 10%;
 }
 
 

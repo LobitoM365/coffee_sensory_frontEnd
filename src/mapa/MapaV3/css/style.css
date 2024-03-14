@@ -1,0 +1,174 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.punto-ubicacion,
+.punto {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.punto {
+    width: 0;
+    height: 0;
+    position: absolute;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.div-mapa {
+    position: absolute;
+    width: max-content;
+    height: max-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.5s;
+    top: 0;
+    left: 0;
+}
+
+.center {
+    border-top: 5px solid rgb(255, 38, 0);
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+/* .x{
+    width: 100%;
+    height: 1px;
+    background-color: orange;
+    position: absolute;
+    z-index: 99;
+}
+.y{
+    height: 100%;
+    width: 1px;
+    background-color: orange;
+    position: absolute;
+    z-index: 99;
+} */
+.content-mapa {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.element-departament,
+.municipio {
+    cursor: pointer;
+}
+
+.element-departament:hover,
+.municipio:hover {
+    filter: brightness(1.2);
+
+}
+
+.main-div-mapa {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: none;
+
+    transform: scale(1);
+    transition: all 0.5s;
+}
+
+#divPuntosUbicacion {
+    position: absolute;
+
+}
+
+#svg4942 {
+    z-index: 9;
+}
+
+.fondo-mapa {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: -99999;
+}
+
+.department-cesar,
+.department-cordoba,
+.department-vichada,
+.department-cundinamarca,
+.department-valle_cauca,
+.department-caqueta {
+    fill: rgb(225, 225, 115);
+}
+
+.department-santander,
+.department-choco,
+.department-narino,
+.department-tolima,
+.department-meta,
+.department-amazonas,
+.department-guajira,
+.department-sucre {
+    fill: rgb(195, 216, 150);
+}
+
+.department-antioquia,
+.department-casanare,
+.department-vaupes,
+.department-cauca,
+.department-norte_santander,
+.department-atlantico,
+.department-quindio,
+.department-bogota {
+    fill: rgb(188, 186, 209);
+}
+
+.department-bolivar,
+.department-arauca,
+.department-caldas,
+.department-guaviare,
+.department-putumayo {
+    fill: rgb(255, 205, 122);
+}
+
+.department-magdalena,
+.department-boyaca,
+.department-risaralda,
+.department-huila,
+.department-guainia {
+    fill: rgb(253, 183, 212);
+}
+
+
+
+.punto-ubicacion {
+    position: absolute;
+    bottom: 0;
+    flex: none;
+}
+
+.img-punto-ubicacion {
+    width: 10px;
+    position: absolute;
+    bottom: 0;
+}
+
+.div-punto-ubicacion {
+    background-color: red;
+    width: 2px;
+    height: 2px;
+    position: absolute;
+    bottom: 0;
+}
+
+#sizeMap path{
+visibility: hidden;
+}

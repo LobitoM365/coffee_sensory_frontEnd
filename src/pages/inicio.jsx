@@ -12,9 +12,9 @@ export const Inicio = () => {
     return (
         <>
             <link rel="stylesheet" href="css/style.css" />
-            <img className='img-fondo' src="/img/regiones-de-colombia-mapa-cultura-fauna-flora-paisajes-viajes-turismo-996x560.jpg" alt="" />
+            <img className='img-fondo' src="/img/fondoMapa2.png" alt="" />
             {/* <iframe id='iframeMapa' className='iframe' src="src/mapa/mapa.html" frameBorder={0}></iframe> */}
-            <iframe id='iframeMapa' className='iframe' src="src/mapa/index.html" frameBorder={0}></iframe>
+            <iframe id='iframeMapa' className='iframe' src="src/mapa/mapaV4/index.html" frameBorder={0}></iframe>
         </>
     )
 }

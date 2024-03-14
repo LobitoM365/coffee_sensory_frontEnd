@@ -43,6 +43,7 @@ export const GeneratePdfTable = () => {
         page: {
             width: "100%",
             height: "90%",
+            padding: "0px 20px 70px 20px",
         },
         container: {
             margin: "40px 30px",
@@ -78,13 +79,13 @@ export const GeneratePdfTable = () => {
             height: "100%",
             padding: 0,
             margin: 0,
-            textOverflow: "ellipsis"
+
         },
         divheader: {
             height: "110px",
         },
         text: {
-            textOverflow: "ellipsis",
+
             fontSize: "10px",
             textAlign: "center"
         },
@@ -126,7 +127,7 @@ export const GeneratePdfTable = () => {
             width: "70%"
         },
         containerBody: {
-            margin: "0px 30px 30px 30px",
+            padding: "0px 30px 30px 30px",
         },
         footer: {
             position: "absolute",
@@ -155,10 +156,14 @@ export const GeneratePdfTable = () => {
         tableCellHeaderStyle: {
             margin: 4,
             fontSize: 12,
-            fontWeight: "bold"
+            fontWeight: "bold",
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
         },
         tableRowStyle: {
-            flexDirection: "row"
+            flexDirection: "row",
         },
         colTable: {
             width: "100%"
@@ -169,7 +174,7 @@ export const GeneratePdfTable = () => {
             borderWidth: 1,
             borderTopWidth: 0,
             padding: "5px",
-            textOverflow: "ellipsis",
+
         },
         tableColStyle: {
             borderStyle: "solid",
@@ -184,8 +189,7 @@ export const GeneratePdfTable = () => {
         tableCellStyle: {
             margin: 5,
             fontSize: 10,
-            textOverflow: "hidden",
-            textOverflow: "ellipsis"
+
         },
         cleanMessage: {
             textAlign: "center"
@@ -243,9 +247,9 @@ export const GeneratePdfTable = () => {
                                 </View>
                             </View>
                         </View>
-                        <View style={[estyle.containerBody, estyle.body]} >
+                        <View wrap={true} style={[estyle.containerBody, estyle.body]} >
                             {data.data ? data.data.length > 0 ? (
-                                <View >
+                                <View style={estyle.contentBody} wrap={true}>
                                     <View style={estyle.tableRowStyle} fixed>
                                         {keysPrint.map((keys, index) => {
                                             let styleElement = estyle.tableColHeaderStyle;
@@ -259,105 +263,105 @@ export const GeneratePdfTable = () => {
                                     </View>
 
 
-                                    <View style={estyle.divTableBody}>
-                                    {
-                                        data.data.map((keysD, valuesD) => (
-                                            <View key={keysD} style={[estyle.tableRowStyle, estyle.tableBody]}>
-                                                {
+                                    <View wrap={true} style={estyle.divTableBody}>
+                                        {
+                                            data.data.map((keysD, valuesD) => (
+                                                <View wrap={true} key={keysD} style={[estyle.tableRowStyle, estyle.tableBody]}>
+                                                    {
 
 
-                                                    keysPrint.map((keys, index) => {
-                                                        let styleElement = estyle.tableColStyle;
-                                                        if (index == 0) {
-                                                            styleElement = estyle.firstTableColStyle;
-                                                        }
+                                                        keysPrint.map((keys, index) => {
+                                                            let styleElement = estyle.tableColStyle;
+                                                            if (index == 0) {
+                                                                styleElement = estyle.firstTableColStyle;
+                                                            }
 
-                                                        if (keysData.includes(keys)) {
                                                             if (keysData.includes(keys)) {
-                                                                if (data.data[valuesD][keys] === "" || data.data[valuesD][keys] == null || data.data[valuesD][keys] == undefined) {
-                                                                    return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                        <Text style={estyle.tableCellStyle}>No registra</Text></View>
-                                                                } else {
-                                                                    if (keys == "estado") {
-                                                                        if (data.data[valuesD][keys] == 0) {
-                                                                            return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                                <Text style={estyle.tableCellStyle}>Inactivo</Text></View>;
-                                                                        } else if (data.data[valuesD][keys] == 1) {
-                                                                            return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                                <Text style={estyle.tableCellStyle}>Activo</Text></View>;
-                                                                        } else if (data.data[valuesD][keys] == 2) {
-                                                                            return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                                <Text style={estyle.tableCellStyle}>Pendiente</Text></View>;
-                                                                        } else if (data.data[valuesD][keys] == 3 || data.data[valuesD][keys] == 4) {
-                                                                            return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                                <Text style={estyle.tableCellStyle}>Aginado</Text></View>;
-                                                                        }
+                                                                if (keysData.includes(keys)) {
+                                                                    if (data.data[valuesD][keys] === "" || data.data[valuesD][keys] == null || data.data[valuesD][keys] == undefined) {
+                                                                        return <View key={keys} style={[styleElement, estyle.colTable]}>
+                                                                            <Text style={estyle.tableCellStyle}>No registra</Text></View>
                                                                     } else {
-                                                                        if (print[keys]["values"]) {
-                                                                            let count = 0;
-                                                                            let group = ""
-                                                                            print[keys]["values"].map((ketV, indexV) => {
-                                                                                if (data.data[valuesD][ketV]) {
-                                                                                    count = count + 1;
-                                                                                    if (count == 1) {
-                                                                                        group = data.data[valuesD][ketV]
-                                                                                    } else {
-                                                                                        group += ", " + data.data[valuesD][ketV]
+                                                                        if (keys == "estado") {
+                                                                            if (data.data[valuesD][keys] == 0) {
+                                                                                return <View key={keys} style={[styleElement, estyle.colTable]}>
+                                                                                    <Text style={estyle.tableCellStyle}>Inactivo</Text></View>;
+                                                                            } else if (data.data[valuesD][keys] == 1) {
+                                                                                return <View key={keys} style={[styleElement, estyle.colTable]}>
+                                                                                    <Text style={estyle.tableCellStyle}>Activo</Text></View>;
+                                                                            } else if (data.data[valuesD][keys] == 2) {
+                                                                                return <View key={keys} style={[styleElement, estyle.colTable]}>
+                                                                                    <Text style={estyle.tableCellStyle}>Pendiente</Text></View>;
+                                                                            } else if (data.data[valuesD][keys] == 3 || data.data[valuesD][keys] == 4) {
+                                                                                return <View key={keys} style={[styleElement, estyle.colTable]}>
+                                                                                    <Text style={estyle.tableCellStyle}>Aginado</Text></View>;
+                                                                            }
+                                                                        } else {
+                                                                            if (print[keys]["values"]) {
+                                                                                let count = 0;
+                                                                                let group = ""
+                                                                                print[keys]["values"].map((ketV, indexV) => {
+                                                                                    if (data.data[valuesD][ketV]) {
+                                                                                        count = count + 1;
+                                                                                        if (count == 1) {
+                                                                                            group = data.data[valuesD][ketV]
+                                                                                        } else {
+                                                                                            group += ", " + data.data[valuesD][ketV]
+                                                                                        }
                                                                                     }
-                                                                                }
-                                                                            })
-                                                                            if (group != "") {
-                                                                                if (print[keys]["upper_case"]) {
-                                                                                    return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                                        <Text style={estyle.tableCellStyle}>{group.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</Text></View>;
-                                                                                } else if (print[keys]["capital_letter"]) {
-                                                                                    return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                                        <Text style={estyle.tableCellStyle}>{group.toString().replace(/^[a-z]/, match => match.toUpperCase())}</Text></View>;
+                                                                                })
+                                                                                if (group != "") {
+                                                                                    if (print[keys]["upper_case"]) {
+                                                                                        return <View key={keys} style={[styleElement, estyle.colTable]}>
+                                                                                            <Text style={estyle.tableCellStyle}>{group.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</Text></View>;
+                                                                                    } else if (print[keys]["capital_letter"]) {
+                                                                                        return <View key={keys} style={[styleElement, estyle.colTable]}>
+                                                                                            <Text style={estyle.tableCellStyle}>{group.toString().replace(/^[a-z]/, match => match.toUpperCase())}</Text></View>;
+                                                                                    } else {
+                                                                                        return <View key={keys} style={[styleElement, estyle.colTable]}>
+                                                                                            <Text style={estyle.tableCellStyle}>{group}</Text></View>;
+
+                                                                                    }
                                                                                 } else {
                                                                                     return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                                        <Text style={estyle.tableCellStyle}>{group}</Text></View>;
+                                                                                        <Text style={estyle.tableCellStyle}>No registra</Text></View>;
+                                                                                }
+                                                                            } else if (print[keys]["format"]) {
+
+                                                                                return <View key={keys} style={[styleElement, estyle.colTable]}>
+                                                                                    <Text style={estyle.tableCellStyle}>{formatDate(data.data[valuesD][keys])}</Text></View>;
+
+                                                                            } else {
+                                                                                if (print[keys]["upper_case"]) {
+                                                                                    return <View key={keys} style={[styleElement, estyle.colTable]}>
+                                                                                        <Text style={estyle.tableCellStyle}>{data.data[valuesD][keys].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</Text></View>
+                                                                                        ;
+                                                                                } else if (print[keys]["capital_letter"]) {
+                                                                                    return <View key={keys} style={[styleElement, estyle.colTable]}>
+                                                                                        <Text style={estyle.tableCellStyle}>{data.data[valuesD][keys].toString().replace(/^[a-z]/, match => match.toUpperCase())}</Text></View>
+                                                                                        ;
+                                                                                } else {
+                                                                                    return <View key={keys} style={[styleElement, estyle.colTable]}>
+                                                                                        <Text style={estyle.tableCellStyle}>{data.data[valuesD][keys]}</Text></View>
 
                                                                                 }
-                                                                            } else {
-                                                                                return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                                    <Text style={estyle.tableCellStyle}>No registra</Text></View>;
-                                                                            }
-                                                                        } else if (print[keys]["format"]) {
-
-                                                                            return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                                <Text style={estyle.tableCellStyle}>{formatDate(data.data[valuesD][keys])}</Text></View>;
-
-                                                                        } else {
-                                                                            if (print[keys]["upper_case"]) {
-                                                                                return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                                    <Text style={estyle.tableCellStyle}>{data.data[valuesD][keys].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</Text></View>
-                                                                                    ;
-                                                                            } else if (print[keys]["capital_letter"]) {
-                                                                                return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                                    <Text style={estyle.tableCellStyle}>{data.data[valuesD][keys].toString().replace(/^[a-z]/, match => match.toUpperCase())}</Text></View>
-                                                                                    ;
-                                                                            } else {
-                                                                                return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                                    <Text style={estyle.tableCellStyle}>{data.data[valuesD][keys]}</Text></View>
 
                                                                             }
-
                                                                         }
                                                                     }
                                                                 }
+                                                            } else {
+                                                                return <View key={keys} style={[styleElement, estyle.colTable]}>
+                                                                    <Text style={estyle.tableCellStyle}>No registra</Text></View>;
                                                             }
-                                                        } else {
-                                                            return <View key={keys} style={[styleElement, estyle.colTable]}>
-                                                                <Text style={estyle.tableCellStyle}>No registra</Text></View>;
-                                                        }
-                                                    })
-                                                }
-                                            </View>
-                                        ))
-                                    }
+                                                        })
+                                                    }
+                                                </View>
+                                            ))
+                                        }
                                     </View>
                                 </View>
-                            ) : <View style={estyle.cleanMessage}> <Text>No hay información para mostrar</Text></View> : <View style={estyle.cleanMessage}> <Text>No hay información para mostrar</Text></View> }
+                            ) : <View style={estyle.cleanMessage}> <Text>No hay información para mostrar</Text></View> : <View style={estyle.cleanMessage}> <Text>No hay información para mostrar</Text></View>}
 
 
                         </View>

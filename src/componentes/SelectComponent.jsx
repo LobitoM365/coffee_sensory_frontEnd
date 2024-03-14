@@ -11,21 +11,21 @@ export const SelectComponent = (props) => {
     const fetchData = async () => {
       try {
         const response = await Api[props.metodos](props.url);
-
-
+        console.log(response.data.data,"Aqui van Lsa muestras")
         if (response.data.data && response.data.data.length > 0) {
-          let valorOption = props.opcion;
+          const valorOption = props.opcion;
           console.log(props.opcion, 'esto es una opción');
 
           const nuevosDatos = response.data.data.map((item) => ({
             value: item.id,
-            label: `${item.id} . ${item[valorOption]}`,
+            label: `${item.id}. ${item[valorOption]}`,
           }));
 
-          
+          // Actualizar el estado o hacer algo con nuevosDatos
+          // Por ejemplo, puedes almacenarlos en un estado si estás trabajando con React
           setOpciones(nuevosDatos);
         } else {
-          setError('No se encontraron datos válidos en la respuesta de la API.');
+          console.error("No se encontraron datos válidos en la respuesta");
         }
       } catch (error) {
         console.error('Error al obtener datos:', error);
@@ -36,11 +36,13 @@ export const SelectComponent = (props) => {
     console.log(opciones, 'estas son las opciones');
     fetchData();
   }, [props.metodos, props.url, props.opcion]);
-
+ /*  console.log(props.options,"opciones23456") */
   return (
+    
+
     <div>
       <Select
-        options={opciones}
+        options={(props.options !== undefined ? props.options : opciones)}
         name={props.name}
         id={props.id}
         placeholder={props.placeholder}

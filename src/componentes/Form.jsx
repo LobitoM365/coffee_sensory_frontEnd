@@ -249,6 +249,11 @@ export const Form = forwardRef((data, ref) => {
                                 <div style={{ display: Object.keys(inputs).length == 1 ? "unset" : "" }} className="form-register">
                                     {
                                         inputs.map((key, index) => {
+                                            if(data.userInfo && dataInputs[key]["rol"]){
+                                                if(!dataInputs[key]["rol"].includes(data.userInfo.rol)){
+                                                    return
+                                                }
+                                            }
                                             if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "ubicacion" || dataInputs[key]["type"] === "normal") {
                                                 if (data.statusInputDefault && elementEdit) {
 

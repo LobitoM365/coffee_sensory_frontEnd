@@ -51,6 +51,11 @@ export const Tablas = (array) => {
     let paginate = 0;
     let paginateJson = []
     let [posicionPaginate, setPosicionPaginate] = useState(0);
+    const [pageLoad, setPageLoad] = useState(false);
+
+    useEffect(() => {
+        setPageLoad(true)
+    }, [])
 
     let filtersLimitRegister = [
         "1",
@@ -144,253 +149,264 @@ export const Tablas = (array) => {
         setkeyTable(keyTable + 1)
     }, [array.data])
     const [statusResize, setStatusResize] = useState(false);
-    
+
     useEffect(() => {
-        let contentComponent = document.getElementById("contentComponent")
-        let ziseTableComponent = 0;
-        let svgPlusTable;
-        let arrayThQuit = [];
-        let ziseLess = 0;
-        let lastHeightBeforeScroll = 0
-
-        if (!statusResize) {
-
-            const resizeObserver = new ResizeObserver(entries => {
-                console.log("qjweqjwehjqwhje---------------")
-
-                for (let entry of entries) {
-                    resizeTable()
-                }
-                /* setStatusResize(true) */
-            });
-            setTimeout(() => {
-                resizeObserver.observe(contentComponent);
-            }, [200])
-            setStatusResize(true)
-        }
+        if (pageLoad == true) {
 
 
-
-        function compareElements(elementOne, elementTwo, appendOne, appendTwo, father) {
-            let sizeOne = 0
-            if (father) {
-                father.style.width = "max-content"
-            }
-            let sizeTwo = 0
-            if (elementOne) {
-                if (appendOne) {
-                    father.append(elementOne)
-                    sizeOne = getMinSize(elementOne)
-                    elementOne.remove()
-                } else {
-                    sizeOne = getMinSize(elementOne)
-                }
-            }
-            if (elementTwo) {
-                if (appendTwo) {
-                    father.append(elementTwo)
-                    sizeTwo = getMinSize(elementTwo)
-                    elementTwo.remove()
-                } else {
-                    sizeTwo = getMinSize(elementTwo)
-                }
-            }
-            father.style.width = ""
-            return sizeOne > sizeTwo ? sizeOne : sizeTwo
-        }
-        function getMinSize(element) {
-            let min = 0;
-            element.style.width = "0px"
-            min = Math.ceil(element.scrollWidth + 11)
-            element.style.width = ""
-            return min
-        }
-        function resizeTable() {
             let contentComponent = document.getElementById("contentComponent")
-            if (contentComponent) {
-                let tableComponent = document.querySelectorAll(".table-component")
-                let newDivTable = document.querySelectorAll(".new-div-table");
-                let contentTable = document.querySelectorAll(".content-table")
-                if (newDivTable.length == 0) {
-                    arrayThQuit = [];
-                    ziseLess = 0
+            let ziseTableComponent = 0;
+            let svgPlusTable;
+            let arrayThQuit = [];
+            let ziseLess = 0;
+            let lastHeightBeforeScroll = 0
+            let executeQuery = 0;
+            let thTable = document.querySelectorAll(".th-table-print")
+       /*      if (!statusResize) { */
+                console.log("resizeeeeeee")
+
+                const resizeObserver = new ResizeObserver(entries => {
+                    for (let entry of entries) {
+                        resizeTable()
+                    }
+                    setStatusResize(true)
+                });
+                resizeObserver.observe(contentComponent);
+                setStatusResize(true)
+           /*  } */
+
+
+
+            function compareElements(elementOne, elementTwo, appendOne, appendTwo, father) {
+                let sizeOne = 0
+                if (father) {
+                    father.style.width = "max-content"
                 }
-                let thQuit = contentTable[0].querySelectorAll("th");
-
-                if (contentTable[0].scrollHeight >= contentTable[0].clientHeight) {
-                    lastHeightBeforeScroll = contentTable[0].scrollWidth
+                let sizeTwo = 0
+                if (elementOne) {
+                    if (appendOne) {
+                        father.append(elementOne)
+                        sizeOne = getMinSize(elementOne)
+                        elementOne.remove()
+                    } else {
+                        sizeOne = getMinSize(elementOne)
+                    }
                 }
+                if (elementTwo) {
+                    if (appendTwo) {
+                        father.append(elementTwo)
+                        sizeTwo = getMinSize(elementTwo)
+                        elementTwo.remove()
+                    } else {
+                        sizeTwo = getMinSize(elementTwo)
+                    }
+                }
+                father.style.width = ""
+                return sizeOne > sizeTwo ? sizeOne : sizeTwo
+            }
+            function getMinSize(element) {
+                let min = 0;
+                element.style.width = "0px"
+                min = Math.ceil(element.scrollWidth + 11)
+                element.style.width = ""
+                return min
+            }
+            
+            function resizeTable() {
+                executeQuery = executeQuery + 1;
+
+                if (executeQuery <= thTable.length) {
+/* console.log("uhhhhhhhhhhhhhh") */
+
+                    let contentComponent = document.getElementById("contentComponent")
+                    if (contentComponent) {
+                        let tableComponent = document.querySelectorAll(".table-component")
+                        let newDivTable = document.querySelectorAll(".new-div-table");
+                        let contentTable = document.querySelectorAll(".content-table")
+                        console.log(newDivTable.length, arrayThQuit)
+                        if (newDivTable.length == 0) {
+                            arrayThQuit = [];
+                            ziseLess = 0
+                        }
+                        let thQuit = contentTable[0].querySelectorAll("th");
+
+                        if (contentTable[0].scrollHeight >= contentTable[0].clientHeight) {
+                            lastHeightBeforeScroll = contentTable[0].scrollWidth
+                        }
 
 
-                if (contentTable[0].clientWidth < tableComponent[0].clientWidth) {
+                        if (contentComponent.clientWidth < tableComponent[0].clientWidth) {
 
-                    if (thQuit.length > 1) {
-                        let tBody = contentTable[0].querySelectorAll("tbody")
-                        if (tBody) {
-                            let trTbody = tBody[0].querySelectorAll(".tr-table")
-                            let nameTd = thQuit[(thQuit.length) - 1].querySelectorAll(".tittle-item-header-table")
-                            let name = ""
-                            if (nameTd.length > 0) {
-                                name = nameTd[0].innerHTML
-                            }
+                            if (thQuit.length > 1) {
+                                let tBody = contentTable[0].querySelectorAll("tbody")
+                                if (tBody) {
+                                    let trTbody = tBody[0].querySelectorAll(".tr-table")
+                                    let nameTd = thQuit[(thQuit.length) - 1].querySelectorAll(".tittle-item-header-table")
+                                    let name = ""
+                                    if (nameTd.length > 0) {
+                                        name = nameTd[0].innerHTML
+                                    }
 
-                            arrayThQuit.push(thQuit[(thQuit.length) - 1])
-                            thQuit[(thQuit.length) - 1].remove();
+                                    arrayThQuit.push(thQuit[(thQuit.length) - 1])
+                                    thQuit[(thQuit.length) - 1].remove();
 
-                            for (let tr = 0; tr < trTbody.length; tr++) {
-                                let tdTbody = trTbody[tr].querySelectorAll("td")
-                                if (tdTbody) {
-                                    let newtr = document.createElement("tr");
-                                    let newtd = document.createElement("td");
-                                    let newdiv = document.createElement("div");
-                                    newtd.setAttribute("colspan", 999999999999999);
-                                    newtr.classList.add("new-tr-table")
-                                    newtd.classList.add("new-td-table")
-                                    newdiv.classList.add("new-div-table")
-                                    newtr.setAttribute("data-tr", tr)
+                                    for (let tr = 0; tr < trTbody.length; tr++) {
+                                        let tdTbody = trTbody[tr].querySelectorAll("td")
+                                        if (tdTbody) {
+                                            let newtr = document.createElement("tr");
+                                            let newtd = document.createElement("td");
+                                            let newdiv = document.createElement("div");
+                                            newtd.setAttribute("colspan", 999999999999999);
+                                            newtr.classList.add("new-tr-table")
+                                            newtd.classList.add("new-td-table")
+                                            newdiv.classList.add("new-div-table")
+                                            newtr.setAttribute("data-tr", tr)
 
-                                    newtr.appendChild(newtd)
-                                    newtd.appendChild(newdiv)
+                                            newtr.appendChild(newtd)
+                                            newtd.appendChild(newdiv)
 
-                                    if (ziseLess == 0) {
-                                        if (!document.querySelectorAll(".td-view-elementos-ocult")[tr]) {
-                                            let td = document.createElement("td")
-                                            td.classList.add("td-view-elementos-ocult", "td-table-print")
-                                            td.innerHTML = '<div class="div-svg-plus-table"> <svg class="svg-plus-table" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" <g><g><g><path  d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z"/></g></g></g></svg> </div>'
+                                            if (ziseLess == 0) {
+                                                if (!document.querySelectorAll(".td-view-elementos-ocult")[tr]) {
+                                                    let td = document.createElement("td")
+                                                    td.classList.add("td-view-elementos-ocult", "td-table-print")
+                                                    td.innerHTML = '<div class="div-svg-plus-table"> <svg class="svg-plus-table" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" <g><g><g><path  d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z"/></g></g></g></svg> </div>'
 
-                                            trTbody[tr].insertAdjacentElement('afterend', newtr)
-                                            trTbody[tr].insertBefore(td, trTbody[tr].children[0]);
-                                            let plus = td.querySelectorAll(".svg-plus-table")
-                                            plus[0].addEventListener("click", function () {
-                                                if (newtr.style.display == "table-row") {
-                                                    newtr.style.display = "";
-                                                    newdiv.style.height = "";
-                                                } else {
-                                                    newtr.style.display = "table-row";
-                                                    newdiv.style.height = "max-content";
+                                                    trTbody[tr].insertAdjacentElement('afterend', newtr)
+                                                    trTbody[tr].insertBefore(td, trTbody[tr].children[0]);
+                                                    let plus = td.querySelectorAll(".svg-plus-table")
+                                                    plus[0].addEventListener("click", function () {
+                                                        if (newtr.style.display == "table-row") {
+                                                            newtr.style.display = "";
+                                                            newdiv.style.height = "";
+                                                        } else {
+                                                            newtr.style.display = "table-row";
+                                                            newdiv.style.height = "max-content";
+                                                        }
+
+                                                    })
                                                 }
 
-                                            })
+                                            }
+                                            let elementsNewTr = document.querySelectorAll(".new-div-table");
+                                            if (elementsNewTr[tr]) {
+                                                let div = document.createElement("div")
+                                                div.classList.add("div-element-add")
+                                                div.innerHTML = "<h4> " + name + "</h4>"
+                                                if (tdTbody[(thQuit.length) - 1]) {
+                                                    /*  tdTbody[(thQuit.length) - 1].style.wordBreak = "break-all"; */
+                                                    div.append(tdTbody[(thQuit.length) - 1])
+                                                    elementsNewTr[tr].appendChild(div)
+                                                }
+                                            }
                                         }
 
                                     }
-                                    let elementsNewTr = document.querySelectorAll(".new-div-table");
-                                    if (elementsNewTr[tr]) {
-                                        let div = document.createElement("div")
-                                        div.classList.add("div-element-add")
-                                        div.innerHTML = "<h4> " + name + "</h4>"
-                                        if (tdTbody[(thQuit.length) - 1]) {
-                                            /*  tdTbody[(thQuit.length) - 1].style.wordBreak = "break-all"; */
-                                            div.append(tdTbody[(thQuit.length) - 1])
-                                            elementsNewTr[tr].appendChild(div)
+                                    if (ziseLess == 0 && !data.find_error) {
+
+                                        if (document.querySelectorAll(".th-plus-view-elements-ocult").length == 0) {
+                                            let theadTable = document.querySelectorAll(".thead-table")
+                                            let th = document.createElement("th")
+                                            th.classList.add("th-plus-view-elements-ocult", "th-table-print")
+                                            th.innerHTML = ''
+                                            theadTable[0].insertBefore(th, theadTable[0].children[0]);
+                                            ziseLess = 1;
                                         }
+                                    }
+                                    ziseTableComponent = tableComponent[0].clientWidth;
+                                    resizeTable()
+                                    return
+                                }
+                            }
+
+                        } else {
+
+                            let elementsNewDivTable = document.querySelectorAll(".div-element-add");
+                            let thTable = document.querySelectorAll(".th-table-print")
+                            let tdTable = document.querySelectorAll(".td-table-print")
+                            let height = 0;
+                            let heightGroup = 0;
+
+                            for (let x = 0; x < newDivTable.length; x++) {
+                                let none = false;
+                                let divNewDivTable = newDivTable[x].querySelectorAll(".div-element-add");
+                                if (divNewDivTable[divNewDivTable.length - 1]) {
+                                    let divNewDivTableTd = divNewDivTable[divNewDivTable.length - 1].querySelectorAll("td");
+
+                                    if (divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display == "none" || divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display == "") {
+                                        none = true
+                                    }
+                                    divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display = "table-row";
+
+                                    height = parseFloat(compareElements(divNewDivTableTd[0], arrayThQuit[arrayThQuit.length - 1], false, true, tableComponent[0])) > height ? parseFloat(compareElements(divNewDivTableTd[0], arrayThQuit[arrayThQuit.length - 1], false, true, tableComponent[0])) : height
+                                    if (none) {
+                                        divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display = "none";
                                     }
                                 }
 
                             }
-                            if (ziseLess == 0 && !data.find_error) {
-
-                                if (document.querySelectorAll(".th-plus-view-elements-ocult").length == 0) {
-                                    let theadTable = document.querySelectorAll(".thead-table")
-                                    let th = document.createElement("th")
-                                    th.classList.add("th-plus-view-elements-ocult", "th-table-print")
-                                    th.innerHTML = ''
-                                    theadTable[0].insertBefore(th, theadTable[0].children[0]);
-                                    ziseLess = 1;
+                            for (let x = 0; x < thTable.length; x++) {
+                                heightGroup = heightGroup + parseFloat(compareElements(thTable[x], tdTable[x], false, false, tableComponent[0]))
+                            }
+                            if (elementsNewDivTable.length == 0) {
+                                let newTrTable = document.querySelectorAll(".new-tr-table");
+                                let tdPlus = document.querySelectorAll(".td-view-elementos-ocult");
+                                let thPlus = document.querySelectorAll(".th-plus-view-elements-ocult");
+                                for (let x = 0; x < newTrTable.length; x++) {
+                                    newTrTable[x].remove()
                                 }
+                                for (let x = 0; x < tdPlus.length; x++) {
+                                    tdPlus[x].remove()
+                                }
+                                for (let x = 0; x < thPlus.length; x++) {
+                                    thPlus[x].remove()
+                                }
+
+                                ziseLess = 0
                             }
-                            ziseTableComponent = tableComponent[0].clientWidth;
-                            resizeTable()
-                            return
-                        }
-                    }
-
-                } else {
-
-                    let elementsNewDivTable = document.querySelectorAll(".div-element-add");
-                    let thTable = document.querySelectorAll(".th-table-print")
-                    let tdTable = document.querySelectorAll(".td-table-print")
-                    let height = 0;
-                    let heightGroup = 0;
-
-                    for (let x = 0; x < newDivTable.length; x++) {
-                        let none = false;
-                        let divNewDivTable = newDivTable[x].querySelectorAll(".div-element-add");
-                        if (divNewDivTable[divNewDivTable.length - 1]) {
-                            let divNewDivTableTd = divNewDivTable[divNewDivTable.length - 1].querySelectorAll("td");
-
-                            if (divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display == "none" || divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display == "") {
-                                none = true
-                            }
-                            divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display = "table-row";
-
-                            height = parseFloat(compareElements(divNewDivTableTd[0], arrayThQuit[arrayThQuit.length - 1], false, true, tableComponent[0])) > height ? parseFloat(compareElements(divNewDivTableTd[0], arrayThQuit[arrayThQuit.length - 1], false, true, tableComponent[0])) : height
-                            if (none) {
-                                divNewDivTable[divNewDivTable.length - 1].closest(".new-tr-table").style.display = "none";
-                            }
-                        }
-
-                    }
-                    for (let x = 0; x < thTable.length; x++) {
-                        heightGroup = heightGroup + parseFloat(compareElements(thTable[x], tdTable[x], false, false, tableComponent[0]))
-                    }
-                    if (elementsNewDivTable.length == 0) {
-                        let newTrTable = document.querySelectorAll(".new-tr-table");
-                        let tdPlus = document.querySelectorAll(".td-view-elementos-ocult");
-                        let thPlus = document.querySelectorAll(".th-plus-view-elements-ocult");
-                        for (let x = 0; x < newTrTable.length; x++) {
-                            newTrTable[x].remove()
-                        }
-                        for (let x = 0; x < tdPlus.length; x++) {
-                            tdPlus[x].remove()
-                        }
-                        for (let x = 0; x < thPlus.length; x++) {
-                            thPlus[x].remove()
-                        }
-
-                        ziseLess = 0
-                    }
-                    let styleTable = window.getComputedStyle(tableComponent[0])
+                            let styleTable = window.getComputedStyle(tableComponent[0])
 
 
-                    let extraSize = parseFloat(styleTable.paddingLeft.match(/\d+/)[0]) + parseFloat(styleTable.paddingRight.match(/\d+/)[0]) + parseFloat(styleTable.marginLeft.match(/\d+/)[0]) + parseFloat(styleTable.marginRight.match(/\d+/)[0] + (Math.ceil(contentTable[0].offsetWidth) - Math.ceil(contentTable[0].clientWidth)))
+                            let extraSize = parseFloat(styleTable.paddingLeft.match(/\d+/)[0]) + parseFloat(styleTable.paddingRight.match(/\d+/)[0]) + parseFloat(styleTable.marginLeft.match(/\d+/)[0]) + parseFloat(styleTable.marginRight.match(/\d+/)[0] + (Math.ceil(contentTable[0].offsetWidth) - Math.ceil(contentTable[0].clientWidth))) + 0
+                        console.log(newDivTable.length, arrayThQuit)
 
-                    if (arrayThQuit.length > 0) {
-                        if (((heightGroup + height) + extraSize) <= contentComponent.clientWidth) {
-                            console.log("asdasdhash")
-
-                            let theadTable = document.querySelectorAll(".thead-table")
                             if (arrayThQuit.length > 0) {
-                                let trTable = document.querySelectorAll(".tr-table");
-                                theadTable[0].append(arrayThQuit[arrayThQuit.length - 1])
-                                arrayThQuit.pop()
-                                for (let x = 0; x < newDivTable.length; x++) {
-                                    let divNewDivTable = newDivTable[x].querySelectorAll(".div-element-add");
-                                    if (divNewDivTable.length > 0) {
+                                if (((heightGroup + height) + extraSize) <= contentComponent.clientWidth) {
+                                    let theadTable = document.querySelectorAll(".thead-table")
+                                    if (arrayThQuit.length > 0) {
+                                        let trTable = document.querySelectorAll(".tr-table");
+                                        theadTable[0].append(arrayThQuit[arrayThQuit.length - 1])
+                                        arrayThQuit.pop()
+                                        for (let x = 0; x < newDivTable.length; x++) {
+                                            let divNewDivTable = newDivTable[x].querySelectorAll(".div-element-add");
+                                            if (divNewDivTable.length > 0) {
 
-                                        let divNewDivTableTd = divNewDivTable[divNewDivTable.length - 1].querySelectorAll("td");
-                                        if (trTable[x]) {
-                                            trTable[x].append(divNewDivTableTd[0])
-                                            divNewDivTable[divNewDivTable.length - 1].remove()
+                                                let divNewDivTableTd = divNewDivTable[divNewDivTable.length - 1].querySelectorAll("td");
+                                                if (trTable[x]) {
+                                                    trTable[x].append(divNewDivTableTd[0])
+                                                    divNewDivTable[divNewDivTable.length - 1].remove()
+                                                }
+                                            }
                                         }
+                                        resizeTable()
+                                        return
                                     }
-                                }
-                                resizeTable()
-                                return
-                            }
 
+                                }
+                            }
                         }
+                        setTimeout(() => {
+                            if (document.getElementById("loadTable")) {
+                                document.getElementById("loadTable").remove()
+                            }
+                        }, [200])
+
                     }
+                } else {
+                    executeQuery = 0;
                 }
-                setTimeout(() => {
-                    if (document.getElementById("loadTable")) {
-                        document.getElementById("loadTable").remove()
-                    }
-                }, [200])
-            
             }
+            resizeTable()
         }
-        resizeTable()
     }, [keyTable])
 
 

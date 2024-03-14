@@ -417,7 +417,7 @@ export const Muestras = () => {
     }
     async function buscarMuestra(id) {
 
-        const response = await Api.get("muestra/buscar/" + id);
+        const response = await Api.post("muestra/buscar/" + id);
         if (response.data.status == true) {
             setMuestraEdit(response.data.data[0])
         } else if (response.data.find_error) {

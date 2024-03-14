@@ -23,6 +23,7 @@ export const Analisis = (userInfo) => {
     const [dataModalResultadoAnalisis, setDataModalResultadoAnalisis] = useState(false);
 
 
+
     ///////
     let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
@@ -299,7 +300,7 @@ export const Analisis = (userInfo) => {
         },
         "finca": {
             "referencia": "Finca",
-            "upper_case": true
+            "upper_case": true,
         },
         "lote": {
             "referencia": "Lote",
@@ -387,7 +388,7 @@ export const Analisis = (userInfo) => {
                     "type": "free",
                     "element": "icon-pdf",
                     "redirect-value": {
-                        "type" : "new-window",
+                        "type": "new-window",
                         "value": "/dashboard/generateReporteAnalisis",
                         "execute": {
                             "type": "table",
@@ -1021,27 +1022,88 @@ export const Analisis = (userInfo) => {
                     "require": "and"
                 }
             }
-
             const response = await Api.post("analisis/listar", filterReport);
-            if (response.data.count > 100) {
-                setFilterPdflimit({ status: true, max: response.data.count })
+            console.log(response)
+            if (response.data.status == true) {
+                if (tipo == "pdf") {
+                    if (response.data.count > 100) {
+                        setFilterPdflimit({ status: true, max: response.data.count })
+                    }
+                    let dataPdf = {
+                        data: response.data.data,
+                        table: keys
+                    }
+                    localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
+                    window.open('/dashboard/generatePdfTable', '_blank')
+                } else {
+                    generatePdf(filterReport, response.data.data, keys)
+                }
             }
-            let dataPdf = {
-                data: response.data.data,
-                table: keys
-            }
-            localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
-            window.open('/dashboard/generatePdfTable', '_blank')
+
 
         } catch (e) {
             console.log(e)
         }
     }
+
+    /*     async function generatePdf() {
+            try {
+                const response = await Api.get('generatePdf');
+                const pdfContent = response.data;
+        
+                // Convertir el contenido del PDF en un blob
+                const pdfBlob = new Blob([pdfContent], { type: 'application/pdf' });
+        
+                // Crear una URL de objeto a partir del blob
+                const blobUrl = URL.createObjectURL(pdfBlob);
+        
+                // Abrir el PDF en una nueva pestaña del navegador
+                window.open(blobUrl, '_blank');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        } */
+    async function generatePdf(filter, dataTable, table) {
+        let cloneTable = {...table}
+        delete cloneTable["permission_formato_fisico"]
+        delete cloneTable["permission_formato_sca"]
+        delete cloneTable["actualizar"]
+        delete cloneTable["reporte"]
+        console.log(cloneTable,"hahsd")
+        const data = {
+            dataTable,
+            filter,
+            table : {...cloneTable}
+        };
+        try {
+            const response = await fetch('http://localhost:8000/generateReporte.php', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            if (!response.ok) {
+                throw new Error('Error al generar el PDF');
+            }
+
+            const pdfBlob = await response.blob();
+
+            // Crear una URL de objeto a partir del blob
+            const blobUrl = URL.createObjectURL(pdfBlob);
+
+            // Abrir el PDF en una nueva pestaña del navegador
+            window.open(blobUrl, '_blank');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     return (
         <>
             <link rel="stylesheet" href="../../public/css/analisis.css" />
 
-            <Tablas filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <FormResultados inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />

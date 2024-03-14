@@ -5,7 +5,7 @@ import { Loader } from '../componentes/loader.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
 export const Profile = (data) => {
-
+    console.log('data: ', data.userInfo != null ? data.userInfo.rol : '');
     const [user, setUser] = useState({ "nombre": "" });
     const [form, changeForm] = useState(0);
     const [errors, setErrors] = useState({});
@@ -23,6 +23,7 @@ export const Profile = (data) => {
     const [mensaje, setMensaje] = useState({});
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
+    const [dni, setDni] = useState('');
 
 
     async function fetchUser() {
@@ -42,6 +43,7 @@ export const Profile = (data) => {
                         telefono.current.value = data.telefono;
                         correo_electronico.current.value = data.correo_electronico;
                         numero_documento.current.value = data.numero_documento;
+                        setDni(data.numero_documento);
                     } else {
                         user_password.current.value = "";
                         new_password.current.value = "";
@@ -222,7 +224,12 @@ export const Profile = (data) => {
                                             </div>
                                             <div className='element-form'>
                                                 <label htmlFor="numero_de_documento">Numero de documento</label>
-                                                <input ref={numero_documento} className='input-update-profile' type="text" name="" id="numero_de_documento" />
+                                                {data.userInfo != null ?
+                                                    (data.userInfo.rol === 'administrador' ?
+                                                        <input ref={numero_documento} className='input-update-profile' type="text" name="" id="numero_de_documento" />
+                                                        : <div >{dni}</div>)
+                                                    : <input ref={numero_documento} className='input-update-profile' type="text" name="" id="numero_de_documento" />
+                                                }
                                                 <div className='div-input-error'>
                                                     <h5 className='input-error'>{errors.numero_documento ? errors.numero_documento : ""}</h5>
                                                 </div>

@@ -4,7 +4,7 @@ import Api from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
 
-export const Fincas = () => {
+export const Fincas = (userInfo) => {
     let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
@@ -45,21 +45,24 @@ export const Fincas = () => {
                 values: ["numero_documento", "nombre"],
                 upper_case: true,
                 key: "id",
-                visibility: false
+                visibility: false,
+                rol: ['administrador'],
             },
             departamentos_id: {
                 type: "select",
                 referencia: "Departamentos",
                 values: ["nombre"],
                 key: "id",
-                upper_case: true
+                upper_case: true,
+                execute: getMunicipios,
             },
             municipios_id: {
                 type: "select",
                 referencia: "Municipio",
                 values: ["nombre"],
                 key: "id",
-                upper_case: true
+                upper_case: true,
+                execute: getVeredas,
             },
             veredas_id: {
                 type: "select",
@@ -127,9 +130,7 @@ export const Fincas = () => {
     }
     useEffect(() => {
         getFincas()
-        getMunicipios()
         getDepartamentos();
-        getVeredas()
     }, [])
     getUsers()
     async function getFincas() {
@@ -333,14 +334,13 @@ export const Fincas = () => {
                 }
             }
             const response = await Api.post("departamento/listar", filterReport);
-            console.log('DEPARTAMETS: ', response)
             if (response.data.status == true) {
                 let departamentos = inputsForm;
                 if (!departamentos["departamentos_id"]) {
                     departamentos["departamentos_id"] = {}
                 }
                 departamentos["departamentos_id"]["opciones"] = response.data.data
-                setInputsForm(users)
+                setInputsForm(departamentos)
             } else if (response.data.find_error) {
 
             } else {
@@ -350,11 +350,17 @@ export const Fincas = () => {
         }
     }
 
-    async function getMunicipios() {
+    async function getMunicipios(data) {
+        console.log('MINCIPIOS EXCUTE: ', data);
         try {
             let filterReport = {
                 "filter": {
-
+                    "where": {
+                        "mu.departamentos_id": {
+                            "value": data,
+                            "require": "and"
+                        }
+                    },
                     "limit": {
                         inicio: 0,
                         fin: 4444
@@ -362,14 +368,14 @@ export const Fincas = () => {
                 }
             }
             const response = await Api.post("municipio/listar", filterReport);
-            console.log(response, "muniiii")
             if (response.data.status == true) {
                 let municipios = inputsForm;
                 if (!municipios["municipios_id"]) {
                     municipios["municipios_id"] = {}
                 }
                 municipios["municipios_id"]["opciones"] = response.data.data
-                setInputsForm(users)
+                console.log("MUNICIPIOS GET: ", municipios)
+                setInputsForm(municipios)
             } else if (response.data.find_error) {
 
             } else {
@@ -380,11 +386,16 @@ export const Fincas = () => {
     }
 
     //Obtener Veredas
-    async function getVeredas() {
+    async function getVeredas(data) {
         try {
             let filterReport = {
                 "filter": {
-
+                    "where": {
+                        "ve.municipios_id": {
+                            "value": data,
+                            "require": "and"
+                        }
+                    },
                     "limit": {
                         inicio: 0,
                         fin: 4444
@@ -399,7 +410,7 @@ export const Fincas = () => {
                     veredas["veredas_id"] = {}
                 }
                 veredas["veredas_id"]["opciones"] = response.data.data
-                setInputsForm(users)
+                setInputsForm(veredas)
             } else if (response.data.find_error) {
 
             } else {
@@ -519,7 +530,7 @@ export const Fincas = () => {
     }, [])
     return (
         <>
-            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} userInfo={userInfo} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

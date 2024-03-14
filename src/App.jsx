@@ -109,18 +109,18 @@ export default function App(data) {
 
           <Route path='/dashboard' element={<Menu socket={data.socket} valueDarkMode={valueDarkMode} changeDarkMode={changeDarkMode} />}>
             <Route path='' element={<Home userInfo={userInfo} />} />
-            <Route path='profile' element={<Profile valueDarkMode={valueDarkMode} />} />
+            <Route path='profile' element={<Profile userInfo={userInfo} valueDarkMode={valueDarkMode} />} />
             <Route path="usuarios/registros" element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} /> : ""} />
             <Route path='formulario' element={<FormRegiser />} />
             <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
-            <Route path='fincas/registros' element={<Fincas />} />
+            <Route path='fincas/registros' element={<Fincas userInfo={userInfo}/>} />
             <Route path='analisis/registros' element={<Analisis socket={data.socket} userInfo={userInfo} />} />
             <Route path='cafes/registros' element={<Cafes />} />
             <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} /> : ""} />
             <Route path='municipios/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Municipios} /> : ""} />
             <Route path='variedades/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Variedades} /> : ""} />
             <Route path='muestras/registros' element={<Muestras />} />
-            <Route path='lotes/registros' element={<Lotes />} />
+            <Route path='lotes/registros' element={<Lotes  userInfo={userInfo} />} />
             <Route path='muestras/verRegistros' element={<VerRegistros />} />
           </Route>
         </Route>

@@ -84,7 +84,7 @@ export const Home = ({ userInfo }) => {
   console.log(Data,"sin datos")
 
   useEffect(() => {
-    if (inputValue.muestras_id) {
+   /*  if (inputValue.muestras_id) { */
       // Llamada a la API para obtener las fechas asociadas al muestras_id
       const obtenerFechas = async () => {
         try {
@@ -112,43 +112,13 @@ export const Home = ({ userInfo }) => {
       };
   
       obtenerFechas();
-    }else{
-      const obtenerFechas = async () => {
-
-        
-        try {
-          
-            const response = await Api.post(`/analisis/total/${user.id}`, inputValue);
-        
-            if (response.data.data && response.data.data.length > 0) {
-              // Mapear los datos de fechas para el SelectComponent
-              const nuevasFechas = response.data.data.map((fecha) => ({
-                value: fecha.id,
-                label: fecha.fecha,
-              }));
-              
-              console.log(nuevasFechas, "fechas nuevas sin datos");
-              
-              // Actualizar el estado para que SelectComponent muestre las nuevas fechas
-              setFechas2(nuevasFechas);
-              
-            } else {
-              console.error("No se encontraron fechas válidas para el muestras_id");
-              // Puedes manejar este caso actualizando el estado con un valor predeterminado
-              setFechas2([{ value: '0', label: 'Sin fechas disponibles' }]);
-            }
-          
-        } catch (error) {
-          console.error("Error al obtener fechas:", error.message);
-          // Puedes manejar este caso actualizando el estado con un valor predeterminado
-          setFechas2([{ value: '', label: 'Error al cargar fechas' }]);
-        }
-      };
-
-      
-      obtenerFechas();
+   /*  }else{
+      setFechas2([
+        {"value":"",
+        "label":""}
+      ]);
       console.log(fechas,"fechas")
-    }
+    } */
 
   }, [inputValue.muestras_id]);
   useEffect(() => {
@@ -166,8 +136,10 @@ export const Home = ({ userInfo }) => {
 
     cargarFechas();
   }, [urlId, urlIdReady]);
+
+  console.log(fechas2,'mamahuevo')
   
-  if (urlData && Data == undefined || Data == []) {
+  if (urlData && (Data === undefined || Data.length === 0)) {
     console.log(Data,"aqui va un componente")
     return(
       <>
@@ -208,7 +180,11 @@ export const Home = ({ userInfo }) => {
             }
             url={urlId}
             opcion="fecha"
-            options={fechas.length !== 0 ? fechas : fechas2}
+            /* options={fechas && fechas.length > 0 ? fechas.map(fecha => ({ value: fecha.value, label: fecha.label })) : []} */
+            options={fechas && fechas.length > 0 ? fechas.map(fecha => ({ value: fecha.value, label: fecha.label })) : null} 
+ 
+            inputValueMuestras={inputValue.muestras_id}
+
 
           />
         )}
@@ -224,7 +200,7 @@ export const Home = ({ userInfo }) => {
                 }
                 url="muestra/listar"
                 opcion="codigo_muestra"
-                
+              
               /> 
               <input
                 type="number"

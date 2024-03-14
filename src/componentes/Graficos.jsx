@@ -56,10 +56,14 @@ export const Graficos = ({user,inputData}) => {
         }  */
         const dataToSend ={
           muestras_id: nuevoDato.muestras_id,
-          anio:nuevoDato.anio
+          anio: nuevoDato.anio
         };
+
+        console.log(dataToSend)
         const response = await Api.post(`analisis/total/${VariableIdUser}`,dataToSend);
         const responseData = response.data;
+
+        console.log(responseData,"respuesta api graficas")
        /*  console.log(dataToSend,'Data Body', UserIdSesion.id , 'User')
         console.log(responseData,'responseData') */
 
@@ -213,7 +217,8 @@ export const Graficos = ({user,inputData}) => {
         </div>
           :   
           <div id="graficos">
-              <img src={Logo} className="SinGraficos" alt="No hay graficas Disponibles" />
+              {/* <img src={Logo} className="SinGraficos" alt="No hay graficas Disponibles" /> */}
+              <Bar options={options} data={chartData} /> 
           </div>
           : "No hay nada para mostrar" }
           

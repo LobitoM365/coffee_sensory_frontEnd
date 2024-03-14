@@ -54,7 +54,16 @@ export const Fincas = (userInfo) => {
                 values: ["nombre"],
                 key: "id",
                 upper_case: true,
-                execute: getMunicipios,
+                function: {
+                    value: getMunicipios,
+                    execute: {
+                        type: "own",
+                        value: "key"
+                    }
+                },
+                search: {
+                    clean: ["municipios_id","veredas_id"]
+                }
             },
             municipios_id: {
                 type: "select",
@@ -62,7 +71,16 @@ export const Fincas = (userInfo) => {
                 values: ["nombre"],
                 key: "id",
                 upper_case: true,
-                execute: getVeredas,
+                function: {
+                    value: getVeredas,
+                    execute: {
+                        type: "own",
+                        value: "key"
+                    }
+                },
+                search: {
+                    clean: ["veredas_id"]
+                }
             },
             veredas_id: {
                 type: "select",
@@ -334,15 +352,19 @@ export const Fincas = (userInfo) => {
                 }
             }
             const response = await Api.post("departamento/listar", filterReport);
+            let departamentos = inputsForm;
+
             if (response.data.status == true) {
-                let departamentos = inputsForm;
                 if (!departamentos["departamentos_id"]) {
                     departamentos["departamentos_id"] = {}
                 }
                 departamentos["departamentos_id"]["opciones"] = response.data.data
                 setInputsForm(departamentos)
             } else if (response.data.find_error) {
-
+                if (departamentos["departamentos_id"]) {
+                    departamentos["departamentos_id"]["opciones"] = []
+                }
+                setInputsForm(departamentos)
             } else {
 
             }
@@ -368,8 +390,9 @@ export const Fincas = (userInfo) => {
                 }
             }
             const response = await Api.post("municipio/listar", filterReport);
+            let municipios = { ...inputsForm };
+
             if (response.data.status == true) {
-                let municipios = inputsForm;
                 if (!municipios["municipios_id"]) {
                     municipios["municipios_id"] = {}
                 }
@@ -377,7 +400,10 @@ export const Fincas = (userInfo) => {
                 console.log("MUNICIPIOS GET: ", municipios)
                 setInputsForm(municipios)
             } else if (response.data.find_error) {
-
+                if (municipios["municipios_id"]) {
+                    municipios["municipios_id"]["opciones"] = []
+                }
+                setInputsForm(municipios)
             } else {
 
             }
@@ -387,6 +413,7 @@ export const Fincas = (userInfo) => {
 
     //Obtener Veredas
     async function getVeredas(data) {
+        console.log(data, "dataaaaaaaa")
         try {
             let filterReport = {
                 "filter": {
@@ -404,14 +431,19 @@ export const Fincas = (userInfo) => {
             }
             const response = await Api.post("veredas/listar", filterReport);
             console.log('VEREDAS: ', response);
+            let veredas = inputsForm;
+
             if (response.data.status == true) {
-                let veredas = inputsForm;
                 if (!veredas["veredas_id"]) {
                     veredas["veredas_id"] = {}
                 }
                 veredas["veredas_id"]["opciones"] = response.data.data
                 setInputsForm(veredas)
             } else if (response.data.find_error) {
+                if (veredas["veredas_id"]) {
+                    veredas["veredas_id"]["opciones"] = []
+                }
+                setInputsForm(veredas)
 
             } else {
 

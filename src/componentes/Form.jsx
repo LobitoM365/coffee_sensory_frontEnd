@@ -94,10 +94,18 @@ export const Form = forwardRef((data, ref) => {
         })
         changeSelectsValues(cloneSlectValue)
     }
-    function selectSearch(value, key) {
+    function clearOptionsSelect(key) {
+        let selectOptions = document.querySelectorAll(".select-option-" + key)
+        for (let s = 0; s < selectOptions.length; s++) {
+            selectOptions[s].style.display = "";
+        }
+    }
+    function selectSearch(value, key, functionExecute, execute) {
+        let coincidencia = false;
         let cloneDataSelect = { ...dataSelect }
         let selectOptions = document.querySelectorAll(".select-option-" + key)
         let cloneSlectValue = { ...selectsValues }
+        let parent = "";
         cloneSlectValue[key] = value
         data.setStatusSelectDefault(false)
         data.setStatusSelect(false)
@@ -112,6 +120,15 @@ export const Form = forwardRef((data, ref) => {
             if (selectOptions[s].innerHTML.toLocaleLowerCase() == value.toLocaleLowerCase()) {
                 cloneSlectValue[key] = selectOptions[s].innerHTML
                 cloneDataSelect[key] = dataInputs[key]["opciones"][s][dataInputs[key]["key"]]
+                coincidencia = true
+                parent = selectOptions[s].parentNode;
+                if(functionExecute){
+                    if(execute){
+                        if(execute == "key"){
+                            functionExecute(dataInputs[key]["opciones"][s][dataInputs[key]["key"]])
+                        }
+                    }
+                }
                 break
             } else {
                 cloneDataSelect[key] = ""
@@ -119,8 +136,11 @@ export const Form = forwardRef((data, ref) => {
 
         }
         changeSelectsValues(cloneSlectValue)
-
         setDataSelects(cloneDataSelect)
+        if (coincidencia) {
+            parent.style.display = "none";
+            clearOptionsSelect(key);
+        }
     }
     function clearElementsClick() {
         /*  changeModalSelect({}) */
@@ -234,7 +254,7 @@ export const Form = forwardRef((data, ref) => {
                             <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="icon-quit-svg-form">
                                 <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                    <g><g><path  d="M150.7,128l90.6-90.7c6.3-6.3,6.3-16.4,0-22.7c-6.3-6.3-16.4-6.3-22.7,0L128,105.3L37.4,14.7c-6.3-6.3-16.4-6.3-22.7,0s-6.3,16.4,0,22.7l90.6,90.6l-90.6,90.6c-6.3,6.3-6.3,16.4,0,22.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7l90.7-90.6l90.6,90.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7c6.3-6.3,6.3-16.4,0-22.7L150.7,128z" /></g></g>
+                                    <g><g><path d="M150.7,128l90.6-90.7c6.3-6.3,6.3-16.4,0-22.7c-6.3-6.3-16.4-6.3-22.7,0L128,105.3L37.4,14.7c-6.3-6.3-16.4-6.3-22.7,0s-6.3,16.4,0,22.7l90.6,90.6l-90.6,90.6c-6.3,6.3-6.3,16.4,0,22.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7l90.7-90.6l90.6,90.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7c6.3-6.3,6.3-16.4,0-22.7L150.7,128z" /></g></g>
                                 </svg>
                             </div>
                         </div>
@@ -249,8 +269,8 @@ export const Form = forwardRef((data, ref) => {
                                 <div style={{ display: Object.keys(inputs).length == 1 ? "unset" : "" }} className="form-register">
                                     {
                                         inputs.map((key, index) => {
-                                            if(data.userInfo && dataInputs[key]["rol"]){
-                                                if(!dataInputs[key]["rol"].includes(data.userInfo.rol)){
+                                            if (data.userInfo && dataInputs[key]["rol"]) {
+                                                if (!dataInputs[key]["rol"].includes(data.userInfo.rol)) {
                                                     return
                                                 }
                                             }
@@ -275,7 +295,27 @@ export const Form = forwardRef((data, ref) => {
                                                 );
 
                                             } else if (dataInputs[key]["type"] === "select" && dataInputs[key]["visibility"] != false) {
+                                                let functionExecute = "";
+                                                let execute = "";
+                                                if (dataInputs[key]["function"]) {
+                                                    if (dataInputs[key]["function"]["value"]) {
+                                                        functionExecute = dataInputs[key]["function"]["value"];
+                                                    }
+                                                    if (dataInputs[key]["function"]["execute"]) {
+                                                        if (dataInputs[key]["function"]["execute"]["type"]) {
+                                                            let type = dataInputs[key]["function"]["execute"]["type"];
+                                                            if (dataInputs[key]["function"]["execute"]["value"]) {
+                                                                let value = dataInputs[key]["function"]["execute"]["value"];
+                                                                if (type == "own") {
+                                                                    if (value == "key") {
+                                                                        execute = "key";
+                                                                    }
+                                                                }
+                                                            }
 
+                                                        }
+                                                    }
+                                                }
                                                 if (data.statusSelect) {
                                                     selectsValues[key] = "";
                                                     dataSelect[key] = ""
@@ -295,6 +335,7 @@ export const Form = forwardRef((data, ref) => {
                                                                         divOptions[0] ? divOptions[0].style.display = "none" : ""
 
                                                                         data.setStatusSelect(false); data.setStatusSelectDefault(false); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = ""; changeSelectsValues(cloneSelectsValues); dataSelect[key] = "";
+                                                                        clearOptionsSelect(key);
                                                                     }} className='select-option'>Seleccione una opción...</h4>
 
                                                                     {
@@ -322,6 +363,8 @@ export const Form = forwardRef((data, ref) => {
 
 
                                                                             return <h4 key={indexSelect} onClick={(e) => {
+                                                                                clearOptionsSelect(key);
+                                                                                functionExecute(execute == "key" ? dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] : "");
                                                                                 const parentElement = e.target.parentElement.parentElement;
                                                                                 const divOptions = parentElement.querySelectorAll(".opciones-input-select")
                                                                                 divOptions[0] ? divOptions[0].style.display = "none" : ""; let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); data.setStatusSelect(false); data.setStatusSelectDefault(false); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]];
@@ -338,7 +381,9 @@ export const Form = forwardRef((data, ref) => {
                                                                         const parentElement = e.target.closest(".div-select");
                                                                         const divOptions = parentElement.querySelectorAll(".opciones-input-select")
                                                                         divOptions[0] ? divOptions[0].style.display = "block" : ""
-                                                                        selectSearch(e.target.value, key)
+                                                                        selectSearch(e.target.value, key, functionExecute, execute == "key" ? "key" : "");
+
+
                                                                     }} placeholder={"Seleccione una opción..."} value={selectsValues[key] != "Seleccione una opción..." ? selectsValues[key] : ""} />
                                                                     <div onClick={(e) => {
                                                                         const parentElement = e.target.closest(".div-select");

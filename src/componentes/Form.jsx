@@ -364,7 +364,10 @@ export const Form = forwardRef((data, ref) => {
 
                                                                             return <h4 key={indexSelect} onClick={(e) => {
                                                                                 clearOptionsSelect(key);
-                                                                                functionExecute(execute == "key" ? dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] : "");
+                                                                                if(typeof functionExecute == "function"){
+                                                                                    functionExecute(execute == "key" ? dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] : "");
+                                                                                }
+                                                                                
                                                                                 const parentElement = e.target.parentElement.parentElement;
                                                                                 const divOptions = parentElement.querySelectorAll(".opciones-input-select")
                                                                                 divOptions[0] ? divOptions[0].style.display = "none" : ""; let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); data.setStatusSelect(false); data.setStatusSelectDefault(false); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]];

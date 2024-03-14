@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { element } from "prop-types";
+import Logo from '../assets/SinGraficos.svg'
 
 ChartJS.register(
   CategoryScale,
@@ -211,7 +212,9 @@ export const Graficos = ({user,inputData}) => {
           
         </div>
           :   
-          "No hay nada para mostrar" 
+          <div id="graficos">
+              <img src={Logo} className="SinGraficos" alt="No hay graficas Disponibles" />
+          </div>
           : "No hay nada para mostrar" }
           
       </div>

@@ -37,7 +37,7 @@ export const Menu = (data) => {
         }
     }, [data.socket]);
 
-    console.log("DATA OC", data.socket);
+    // console.log("DATA OC", data.socket);
 
     const [pageLoad, setPageLoad] = useState({});
     const [queryMenu, setQueryMenu] = useState(document.body.scrollWidth <= 610 ? true : false)

@@ -350,7 +350,6 @@ export const Tablas = (array) => {
 
                     let extraSize = parseFloat(styleTable.paddingLeft.match(/\d+/)[0]) + parseFloat(styleTable.paddingRight.match(/\d+/)[0]) + parseFloat(styleTable.marginLeft.match(/\d+/)[0]) + parseFloat(styleTable.marginRight.match(/\d+/)[0] + (Math.ceil(contentTable[0].offsetWidth) - Math.ceil(contentTable[0].clientWidth)))
 
-
                     if (arrayThQuit.length > 0) {
                         if (((heightGroup + height) + extraSize) <= contentComponent.clientWidth) {
                             console.log("asdasdhash")

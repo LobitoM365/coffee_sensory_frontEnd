@@ -152,7 +152,9 @@ export const GraficoCircular = ({ user , inputData}) => {
           <Pie data={chartData}/>
         </div>
         :
-        "No hay Datos por Mostrar "
+        <div >
+          <h3 className='text-Graphic-none'>No hay Datos por Mostrar </h3>
+        </div>
       }
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Tablas } from "../componentes/tablas.jsx"
-import Api from '../componentes/Api.jsx'
+import Api, { host } from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
 
@@ -23,6 +23,40 @@ export const Lotes = () => {
     const [dataAlert, setdataAlert] = useState({});
     const [modalForm, changeModalForm] = useState(false);
     let idLoteCambiarEstado = 0;
+
+
+    let [inputsDocumento, setinputsDocumento] = useState(
+        {
+            "fecha": {
+                inputs: {
+                    desde_registro: {
+                        type: "date",
+                        referencia: "Desde",
+                        values: ["nombre"],
+                    },
+                    hasta_registro: {
+                        type: "date",
+                        referencia: "Hasta",
+                    }
+                },
+                referencia: "Filtrar por fecha de creación"
+            },
+            "estado": {
+                inputs: {
+                    estado: {
+                        type: "select",
+                        referencia: "Estado",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "activo", value: "1" }, { nombre: "inactivo", value: "0" }],
+                        upper_case: true,
+                        key: "value"
+                    },
+                },
+                referencia: "Filtrar por estado"
+            }
+        }
+    )
+
 
     let [inputsForm, setInputsForm] = useState(
         {
@@ -69,7 +103,7 @@ export const Lotes = () => {
         },
         "fecha_creacion": {
             "referencia": "Fecha creación",
-            "format" : true
+            "format": true
         },
         "estado": {
             "referencia": "Estado"
@@ -393,10 +427,107 @@ export const Lotes = () => {
 
     }
 
+    async function getReporte(tipo, filter) {
+        try {
+
+            let filterReport = {
+                "filter": {
+                    "where": {
+
+                    },
+                    "date": {
+                        "lo.fecha_creacion": {
+                            "desde": filter.desde_registro ? filter.desde_registro : "",
+                            "hasta": filter.hasta_registro ? filter.hasta_registro : ""
+                        }
+                    },
+                    "limit": {
+                        inicio: 0,
+                        fin: 100
+                    }
+                }
+            }
+            if (filter.estado != "" && filter.estado) {
+                filterReport["filter"]["where"]["lo.estado"] = {
+                    "value": filter.estado ? filter.estado : "",
+                    "operador": "=",
+                    "require": "and"
+                }
+            }
+            const response = await Api.post("lotes/listar", filterReport);
+            console.log(response)
+            if (response.data.status == true) {
+                if (tipo == "pdf") {
+                    if (response.data.count > 100) {
+                        setFilterPdflimit({ status: true, max: response.data.count })
+                    }
+                    let dataPdf = {
+                        data: response.data.data,
+                        table: keys
+                    }
+                    localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
+                    window.open('/dashboard/generatePdfTable', '_blank')
+                } else {
+                    generatePdf(filterReport, response.data.data, keys)
+                }
+            } else if (response.data.find_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.find_error,
+                        "tittle": "No se encontró!"
+                    }
+                )
+            }
+
+
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    async function generatePdf(filter, dataTable, table) {
+        let cloneTable = { ...table }
+        delete cloneTable["permission_formato_fisico"]
+        delete cloneTable["permission_formato_sca"]
+        delete cloneTable["actualizar"]
+        delete cloneTable["reporte"]
+        console.log(cloneTable, "hahsd")
+        const data = {
+            dataTable,
+            filter,
+            table: { ...cloneTable }
+        };
+        try {
+            const response = await fetch('http://' + host + ':8000/generateReporte.php', {
+
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            if (!response.ok) {
+                throw new Error('Error al generar el PDF');
+            }
+
+            const pdfBlob = await response.blob();
+
+            // Crear una URL de objeto a partir del blob
+            const blobUrl = URL.createObjectURL(pdfBlob);
+
+            // Abrir el PDF en una nueva pestaña del navegador
+            window.open(blobUrl, '_blank');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     return (
         <>
-            <Tablas imgForm={"/img/formularios/img-form-state.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarLote} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setLote} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={lotes} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateLote} tittle={"Lotes"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
-            
+            <Tablas getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/img-form-state.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarLote} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setLote} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={lotes} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateLote} tittle={"Lotes"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

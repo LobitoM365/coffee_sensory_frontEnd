@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Tablas } from "../componentes/tablas.jsx"
 import Api from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
-
+import { host } from '../componentes/Api.jsx'
 
 export const RegistrosUsuarios = () => {
     let [dataFilterTable, setDataFilterTable] = useState({
@@ -72,6 +72,38 @@ export const RegistrosUsuarios = () => {
             correo_electronico: {
                 type: "email",
                 referencia: "Correo electrónico"
+            }
+        }
+    )
+
+    let [inputsDocumento, setinputsDocumento] = useState(
+        {
+            "fecha": {
+                inputs: {
+                    desde_registro: {
+                        type: "date",
+                        referencia: "Desde",
+                        values: ["nombre"],
+                    },
+                    hasta_registro: {
+                        type: "date",
+                        referencia: "Hasta",
+                    }
+                },
+                referencia: "Filtrar por fecha de creación"
+            },
+            "estado": {
+                inputs: {
+                    estado: {
+                        type: "select",
+                        referencia: "Estado",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "activo", value: "1" }, { nombre: "inactivo", value: "0" }],
+                        upper_case: true,
+                        key: "value"
+                    },
+                },
+                referencia: "Filtrar por estado"
             }
         }
     )
@@ -422,9 +454,105 @@ export const RegistrosUsuarios = () => {
         localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
         window.open('/dashboard/generatePdfTable', '_blank')
     }
+
+    async function getReporte(tipo, filter) {
+        try {
+
+            let filterReport = {
+                "filter": {
+                    "where": {
+
+                    },
+                    "date": {
+                        "us.fecha_creacion": {
+                            "desde": filter.desde_registro ? filter.desde_registro : "",
+                            "hasta": filter.hasta_registro ? filter.hasta_registro : ""
+                        }
+                    },
+                    "limit": {
+                        inicio: 0,
+                        fin: 100
+                    }
+                }
+            }
+            if (filter.estado != "" && filter.estado) {
+                filterReport["filter"]["where"]["us.estado"] = {
+                    "value": filter.estado ? filter.estado : "",
+                    "operador": "=",
+                    "require": "and"
+                }
+            }
+            const response = await Api.post("usuarios/listar", filterReport);
+            console.log(response)
+            if (response.data.status == true) {
+                if (tipo == "pdf") {
+                    if (response.data.count > 100) {
+                        setFilterPdflimit({ status: true, max: response.data.count })
+                    }
+                    let dataPdf = {
+                        data: response.data.data,
+                        table: keys
+                    }
+                    localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
+                    window.open('/dashboard/generatePdfTable', '_blank')
+                } else {
+                    generatePdf(filterReport, response.data.data, keys)
+                }
+            } else if (response.data.find_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.find_error,
+                        "tittle": "No se encontró!"
+                    }
+                )
+            }
+
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    async function generatePdf(filter, dataTable, table) {
+        let cloneTable = { ...table }
+        delete cloneTable["permission_formato_fisico"]
+        delete cloneTable["permission_formato_sca"]
+        delete cloneTable["actualizar"]
+        delete cloneTable["reporte"]
+        console.log(cloneTable, "hahsd")
+        const data = {
+            dataTable,
+            filter,
+            table: { ...cloneTable }
+        };
+        try {
+            const response = await fetch('http://' + host + ':8000/generateReporte.php', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            if (!response.ok) {
+                throw new Error('Error al generar el PDF');
+            }
+
+            const pdfBlob = await response.blob();
+
+            // Crear una URL de objeto a partir del blob
+            const blobUrl = URL.createObjectURL(pdfBlob);
+
+            // Abrir el PDF en una nueva pestaña del navegador
+            window.open(blobUrl, '_blank');
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     return (
         <>
-            <Tablas getDataPdf={getDataPdf} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas getDataPdf={getDataPdf} clearInputs={clearInputs} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

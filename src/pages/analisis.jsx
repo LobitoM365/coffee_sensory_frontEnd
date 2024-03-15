@@ -463,7 +463,7 @@ export const Analisis = (userInfo) => {
                 if (formato.data.status == true) {
                     setDataModalResultado(formato.data.data)
                     const resultado = await Api.post("resultado/buscar/" + formato.data.data[0].id + "");
-                    console.log(resultado,"resulttt")
+                    console.log(resultado, "resulttt")
                     if (resultado.data.status == true) {
                         setDataModalResultadoAnalisis(resultado.data.data)
                     } else {
@@ -1042,6 +1042,15 @@ export const Analisis = (userInfo) => {
                 } else {
                     generatePdf(filterReport, response.data.data, keys)
                 }
+            } else if (response.data.find_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.find_error,
+                        "tittle": "No se encontró!"
+                    }
+                )
             }
 
 

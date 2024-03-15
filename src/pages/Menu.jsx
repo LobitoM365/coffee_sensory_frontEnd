@@ -3,6 +3,7 @@ import { Link, Outlet, json, useLocation } from "react-router-dom"
 
 import Api from '../componentes/Api.jsx';
 import { validateViews } from "../componentes/ValidateViews.jsx";
+import { formatDate } from "../componentes/tablas.jsx";
 
 
 export const Menu = (data) => {
@@ -333,14 +334,14 @@ export const Menu = (data) => {
                     <li className="hamburguer-centered line-nav-li">
                         <h4 className="title-li change-hamburguer-quit">Principal</h4>
                         <ul>
-                            <Link to={"/dashboard"} onClick={() => { selectedLi("/dashboard") }} className={`link-memu-horizontal  ${liSelected == "/dashboard" ? "selected-li" : ""}`}>
+                            <Link title="Inicio" to={"/dashboard"} onClick={() => { selectedLi("/dashboard") }} className={`link-memu-horizontal  ${liSelected == "/dashboard" ? "selected-li" : ""}`}>
                                 <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                     <g><g><g><path d="M119.8,10.3c-54,3.5-99.2,44.4-108.3,98.1c-2,11.4-2,28,0,39.4C19.2,193,52.6,230,96.7,242c20,5.5,42.7,5.5,62.7,0c39.9-10.9,71.6-42.6,82.5-82.5c5.5-20,5.5-42.7,0-62.7c-12-44.1-49-77.5-94.2-85.2c-4.1-0.7-19.3-2-21-1.7C126.4,9.9,123.3,10.1,119.8,10.3z M131.3,69.4c2,0.7,62.4,52.8,63.5,54.6c1.3,2.3,1,7-0.6,9.2c-1.8,2.6-4,3.3-10.1,3.3h-5.3v22.2c0,24.6,0,24.6-3.4,27.1c-1.6,1.1-2.1,1.2-16,1.3l-14.4,0.2V162v-25.4H128h-16.9V162v25.4l-14.4-0.2c-14-0.2-14.5-0.2-16.1-1.3c-3.4-2.4-3.4-2.5-3.4-27.1v-22.2h-5.3c-8.1,0-11-2-11.5-7.7c-0.4-4.3,0.6-5.6,9.1-12.9l7.7-6.5V96.6c0-10.8,0.2-13.3,0.8-14.7c2.5-5.4,11.1-6,14.6-1.1c1,1.4,1.2,2.5,1.4,7.8l0.3,6.2L109,82.3c8-6.8,15-12.6,15.6-12.8C126,68.8,129.7,68.8,131.3,69.4z" /></g></g></g>
                                 </svg> <h5 className="change-hamburguer-quit ">Inicio</h5>
                                 </li>
                             </Link>
-                            <Link to={"/"}>
+                            <Link to={"/"} title="Ubicación de Fincas">
                                 <li className="hamburguer-centered"><img className="icon-li-nav-horizontal" src="/img/iconMapColombia.png" alt="" />
                                     <h5 className="change-hamburguer-quit ">Mapa</h5>
                                 </li>
@@ -352,7 +353,7 @@ export const Menu = (data) => {
                         <ul>
 
                             {responseValidate && responseValidate.data.user.rol == 'administrador' && (
-                                <Link to={"/dashboard/usuarios/registros"} onClick={() => { selectedLi("/dashboard/usuarios/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/usuarios/registros" ? "selected-li" : ""}`}>
+                                <Link title="Usuarios" to={"/dashboard/usuarios/registros"} onClick={() => { selectedLi("/dashboard/usuarios/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/usuarios/registros" ? "selected-li" : ""}`}>
                                     <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 256 256"  >
                                         <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                         <g><g><g><path d="M119.1,22c-42.9,3.2-80.9,29.7-98.7,69c-4.6,10.1-7.7,20.7-9.5,32.8c-1.1,7.1-1.1,24.9,0,32.1c4.3,28.4,16.6,51.8,37.6,71.3c3.9,3.6,8.5,7.2,8.8,7c0.1-0.1,0.8-2.9,1.6-6.2c3.6-14.5,6.2-22.3,8.2-24.4c2.3-2.4,14.4-5.9,29.1-8.5c9.5-1.6,9.5-1.6,9.5-2.3c0-0.3,1-1.5,2.2-2.7l2.2-2.1l0-6.1c0-3.3-0.1-7-0.1-8.1l0-2l-3.1-1.4c-4.7-2.2-10.5-6.3-11.8-8.3c-3.2-4.9-6.6-13.4-8.7-22c-0.8-3.1-1.4-6.1-1.4-6.7c0-0.6-0.9-2.1-2.1-3.5c-4.3-5-5.1-12.5-2.2-18.6l1.5-3V95.7c0-9.5,0.2-13.4,0.7-15.6c3.2-13.4,14.9-23.2,34.5-28.7c8.2-2.3,12.7-2.3,20.9,0c18.1,5.1,29.5,14,33.8,26.3c1,2.8,1.1,3.8,1.2,16.8c0.1,13.8,0.1,13.8,1.3,15.5c3.8,5.7,3,15.5-1.8,20.4c-1.3,1.3-1.6,2.3-2.5,6.9c-1.4,6.9-3.8,14.1-6.7,20c-3.2,6.5-5.1,8.3-13.9,12.8l-3.9,2l-0.1,7.9l-0.1,7.8l2.3,2.3c1.3,1.3,2.3,2.5,2.3,2.9c0,0.3,0.7,0.7,1.5,0.8c24.5,4.2,35,7.2,37.8,10.7c1.2,1.5,4.6,11.9,7.1,21.9c1.1,4.4,2.1,8,2.3,8c0.8,0,9.6-7.9,14.4-12.8c36.7-37.9,43.4-96.5,16.3-141.9c-12.6-21.1-31.1-37.6-53.6-47.7C158.9,24.3,137.9,20.6,119.1,22z" /></g></g></g>
@@ -362,7 +363,7 @@ export const Menu = (data) => {
                             )}
 
                             {responseValidate && responseValidate.data.user.rol == 'administrador' && (
-                                <Link to={"/dashboard/departamentos/registros"} onClick={() => { selectedLi("/dashboard/departamentos/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/departamentos/registros" ? "selected-li" : ""}`}>
+                                <Link title="Departamentos" to={"/dashboard/departamentos/registros"} onClick={() => { selectedLi("/dashboard/departamentos/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/departamentos/registros" ? "selected-li" : ""}`}>
                                     <li className="hamburguer-centered">
                                         <svg className="icon-li-nav-horizontal" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
                                             <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -372,7 +373,7 @@ export const Menu = (data) => {
                                 </Link>
                             )}
                             {responseValidate && responseValidate.data.user.rol == 'administrador' && (
-                                <Link to={"/dashboard/municipios/registros"} onClick={() => { selectedLi("/dashboard/municipios/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/municipios/registros" ? "selected-li" : ""}`}>
+                                <Link title="Municipios" to={"/dashboard/municipios/registros"} onClick={() => { selectedLi("/dashboard/municipios/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/municipios/registros" ? "selected-li" : ""}`}>
                                     <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
                                         <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                         <g><g><path d="M10,10v177h196.7V10H10z M187,167.3H29.7V29.7H187V167.3z M108.3,108.3h-59v-59h59V108.3z M167.3,108.3H128V88.7h39.3V108.3z M167.3,69H128V49.3h39.3V69z M167.3,147.7h-118V128h118V147.7z M69,206.7v19.7h157.3V69H246v177H49.3v-39.3H69z" /></g></g>
@@ -397,7 +398,7 @@ export const Menu = (data) => {
                                 </li>
                             </Link> */}
 
-                            <Link to={"/dashboard/fincas/registros"} onClick={() => { selectedLi("/dashboard/fincas/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/fincas/registros" ? "selected-li" : ""}`}>
+                            <Link title="Fincas" to={"/dashboard/fincas/registros"} onClick={() => { selectedLi("/dashboard/fincas/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/fincas/registros" ? "selected-li" : ""}`}>
                                 <li className="hamburguer-centered">
                                     <svg className="icon-li-nav-horizontal" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256" >
                                         <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -406,7 +407,7 @@ export const Menu = (data) => {
                                     <h5 className="change-hamburguer-quit ">Fincas</h5>
                                 </li>
                             </Link>
-                            <Link to={"/dashboard/lotes/registros"} onClick={() => { selectedLi("/dashboard/lotes/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/lotes/registros" ? "selected-li" : ""}`}>
+                            <Link title="Lotes" to={"/dashboard/lotes/registros"} onClick={() => { selectedLi("/dashboard/lotes/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/lotes/registros" ? "selected-li" : ""}`}>
                                 <li className="hamburguer-centered">
                                     <svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256"  >
                                         <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -419,7 +420,7 @@ export const Menu = (data) => {
 
                             {responseValidate && responseValidate.data.user.rol == 'administrador' && (
 
-                                <Link to={"/dashboard/variedades/registros"} onClick={() => { selectedLi("/dashboard/variedades/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/variedades/registros" ? "selected-li" : ""}`}>
+                                <Link title="Variedades de Café" to={"/dashboard/variedades/registros"} onClick={() => { selectedLi("/dashboard/variedades/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/variedades/registros" ? "selected-li" : ""}`}>
                                     <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256"  >
                                         <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                         <g><g><path d="M99.6,10.4H29.1C18.6,10.4,10,18.4,10,29v69c0,10.5,8.6,20.2,19.1,20.2h70.6c10.5,0,19.1-9.7,19.1-20.2V29C118.7,18.4,110.1,10.4,99.6,10.4z M99.6,99.1H29.1V29h70.6V99.1z M99.6,137.8H29.1c-10.5,0-19.1,8.6-19.1,19.1v69.6c0,10.5,8.6,19.1,19.1,19.1h70.6c10.5,0,19.1-8.6,19.1-19.1v-69.6C118.7,146.5,110.1,137.8,99.6,137.8z M99.6,226.5H29.1v-70.1h70.6V226.5z M226.9,10.4h-70c-10.5,0-19.6,8.1-19.6,18.6v70.1c0,10.5,9.1,19.1,19.6,19.1h70c10.5,0,19.1-8.6,19.1-19.1V29C246,18.4,237.4,10.4,226.9,10.4z M226.9,99.1h-70V29h70V99.1L226.9,99.1z M224.8,137.8h-68.4c-10.5,0-19.1,8.6-19.1,19.1v69.6c0,10.5,8.6,19.1,19.1,19.1h70.6c10.5,0,19.1-8.6,19.1-19.1v-69.6C246,146.5,235.3,137.8,224.8,137.8z M226.9,226.5h-70V157h70V226.5L226.9,226.5z" /></g></g>
@@ -430,7 +431,7 @@ export const Menu = (data) => {
 
 
 
-                            <Link to={"/dashboard/muestras/registros"} onClick={() => { selectedLi("/dashboard/muestras/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/muestras/registros" ? "selected-li" : ""}`}>
+                            <Link title="Muestras" to={"/dashboard/muestras/registros"} onClick={() => { selectedLi("/dashboard/muestras/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/muestras/registros" ? "selected-li" : ""}`}>
                                 <li className="hamburguer-centered">
                                     <svg className="icon-li-nav-horizontal" version="1.1" id="Layer_1" x="0px" y="0px" width="100%" viewBox="0 0 608 608">
                                         <path fill="#FFFFFF" stroke="none" d=" M383.043396,73.979492   C400.429901,63.049480 418.505249,54.666756 438.739380,52.259125   C466.540680,48.951080 491.495636,56.090355 513.338501,73.799629   C515.893250,75.870934 515.063171,77.596565 513.596558,79.747307   C507.423798,88.799408 498.679169,94.845673 489.545288,100.408936   C479.716187,106.395645 469.401123,111.469810 458.759827,115.823135   C437.308624,124.598770 423.080353,140.796280 412.094208,160.492188   C404.877441,173.430405 398.551086,186.828018 391.261200,199.738266   C378.693115,221.995972 360.340729,237.315720 336.952667,247.006592   C332.801788,248.726471 328.649445,250.464462 324.613159,252.430832   C322.277283,253.568802 320.704376,253.523514 319.163391,251.177841   C310.309235,237.700165 305.128296,222.950226 303.664337,206.909912   C300.660919,174.003067 314.157471,146.581955 332.659943,120.975037   C346.268250,102.141510 363.232971,86.763710 383.043396,73.979492  z" />
@@ -442,7 +443,7 @@ export const Menu = (data) => {
                                     </svg> <h5 className="change-hamburguer-quit ">Muestras</h5>
                                 </li>
                             </Link>
-                            <Link to={"/dashboard/cafes/registros"} onClick={() => { selectedLi("/dashboard/cafes/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/cafes/registros" ? "selected-li" : ""}`}>
+                            <Link title="Cafés Registrados" to={"/dashboard/cafes/registros"} onClick={() => { selectedLi("/dashboard/cafes/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/cafes/registros" ? "selected-li" : ""}`}>
                                 <li className="hamburguer-centered">
 
                                     <svg className="icon-li-nav-horizontal" version="1.0" width="256.000000pt" viewBox="0 0 256.000000 256.000000" preserveAspectRatio="xMidYMid meet">
@@ -455,7 +456,7 @@ export const Menu = (data) => {
                                     <h5 className="change-hamburguer-quit ">Cafés</h5>
                                 </li>
                             </Link>
-                            <Link to={"/dashboard/analisis/registros"} onClick={() => { selectedLi("/dashboard/analisis/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/analisis/registros" ? "selected-li" : ""}`}>
+                            <Link title="Análisis" to={"/dashboard/analisis/registros"} onClick={() => { selectedLi("/dashboard/analisis/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/analisis/registros" ? "selected-li" : ""}`}>
                                 <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 335.000000 291.000000" preserveAspectRatio="xMidYMid meet">
                                     <metadata>
                                         Created by potrace 1.16, written by Peter Selinger 2001-2019
@@ -602,12 +603,21 @@ export const Menu = (data) => {
                                                     asignaciones.map((asignacion) => (
                                                         <div key={asignacion.id} className="notificacion-analisis">
                                                             <div className="informacion-analisis">
-                                                                <div className="img-analisis">
-                                                                    <img className="img-analisis" src="../../img/analisisPrueba.jpg" alt="" />
+                                                                <div className="container-data">
+                                                                    <h4>Análisis: {asignacion.tipos_analisis_id == 1 ? 'Fisico' : 'Sensorial'}</h4>
+                                                                    <h4>Asignado: {formatDate(asignacion.fecha_creacion)}</h4>
+                                                                    <h4 className="h4-informacion-notificacion-analisis">
+                                                                        Estado: <span className={`${asignacion.estado == 2 ? "pendiente" : asignacion.estado == 3 ? "asignado" : ""}`}>{asignacion.estado == 2 ? "Pendiente" : asignacion.estado == 3 ? "Asignado" : ""}</span></h4>
+                                                                    <h4>Cd. Muestra: {asignacion.codigo_externo}</h4>
                                                                 </div>
-                                                                <h4 className="h4-informacion-notificacion-analisis">Tiene un análisis <span className={`${asignacion.estado == 2 ? "pendiente" : asignacion.estado == 3 ? "asignado" : ""}`}>{asignacion.estado == 2 ? "Pendiente" : asignacion.estado == 3 ? "Asignado" : ""}</span> por realizar</h4>
+                                                                <div className="img-analisis">
+                                                                    <img className="img-analisis" src="../../img/default_profile.jpg" alt="" />
+                                                                </div>
                                                             </div>
+
                                                             <button onClick={() => { localStorage.setItem("analisis_id", asignacion.analisis_id); localStorage.setItem("tipos_analisis_id", asignacion.tipos_analisis_id), location.href = "/dashboard/analisis/registros" }} className="input-proceder-analisis">Proceder</button>
+
+
                                                         </div>
                                                     ))
 

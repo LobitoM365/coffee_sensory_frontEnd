@@ -749,8 +749,8 @@ export const Tablas = (array) => {
                                     }
 
                                     <div className='footer-get-reporte'>
-                                        <button type='submit' onClick={() => { setTipoReporte("pdf") }} className='button-get-reporte get-repote-pdf'>PDF</button>
-                                        <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-excel'>EXCEL</button>
+                                        {/* <button type='submit' onClick={() => { setTipoReporte("pdf") }} className='button-get-reporte get-repote-pdf'>PDF</button> */}
+                                        <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-excel'>PDF</button>
                                     </div>
 
                                 </form>

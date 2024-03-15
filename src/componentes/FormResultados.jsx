@@ -1,6 +1,7 @@
 import { object, string } from "prop-types";
 import React, { forwardRef, useEffect, useState } from "react";
 import { formatDate } from "./tablas";
+import {$} from "jquery"
 
 
 
@@ -500,6 +501,7 @@ export const FormResultados = forwardRef((data, ref) => {
     useEffect(() => {
         console.log(data)
     }, [data])
+    
     return (
         <>
             <link rel="stylesheet" href="../../public/css/form.css" />

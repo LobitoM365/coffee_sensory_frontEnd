@@ -1,83 +1,24 @@
 let contentForm = document.getElementById("contentForm");
+let iconQuit = document.getElementById("iconQuit");
 let puntoUbicacion = document.querySelectorAll(".svg-ubicacion-cafe");
 let templateModal = contentForm.cloneNode(true);
 contentForm.innerHTML = "";
 contentForm.remove()
 let count = 0;
 
-console.log(puntoUbicacion)
-for (let x = 0; x < puntoUbicacion.length; x++) {
-    puntoUbicacion[x].addEventListener("click", function () {
-        document.body.append(templateModal)
-        window.addEventListener("resize", resizeModal())
-        resizeModal()
-        setTimeout(() => {
-            getResizeFormatoSca()
-        }, 200);
-        document.dispatchEvent(eventoElementoInsertado);
-    })
+let iframeFormatoSca = document.getElementById("iframeFormatoSca")
 
 
-}
-
-const eventoElementoInsertado = new Event('iframeFormatoSca');
-
-
-
-
-function resizeModal() {
-    let modalForm = document.querySelectorAll(".div-modal-form");
-    let divContentForm = document.querySelectorAll(".div-content-modal");
-    let divFondomodalForm = document.querySelectorAll(".div-fondo-modal ");
-
-    for (let m = 0; m < modalForm.length; m++) {
-        if ((divContentForm[m].scrollHeight + 100) > document.body.clientHeight) {
-
-            modalForm[m].style.alignItems = "unset"
-            modalForm[m].style.padding = "20px 20px"
-            modalForm[m].style.height = "calc(100% - 40px)"
-            modalForm[m].style.width = "calc(100% - 40px)"
-            if (divFondomodalForm[m]) {
-                divFondomodalForm[m].style.height = divContentForm[m].clientHeight + 40 + "px"
-                divFondomodalForm[m].style.width = modalForm[m].clientWidth + "px"
-            }
-        } else {
-            if (divFondomodalForm[m]) {
-                divFondomodalForm[m].style.height = "100vh"
-                divFondomodalForm[m].style.width = "100vw"
-            }
-            modalForm[m].style.alignItems = "center"
-            modalForm[m].style.justifyContent = ""
-            modalForm[m].style.padding = ""
-            modalForm[m].style.height = "100%"
-            modalForm[m].style.width = "100%"
+const resizeObserver = new ResizeObserver(entries => {
+    entries.forEach(entry => {
+        if (entries) {
+            resizeFormatoSca();
         }
-
-    }
-}
-
-
-function resizeFormatoSca() {
-    const iframeFormatoSca = document.getElementById("iframeFormatoSca");
-    if (iframeFormatoSca) {
-        const iframeFormatoScaContentDocument = iframeFormatoSca.contentDocument;
-        const formatoSca = iframeFormatoScaContentDocument.getElementById("contenidoFormatoSca");
-        if (formatoSca) {
-            iframeFormatoSca.style.height = "calc(" + formatoSca.clientHeight + "px" + " + 7px)"
-        }
-
-    }
-}
-
-function getResizeFormatoSca() {
-    let iframeFormatoSca = document.getElementById("iframeFormatoSca")
-    const resizeObserver = new ResizeObserver(entries => {
-        entries.forEach(entry => {
-            if (entries) {
-                resizeFormatoSca();
-            }
-        });
     });
+});
+function getResizeFormatoSca() {
+
+
     if (iframeFormatoSca) {
         resizeObserver.observe(iframeFormatoSca);
         resizeFormatoSca();
@@ -85,6 +26,16 @@ function getResizeFormatoSca() {
     resizeFormatoSca();
 
 }
+
+$("body").on("click", "#iconQuit", function () {
+    let iframeFormatoSca = document.getElementById("iframeFormatoSca")
+    resizeObserver.unobserve(iframeFormatoSca)
+
+    let contentForm = document.getElementById("contentForm");
+    contentForm.innerHTML = "";
+    contentForm.remove()
+
+})
 const dataFormatoSensorial = [
     {
         "notas": "noaplica",
@@ -120,6 +71,79 @@ const dataFormatoSensorial = [
         "puntaje_total": null
     }
 ]
+
+
+for (let x = 0; x < puntoUbicacion.length; x++) {
+    puntoUbicacion[x].addEventListener("click", function () {
+        document.body.append(templateModal.cloneNode(true))
+        iconQuit = document.getElementById("iconQuit");
+
+        window.addEventListener("resize", resizeModal())
+        resizeModal()
+        setTimeout(() => {
+            console.log(document.querySelectorAll(".direction-menu"))
+            getResizeFormatoSca()
+            setElementsTemplateFormatoSca("iframeFormatoSca", dataFormatoSensorial)
+            localStorage.setItem("dataFormatoSca", JSON.stringify(dataFormatoSensorial));
+        }, 200);
+    })
+
+
+}
+
+const eventoElementoInsertado = new Event('iframeFormatoSca');
+
+
+
+
+function resizeModal() {
+    let modalForm = document.querySelectorAll(".div-modal-form");
+    let divContentForm = document.querySelectorAll(".div-content-modal");
+    let divFondomodalForm = document.querySelectorAll(".div-fondo-modal ");
+
+    if (divContentForm.length > 0) {
+        for (let m = 0; m < modalForm.length; m++) {
+            if ((divContentForm[m].scrollHeight + 100) > document.body.clientHeight) {
+
+                modalForm[m].style.alignItems = "unset"
+                modalForm[m].style.padding = "20px 20px"
+                modalForm[m].style.height = "calc(100% - 40px)"
+                modalForm[m].style.width = "calc(100% - 40px)"
+                if (divFondomodalForm[m]) {
+                    divFondomodalForm[m].style.height = divContentForm[m].clientHeight + 40 + "px"
+                    divFondomodalForm[m].style.width = modalForm[m].clientWidth + "px"
+                }
+            } else {
+                if (divFondomodalForm[m]) {
+                    divFondomodalForm[m].style.height = "100vh"
+                    divFondomodalForm[m].style.width = "100vw"
+                }
+                modalForm[m].style.alignItems = "center"
+                modalForm[m].style.justifyContent = ""
+                modalForm[m].style.padding = ""
+                modalForm[m].style.height = "100%"
+                modalForm[m].style.width = "100%"
+            }
+
+        }
+    }
+
+}
+
+
+function resizeFormatoSca() {
+    const iframeFormatoSca = document.getElementById("iframeFormatoSca");
+    if (iframeFormatoSca) {
+        const iframeFormatoScaContentDocument = iframeFormatoSca.contentDocument;
+        const formatoSca = iframeFormatoScaContentDocument.getElementById("contenidoFormatoSca");
+        if (formatoSca) {
+            iframeFormatoSca.style.height = "calc(" + formatoSca.clientHeight + "px" + " + 7px)"
+        }
+
+    }
+}
+
+
 
 function setElementsTemplateFormatoSca(idElement, data, setInputs) {
     if (data) {
@@ -247,5 +271,3 @@ function setElementsTemplateFormatoSca(idElement, data, setInputs) {
     }
 
 }
-
-setElementsTemplateFormatoSca("iframeFormatoSca", dataFormatoSensorial)

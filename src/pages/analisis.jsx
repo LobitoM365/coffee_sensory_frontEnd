@@ -47,6 +47,17 @@ export const Analisis = (userInfo) => {
     const [idAnalisisResult, setIdAnalisisResult] = useState(null);
 
 
+    useEffect(() => {
+        const cloneInputsForm = { ...inputsForm };
+
+        if (updateStatus == true) {
+            cloneInputsForm["proceso"]["visibility"] = true;
+        } else {
+            cloneInputsForm["proceso"]["visibility"] = false;
+        }
+
+        setInputsForm(cloneInputsForm)
+    }, [updateStatus])
     let idAnalisis = 0;
 
     let [inputsForm, setInputsForm] = useState(
@@ -463,15 +474,12 @@ export const Analisis = (userInfo) => {
                 if (formato.data.status == true) {
                     setDataModalResultado(formato.data.data)
                     const resultado = await Api.post("resultado/buscar/" + formato.data.data[0].id + "");
-                    console.log(resultado,"resulttt")
+                    console.log(resultado, "resulttt")
                     if (resultado.data.status == true) {
                         setDataModalResultadoAnalisis(resultado.data.data)
                     } else {
-
                     }
-
                 } else if (formato.data.find_error) {
-
                 } else {
                 }
                 changeModalFormResults(true)

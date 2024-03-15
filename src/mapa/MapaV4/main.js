@@ -1,3 +1,4 @@
+
 let divMapa = document.getElementById("divMapa");
 let sizeMap = document.getElementById("sizeMap");
 let contentMapa = document.getElementById("contentMapa");
@@ -7,6 +8,7 @@ let mainDivMapa = document.getElementById("mainDivMapa");
 let departamentos = document.querySelectorAll(".element-departament");
 let municipios = document.querySelectorAll(".municipio");
 let tittleElement = document.getElementById("tittleElement");
+let titlePunto = document.getElementById("titlePunto");
 let zoomPunto = 20 / window.screen.availWidth;
 let departamentoFocus;
 let focusDepartamento = "";
@@ -1320,6 +1322,29 @@ let puntos = [
     }
 ]
 
+fetch("http://localhost:3000/api/muestra/geolocalizar/certificada", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json" // La clave debe ser "Content-Type"
+    }
+})
+    .then(response => {
+
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+        if (data.status == true) {
+            for (let x = 0; x < data.data.length; x++) {
+                getGeolocalizacion(data.data[x].latitud, data.data[x].longitud, "", "", data.data[x])
+            }
+        }
+
+
+    })
+    .catch(error => {
+        console.error("Ha ocurrido un error:", error);
+    });
 /* if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -1328,17 +1353,21 @@ let puntos = [
     );
 } */
 
+/* for (let x = 0; x < puntos.length; x++) {
+    getGeolocalizacion(puntos[x].latitud, puntos[x].longitud, "", "", puntos[x])
+} */
 
 
-for (let x = 0; x < puntos.length; x++) {
-    getGeolocalizacion(puntos[x].latitud, puntos[x].longitud)
-}
 
-function getGeolocalizacion(latitud, longitud, classAdd, element) {
+function getGeolocalizacion(latitud, longitud, classAdd, element, data) {
 
     let divPunto = document.createElement("div");
+    let contentPunto = document.createElement("div");
+    contentPunto.classList.add("content-punto")
     divPunto.classList.add("punto");
-    divPunto.innerHTML = (element ? (element) : ('<svg style="width:' + widthPoint + 'px" class="' + (classAdd ? (classAdd + " ") : "") + 'svg-ubicacion-cafe" xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 176.000000 248.000000" preserveAspectRatio="xMidYMidmeet"style="&#10;  &#10;    height: max-content;&#10;"> <g transform = "translate(0.000000,248.000000) scale(0.100000,-0.100000)" fill "#000000" stroke = "none"><path d="M800 2449 c-247 -21 -477 -156 -621 -365 -45 -65 -104 -197 -125 -279 -29 -112 -25 -294 9 -421 40 -152 83 -266 149 -398 132 -263 291 -473 548 -723 l114 -111 26 18 c14 10 81 73 149 141 339 339 546 684 653 1089 29 111 31 300 4 405 -21 82 -80 214 -125 279 -176 255 -467 391 -781 365z m193 -84 c267 -29 527 -247 615 -516 56 -169 52 -318 -14 -537 -92 -309 -298 -634 -591 -932 l-122 -125 -101 100 c-372 366 -616 799 -662 1171 -43 356 180 698 532 813 72 23 195 41 250 35 19 -1 61 -6 93 -9z" /><path d="M925 2208 c85 -67 155 -215 155 -327 -1 -122 -30 -189 -141 -326 -115 -142 -134 -181 -133 -280 0 -72 4 -87 38 -155 20 -41 50 -90 65 -108 l27 -34 87 21 c126 30 198 70 298 166 135 129 206 333 180 518 -21 152 -76 261 -184 369 -101 101 -270 178 -390 178 l-30 0 28 -22z" /> <path d="M648 2186 c-194 -80 -341 -254 -379 -449 -13 -70 -13 -199 1 -267 30 -145 145 -307 275 -389 59 -37 193 -91 227 -91 10 0 2 24 -25 79 -54 108 -68 206 -44 299 22 82 55 138 158 267 93 116 114 171 107 270 -6 73 -34 131 -95 196 -50 54 -128 109 -152 109 -9 0 -41 -11 -73 -24z" /> <path d="M553 80 c-136 -8 -193 -17 -193 -29 0 -16 45 -21 277 -33 179 -9 289 -9 475 0 239 11 288 17 288 32 0 14 -44 20 -212 30 -181 11 -448 11 -635 0z" /> </g ></svg >'))
+    divPunto.classList.add("svg-ubicacion-cafe");
+    let classAddPoint = data.calidad > 9 ? "punto-calidad-extraordinario" : data.calidad > 8 ? "punto-calidad-excelente" : data.calidad > 7 ? "punto-calidad-muy-byuena" : "punto-calidad-buena";
+    divPunto.innerHTML = (element ? (element) : ('<svg data-point="'+data["analisis_id"]+'" class="svg-point ' + classAddPoint + '" style="width:' + widthPoint + 'px" class="' + (classAdd ? (classAdd + " ") : "") + '" xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 176.000000 248.000000" preserveAspectRatio="xMidYMidmeet"style="&#10;  &#10;    height: max-content;&#10;"> <g transform = "translate(0.000000,248.000000) scale(0.100000,-0.100000)" fill "#000000" stroke = "none"><path d="M800 2449 c-247 -21 -477 -156 -621 -365 -45 -65 -104 -197 -125 -279 -29 -112 -25 -294 9 -421 40 -152 83 -266 149 -398 132 -263 291 -473 548 -723 l114 -111 26 18 c14 10 81 73 149 141 339 339 546 684 653 1089 29 111 31 300 4 405 -21 82 -80 214 -125 279 -176 255 -467 391 -781 365z m193 -84 c267 -29 527 -247 615 -516 56 -169 52 -318 -14 -537 -92 -309 -298 -634 -591 -932 l-122 -125 -101 100 c-372 366 -616 799 -662 1171 -43 356 180 698 532 813 72 23 195 41 250 35 19 -1 61 -6 93 -9z" /><path d="M925 2208 c85 -67 155 -215 155 -327 -1 -122 -30 -189 -141 -326 -115 -142 -134 -181 -133 -280 0 -72 4 -87 38 -155 20 -41 50 -90 65 -108 l27 -34 87 21 c126 30 198 70 298 166 135 129 206 333 180 518 -21 152 -76 261 -184 369 -101 101 -270 178 -390 178 l-30 0 28 -22z" /> <path d="M648 2186 c-194 -80 -341 -254 -379 -449 -13 -70 -13 -199 1 -267 30 -145 145 -307 275 -389 59 -37 193 -91 227 -91 10 0 2 24 -25 79 -54 108 -68 206 -44 299 22 82 55 138 158 267 93 116 114 171 107 270 -6 73 -34 131 -95 196 -50 54 -128 109 -152 109 -9 0 -41 -11 -73 -24z" /> <path d="M553 80 c-136 -8 -193 -17 -193 -29 0 -16 45 -21 277 -33 179 -9 289 -9 475 0 239 11 288 17 288 32 0 14 -44 20 -212 30 -181 11 -448 11 -635 0z" /> </g ></svg>'))
     let topP = 12.49090539183309842
     let bottom = -4.13552330887985
     let left = -66.8698311193493
@@ -1351,9 +1380,32 @@ function getGeolocalizacion(latitud, longitud, classAdd, element) {
     let valorLongitudPorcentaje = longitud - (right);
     let porcentajeTotalLongitud = (valorLongitudPorcentaje / longitudPorcentaje) * 100;
 
-    divPunto.style.bottom = "calc(" + porcentajeTotalLaitud + "% ";
-    divPunto.style.left = "calc(" + porcentajeTotalLongitud + "% ";
-    divPuntosUbicacion.appendChild(divPunto)
+    contentPunto.style.bottom = "calc(" + porcentajeTotalLaitud + "% ";
+    contentPunto.style.left = "calc(" + porcentajeTotalLongitud + "% ";
+    contentPunto.appendChild(divPunto)
+    divPuntosUbicacion.appendChild(contentPunto)
+    let svgPotint = divPunto.querySelectorAll(".svg-point")
+    let titlePunto = document.createElement("div");
+    titlePunto.innerHTML = ' <div class="preinfo-punto-ubicacion"> <div> <h4 class="key-title-punto">Latitud</h4> <h4 class="value-title-punto">' + latitud + ' </h4> </div> <div> <h4 class="key-title-punto">Longitud</h4> <h4 class="value-title-punto">' + longitud + ' </h4> </div> <div> <h4 class="key-title-punto">Departamento</h4> <h4 class="value-title-punto"> ' + data["departamento"] + '</h4> </div> <div> <h4 class="key-title-punto">Municipio</h4> <h4 class="value-title-punto">' + data["municipio"] + ' </h4> </div> <div> <h4 class="key-title-punto">Vereda</h4> <h4 class="value-title-punto">' + data["vereda"] + ' </h4> </div> <div> <h4 class="key-title-punto">Calidad</h4> <h4 class="value-title-punto"> ' + data["calidad"] + '</h4> </div> </div>'
+    titlePunto.classList.add("title-punto-ubicacion")
+    divPunto.appendChild(titlePunto)
+
+    console.log(svgPotint[0])
+    // svgPotint[0].addEventListener("click", function(){
+
+    // })
+    svgPotint[0].addEventListener("mouseover", function(){
+        titlePunto.style.display = "block"
+    })
+    svgPotint[0].addEventListener("mouseout", function(){
+        titlePunto.style.display = "none"
+    })
+    titlePunto.addEventListener("mouseover", function(){
+        titlePunto.style.display = "block"
+    })
+    titlePunto.addEventListener("mouseout", function(){
+        titlePunto.style.display = "none"
+    })
 }
 
 
@@ -1531,17 +1583,20 @@ function moveMap(event) {
     lassClienty = event.clientY
 }
 document.addEventListener('mousedown', function (event) {
-    divMapa.style.transition = "unset"
-    lassClientX = event.clientX
-    lassClienty = event.clientY
-    if (clikeableStatus == false) {
-        setTimeout(() => {
-            document.addEventListener('mousemove', moveMap)
-        }, [150])
-    } else {
-        document.addEventListener('mousemove', moveMap)
-    }
+    if (!event.target.classList.contains("preinfo-punto-ubicacion") && !event.target.parentNode.classList.contains("preinfo-punto-ubicacion") && !event.target.parentNode.parentNode.classList.contains("preinfo-punto-ubicacion")) {
 
+
+        divMapa.style.transition = "unset"
+        lassClientX = event.clientX
+        lassClienty = event.clientY
+        if (clikeableStatus == false) {
+            setTimeout(() => {
+                document.addEventListener('mousemove', moveMap)
+            }, [150])
+        } else {
+            document.addEventListener('mousemove', moveMap)
+        }
+    }
 });
 
 document.addEventListener('mouseup', function (event) {
@@ -1549,7 +1604,7 @@ document.addEventListener('mouseup', function (event) {
     document.removeEventListener('mousemove', moveMap)
     setTimeout(() => {
         clikeableStatus = true
-    }, 150)
+    }, 250)
 });
 function setMovementMap(bboxElement, lessScale, element) {
     let puntos = document.querySelectorAll(".svg-ubicacion-cafe")
@@ -1713,18 +1768,18 @@ for (let m = 0; m < municipios.length; m++) {
 }
 
 
-window.addEventListener("resize", function () {
+/* window.addEventListener("resize", function () {
     let puntoUbicacion = document.querySelectorAll(".punto-ubicacion")
     for (let x = 0; x < puntoUbicacion; x++) {
 
     }
-})
+}) */
 
 
 
 
 
-window.addEventListener("resize", function () {
+/* window.addEventListener("resize", function () {
     lessPorcent = (((document.body.scrollHeight) / (screen.availHeight - 87)))
     ajustPoints()
 })
@@ -1733,22 +1788,14 @@ function ajustPoints() {
     let puntos = document.querySelectorAll(".svg-ubicacion-cafe")
 
     for (let x = 0; x < puntos.length; x++) {
-        puntos[x].style.width = (lastWidthPoint * lessPorcent) + "px"
+        // puntos[x].style.zoom = (lastWidthPoint * lessPorcent) + "%"
+        puntos[x].style.zoom = (widthPoint / ((mainDivMapa.style.zoom.replace("%", "") / zoom) )) + "%"
+
     }
 }
-
-let puntosMapa = document.querySelectorAll(".svg-ubicacion-cafe")
-for (let i = 0; i < puntosMapa.length; i++) {
-    puntosMapa[i].addEventListener('click', function () {
-        alert(i)
-    })
-
-}
-
-
 window.addEventListener("scroll", function () {
     console.log("xdd")
-})
+}) */
 
 Mousetrap.bind('ctrl+g', function () {
     if ("geolocation" in navigator) {
@@ -1790,7 +1837,4 @@ function mouseScroll(event) {
 }
 
 // Agregar un event listener para el evento de desplazamiento del ratón
-/* document.addEventListener('wheel', mouseScroll); */
-
-
-
+document.addEventListener('wheel', mouseScroll);

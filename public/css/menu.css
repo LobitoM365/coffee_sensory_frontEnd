@@ -370,7 +370,7 @@ body {
 }
 
 .nav-main .contenido-analisis {
-    padding: 25px 20px 25px 15px;
+    padding: 10px 0px 10px 0px;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -382,7 +382,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 15px;
+    background-color: whitesmoke;
+    box-shadow: 0px 0px 5px rgb(199, 199, 199) inset;
 }
 
 .nav-main .notificacion-analisis:hover {
@@ -394,6 +396,18 @@ body {
     color: black;
 }
 
+.container-data {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.container-data h4 {
+    font-weight: 500;
+
+}
+
 .nav-main .informacion-analisis {
     display: flex;
     gap: 20px;
@@ -402,7 +416,7 @@ body {
 .nav-main .asignaciones-notificaciones {
     overflow: auto;
     height: 100%;
-    max-width: 320px;
+    max-width: 380px;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -422,18 +436,19 @@ body {
 }
 
 .nav-main .img-analisis {
-    width: 60px;
+    margin-top: 10px;
+    width: 65px;
     border-radius: 8px;
 }
 
 .nav-main .asignado,
 .nav-main .pendiente {
-    padding: 4px;
+    padding: 2px 4px 2px 4px;
     border-radius: 4px;
 }
 
 .nav-main .asignado {
-    background-color: orange;
+    background-color: rgb(254, 197, 90);
 }
 
 .nav-main .pendiente {
@@ -441,17 +456,21 @@ body {
 }
 
 .nav-main .input-proceder-analisis {
+    color: white;
     width: 60%;
     padding: 8px 10px;
     font-size: 1em;
     cursor: pointer;
-    background-color: rgb(51, 67, 87);
+    background-color: rgb(12, 92, 114);
     border: unset;
     border-radius: 4px;
+    margin-right: 60px;
 }
 
+
+
 .nav-main .input-proceder-analisis:hover {
-    background-color: rgb(26, 33, 45)
+    background-color: rgb(17, 124, 143)
 }
 
 .nav-main .h4-notificaciones-vacias {

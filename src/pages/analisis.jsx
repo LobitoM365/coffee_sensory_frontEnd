@@ -1050,6 +1050,15 @@ export const Analisis = (userInfo) => {
                 } else {
                     generatePdf(filterReport, response.data.data, keys)
                 }
+            } else if (response.data.find_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.find_error,
+                        "tittle": "No se encontró!"
+                    }
+                )
             }
 
 

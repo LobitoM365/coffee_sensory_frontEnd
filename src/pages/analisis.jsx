@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Tablas } from "../componentes/tablas.jsx"
-import Api from '../componentes/Api.jsx'
+import Api, { host } from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 import { FormResultados } from '../componentes/FormResultados.jsx'
 
@@ -1097,7 +1097,7 @@ export const Analisis = (userInfo) => {
             table: { ...cloneTable }
         };
         try {
-            const response = await fetch('http://localhost:8000/generateReporte.php', {
+            const response = await fetch('http://' + host + ':8000/generateReporte.php', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'

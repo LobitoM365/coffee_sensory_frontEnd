@@ -1322,7 +1322,7 @@ let puntos = [
     }
 ]
 
-fetch("http://localhost:3000/api/muestra/geolocalizar/certificada", {
+fetch("http://10.193.129.44:3000/api/muestra/geolocalizar/certificada", {
     method: "POST",
     headers: {
         "Content-Type": "application/json" // La clave debe ser "Content-Type"

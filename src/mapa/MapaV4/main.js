@@ -1736,6 +1736,16 @@ function ajustPoints() {
         puntos[x].style.width = (lastWidthPoint * lessPorcent) + "px"
     }
 }
+
+let puntosMapa = document.querySelectorAll(".svg-ubicacion-cafe")
+for (let i = 0; i < puntosMapa.length; i++) {
+    puntosMapa[i].addEventListener('click', function () {
+        alert(i)
+    })
+
+}
+
+
 window.addEventListener("scroll", function () {
     console.log("xdd")
 })

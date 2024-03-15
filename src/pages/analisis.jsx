@@ -57,7 +57,8 @@ export const Analisis = (userInfo) => {
                 values: ["nombre"],
                 opciones: [{ nombre: "certificar" }, { nombre: "practica" }],
                 upper_case: true,
-                key: "nombre"
+                key: "nombre",
+                visibility: false
             }, muestras_id: {
                 type: "select",
                 referencia: "Muestra",
@@ -71,7 +72,7 @@ export const Analisis = (userInfo) => {
                 values: ["numero_documento", "nombre"],
                 upper_case: true,
                 key: "id",
-                rol : ["administrador"]
+                rol: ["administrador"]
             },
             usuario_formato_fisico: {
                 type: "select",
@@ -79,7 +80,7 @@ export const Analisis = (userInfo) => {
                 values: ["numero_documento", "nombre"],
                 upper_case: true,
                 key: "id",
-                rol : ["administrador"]
+                rol: ["administrador"]
             },
 
         }
@@ -1067,16 +1068,16 @@ export const Analisis = (userInfo) => {
             }
         } */
     async function generatePdf(filter, dataTable, table) {
-        let cloneTable = {...table}
+        let cloneTable = { ...table }
         delete cloneTable["permission_formato_fisico"]
         delete cloneTable["permission_formato_sca"]
         delete cloneTable["actualizar"]
         delete cloneTable["reporte"]
-        console.log(cloneTable,"hahsd")
+        console.log(cloneTable, "hahsd")
         const data = {
             dataTable,
             filter,
-            table : {...cloneTable}
+            table: { ...cloneTable }
         };
         try {
             const response = await fetch('http://localhost:8000/generateReporte.php', {

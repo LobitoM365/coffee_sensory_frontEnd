@@ -9,7 +9,12 @@
     justify-content: space-between;
     background-color: transparent;
     position: fixed;
+<<<<<<< HEAD
     z-index: 999;
+=======
+    z-index: -1;
+    width: calc(100% - 30px);
+>>>>>>> 28dcd6fec7c344a7c4845384bd66a86fe2f0a669
 }
 
 

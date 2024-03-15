@@ -45,8 +45,8 @@ export const Fincas = (userInfo) => {
                 values: ["numero_documento", "nombre"],
                 upper_case: true,
                 key: "id",
-                visibility: false,
-                rol: ['administrador'],
+                rol : ["administrador"]
+
             },
             departamentos_id: {
                 type: "select",
@@ -534,7 +534,6 @@ export const Fincas = (userInfo) => {
 
     }
     async function buscarFinca(id) {
-
         const response = await Api.get("finca/buscar/" + id);
         if (response.data.status == true) {
             setfincaEdit(response.data.data[0])
@@ -562,7 +561,7 @@ export const Fincas = (userInfo) => {
     }, [])
     return (
         <>
-            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} userInfo={userInfo} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} userInfo={userInfo.userInfo} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

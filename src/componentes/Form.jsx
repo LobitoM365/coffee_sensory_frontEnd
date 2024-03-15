@@ -122,9 +122,9 @@ export const Form = forwardRef((data, ref) => {
                 cloneDataSelect[key] = dataInputs[key]["opciones"][s][dataInputs[key]["key"]]
                 coincidencia = true
                 parent = selectOptions[s].parentNode;
-                if(functionExecute){
-                    if(execute){
-                        if(execute == "key"){
+                if (functionExecute) {
+                    if (execute) {
+                        if (execute == "key") {
                             functionExecute(dataInputs[key]["opciones"][s][dataInputs[key]["key"]])
                         }
                     }
@@ -270,8 +270,11 @@ export const Form = forwardRef((data, ref) => {
                                     {
                                         inputs.map((key, index) => {
                                             if (data.userInfo && dataInputs[key]["rol"]) {
-                                                if (!dataInputs[key]["rol"].includes(data.userInfo.rol)) {
-                                                    return
+                                                console.log(data.userInfo,"ahahahhahah")
+                                                if (data.userInfo != undefined) {
+                                                    if (!dataInputs[key]["rol"].includes(data.userInfo.rol)) {
+                                                        return
+                                                    }
                                                 }
                                             }
                                             if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "ubicacion" || dataInputs[key]["type"] === "normal") {
@@ -364,10 +367,10 @@ export const Form = forwardRef((data, ref) => {
 
                                                                             return <h4 key={indexSelect} onClick={(e) => {
                                                                                 clearOptionsSelect(key);
-                                                                                if(typeof functionExecute == "function"){
+                                                                                if (typeof functionExecute == "function") {
                                                                                     functionExecute(execute == "key" ? dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] : "");
                                                                                 }
-                                                                                
+
                                                                                 const parentElement = e.target.parentElement.parentElement;
                                                                                 const divOptions = parentElement.querySelectorAll(".opciones-input-select")
                                                                                 divOptions[0] ? divOptions[0].style.display = "none" : ""; let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); data.setStatusSelect(false); data.setStatusSelectDefault(false); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]];

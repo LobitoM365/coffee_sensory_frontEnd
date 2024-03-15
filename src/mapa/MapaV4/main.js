@@ -1768,9 +1768,9 @@ function mouseScroll(event) {
         mainDivMapa.style.zoom = zoomNow + "%"
         for (let x = 0; x < puntos.length; x++) {
             let width = parseFloat(puntos[x].style.width)
-            
+
             console.log(Math.floor((widthPoint / (mainDivMapa.style.zoom.replace("%", "") / zoom))))
-            puntos[x].style.zoom = (widthPoint / ((mainDivMapa.style.zoom.replace("%", "") / zoom) )) + "%"
+            puntos[x].style.zoom = (widthPoint / ((mainDivMapa.style.zoom.replace("%", "") / zoom))) + "%"
         }
     } else {
         mainDivMapa.style.zoom = 5 + "%"
@@ -1780,4 +1780,7 @@ function mouseScroll(event) {
 }
 
 // Agregar un event listener para el evento de desplazamiento del ratón
-document.addEventListener('wheel', mouseScroll);
+/* document.addEventListener('wheel', mouseScroll); */
+
+
+

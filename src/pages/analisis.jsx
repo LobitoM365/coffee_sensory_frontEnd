@@ -462,6 +462,7 @@ export const Analisis = (userInfo) => {
                 if (formato.data.status == true) {
                     setDataModalResultado(formato.data.data)
                     const resultado = await Api.post("resultado/buscar/" + formato.data.data[0].id + "");
+                    console.log(resultado,"resulttt")
                     if (resultado.data.status == true) {
                         setDataModalResultadoAnalisis(resultado.data.data)
                     } else {

@@ -7,11 +7,9 @@
 .menu-horizontal-inicio {
     display: flex;
     justify-content: space-between;
-    padding: 15px;
     background-color: transparent;
     position: fixed;
     z-index: 999;
-    width: calc(100% - 30px);
 }
 
 
@@ -34,3 +32,23 @@
     height: 70px;
 
 }
+
+.direction-menu {
+    right: 15px;
+    top: 32px;
+    position: absolute;
+}
+
+.img-menu {
+    top: 15px;
+    left: 15px;
+    border-radius: 100%;
+}
+
+.logo {
+    width: max-content;
+    height: max-content;
+    border-radius: 100%;
+    overflow: hidden;
+}
+

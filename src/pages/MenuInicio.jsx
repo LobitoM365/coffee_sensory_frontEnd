@@ -10,10 +10,13 @@ export const MenuInicio = ({ userInfo }) => {
         <>
             <link rel="stylesheet" href="css/menuInicio.css" />
 
-            <div className="menu-horizontal-inicio">
+            <div className="menu-horizontal-inicio img-menu">
                 <div className="logo">
-                    <img className='logo-menu' src="../../public/img/logo-coffee-sensory.png" alt="" />
+                    <img className='logo-menu' src="/public/img/logo-coffee-sensory.png" alt="" />
                 </div>
+            </div>
+            <div className="menu-horizontal-inicio direction-menu">
+
                 <nav>
                     <ul>
                         <li>
@@ -35,8 +38,8 @@ export const MenuInicio = ({ userInfo }) => {
                         </li>
                     </ul>
                 </nav>
-
             </div>
+
             <Outlet />
         </>
     )

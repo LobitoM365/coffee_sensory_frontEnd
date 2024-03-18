@@ -59,7 +59,6 @@ h3{
   margin: auto;
   width: 100%;
   height: 60vh;
-  
   grid-area: grafica;
 }
 
@@ -77,7 +76,7 @@ h3{
   border: 1px solid rgb(37, 36, 36);
   box-shadow:0px 0px 3px 0.5px rgb(80, 80, 80);
   position: relative;
-  top: 20%;
+  top: 25%;
   right: 10%;
 }
 .Tablecolors2{
@@ -94,12 +93,12 @@ h3{
   border: 1px solid rgb(37, 36, 36);
   box-shadow:0px 0px 3px 0.5px rgb(80, 80, 80);
   position: relative;
-  top: 20%;
+  top: 28%;
   right: 25%;
 }
 
 
-@media only screen and (min-width: 768px) and (max-width: 1240px) {
+@media only screen and (min-width: 800px) and (max-width: 1240px) {
     .component {
       width: 100%;
       height: calc(100% - 40px);
@@ -153,5 +152,79 @@ h3{
       }
       
 
+  }
+  @media only screen and (max-width: 800px) {
+    .Tablecolors {
+      display: flex;
+      flex-direction: row;
+      grid-area: colores;
+      width: 70%; /* Ancho máximo del contenedor */
+      overflow: hidden;
+      margin: 3PX;
+      position: absolute;
+      top: 80% ;
+      left: 18%;
+      bottom: unset;
+      /* background-color: red; */
+    }
+    .BoxMain {
+      width: calc(100%);
+      height: 80vh;
+      
+      display: grid;
+      grid-template-areas:
+        'grafica colores'
+        /* Puedes ajustar las proporciones según tus necesidades */
+      ;
+      grid-template-rows: 85% 0% ;
+      /* gap: 5px; */
+      padding-left: 15px;
+      bottom: unset;
+    }
+  }
+  @media only screen and (max-width: 650px) {
+    .Tablecolors {
+      display: grid;
+      grid-area: colores;
+      min-width: 50%;/* Ancho máximo del contenedor */
+      height: 70px;
+      overflow: hidden;
+      margin-left: 5%;
+      grid-template-columns: auto auto;
+     /*  position: relative; */
+      top: 85%;
+      left: 8%;
+      padding: 2px 2px; /* Espacio entre las celdas */
+      bottom: 8%;
+      
+    }
+    /* .BoxOptions{
+      padding: 1px;
+    } */
+    
+    .component{
+      
+      height: calc(100%);
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .BoxMain {
+      width: calc(100%);
+      height: 60vh;
+      
+      display: grid;
+      grid-template-areas:
+        'grafica colores'
+        /* Puedes ajustar las proporciones según tus necesidades */
+      ;
+      grid-template-columns: 50% 50% ;
+      /* gap: 5px; */
+      padding-left: 15px;
+      bottom: unset;
+      margin-top: -70px;
+      
+    }
+     
+    
   }
   

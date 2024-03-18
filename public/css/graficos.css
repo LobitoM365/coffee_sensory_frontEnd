@@ -172,7 +172,7 @@
     border-radius: 3px;
     box-shadow: 1px 1px 5px 1.5px gray;
     width: 80%;
-    height: 50vh;
+    height: 60vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -256,4 +256,46 @@
     }
 
 
+}
+@media only screen and (max-width: 768){
+    .formulario{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: auto; 
+        background-color: #4ec74e;
+    }
+    /* #fecha2,#muestras_id2,#anio2,#limite2{
+        pointer-events: none;
+    } */
+    .input{
+        
+        padding: 10px;
+        font-size: 1em;
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 10px;
+        outline: none;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        border-bottom:1px solid gray;
+        border-radius: 3px;
+        
+    }
+    .input:hover{
+        transition: border 2px linear;
+        animation: colores 10s infinite; /* 4s para hacer que el ciclo completo de colores dure 4 segundos */
+        background-color: rgb(239, 245, 245);
+        border-left: none;
+        border-right: none;
+        border-top: none;
+    }
+    .input:focus{
+        border: 0.7px solid rgb(38, 132, 255);
+    }
+    .limit{
+        width: 100px;
+        
+    }
 }

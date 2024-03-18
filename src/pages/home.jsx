@@ -224,24 +224,7 @@ export const Home = ({ userInfo }) => {
            </div>
            
         </div>
-        <div className="Tablecolors2">
-            <div className="BoxOptions-none">
-              <div className="colors extraordinario"></div>
-              <h3>Extraordinario</h3>
-            </div>
-            <div className="BoxOptions-none">
-              <div className="colors excelente"></div>
-              <h3>Excelente</h3>
-            </div>
-            <div className="BoxOptions-none">
-              <div className="colors MyBueno"></div>
-              <h3>Muy Bueno</h3>
-            </div>
-            <div className="BoxOptions-none">
-              <div className="colors bueno"></div>
-              <h3>Bueno</h3>
-            </div>
-          </div>
+       
   
         
       </>
@@ -317,26 +300,26 @@ export const Home = ({ userInfo }) => {
                 value={inputValue.limite}
               />
             </div>
-  
+                  
             {/* Asegúrate de que Graficos y GraficoCircular reciban los datos correctamente */}
             <Graficos user={user?.id} inputData={inputValue} />
             <GraficoCircular user={user?.id} inputData={inputValue} />
           </div>
   
           <div className="Tablecolors">
-            <div className="BoxOptions">
+            <div className="BoxOptions one">
               <div className="colors extraordinario"></div>
               <h3>Extraordinario</h3>
             </div>
-            <div className="BoxOptions">
+            <div className="BoxOptions two">
               <div className="colors excelente"></div>
               <h3>Excelente</h3>
             </div>
-            <div className="BoxOptions">
+            <div className="BoxOptions three">
               <div className="colors MyBueno"></div>
               <h3>Muy Bueno</h3>
             </div>
-            <div className="BoxOptions">
+            <div className="BoxOptions for">
               <div className="colors bueno"></div>
               <h3>Bueno</h3>
             </div>

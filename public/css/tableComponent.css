@@ -577,9 +577,9 @@
     outline: none;
 }
 
-.td-table-print {
+/* .td-table-print {
     word-break: break-all;
-}
+} */
 
 .limit-generate-documento {
     width: 100%;
@@ -643,8 +643,8 @@
 .button-table-normal {
     width: 100px;
     max-width: 100%;
-    word-wrap: break-word;
-    word-break: break-all;
+/*     word-wrap: break-word;
+    word-break: break-all; */
 }
 
 

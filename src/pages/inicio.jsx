@@ -338,6 +338,7 @@ export const Inicio = () => {
         iframe.addEventListener('load', function () {
             $(iframe.contentDocument).on("click", ".svg-point", async function () {
                 const response = await Api.post("analisis/buscar/" + $(this).attr("data-point"));
+                console.log(response)
                 if (response.data.status == true) {
                     const filterMuestra = {
                         "filter": {

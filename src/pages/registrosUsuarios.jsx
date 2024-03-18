@@ -111,42 +111,53 @@ export const RegistrosUsuarios = () => {
     const keys = {
         "us_id": {
             "referencia": "Id",
+            "priority": 1,
         },
         "nombre": {
             "referencia": "Nombre",
-            "upper_case": true
+            "upper_case": true,
+            "priority": 2,
         },
         "apellido": {
             "referencia": "Apelido",
-            "upper_case": true
+            "upper_case": true,
+            "priority": 3,
         },
         "numero_documento": {
             "referencia": "Numero de documento",
-            "upper_case": true
+            "upper_case": true,
+            "priority": 4,
         },
         "telefono": {
-            "referencia": "Teléfono"
+            "referencia": "Teléfono",
+            "priority": 5,
         },
         "correo_electronico": {
-            "referencia": "Correo electrónico"
+            "referencia": "Correo electrónico",
+            "priority": 6,
         },
         "tipo_documento": {
             "referencia": "Tipo de documento",
-            "upper_case": true
+            "upper_case": true,
+            "priority": 7,
         },
         "rol": {
             "referencia": "Rol",
-            "upper_case": true
+            "upper_case": true,
+            "priority": 8,
         },
         "cargo": {
             "referencia": "Cargo",
-            "upper_case": true
+            "upper_case": true,
+            "priority": 9,
         },
         "estado": {
-            "referencia": "Estado"
+            "referencia": "Estado",
+            "priority": 10,
         },
         "actualizar": {
-            "referencia": "actualizar"
+            "referencia": "actualizar",
+            "priority": 11,
         }
     }
     const filterEstado = {
@@ -553,6 +564,8 @@ export const RegistrosUsuarios = () => {
     return (
         <>
             <Tablas getDataPdf={getDataPdf} clearInputs={clearInputs} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+
+            
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

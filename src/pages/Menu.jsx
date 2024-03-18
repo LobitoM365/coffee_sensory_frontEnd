@@ -302,7 +302,7 @@ export const Menu = (data) => {
 
     return (
 
-        <div className={"main-content " + (!data.valueDarkMode ? "lightMode" : "darkMode")}>
+        <div style={{height : "100%", bottom : "0"}} className={"main-content " + (!data.valueDarkMode ? "lightMode" : "darkMode")}>
 
             <link rel="stylesheet" href="/public/css/menu.css" />
             <link rel="stylesheet" href="/public/css/loader.css" />

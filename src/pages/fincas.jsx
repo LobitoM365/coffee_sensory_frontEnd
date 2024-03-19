@@ -353,6 +353,11 @@ export const Fincas = (userInfo) => {
                             "operador": "!=",
                             "value": "0",
                             "require": "and"
+                        },
+                        "us.nombre": {
+                            "operador": "!=",
+                            "value": "Administrador",
+                            "require": "and"
                         }
                     }
                 }
@@ -569,12 +574,32 @@ export const Fincas = (userInfo) => {
     }
     async function buscarFinca(id) {
         const response = await Api.get("finca/buscar/" + id);
-        if (response.data.status == true) {
-            setfincaEdit(response.data.data[0])
-        } else if (response.data.find_error) {
-
-        } else {
-
+        try {
+            if (response.data.status == true) {
+                getMunicipios(response.data.data[0].departamentos_id)
+                getVeredas(response.data.data[0].municipios_id)
+                setfincaEdit(response.data.data[0])
+            } else if (response.data.find_error) {
+                setErrors({})
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.update_error,
+                        "tittle": "Inténtalo de nuevo"
+                    }
+                )
+            }
+        } catch (error) {
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "warning",
+                    description: "Error interno del servidor: " + e,
+                    "tittle": "Inténtalo de nuevo"
+                }
+            )
+            console.error('ERROR GET FINCA: ', e);
         }
     }
     async function updateTable() {
@@ -684,6 +709,14 @@ export const Fincas = (userInfo) => {
             // Abrir el PDF en una nueva pestaña del navegador
             window.open(blobUrl, '_blank');
         } catch (error) {
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "false",
+                    description: "Error interno del servidor: " + error,
+                    "tittle": "Inténtalo de nuevo"
+                }
+            )
             console.error('Error:', error);
         }
     }

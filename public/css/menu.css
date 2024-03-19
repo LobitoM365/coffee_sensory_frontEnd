@@ -137,7 +137,7 @@ body {
 
 .nav-horizontal ul li ul a:hover,
 .nav-main .footer-nav li:hover {
-    background-color: rgb(102, 122, 138);
+    background-color: rgba(0, 170, 108, 0.611);
 }
 
 .nav-main .icon-li-nav-horizontal {
@@ -160,7 +160,7 @@ body {
     height: 18px;
     border-radius: 100px;
     padding: 4px;
-    background-color: rgb(38, 85, 126);
+    background-color: rgb(3, 86, 103);
     display: flex;
     align-items: center;
 }
@@ -224,7 +224,7 @@ body {
 }
 
 .nav-main .selected-li {
-    background-color: rgb(60, 77, 100);
+    background-color: rgba(0, 135, 81, 0.829);
 }
 
 /* Estilos para nav Horizontal */

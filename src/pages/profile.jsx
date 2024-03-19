@@ -167,6 +167,23 @@ export const Profile = (data) => {
     async function updateUser() {
         await fecthUpdateUser()
     }
+
+    async function uploadImg() {
+        let value = document.getElementById("imgUpload")
+        if (value) {
+            if (value.files[0]) {
+                const formData = new FormData();
+                formData.append("img", value.files[0])
+
+                formData.forEach((value, key) => {
+                    console.log(`${key}: ${value}`);
+                });
+
+                const response = await Api.post("/img/icono/cargar", formData);
+                console.log(response, "reposnseImggggggggggg")
+            }
+        }
+    }
     return (
         <>
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
@@ -182,6 +199,8 @@ export const Profile = (data) => {
                         </div>
                         <div className="opciones-formulario">
                             <button onClick={updateForm} className='button-opcion-formulario' type='button'>{form == 0 ? "Cambiar Contraseña" : "Actualizar Perfil"}</button>
+                            <button onClick={() => { uploadImg() }} className='button-opcion-formulario' type='button'>Imagen</button>
+                            <input id='imgUpload' type="file" />
                         </div>
                         <div className="tex-info-usuario">
                             <h5>{user.nombre ? (user.nombre.replace(/(?:^|\s)\S/g, match => match.toUpperCase()) + " " + user.apellido.replace(/(?:^|\s)\S/g, match => match.toUpperCase())) : mensaje.find_error} </h5>

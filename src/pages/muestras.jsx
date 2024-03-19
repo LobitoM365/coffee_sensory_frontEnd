@@ -143,6 +143,18 @@ export const Muestras = () => {
         "mu_id": {
             "referencia": "Id",
         },
+        "nombre_completo": {
+            "referencia": "Propietario",
+            "upper_case": true
+        },
+        "finca": {
+            "referencia": "Finca",
+            "upper_case": true
+        },
+        "lote": {
+            "referencia": "lote",
+            "upper_case": true
+        },
         "codigo_externo": {
             "referencia": "Codigo Externo",
             "upper_case": true
@@ -580,6 +592,14 @@ export const Muestras = () => {
             // Abrir el PDF en una nueva pestaña del navegador
             window.open(blobUrl, '_blank');
         } catch (error) {
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "false",
+                    description: "Error interno del servidor: " + error,
+                    "tittle": "Inténtalo de nuevo"
+                }
+            )
             console.error('Error:', error);
         }
     }

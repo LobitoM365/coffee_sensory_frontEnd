@@ -663,6 +663,15 @@ export const Analisis = (userInfo) => {
                         }
                     }
                 )
+            } else if (axios.data.find_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.find_error,
+                        "tittle": '¡Verfiquie antes!'
+                    }
+                )
             }
 
 
@@ -867,12 +876,33 @@ export const Analisis = (userInfo) => {
         inputsForm["usuario_formato_fisico"]["visibility"] = false
 
         const response = await Api.post("analisis/buscar/" + id);
-        if (response.data.status == true) {
-            setUsuarioEdit(response.data.data[0])
-        } else if (response.data.find_error) {
+        try {
 
-        } else {
+            if (response.data.status == true) {
+                setUsuarioEdit(response.data.data[0])
+            } else if (response.data.find_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.find_error,
+                        "tittle": "Inténtalo de nuevo",
+                        continue: {
 
+                        }
+                    }
+                )
+            }
+        } catch (error) {
+            console.error('ERROR GET USER: ', error);
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "false",
+                    description: 'Error interno del servidor',
+                    "tittle": "Ocurrión un error!",
+                }
+            )
         }
 
     }
@@ -1116,6 +1146,14 @@ export const Analisis = (userInfo) => {
             // Abrir el PDF en una nueva pestaña del navegador
             window.open(blobUrl, '_blank');
         } catch (error) {
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "false",
+                    description: "Error interno del servidor: " + error,
+                    "tittle": "Inténtalo de nuevo"
+                }
+            )
             console.error('Error:', error);
         }
     }

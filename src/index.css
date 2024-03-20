@@ -1,16 +1,166 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+* {
+    padding: 0;
+    margin: 0;
 }
 
+
+.darkMode .input-update-profile,
+.darkMode .input-update-profile::placeholder {
+    color: white;
+}
+
+/* .darkMode #navHorizontal {
+    background-color: rgb(31, 38, 60);
+} */
+
+.darkMode #contenidoComponent {
+    background-color: rgb(22, 26, 43);
+
+}
+
+.darkMode #divContentFormResult {
+    background-color: rgb(22, 26, 43);
+    color: white;
+
+}
+
+.darkMode .nav-vertical {
+    background-color: rgb(31, 38, 60);
+    color: white;
+    border: unset;
+    fill: white;
+}
+
+.darkMode .head-info-profile,
+.darkMode .form-profile {
+    background-color: rgb(31, 38, 60);
+    color: white;
+    border: unset;
+    fill: white;
+}
+
+.darkMode .nav-vertical .icon-opciones-usuario {
+    background-color: rgb(31, 38, 60);
+    color: white;
+    border: unset;
+    fill: white;
+}
+
+.darkMode .table-component {
+    background-color: rgb(31, 38, 60);
+    color: white;
+    fill: white;
+}
+
+.darkMode .thead-table {
+    background-color: rgb(31, 38, 60);
+    color: white;
+
+}
+
+.darkMode .div-filters {
+    background-color: rgb(31, 38, 60);
+    color: white;
+    fill: white;
+
+}
+
+.darkMode input {
+    background-color: rgb(31, 38, 60);
+}
+
+.darkMode .button-register-table {
+    background-color: rgb(255, 64, 108);
+}
+
+.darkMode .div-input-documento {
+    background-color: rgb(22, 26, 43);
+}
+
+.darkMode .nav-main .opciones-usuario,
+.darkMode .nav-main .opciones-usuario button,
+.darkMode .nav-main .link-opciones-usuarios {
+    background-color: rgb(22, 26, 43);
+    fill: white;
+    color: white;
+}
+
+.darkMode .nav-main .selected-li-perfil {
+    background-color: rgb(203, 141, 7);
+}
+
+.darkMode .nav-main .selected-li-perfil .link-opciones-usuarios {
+    background-color: unset;
+}
+
+.darkMode .div-paginate {
+    color: white;
+}
+
+.darkMode .option-update {
+    fill: rgb(255, 64, 108);
+}
+
+.darkMode .nav-main .selected-li svg {
+    fill: white;
+}
+
+.darkMode .nav-main .selected-li .hamburguer-centered {
+    background-color: rgb(203, 141, 7);
+}
+
+.darkMode .table-formato-fisico-template td,
+.darkMode .table-formato-fisico-template th {
+    border-color: rgb(202, 199, 199);
+}
+
+.darkMode .div-select svg {
+    fill: white;
+}
+
+.darkMode #divContentFormResult svg {
+    fill: white;
+}
+
+.darkMode .table-attribute-button-condition {
+    background-color: rgb(203, 141, 7);
+}
+
+.darkMode .opciones-input-select,
+.darkMode .opciones-input-select input,
+.darkMode .input-select-search input {
+    background-color: rgb(22, 26, 43);
+    color: white;
+}
+
+.darkMode .input-select-search::placeholder {
+    background-color: rgb(22, 26, 43);
+    color: white;
+}
+
+.darkMode #divContentForm,
+.darkMode #divForm {
+    background-color: rgb(22, 26, 43);
+    color: white;
+}
+
+.darkMode .icon-quit-svg-form {
+    fill: white;
+}
+
+.darkMode .load-table {
+    background-color: rgb(31, 38, 60);
+    color: white;
+}
+
+.darkMode .svg-plus-table {
+    fill: white;
+}
+
+.darkMode .component{
+    background-color: unset;
+}
+.darkMode #graficos {
+    background-color: rgb(31, 38, 60);
+    color: white;
+}

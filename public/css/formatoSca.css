@@ -1,0 +1,14 @@
+.iframe{
+    width: 1900px;
+    max-width:  100%;
+    background-color: transparent;
+}
+.component{
+    background-color: transparent;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+#sliderContent{
+    width: 1300px;
+}

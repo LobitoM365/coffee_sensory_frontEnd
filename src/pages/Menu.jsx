@@ -4,14 +4,13 @@ import { Link, Outlet, json, useLocation } from "react-router-dom"
 import Api from '../componentes/Api.jsx';
 import { validateViews } from "../componentes/ValidateViews.jsx";
 import { formatDate } from "../componentes/tablas.jsx";
-
+import { host } from "../componentes/Api.jsx";
 
 export const Menu = (data) => {
 
     useEffect(() => {
-        const { socket } = data;
 
-        if (socket) {
+        if (data.socket) {
             const perfilChange = (message) => {
                 console.log("el perfil cambioooo", message)
                 getUser();
@@ -25,15 +24,15 @@ export const Menu = (data) => {
                 getAgignaciones();
             };
 
-            socket.on('perfilChange', perfilChange);
-            socket.on('ok', ok);
-            socket.on("asignAnalisis", asignAnalisis);
+            data.socket.on('perfilChange', perfilChange);
+            data.socket.on('ok', ok);
+            data.socket.on("asignAnalisis", asignAnalisis);
 
             // Limpiar los suscriptores de eventos cuando el componente se desmonte
             return () => {
-                socket.off('perfilChange', perfilChange);
-                socket.off('ok', ok);
-                socket.off('asignAnalisis', asignAnalisis);
+                data.socket.off('perfilChange', perfilChange);
+                data.socket.off('ok', ok);
+                data.socket.off('asignAnalisis', asignAnalisis);
             };
         }
     }, [data.socket]);
@@ -76,7 +75,6 @@ export const Menu = (data) => {
                 }
             }
             const response = await Api.post("formatos/listarPendientes", filterFormato);
-            console.log(response, "analisisssaaaaaaaaaaaaaaaaaaaaaaa")
             if (response.data.status == true) {
                 setAsignaciones(response.data.data)
             }
@@ -302,7 +300,7 @@ export const Menu = (data) => {
 
     return (
 
-        <div style={{height : "100%", bottom : "0"}} className={"main-content " + (!data.valueDarkMode ? "lightMode" : "darkMode")}>
+        <div style={{ height: "100%", bottom: "0" }} className={"main-content " + (!data.valueDarkMode ? "lightMode" : "darkMode")}>
 
             <link rel="stylesheet" href="/public/css/menu.css" />
             <link rel="stylesheet" href="/public/css/loader.css" />
@@ -472,7 +470,22 @@ export const Menu = (data) => {
                                 </svg> <h5 className="change-hamburguer-quit ">Análisis</h5>
                                 </li>
                             </Link>
-
+                            <Link title="Análisis" to={"/dashboard/formatos/registros"} onClick={() => { selectedLi("/dashboard/formatos/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/formatos/registros" ? "selected-li" : ""}`}>
+                                <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 335.000000 291.000000" preserveAspectRatio="xMidYMid meet">
+                                    <metadata>
+                                        Created by potrace 1.16, written by Peter Selinger 2001-2019
+                                    </metadata>
+                                    <g transform="translate(0.000000,291.000000) scale(0.100000,-0.100000)" stroke="none">
+                                        <path d="M95 2838 c10 -46 41 -94 81 -124 115 -88 287 -21 319 124 6 30 5 32 -22 32 -24 -1 -32 -9 -53 -53 -21 -44 -32 -55 -72 -71 -42 -17 -52 -18 -90 -7 -49 15 -93 58 -101 101 -6 26 -11 30 -38 30 -29 0 -30 -1 -24 -32z" />
+                                        <path d="M1570 2853 c1 -64 80 -154 151 -173 98 -27 218 38 244 130 3 14 9 33 12 43 4 15 0 18 -27 15 -27 -2 -34 -9 -45 -40 -15 -45 -34 -64 -81 -84 -74 -31 -172 18 -189 95 -5 26 -11 31 -36 31 -21 0 -29 -5 -29 -17z" />
+                                        <path d="M1180 2430 c0 -330 -2 -345 -59 -393 -39 -33 -115 -37 -162 -10 -27 16 -69 84 -69 111 0 7 -13 12 -29 12 -20 0 -30 -6 -34 -20 -3 -11 -17 -25 -31 -31 -20 -10 -30 -9 -51 5 -14 9 -25 23 -25 31 0 10 -10 15 -30 15 -24 0 -30 -4 -30 -22 0 -13 14 -37 30 -55 38 -40 87 -51 131 -29 39 19 39 19 39 3 0 -17 47 -60 87 -81 78 -39 202 -9 246 60 12 19 27 32 32 30 60 -26 83 -28 119 -11 36 17 66 58 66 90 0 24 -56 20 -63 -5 -3 -11 -17 -25 -31 -31 -20 -10 -30 -9 -51 5 l-25 16 0 305 0 305 -30 0 -30 0 0 -300z" />
+                                        <path d="M280 1603 c0 -85 20 -226 46 -332 45 -181 124 -342 230 -467 30 -35 54 -65 54 -68 0 -2 -91 -3 -202 -2 l-201 2 33 -25 c19 -14 76 -59 127 -98 l94 -73 573 0 574 0 121 93 c66 50 121 94 121 97 0 3 -89 5 -198 5 l-198 0 52 62 c29 34 61 74 70 90 10 15 19 30 20 32 2 2 24 -7 51 -20 83 -40 225 -22 272 34 10 13 30 17 74 17 60 0 60 0 42 -20 -20 -22 -32 -111 -21 -154 3 -14 20 -42 38 -61 l31 -36 -25 -27 c-39 -41 -48 -66 -48 -125 0 -42 6 -63 26 -93 15 -21 32 -42 38 -46 7 -5 2 -17 -15 -35 -15 -15 -32 -38 -38 -50 -14 -28 -14 -113 0 -150 12 -33 73 -91 104 -99 11 -3 178 -4 371 -2 l349 3 67 27 c242 97 393 301 413 559 16 201 -70 399 -229 527 -98 79 -202 124 -323 142 -56 8 -84 18 -120 43 -56 39 -110 63 -173 77 -59 13 -201 13 -276 0 -65 -12 -254 -68 -268 -80 -4 -5 -31 3 -60 16 -28 13 -64 24 -80 24 -26 0 -28 2 -23 33 3 17 9 76 13 130 l6 97 -756 0 -756 0 0 -47z m1446 -55 c-3 -24 -8 -68 -11 -98 -3 -30 -8 -70 -12 -89 -6 -34 -6 -34 27 -28 18 4 51 2 74 -4 l40 -11 -34 -15 c-19 -8 -56 -21 -81 -29 l-46 -14 -31 -88 c-30 -85 -30 -88 -13 -117 11 -20 34 -36 66 -49 28 -10 70 -27 95 -36 l44 -18 -41 -11 c-57 -15 -127 1 -177 41 -37 30 -40 31 -50 14 -43 -74 -94 -140 -149 -194 l-64 -63 -284 -4 c-364 -5 -365 -5 -426 54 -176 169 -279 412 -308 729 l-7 72 697 0 696 0 -5 -42z m803 -195 c30 -11 56 -24 58 -29 2 -5 -107 -8 -274 -6 -296 4 -306 7 -143 43 110 24 279 21 359 -8z m331 -121 c287 -96 453 -376 396 -663 -24 -115 -66 -196 -149 -285 -54 -58 -86 -83 -151 -114 -124 -62 -200 -72 -534 -68 -309 3 -311 4 -342 71 -23 50 -12 99 29 141 30 30 34 31 136 34 l105 4 0 29 0 29 -104 0 c-97 0 -107 2 -134 25 -33 27 -51 68 -46 101 14 89 55 114 187 114 l97 0 0 30 0 30 -99 0 c-86 0 -102 3 -132 23 -64 43 -69 136 -9 190 29 26 35 27 135 27 l105 0 0 30 0 30 -245 0 c-268 0 -293 4 -334 56 -19 24 -22 38 -18 77 2 27 12 56 23 68 43 49 48 49 549 46 453 -3 472 -4 535 -25z m-1180 -557 c0 -1 -20 -19 -45 -39 l-44 -37 -556 1 -557 0 -43 34 c-25 18 -42 36 -39 39 6 5 1284 8 1284 2z" />
+                                        <path d="M1060 1196 c0 -130 4 -236 9 -236 40 0 106 110 117 196 12 100 -32 220 -97 258 l-29 17 0 -235z" />
+                                        <path d="M958 1400 c-33 -25 -68 -109 -75 -177 -9 -79 20 -175 67 -224 20 -21 42 -39 48 -39 9 0 12 63 12 230 0 249 -1 251 -52 210z" />
+                                    </g>
+                                </svg> <h5 className="change-hamburguer-quit ">Análisis</h5>
+                                </li>
+                            </Link>
                             {/* <li className="hamburguer-centered">
                                 <svg className="icon-li-nav-horizontal" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -522,7 +535,7 @@ export const Menu = (data) => {
                     {Object.keys(user).length > 0 ? (
                         <div className="div-info-usuario">
                             <div className="div-img-perfil-nav">
-                                {Object.keys(user).length > 0 ? user.cargo == "administrador" ? <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" /> : user.cargo == "instructor" ? <img className='img-perfil-usuario' src="/img/img_instructor.jpg" alt="" /> : user.cargo == "aprendiz" ? <img className='img-perfil-usuario' src="/img/img_aprendiz.jpg" alt="" /> : user.cargo == "cliente" ? <img className='img-perfil-usuario' src="/img/img_client.jpg" alt="" /> : <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" />
+                                {Object.keys(user).length > 0 ? user.img ? <img className='img-icono' src={"http://" + host + ":3000/img/usuarios/" + (user.id ? user.id : "") + "/iconos/" + (user.img ? user.img : "")} /> : user.cargo == "administrador" ? <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" /> : user.cargo == "instructor" ? <img className='img-perfil-usuario' src="/img/img_instructor.jpg" alt="" /> : user.cargo == "aprendiz" ? <img className='img-perfil-usuario' src="/img/img_aprendiz.jpg" alt="" /> : user.cargo == "cliente" ? <img className='img-perfil-usuario' src="/img/img_client.jpg" alt="" /> : <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" />
 
                                     :
                                     <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" />}

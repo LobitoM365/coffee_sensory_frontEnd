@@ -30,6 +30,7 @@ import { PruebaPdf } from './pages/PruebaPdf.jsx';
 import { GeneratePdfTable } from './pages/generatePdfTable.jsx';
 import { RecoveryPassword } from './pages/recoveryPassword.jsx';
 import { GenerateReporteAnalisis } from './pages/generateReporteAnalisis.jsx';
+import { Formatos } from './pages/formatos.jsx';
 export default function App(data) {
   const [statusAlert, setStatusAlert] = useState(false);
   const [dataAlert, setdataAlert] = useState({});
@@ -115,6 +116,7 @@ export default function App(data) {
             <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
             <Route path='fincas/registros' element={<Fincas userInfo={userInfo}/>} />
             <Route path='analisis/registros' element={<Analisis socket={data.socket} userInfo={userInfo} />} />
+            <Route path='formatos/registros' element={<Formatos socket={data.socket} userInfo={userInfo} />} />
             <Route path='cafes/registros' element={<Cafes />} />
             <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} /> : ""} />
             <Route path='municipios/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Municipios} /> : ""} />

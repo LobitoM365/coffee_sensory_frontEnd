@@ -200,6 +200,67 @@
     background-color: white;
     width: 25px;
 }
-.info-catador >div{
+
+.info-catador>div {
     padding: 20px;
+}
+
+.icon-ver-encargados {
+    background-color: orange;
+    font-size: 1.2em;
+    font-weight: bolder;
+}
+
+.button-asignar-analisis {
+    background-color: rgb(235, 130, 11) !important;
+}
+
+.div-content-asignar {
+    display: flex;
+    gap: 70px;
+}
+
+.table-asignar .div-table {
+    width: 100%;
+}
+
+.table-asignar .div-filters,
+.table-asignar .table-component,
+.table-asignar thead,
+.table-asignar #inputSearch {
+    background-color: #efecec !important;
+}
+
+.table-asignar {
+    width: 1300px;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.modal-table #divContentForm {
+    background-color: rgb(255, 255, 255);
+}
+
+.input-global .head-input {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+.input-global .head-input label{
+    
+}
+
+.div-asign-elements {
+    width: 600px;
+    flex: none;
+}
+
+@media screen and (max-width : 1080px) {
+    .div-asign-elements{
+        width: 100%;
+    }
+    .div-content-asignar {
+        flex-direction: column;
+    }
+    
 }

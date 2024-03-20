@@ -101,7 +101,7 @@ export const Tablas = (array) => {
         keysFilterEstado = array.filterEstado;
         filterEstado = Object.keys(keysFilterEstado)
     }
-    function functionCancheFilterRotate(element) {
+    function functionChangeFilterRotate(element) {
         let value = "asc"
         let filtersClone = { ...filterRotate };
 
@@ -258,6 +258,7 @@ export const Tablas = (array) => {
                     countQuit = [];
                     quitElements = {}
                 }
+
 
 
 
@@ -432,13 +433,18 @@ export const Tablas = (array) => {
 
 
                             }
+                            if (countResize <= (keysLenght.length * 2)) {
+                                return resizeTable()
+                            } else {
+                                countResize = 0
+                            }
                         }
-                        /* return resizeTable() */
+
                     }
                     if (Object.keys(quitElements).length == 0) {
-                        const pLusDelete = document.querySelectorAll(".td-view-elementos-ocult")
-                        const divDelete = document.querySelectorAll(".new-tr-table")
-                        const thDelete = document.querySelectorAll(".th-plus-view")
+                        const pLusDelete = table.querySelectorAll(".td-view-elementos-ocult")
+                        const divDelete = table.querySelectorAll(".new-tr-table")
+                        const thDelete = table.querySelectorAll(".th-plus-view")
                         if (thDelete[0]) {
                             thDelete[0].remove()
                         }
@@ -596,231 +602,380 @@ export const Tablas = (array) => {
     };
     return (
 
-        <div ref={contentComponent} id='contentComponent'>
+        <div className={array.class ? array.class : ""} ref={contentComponent} id='contentComponent'>
             <TemporaryStyles />
             <link rel="stylesheet" href="/public/css/tableComponent.css" />
             <div className="div-table">
                 <div className="div-filters">
                     <div className='div-tittle'>
                         <h2> {array.tittle ? array.tittle : "Tabla de registros"}</h2>
-                        <button style={{ display: array.hidden && array.hidden.includes('register') ? 'none' : '' }} onClick={() => { array.clearInputs ? array.clearInputs() : ""; setClearClick(); array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>
-                        <div className='div-generar-documento father-div-modal'>
-                            <button onClick={(e) => {
-                                let divModal = e.target.parentElement.querySelectorAll(".child-div-modal")
-                                if (divModal[0]) {
-                                    divModal[0].style.display = divModal[0].style.display == "none" ? "block" : "none"
-                                }
 
-                            }} className='button-register-table'>Reporte
-                            </button>
+                        {array.buttonsHeaderTable ?
+                            array.buttonsHeaderTable["buttons"] ?
+                                Object.keys(array.buttonsHeaderTable["buttons"]).length > 0 ?
+                                    Object.keys(array.buttonsHeaderTable["buttons"]).map((key, value) => {
+                                        const div = []
+                                        const data = array.buttonsHeaderTable["buttons"];
+                                        if (key == "add") {
+                                            if (data[key] == true) {
+                                                div.push(<button key={value} style={{ display: array.hidden && array.hidden.includes('register') ? 'none' : '' }} onClick={() => { array.clearInputs ? array.clearInputs() : ""; setClearClick(); array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>)
+                                            }
 
-                            <div style={{ display: "none" }} className='div-input-documento child-div-modal'>
-                                <form onSubmit={(e) => { chageData(e) }}>
-                                    <div className='div-body-reporte'>
-                                        {
+                                        } else if (key == "reporte") {
+                                            if (data[key] == true) {
+                                                div.push(<div key={value} className='div-generar-documento father-div-modal'>
+                                                    <button onClick={(e) => {
+                                                        let divModal = e.target.parentElement.querySelectorAll(".child-div-modal")
+                                                        if (divModal[0]) {
+                                                            divModal[0].style.display = divModal[0].style.display == "none" ? "block" : "none"
+                                                        }
 
-                                            array.dataDocumento ?
+                                                    }} className='button-register-table'>Reporte
+                                                    </button>
+                                                    <div style={{ display: "none" }} className='div-input-documento child-div-modal'>
+                                                        <form onSubmit={(e) => { chageData(e) }}>
+                                                            <div className='div-body-reporte'>
+                                                                {
 
-                                                keysInputsDocumento.map((keyInput, index) => {
-                                                    let keysInputs = []
-                                                    let dataInputs = {}
-                                                    if (array.dataDocumento[keyInput]["inputs"]) {
-                                                        keysInputs = Object.keys(array.dataDocumento[keyInput]["inputs"])
-                                                        dataInputs = array.dataDocumento[keyInput]["inputs"]
-                                                    }
-                                                    let titleRefer = array.dataDocumento[keyInput]["referencia"] ? array.dataDocumento[keyInput]["referencia"] : "Campo"
+                                                                    array.dataDocumento ?
 
-                                                    return <div key={keyInput}>
-                                                        <h4 className='title-reporte-group'>{titleRefer}</h4>
-                                                        <div className='content-div-inputs-group'>
-                                                            {keysInputs.map((key, indexInput) => {
+                                                                        keysInputsDocumento.map((keyInput, index) => {
+                                                                            let keysInputs = []
+                                                                            let dataInputs = {}
+                                                                            if (array.dataDocumento[keyInput]["inputs"]) {
+                                                                                keysInputs = Object.keys(array.dataDocumento[keyInput]["inputs"])
+                                                                                dataInputs = array.dataDocumento[keyInput]["inputs"]
+                                                                            }
+                                                                            let titleRefer = array.dataDocumento[keyInput]["referencia"] ? array.dataDocumento[keyInput]["referencia"] : "Campo"
 
-                                                                if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "ubicacion" || dataInputs[key]["type"] === "normal") {
-                                                                    if (data.statusInput) {
-                                                                        inputValor[key] = ""
+                                                                            return <div key={keyInput}>
+                                                                                <h4 className='title-reporte-group'>{titleRefer}</h4>
+                                                                                <div className='content-div-inputs-group'>
+                                                                                    {keysInputs.map((key, indexInput) => {
 
-                                                                    }
-                                                                    return (
+                                                                                        if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "ubicacion" || dataInputs[key]["type"] === "normal") {
+                                                                                            if (data.statusInput) {
+                                                                                                inputValor[key] = ""
 
-                                                                        <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
-                                                                            <div className="head-input">
-                                                                                <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                                                                <input id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); setStatusInput(false) }} value={inputValor[key]} className="input-form" type="text" />
-                                                                            </div>
-                                                                            {/*                                                                             <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4> */}
-                                                                        </div>
-                                                                    );
+                                                                                            }
+                                                                                            return (
 
-                                                                } else if (dataInputs[key]["type"] === "select" && dataInputs[key]["visibility"] != false) {
+                                                                                                <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
+                                                                                                    <div className="head-input">
+                                                                                                        <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
+                                                                                                        <input id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); setStatusInput(false) }} value={inputValor[key]} className="input-form" type="text" />
+                                                                                                    </div>
+                                                                                                    {/*                                                                             <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4> */}
+                                                                                                </div>
+                                                                                            );
 
-                                                                    if (data.statusSelect) {
-                                                                        selectsValuesDocumento[key] = "";
-                                                                        dataSelectDocumento[key] = ""
-                                                                    }
+                                                                                        } else if (dataInputs[key]["type"] === "select" && dataInputs[key]["visibility"] != false) {
 
-                                                                    return (
-                                                                        <div key={key} className="input-content-form-register">
-                                                                            <div className="head-input">
-                                                                                <label htmlFor={key} className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                                                                <div key={key} className="filter-estado div-select">
+                                                                                            if (data.statusSelect) {
+                                                                                                selectsValuesDocumento[key] = "";
+                                                                                                dataSelectDocumento[key] = ""
+                                                                                            }
 
-                                                                                    <div key={index} style={{ display: "none" }} className="opciones opciones-input-select">
+                                                                                            return (
+                                                                                                <div key={key} className="input-content-form-register">
+                                                                                                    <div className="head-input">
+                                                                                                        <label htmlFor={key} className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
+                                                                                                        <div key={key} className="filter-estado div-select">
 
-                                                                                        <h4 onClick={(e) => {
-                                                                                            const parentElement = e.target.closest(".div-select");
-                                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                                            divOptions[0] ? divOptions[0].style.display = "none" : ""
+                                                                                                            <div key={index} style={{ display: "none" }} className="opciones opciones-input-select">
 
-                                                                                            setStatusSelect(false); let cloneselectsValues = { ...selectsValuesDocumento }; cloneselectsValues[key] = ""; changeSelectsValuesDocumento(cloneselectsValues); dataSelectDocumento[key] = "";
-                                                                                        }} className='select-option'>Seleccione una opción...</h4>
+                                                                                                                <h4 onClick={(e) => {
+                                                                                                                    const parentElement = e.target.closest(".div-select");
+                                                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                                                    divOptions[0] ? divOptions[0].style.display = "none" : ""
 
-                                                                                        {
-                                                                                            dataInputs[key]["opciones"] ? dataInputs[key]["opciones"].map((select, indexSelect) => {
-                                                                                                let value = ""
-                                                                                                if (dataInputs[key]["values"]) {
-                                                                                                    dataInputs[key]["values"].map((nameSelect, nameIndexSelect) => {
-                                                                                                        value += nameIndexSelect == 0 ? dataInputs[key]["opciones"][indexSelect][nameSelect] : ", " + dataInputs[key]["opciones"][indexSelect][nameSelect];
-                                                                                                    })
-                                                                                                }
+                                                                                                                    setStatusSelect(false); let cloneselectsValues = { ...selectsValuesDocumento }; cloneselectsValues[key] = ""; changeSelectsValuesDocumento(cloneselectsValues); dataSelectDocumento[key] = "";
+                                                                                                                }} className='select-option'>Seleccione una opción...</h4>
 
-
-
-                                                                                                if (dataInputs[key]["upper_case"]) {
-                                                                                                    value = value.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())
-                                                                                                } else if (dataInputs[key]["capital_letter"]) {
-                                                                                                    value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
-                                                                                                }
+                                                                                                                {
+                                                                                                                    dataInputs[key]["opciones"] ? dataInputs[key]["opciones"].map((select, indexSelect) => {
+                                                                                                                        let value = ""
+                                                                                                                        if (dataInputs[key]["values"]) {
+                                                                                                                            dataInputs[key]["values"].map((nameSelect, nameIndexSelect) => {
+                                                                                                                                value += nameIndexSelect == 0 ? dataInputs[key]["opciones"][indexSelect][nameSelect] : ", " + dataInputs[key]["opciones"][indexSelect][nameSelect];
+                                                                                                                            })
+                                                                                                                        }
 
 
-                                                                                                return <h4 key={indexSelect} onClick={(e) => {
-                                                                                                    const parentElement = e.target.parentElement.parentElement;
-                                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                                                    divOptions[0] ? divOptions[0].style.display = "none" : ""; let cloneSelectsValues = { ...selectsValuesDocumento }; cloneSelectsValues[key] = value; changeSelectsValuesDocumento(cloneSelectsValues); setStatusSelect(false); dataSelectDocumento[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]];
-                                                                                                }} className={`select-option select-option-${key} ${selectsValuesDocumento[key] == value ? 'option-focus' : ''}`} value="">
-                                                                                                    {value}
-                                                                                                </h4>
-                                                                                            }) : ""
+
+                                                                                                                        if (dataInputs[key]["upper_case"]) {
+                                                                                                                            value = value.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())
+                                                                                                                        } else if (dataInputs[key]["capital_letter"]) {
+                                                                                                                            value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
+                                                                                                                        }
+
+
+                                                                                                                        return <h4 key={indexSelect} onClick={(e) => {
+                                                                                                                            const parentElement = e.target.parentElement.parentElement;
+                                                                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                                                            divOptions[0] ? divOptions[0].style.display = "none" : ""; let cloneSelectsValues = { ...selectsValuesDocumento }; cloneSelectsValues[key] = value; changeSelectsValuesDocumento(cloneSelectsValues); setStatusSelect(false); dataSelectDocumento[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]];
+                                                                                                                        }} className={`select-option select-option-${key} ${selectsValuesDocumento[key] == value ? 'option-focus' : ''}`} value="">
+                                                                                                                            {value}
+                                                                                                                        </h4>
+                                                                                                                    }) : ""
+                                                                                                                }
+
+                                                                                                            </div>
+                                                                                                            <div className='input-select-estado input-select-search' name="" id="">
+
+                                                                                                                <input id={key} type="text" className="input-select" onInput={(e) => {
+                                                                                                                    const parentElement = e.target.closest(".div-select");
+                                                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                                                    divOptions[0] ? divOptions[0].style.display = "block" : ""
+                                                                                                                    selectSearch(e.target.value, key, keyInput)
+                                                                                                                }} placeholder={"Seleccione una opción..."} value={selectsValuesDocumento[key] != "Seleccione una opción..." ? selectsValuesDocumento[key] : ""} />
+                                                                                                                <div onClick={(e) => {
+                                                                                                                    const parentElement = e.target.closest(".div-select");
+                                                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                                                    divOptions[0] ? divOptions[0].style.display == "none" ? divOptions[0].style.display = "block" : divOptions[0].style.display = "none" : ""
+                                                                                                                }} className="icon-chevron-estado">
+                                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
+                                                                                                                        <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                                                                                                        <g><g><path d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
+                                                                                                                    </svg>
+                                                                                                                </div>
+
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    {/*                                 <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4> */}
+
+                                                                                                </div>
+                                                                                            );
+                                                                                        } else if (dataInputs[key]["type"] === "date" && dataInputs[key]["visibility"] != false) {
+                                                                                            return (
+
+                                                                                                <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
+                                                                                                    <div className="head-input">
+                                                                                                        <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
+                                                                                                        <input id={key} name={key} className='input-date' type="datetime-local" />
+                                                                                                    </div>
+
+                                                                                                </div>
+                                                                                            );
+                                                                                        } else {
+                                                                                            return "No hay nada para mostrar " + key;
                                                                                         }
 
-                                                                                    </div>
-                                                                                    <div className='input-select-estado input-select-search' name="" id="">
-
-                                                                                        <input id={key} type="text" className="input-select" onInput={(e) => {
-                                                                                            const parentElement = e.target.closest(".div-select");
-                                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                                            divOptions[0] ? divOptions[0].style.display = "block" : ""
-                                                                                            selectSearch(e.target.value, key, keyInput)
-                                                                                        }} placeholder={"Seleccione una opción..."} value={selectsValuesDocumento[key] != "Seleccione una opción..." ? selectsValuesDocumento[key] : ""} />
-                                                                                        <div onClick={(e) => {
-                                                                                            const parentElement = e.target.closest(".div-select");
-                                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                                            divOptions[0] ? divOptions[0].style.display == "none" ? divOptions[0].style.display = "block" : divOptions[0].style.display = "none" : ""
-                                                                                        }} className="icon-chevron-estado">
-                                                                                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
-                                                                                                <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                                                                                <g><g><path d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
-                                                                                            </svg>
-                                                                                        </div>
-
-                                                                                    </div>
+                                                                                    })
+                                                                                    }
                                                                                 </div>
                                                                             </div>
-                                                                            {/*                                 <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4> */}
+                                                                        })
+                                                                        :
+                                                                        ""
+                                                                }
+                                                            </div>
+                                                            {
+                                                                array.filterPdfLimit ?
+                                                                    array.filterPdfLimit.status ?
+                                                                        <div className='limit-generate-documento'>
+                                                                            <h4>Debes elegir un máximo de 100 registros para el documento. Sin especificación, se usarán los primeros 100 registros. Si optas por iniciar en el registro 100, se incluirán del 100 al 199, y así sucesivamente.</h4>
 
-                                                                        </div>
-                                                                    );
-                                                                } else if (dataInputs[key]["type"] === "date" && dataInputs[key]["visibility"] != false) {
-                                                                    return (
-
-                                                                        <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
-                                                                            <div className="head-input">
-                                                                                <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                                                                <input id={key} name={key} className='input-date' type="datetime-local" />
+                                                                            <div className="limit-generate-documento-maximo">
+                                                                                <label htmlFor="limit" className="label-from-register">Número de registros:</label> <h4>{array.filterPdfLimit.max ? array.filterPdfLimit.max : 100} </h4>
                                                                             </div>
+                                                                            <div className='div-input-limit-generate-documento'>
 
-                                                                        </div>
-                                                                    );
-                                                                } else {
-                                                                    return "No hay nada para mostrar " + key;
-                                                                }
-
-                                                            })
+                                                                                <div className="head-input">
+                                                                                    <label htmlFor="limit" className="label-from-register">Desde</label>
+                                                                                    <input onInput={(e) => {
+                                                                                        let limit = 100;
+                                                                                        let hastaLimit = document.getElementById("hastaLimit");
+                                                                                        let cantidadLimit = document.getElementById("cantidadLimit");
+                                                                                        if (array.filterPdfLimit.max) {
+                                                                                            limit = array.filterPdfLimit.max
+                                                                                        };
+                                                                                        if (e.target.value <= 0 && e.target.value != "") {
+                                                                                            e.target.value = 1
+                                                                                        }
+                                                                                        if (e.target.value > limit) {
+                                                                                            e.target.value = limit
+                                                                                        }
+                                                                                        if (e.target.value.toString().length == 1) {
+                                                                                            e.target.value = e.target.value.replace(/\D/g, 1)
+                                                                                        } else {
+                                                                                            e.target.value = e.target.value.replace(/\D/g, "")
+                                                                                        }
+                                                                                        if (parseFloat(e.target.value) + 99 <= limit) {
+                                                                                            hastaLimit.innerHTML = parseFloat(e.target.value) + 99
+                                                                                        } else if (parseFloat(e.target.value) + 99 > limit) {
+                                                                                            hastaLimit.innerHTML = limit
+                                                                                        }
+                                                                                        if (e.target.value != "") {
+                                                                                            cantidadLimit.innerHTML = parseFloat(hastaLimit.innerHTML) - parseFloat(e.target.value) + 1
+                                                                                        } else {
+                                                                                            cantidadLimit.innerHTML = 100
+                                                                                            hastaLimit.innerHTML = 100
+                                                                                        }
+                                                                                    }} defaultValue={1} id="limit" name="limit" autoComplete="false" className="input-form" type="text" />
+                                                                                </div>
+                                                                                <div className="head-input div-hasta-limit-generate-documento">
+                                                                                    <label htmlFor="limit" className="label-from-register">Hasta:</label>
+                                                                                    <h4 id='hastaLimit'>100</h4>
+                                                                                </div>
+                                                                                <div className="head-input div-hasta-limit-generate-documento">
+                                                                                    <label htmlFor="limit" className="label-from-register">Cantidad:</label>
+                                                                                    <h4 id='cantidadLimit'>100</h4>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div> :
+                                                                        "" :
+                                                                    " "
                                                             }
-                                                        </div>
+
+                                                            <div className='footer-get-reporte'>
+                                                                <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-pdf'>PDF</button>
+                                                                {/* <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-excel'>EXCEL</button> */}
+                                                            </div>
+
+                                                        </form>
+
                                                     </div>
-                                                })
-                                                :
-                                                ""
+
+                                                </div>)
+                                            }
+                                        } else if (data[key]["normal"]) {
+                                            let tableData = []
+                                            let classProcedure = "";
+                                            if (data[key]["class"]) {
+                                                classProcedure = data[key]["class"];
+                                            }
+                                            if (data[key]["inputs"]) {
+                                                let keysInputs = Object.keys(data[key]["inputs"])
+                                                let indexInputs = Object.keys(data[key]["inputs"]).length > 5 ? 5 : Object.keys(data[key]["inputs"]).length
+                                                for (let x = 0; x < indexInputs; x++) {
+                                                    let referenciaButton = keysInputs[x];
+                                                    let classProcedure = "";
+                                                    if (data[key]["inputs"][keysInputs[x]]["class"]) {
+                                                        classProcedure = data[key]["inputs"][keysInputs[x]]["class"];
+                                                    }
+
+                                                    if (data[key]["inputs"][keysInputs[x]]["referencia"]) {
+                                                        referenciaButton = data[key]["inputs"][keysInputs[x]]["referencia"]
+                                                    }
+
+                                                    if (data[key]["inputs"][keysInputs[x]]["type"]) {
+
+                                                        if (data[key]["inputs"][keysInputs[x]]["type"] == "button") {
+
+                                                            let functionProcedure;
+                                                            let valueFunctionProcedure;
+
+                                                            if (data[key]["inputs"][keysInputs[x]]["function"]) {
+                                                                if (data[key]["inputs"][keysInputs[x]]["function"]["value"]) {
+                                                                    functionProcedure = data[key]["inputs"][keysInputs[x]]["function"]["value"];
+                                                                }
+                                                                if (data[key]["inputs"][keysInputs[x]]["function"]["execute"]) {
+                                                                    if (data[key]["inputs"][keysInputs[x]]["function"]["execute"]["type"]) {
+                                                                        if (data[key]["inputs"][keysInputs[x]]["function"]["execute"]["type"] == "table") {
+                                                                            if (data[key]["inputs"][keysInputs[x]]["function"]["execute"]["value"]) {
+                                                                                if (keysData.includes(data[key]["inputs"][keysInputs[x]]["function"]["execute"]["value"])) {
+                                                                                    valueFunctionProcedure = [data[key]["inputs"][keysInputs[x]]["function"]["execute"]["value"]];
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            div.push(<button key={x} onClick={() => { functionProcedure ? functionProcedure(valueFunctionProcedure) : "" }} className={'button-register-table ' + classProcedure}>{referenciaButton}</button>);
+
+                                                        } else if (data[key]["inputs"][keysInputs[x]]["type"] == "free") {
+                                                            if (data[key]["inputs"][keysInputs[x]]["element"]) {
+                                                                let functionProcedure;
+                                                                let valueFunctionProcedure;
+
+                                                                if (data[key]["inputs"][keysInputs[x]]["function"]) {
+                                                                    if (data[key]["inputs"][keysInputs[x]]["function"]["value"]) {
+                                                                        functionProcedure = data[key]["inputs"][keysInputs[x]]["function"]["value"];
+                                                                    }
+                                                                    if (data[key]["inputs"][keysInputs[x]]["function"]["execute"]) {
+                                                                        if (data[key]["inputs"][keysInputs[x]]["function"]["execute"]["type"]) {
+                                                                            if (data[key]["inputs"][keysInputs[x]]["function"]["execute"]["type"] == "table") {
+                                                                                if (data[key]["inputs"][keysInputs[x]]["function"]["execute"]["value"]) {
+                                                                                    if (keysData.includes(data[key]["inputs"][keysInputs[x]]["function"]["execute"]["value"])) {
+                                                                                        valueFunctionProcedure = data[valuesD][data[key]["inputs"][keysInputs[x]]["function"]["execute"]["value"]];
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                } else if (data[key]["inputs"][keysInputs[x]]["redirect-value"]) {
+                                                                    functionProcedure = function procedure() {
+                                                                        let direction = ""
+                                                                        let value = ""
+                                                                        if (data[key]["inputs"][keysInputs[x]]["redirect-value"]["value"]) {
+                                                                            direction = data[key]["inputs"][keysInputs[x]]["redirect-value"]["value"];
+                                                                        }
+                                                                        if (data[key]["inputs"][keysInputs[x]]["redirect-value"]["execute"]) {
+                                                                            if (data[key]["inputs"][keysInputs[x]]["redirect-value"]["execute"]["type"]) {
+                                                                                if (data[key]["inputs"][keysInputs[x]]["redirect-value"]["execute"]["type"] == "table") {
+                                                                                    if (data[key]["inputs"][keysInputs[x]]["redirect-value"]["execute"]["value"]) {
+                                                                                        if (keysData.includes(data[key]["inputs"][keysInputs[x]]["redirect-value"]["execute"]["value"])) {
+                                                                                            value = data[valuesD][data[key]["inputs"][keysInputs[x]]["redirect-value"]["execute"]["value"]];
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        if (data[key]["inputs"][keysInputs[x]]["redirect-value"]["type"]) {
+                                                                            if (data[key]["inputs"][keysInputs[x]]["redirect-value"]["type"] == "new-window") {
+                                                                                window.open(direction + "/" + value, "_blank")
+                                                                            } else {
+                                                                                if (direction != "") {
+                                                                                    location.href = direction + "/" + value
+                                                                                }
+                                                                            }
+                                                                        } else {
+                                                                            if (direction != "") {
+                                                                                location.href = direction + "/" + value
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                                div.push(
+                                                                    <div onClick={() => { functionProcedure ? functionProcedure(valueFunctionProcedure) : "" }} className={"div-element-free " + classProcedure} key={x}>{data[key]["inputs"][keysInputs[x]]["element"] == "icon-pdf" ? <svg className='icon-pdf-table' xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 358.000000 438.000000" preserveAspectRatio="xMidYMid meet">
+                                                                        <metadata>
+                                                                            Created by potrace 1.16, written by Peter Selinger 2001-2019
+                                                                        </metadata>
+                                                                        <g transform="translate(0.000000,438.000000) scale(0.100000,-0.100000)" stroke="none">
+                                                                            <path d="M301 4330 c-103 -37 -193 -119 -239 -218 l-27 -57 0 -1870 0 -1870 30 -60 c40 -82 119 -159 202 -198 l68 -32 1410 -3 c1027 -2 1426 0 1470 8 123 24 234 110 291 225 l29 60 3 1543 2 1544 -26 58 c-22 50 -76 108 -422 452 -369 368 -401 397 -455 417 -58 21 -59 21 -1170 21 -1077 -1 -1114 -1 -1166 -20z m2293 -124 c21 -9 181 -161 415 -395 302 -304 383 -389 391 -419 8 -26 10 -489 8 -1542 l-3 -1505 -22 -41 c-26 -48 -88 -107 -140 -131 -36 -17 -122 -18 -1428 -21 -950 -2 -1406 1 -1440 8 -81 17 -147 68 -184 141 l-31 62 0 1817 c0 2002 -4 1864 62 1944 18 23 57 50 92 67 l61 29 1093 0 c919 0 1098 -2 1126 -14z" />
+                                                                            <path d="M1652 3444 c-75 -53 -78 -227 -6 -442 19 -57 34 -110 34 -118 0 -29 -113 -312 -181 -454 l-70 -145 -117 -55 c-207 -97 -330 -192 -354 -272 -17 -56 8 -101 68 -124 82 -31 167 2 269 105 79 81 156 181 215 283 l45 76 101 32 c56 17 164 45 238 61 l137 31 52 -40 c79 -60 133 -91 206 -120 56 -21 83 -25 179 -26 l114 -1 29 33 c62 69 18 153 -100 189 -63 19 -250 24 -389 9 l-82 -8 -58 62 c-63 68 -164 206 -192 260 -17 34 -17 37 12 135 62 215 72 363 30 457 -34 77 -123 113 -180 72z m80 -15 c25 -13 48 -67 48 -112 0 -79 -63 -367 -80 -367 -4 0 -19 35 -33 78 -63 191 -60 368 7 400 28 14 34 14 58 1z m208 -907 c35 -40 61 -74 59 -76 -2 -1 -42 -10 -89 -20 -47 -10 -132 -31 -190 -48 -58 -17 -113 -33 -123 -36 -16 -4 -15 3 11 54 24 48 118 278 146 358 5 15 18 1 65 -70 33 -49 87 -122 121 -162z m512 -82 c77 -22 101 -98 49 -151 -46 -45 -125 -40 -249 17 -46 22 -143 87 -161 108 -11 13 -9 16 11 20 74 17 298 20 350 6z m-1062 -216 c0 -19 -123 -188 -183 -251 -84 -88 -144 -121 -187 -103 -33 14 -46 45 -36 85 15 61 118 141 295 232 80 41 111 51 111 37z" />
+                                                                            <path d="M1100 935 l0 -315 50 0 50 0 0 115 0 115 51 0 c158 0 249 105 218 252 -9 40 -21 62 -50 90 -49 47 -90 58 -216 58 l-103 0 0 -315z m224 213 c30 -13 46 -48 46 -101 -1 -69 -44 -107 -124 -107 l-46 0 0 116 0 117 50 -7 c28 -4 61 -12 74 -18z" />
+                                                                            <path d="M1580 935 l0 -317 123 3 c112 4 126 6 169 31 89 53 134 132 145 258 7 81 -16 179 -56 234 -15 22 -52 54 -82 70 -51 29 -62 31 -176 35 l-123 3 0 -317z m239 210 c46 -23 79 -70 91 -131 18 -86 -3 -197 -48 -248 -26 -29 -92 -56 -139 -56 l-43 0 0 225 0 225 55 0 c31 0 69 -7 84 -15z" />
+                                                                            <path d="M2140 935 l0 -315 50 0 50 0 0 135 0 135 105 0 105 0 0 45 0 45 -105 0 -105 0 0 90 0 90 116 0 115 0 -3 43 -3 42 -162 3 -163 2 0 -315z" />
+                                                                        </g>
+                                                                    </svg> : data[key]["inputs"][keysInputs[x]]["element"]}</div>
+                                                                );
+                                                            }
+                                                        } else if (data[key]["type"] == "text") {
+
+                                                            div.push(<h4 key={x} className={'text-table-normal table-attribute-no-registra ' + classProcedure}>{referenciaButton}</h4>);
+                                                        } else {
+                                                            div.push(<h4 key={x} className='text-table-normal table-attribute-no-registra'>{referenciaButton}</h4>);
+                                                        }
+                                                    } else {
+                                                        div.push(<h4 key={x} className={'text-table-normal table-attribute-no-registra '}>{referenciaButton}</h4>);
+                                                    }
+                                                }
+                                            } else {
+                                                div.push((<h4 key={x} className='text-table-normal table-attribute-no-registra'>No registra</h4>))
+                                            }
                                         }
-                                    </div>
-                                    {
-                                        array.filterPdfLimit ?
-                                            array.filterPdfLimit.status ?
-                                                <div className='limit-generate-documento'>
-                                                    <h4>Debes elegir un máximo de 100 registros para el documento. Sin especificación, se usarán los primeros 100 registros. Si optas por iniciar en el registro 100, se incluirán del 100 al 199, y así sucesivamente.</h4>
 
-                                                    <div className="limit-generate-documento-maximo">
-                                                        <label htmlFor="limit" className="label-from-register">Número de registros:</label> <h4>{array.filterPdfLimit.max ? array.filterPdfLimit.max : 100} </h4>
-                                                    </div>
-                                                    <div className='div-input-limit-generate-documento'>
+                                        return <div key={value} >{div}</div>
+                                    })
+                                    : ""
+                                : ""
+                            : ""}
 
-                                                        <div className="head-input">
-                                                            <label htmlFor="limit" className="label-from-register">Desde</label>
-                                                            <input onInput={(e) => {
-                                                                let limit = 100;
-                                                                let hastaLimit = document.getElementById("hastaLimit");
-                                                                let cantidadLimit = document.getElementById("cantidadLimit");
-                                                                if (array.filterPdfLimit.max) {
-                                                                    limit = array.filterPdfLimit.max
-                                                                };
-                                                                if (e.target.value <= 0 && e.target.value != "") {
-                                                                    e.target.value = 1
-                                                                }
-                                                                if (e.target.value > limit) {
-                                                                    e.target.value = limit
-                                                                }
-                                                                if (e.target.value.toString().length == 1) {
-                                                                    e.target.value = e.target.value.replace(/\D/g, 1)
-                                                                } else {
-                                                                    e.target.value = e.target.value.replace(/\D/g, "")
-                                                                }
-                                                                if (parseFloat(e.target.value) + 99 <= limit) {
-                                                                    hastaLimit.innerHTML = parseFloat(e.target.value) + 99
-                                                                } else if (parseFloat(e.target.value) + 99 > limit) {
-                                                                    hastaLimit.innerHTML = limit
-                                                                }
-                                                                if (e.target.value != "") {
-                                                                    cantidadLimit.innerHTML = parseFloat(hastaLimit.innerHTML) - parseFloat(e.target.value) + 1
-                                                                } else {
-                                                                    cantidadLimit.innerHTML = 100
-                                                                    hastaLimit.innerHTML = 100
-                                                                }
-                                                            }} defaultValue={1} id="limit" name="limit" autoComplete="false" className="input-form" type="text" />
-                                                        </div>
-                                                        <div className="head-input div-hasta-limit-generate-documento">
-                                                            <label htmlFor="limit" className="label-from-register">Hasta:</label>
-                                                            <h4 id='hastaLimit'>100</h4>
-                                                        </div>
-                                                        <div className="head-input div-hasta-limit-generate-documento">
-                                                            <label htmlFor="limit" className="label-from-register">Cantidad:</label>
-                                                            <h4 id='cantidadLimit'>100</h4>
-                                                        </div>
-                                                    </div>
-                                                </div> :
-                                                "" :
-                                            " "
-                                    }
 
-                                    <div className='footer-get-reporte'>
-                                        <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-pdf'>PDF</button>
-                                        {/* <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-excel'>EXCEL</button> */}
-                                    </div>
 
-                                </form>
-
-                            </div>
-
-                        </div>
 
 
 
@@ -896,8 +1051,8 @@ export const Tablas = (array) => {
 
                                     return <th className='th-table-print' key={index}>
                                         <div className="items-header-table">
-                                            <h4 className='tittle-item-header-table'>   {print[keys]["referencia"]} </h4>
-                                            {keys != "actualizar" ? <svg onClick={() => functionCancheFilterRotate(keys)} style={{ rotate: filterRotate[keys] ? filterRotate[keys]["value"] == "desc" ? "0deg" : "180deg" : "0deg", fill: filterRotate[keys] ? "blue" : "" }} className="filter-asc-desc" version="1.0" viewBox="0 0 512.000000 512.000000">
+                                            <h4 className='tittle-item-header-table'>   {print[keys]["referencia"] ? print[keys]["referencia"] : keys} </h4>
+                                            {keys != "actualizar" ? <svg onClick={() => functionChangeFilterRotate(keys)} style={{ rotate: filterRotate[keys] ? filterRotate[keys]["value"] == "desc" ? "0deg" : "180deg" : "0deg", fill: filterRotate[keys] ? "blue" : "" }} className="filter-asc-desc" version="1.0" viewBox="0 0 512.000000 512.000000">
 
                                                 <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" stroke="none">
                                                     <path d="M680 4341 c-66 -23 -140 -97 -158 -158 -39 -131 13 -259 133 -322 l40 -21 1478 0 c1633 0 1508 -5 1587 67 58 51 80 102 80 186 0 109 -42 183 -132 233 l-53 29 -1460 2 c-1411 2 -1462 2 -1515 -16z" />
@@ -1070,14 +1225,21 @@ export const Tablas = (array) => {
                                                         return <td className="td-table-print" key={index}><h4 className='table-attribute-no-registra'>No registra</h4></td>;
                                                     } else {
                                                         if (keys == "estado") {
+                                                            let funcctionChangeEstado = "";
+                                                            if (array.cambiarEstado) {
+                                                                funcctionChangeEstado = array.cambiarEstado;
+                                                            };
+
                                                             if (data[valuesD][keys] == 0) {
-                                                                return <td className="td-table-print" key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-0'>Inactivo</h4></td>;
+                                                                return <td className="td-table-print" key={index}><h4 onClick={() =>
+                                                                    funcctionChangeEstado != "" ? funcctionChangeEstado(data[valuesD]["id"], data[valuesD][keys]) : ""
+                                                                } className='estado-0'>Inactivo</h4></td>;
                                                             } else if (data[valuesD][keys] == 1) {
-                                                                return <td className="td-table-print" key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-1'>Activo</h4></td>;
+                                                                return <td className="td-table-print" key={index}><h4 onClick={() => funcctionChangeEstado != "" ? funcctionChangeEstado(data[valuesD]["id"], data[valuesD][keys]) : ""} className='estado-1'>Activo</h4></td>;
                                                             } else if (data[valuesD][keys] == 2) {
                                                                 return <td className="td-table-print" key={index}><h4 className='estado-2'>Pendiente</h4></td>;
                                                             } else if (data[valuesD][keys] == 3 || data[valuesD][keys] == 4) {
-                                                                return <td className="td-table-print" key={index}><h4 onClick={() => array.cambiarEstado(data[valuesD]["id"], data[valuesD][keys])} className='estado-3'>Aginado</h4></td>;
+                                                                return <td className="td-table-print" key={index}><h4 onClick={() => funcctionChangeEstado != "" ? funcctionChangeEstado(data[valuesD]["id"], data[valuesD][keys]) : ""} className='estado-3'>Aginado</h4></td>;
                                                             }
 
                                                         } else {

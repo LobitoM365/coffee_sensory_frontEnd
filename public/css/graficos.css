@@ -1,5 +1,4 @@
 .graphicBox{
-    margin: auto;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -21,14 +20,8 @@
     text-transform: uppercase;
     padding: 5px;
 }
-.Tablecolors{
-    width: 15rem;
-    height: 20rem;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;    
-}
-.BoxOptions{
+
+.BoxOptions,.BoxOptions-none{
     width: max-content;
     display: flex;
     justify-content: center;
@@ -36,11 +29,11 @@
     align-items: center;
     
 }
+
 .BoxOptions:hover{
     background-color: rgba(123, 124, 124, 0.542);
     border-radius: 7px;
-    padding: 2px 15px;
-    transition: padding 0.3s ;
+    padding-right: 10px;
 }
 .colors{
     width: 1.5rem;
@@ -58,4 +51,251 @@
 }
 .bueno{
    background-color: rgb(255, 174, 0);
+}
+.barras{
+    width: 20px !important;
+    height: 10%;
+}
+
+.BocCharts{
+    width: '1000px';
+    height: '500px';
+}
+.formulario{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+   margin: auto;
+  
+}
+/* #fecha2,#muestras_id2,#anio2,#limite2{
+    pointer-events: none;
+} */
+.input{
+    
+    padding: 10px;
+    font-size: 1em;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 10px;
+    outline: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom:1px solid gray;
+    border-radius: 3px;
+    
+}
+.input:hover{
+    transition: border 2px linear;
+    animation: colores 10s infinite; /* 4s para hacer que el ciclo completo de colores dure 4 segundos */
+    background-color: rgb(239, 245, 245);
+    border-left: none;
+    border-right: none;
+    border-top: none;
+}
+.input:focus{
+    border: 0.7px solid rgb(38, 132, 255);
+}
+.limit{
+    width: 100px;
+    
+}
+
+@keyframes colores {
+    0% {
+        border-bottom: 2px solid red;
+    }
+    25% {
+        border-bottom: 2px solid green;
+    }
+    50% {
+        border-bottom: 2px solid blue;
+    }
+    75% {
+        border-bottom: 2px solid yellow;
+    }
+    100% {
+        border-bottom: 2px solid grey;
+    }
+}
+.SinGraficos{
+    width: 100%;
+    
+    border-radius: 100%;
+    box-shadow: 1px 3px 6px 1px rgb(116,167,183);
+}
+.SinGraficos2{
+    width: 30%;
+    border-radius: 100%;
+    box-shadow: 1px 3px 6px 1px rgb(116,167,183);
+}
+.text-Graphic-none{
+    font-size: 1.5em;
+    padding: 50px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    animation: coloresLetter 10s infinite;
+}
+
+@keyframes coloresLetter {
+    0% {
+        color: rgb(251,1,9)
+    }
+    25% {
+        color: rgb(36,159,222)
+    }
+    50% {
+        color:  rgb(202,49,0)
+    }
+    75% {
+        color:  rgb(149, 2, 3);
+    }
+    100% {
+        color:  rgb(40, 2, 1);
+    }
+}
+
+#graficos{
+    width: 100%;
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: auto;
+    
+    
+    
+}
+.Graphic-none{
+    background-color: rgb(242, 242, 242);
+    border-radius: 3px;
+    box-shadow: 1px 1px 5px 1.5px gray;
+    width: 80%;
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px;
+}
+@media only screen and (min-width: 768px) and (max-width: 1240px) {
+    .formulario{
+        
+        display: flex;
+        margin: 1%;
+        margin-bottom: 2%;
+        margin-top: 3%;
+    }
+    .input{
+        background-color: white;
+        height: 22px; 
+    }
+    h3{
+        font-size: 0.8em;
+        overflow: hidden;
+       
+    }
+    .select2{
+        
+        width: 100%;
+        border-top:none ;
+        border-bottom: 1px solid gray;
+        border-radius: 3px;
+    }
+    .select2:focus{
+        
+        width: 20%;
+    }
+
+    .SinGraficos{
+        width: 75%;
+        
+        border-radius: 100%;
+        box-shadow: 1px 3px 6px 1px rgb(116,167,183);
+    }
+    .SinGraficos2{
+        width: 50%;
+        border-radius: 100%;
+        box-shadow: 1px 3px 6px 1px rgb(116,167,183);
+    }
+    .text-Graphic-none{
+        font-size: 1em;
+        padding: 20px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        animation: coloresLetter 10s infinite;
+    }
+    
+    @keyframes coloresLetter {
+        0% {
+            color: rgb(251,1,9)
+        }
+        25% {
+            color: rgb(36,159,222)
+        }
+        50% {
+            color:  rgb(202,49,0)
+        }
+        75% {
+            color:  rgb(149, 2, 3);
+        }
+        100% {
+            color:  rgb(40, 2, 1);
+        }
+    }
+    
+    #graficos{
+       /*  max-width: 100%;
+        height: 50vh; */
+       
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        
+    }
+
+
+}
+@media only screen and (max-width: 768){
+    .formulario{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: auto; 
+        background-color: #4ec74e;
+    }
+    /* #fecha2,#muestras_id2,#anio2,#limite2{
+        pointer-events: none;
+    } */
+    .input{
+        
+        padding: 10px;
+        font-size: 1em;
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 10px;
+        outline: none;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        border-bottom:1px solid gray;
+        border-radius: 3px;
+        
+    }
+    .input:hover{
+        transition: border 2px linear;
+        animation: colores 10s infinite; /* 4s para hacer que el ciclo completo de colores dure 4 segundos */
+        background-color: rgb(239, 245, 245);
+        border-left: none;
+        border-right: none;
+        border-top: none;
+    }
+    .input:focus{
+        border: 0.7px solid rgb(38, 132, 255);
+    }
+    .limit{
+        width: 100px;
+        
+    }
 }

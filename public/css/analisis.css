@@ -1,0 +1,266 @@
+.div-info-analisis {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.div-contenido-info-analisis {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.div-table-analisis {
+    width: 600px !important;
+    background-color: rgba(220, 220, 220, 0.331);
+}
+
+#divContentFormResult {
+    width: max-content;
+}
+
+#divContentFormResult .div-body-form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+#divContentFormResult .contenido-info-resultado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.iframe-formato-sca {
+    width: 1500px;
+    max-width: 100%;
+    height: 500px;
+
+}
+
+.value-range-item {
+    width: 100%;
+    height: 100%;
+}
+
+.iframe-vacio-formato-sca {
+    background-color: #00000021;
+    cursor: not-allowed;
+    border-radius: 4px;
+}
+
+.cotent-info-analisis {
+    /* display: flex; */
+    /* justify-content: center; */
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.cotent-info-analisis .div-info-analisis {
+    width: max-content;
+}
+
+.form-registar-formato-sca {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+#iframeFormRegister {
+    width: 2500px;
+}
+
+.table-formato-fisico-template td,
+.table-formato-fisico-template th {
+    border: 1px solid black;
+    padding: 10px 20px;
+}
+
+.table-formato-fisico-template th {
+    background-color: rgb(13, 136, 97);
+    color: white;
+}
+
+.table-formato-fisico-template {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.div-table-formato-fisico-template {
+    width: 1200px;
+    max-width: 100%;
+}
+
+.div-content-info-analisis-formato {
+    max-width: 100%;
+}
+
+.no-registra-formato-fisico {
+    display: flex;
+    color: #7171719c;
+    font-weight: bolder;
+    width: max-content;
+    position: relative;
+}
+
+.line-no-registra-formato-fisico {
+    width: 100%;
+    height: 1.5px;
+    background-color: rgba(113, 113, 113, 0.404);
+    position: absolute;
+    top: 50%;
+    transform: rotate(5deg);
+}
+
+#divFormFormatoFisico .form-register-formato-fisico {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px 80px;
+}
+
+#divFormFormatoFisico {
+    width: 100%;
+}
+
+#divFormFormatoFisico>div>div>div {
+    display: flex;
+}
+
+.div-body-form {
+    width: 100% !important;
+}
+
+.contenido-info-resultado {
+    max-width: 100%;
+}
+
+.contenido-info-resultado h3 {
+    padding: 10px;
+    border-radius: 20px;
+    background-color: rgb(255, 169, 116);
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+@media screen and (max-width: 1360px) {
+    #divFormFormatoFisico .form-register-formato-fisico {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px 80px;
+    }
+}
+
+@media screen and (max-width: 990px) {
+    #divFormFormatoFisico .form-register-formato-fisico {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px 80px;
+    }
+}
+
+@media screen and (max-width: 610px) {
+    #divFormFormatoFisico .form-register-formato-fisico {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px 80px;
+    }
+}
+
+.info-analisis {
+    background-color: rgba(220, 220, 220, 0.149);
+    border-radius: 8px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.386);
+}
+
+.title-info {
+    display: flex;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 10px;
+    gap: 20px;
+    color: whitesmoke;
+    background-color: rgb(0, 140, 93);
+}
+
+
+.div-info-analisis div {
+    padding: 10px 16px 10px 16px;
+    border: 1px solid rgb(205, 205, 205);
+}
+
+.div-info-analisis div p {
+    text-transform: capitalize;
+}
+
+.title-svg {
+    border-radius: 100px;
+    padding: 5px 10px 0px 10px;
+    background-color: white;
+    width: 25px;
+}
+
+.info-catador>div {
+    padding: 20px;
+}
+
+.icon-ver-encargados {
+    background-color: orange;
+    font-size: 1.2em;
+    font-weight: bolder;
+}
+
+.button-asignar-analisis {
+    background-color: rgb(235, 130, 11) !important;
+}
+
+.div-content-asignar {
+    display: flex;
+    gap: 70px;
+}
+
+.table-asignar .div-table {
+    width: 100%;
+}
+
+.table-asignar .div-filters,
+.table-asignar .table-component,
+.table-asignar thead,
+.table-asignar #inputSearch {
+    background-color: #efecec !important;
+}
+
+.table-asignar {
+    width: 1300px;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.modal-table #divContentForm {
+    background-color: rgb(255, 255, 255);
+}
+
+.input-global .head-input {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+.input-global .head-input label{
+    
+}
+
+.div-asign-elements {
+    width: 600px;
+    flex: none;
+}
+
+@media screen and (max-width : 1080px) {
+    .div-asign-elements{
+        width: 100%;
+    }
+    .div-content-asignar {
+        flex-direction: column;
+    }
+    
+}

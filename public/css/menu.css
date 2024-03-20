@@ -591,7 +591,6 @@ body {
 }
 
 .div-img-perfil-nav img {
-    width: 100%;
     height: 100%;
 }
 
@@ -681,4 +680,8 @@ body {
         height: 100%;
         margin-bottom: 0 !important;
     }
+}
+
+.div-ver-iconos .img-icono{
+    border-radius: 100%;
 }

@@ -194,7 +194,7 @@ export const Profile = (data) => {
 
 
     }
-    async function loadImg(e) {
+    async function loadImg(e, tipo) {
         try {
             const father = e.target;
             const input = document.createElement("input")
@@ -215,11 +215,26 @@ export const Profile = (data) => {
                         formData.forEach((input, key) => {
                             console.log(`${key}: ${input}`);
                         });
-                        const response = await Api.post("/img/icono/cargar", formData);
-                        if (response.data.status == true) {
-                            listarIconos();
+                        let route = "cargar"
+                        let method = "post"
+                        if (tipo == "editar") {
+                            route = "actualizar/" + focusImgChange.id
+                            method = "put"
                         }
-                        console.log(response,"ressssssss")
+                        const response = await Api[method]("/img/icono/" + route, formData);
+                        if (response.data.status == true) {
+                            fetchUser()
+                            listarIconos();
+                            setModalImgChange();
+                        } else if (response.data.register_error) {
+                            setStatusAlert(true);
+                            setdataAlert({
+                                status: "false",
+                                description: response.data.register_error,
+                                "tittle": "Error de validación.",
+                            });
+                        }
+                        console.log(response, "ressssssss")
                     }
                 }
                 input.remove()
@@ -234,6 +249,8 @@ export const Profile = (data) => {
             const response = await Api.post("/img/icono/predeterminar/" + id)
             if (response.data.status == true) {
                 fetchUser()
+                listarIconos()
+                setModalImgChange()
             }
             console.log(response, "siuuuuuuu")
         } catch (e) {
@@ -372,7 +389,7 @@ export const Profile = (data) => {
                 {modalImg ? <GlobalModal statusModal={setModaImgs} key={"icons-img"} class="modal-img" content={
                     <div className='div-icons-img' key={"div-icons-img"} >
                         {imgs.length >= 5 ? "" :
-                            <div className='load-icono' onClick={(e) => { loadImg(e) }}>
+                            <div className='load-icono' onClick={(e) => { loadImg(e, "cargar") }}>
                                 <svg viewBox="0 0 182.000000 164.000000" preserveAspectRatio="xMidYMid meet">
 
                                     <g transform="translate(0.000000,164.000000) scale(0.100000,-0.100000)" stroke="none">
@@ -391,7 +408,7 @@ export const Profile = (data) => {
                                         imgs.map((value, key) => {
                                             return <div key={key} className='div-imgs-iconos-add'>
                                                 <img className='img-icono' src={"http://" + host + ":3000/img/usuarios/" + (value.usuarios_id ? value.usuarios_id : "") + "/iconos/" + (value.nombre ? value.nombre : "")} />
-                                                <div onClick={(e) => { setFocusImgChange({ id: value.id, src: "http://" + host + ":3000/img/usuarios/" + (value.usuarios_id ? value.usuarios_id : "") + "/iconos/" + (value.nombre ? value.nombre : "") }); setModalImgChange(true) }} className='div-ver-iconos'>
+                                                <div onClick={(e) => { setFocusImgChange({ id: value.id, src: "http://" + host + ":3000/img/usuarios/" + (value.usuarios_id ? value.usuarios_id : "") + "/iconos/" + (value.nombre ? value.nombre : ""), estado: value.estado }); setModalImgChange(true) }} className='div-ver-iconos'>
                                                     <h4>Ver</h4>
                                                 </div>
                                             </div>
@@ -407,13 +424,13 @@ export const Profile = (data) => {
                         <div >
                             <div className='div-img-focus'>
                                 <img className='img-focus' src={focusImgChange.src} alt="" />
-                                <div onClick={() => { }} className='div-ver-iconos'>
+                                <div onClick={(e) => { loadImg(e, "editar") }} className='div-ver-iconos'>
                                     <h4>Cambiar</h4>
                                 </div>
                             </div>
                             <div className='div-buttons-img-focus'>
                                 {/* <button className='button-cambiar-img-focus'>Cambiar</button> */}
-                                <button onClick={() => { predeterminarImg(focusImgChange.id) }} className='button-predeterminar-img-focus'>Predeterminar</button>
+                                <button onClick={() => { predeterminarImg(focusImgChange.id) }} className='button-predeterminar-img-focus'>{focusImgChange.estado == 0 ? "Predeterminar" : "Quitar"}</button>
                                 <button onClick={() => { eliminarImg(focusImgChange.id) }} className='button-eliminar-img-focus'>Eliminar</button>
                             </div>
                         </div>

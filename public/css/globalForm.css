@@ -12,8 +12,7 @@
     overflow-y: auto;
     background-color: rgba(0, 0, 0, 0.321);
 }
-
-.div-form {
+#modalForm .div-form {
     background-color: white;
     display: flex;
     grid-template-columns: 1fr;
@@ -28,8 +27,7 @@
     max-width: 100%;
 
 }
-
-.div-content-form {
+#modalForm .div-content-form {
     z-index: 99999;
     background-color: white;
     border-radius: 4px;
@@ -42,15 +40,13 @@
     height: max-content;
     position: relative;
 }
-
-.div-body-form {
+#modalForm .div-body-form {
     width: max-content;
     max-width: 100%;
     display: flex;
     gap: 30px;
     position: relative;
-}
-.icon-quit-svg-form {
+}#modalForm .icon-quit-svg-form {
     width: 20px;
     cursor: pointer;
     padding: 8px;
@@ -63,7 +59,6 @@
     top: 0;
     right: 0;
 }
-
-.icon-quit-svg-form:hover {
+#modalForm .icon-quit-svg-form:hover {
     background-color: rgba(150, 149, 149, 0.358);
 }

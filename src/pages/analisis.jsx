@@ -364,6 +364,7 @@ export const Analisis = (userInfo) => {
     const keys = {
         "an_id": {
             "referencia": "Id",
+            "priority" : 1
         },
         "calidad": {
             "referencia": "Calidad",
@@ -501,7 +502,8 @@ export const Analisis = (userInfo) => {
                 }
             },
             "class": "div-reporte-pdf",
-            "upper_case": true
+            "upper_case": true,
+            "priority" : 2
         }
     }
 

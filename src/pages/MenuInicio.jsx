@@ -4,8 +4,6 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 
 export const MenuInicio = ({ userInfo }) => {
     const location = useLocation()
-
-    console.log(location.pathname)
     return (
         <>
             <link rel="stylesheet" href="css/menuInicio.css" />
@@ -16,7 +14,6 @@ export const MenuInicio = ({ userInfo }) => {
                 </div>
             </div>
             <div className="menu-horizontal-inicio direction-menu">
-
                 <nav>
                     <ul>
                         <li>

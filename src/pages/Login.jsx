@@ -15,8 +15,6 @@ export const Login = (data) => {
     const [eyes, setEyes] = useState(false);
     const [loader, serLoader] = useState(false);
 
-
-
     // useEffect(() => {
         
 

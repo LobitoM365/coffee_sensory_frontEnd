@@ -1,0 +1,151 @@
+.img-icono {
+    height: 100%;
+}
+
+.div-imgs-iconos {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.load-icono {
+    border: 3px solid black;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.load-icono svg {
+    width: 70%;
+    fill: rgb(0, 0, 0);
+    margin-top: 5px;
+}
+
+.load-icono:hover {
+    background-color: gray;
+}
+
+.load-icono:hover svg {
+    fill: rgb(44, 44, 44) !important;
+}
+
+.div-icons-img {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.div-ver-iconos {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(54, 21, 78, 0.259);
+    top: 0;
+    left: 0;
+    color: white;
+    font-weight: bolder;
+    font-size: 1.2em;
+    cursor: pointer;
+    display: none;
+}
+
+.div-img-perfil-usuario:hover .div-ver-iconos {
+    display: flex;
+
+}
+
+.div-img-focus {
+    width: 300px;
+    height: 300px;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    overflow: hidden;
+    border-radius: 100%;
+    border: 2px solid rgb(28, 15, 65);
+}
+
+.div-img-focus img {
+    height: 100%;
+}
+
+.div-img-focus {
+    width: 300px;
+    max-width: 100%;
+    height: 0;
+    padding-top: 100%;
+    position: relative;
+}
+
+.div-img-focus img {
+    position: absolute;
+    top: 0;
+    height: 100%;
+}
+
+.div-img-focus:hover .div-ver-iconos {
+    display: flex;
+}
+
+.div-buttons-img-focus {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px 10px 0px 10px;
+}
+
+.div-buttons-img-focus button {
+    padding: 10px;
+    border: unset;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    font-weight: bolder;
+    width: 120px;
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+.button-eliminar-img-focus {
+    background-color: red;
+}
+
+.button-predeterminar-img-focus {
+    background-color: orange;
+}
+
+.button-cambiar-img-focus {
+    background-color: rgb(13, 187, 106);
+}
+
+.div-imgs-iconos-add:hover .div-ver-iconos {
+    display: flex;
+}
+
+.div-imgs-iconos-add,
+.load-icono {
+    position: relative;
+    border-radius: 100%;
+    overflow: hidden;
+    width: 200px;
+    height: 200px;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.icon-ver-imgs{
+    background-color: orange !important;
+}

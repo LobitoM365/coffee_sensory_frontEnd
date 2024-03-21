@@ -189,8 +189,7 @@
     gap: 30px;
     height: max-content;
     position: relative;
-    height: 32px;
-
+    flex-wrap: wrap;
 }
 
 .filter-estado {
@@ -369,7 +368,7 @@
     background-color: rgb(11, 46, 75);
     border-radius: 4px;
     color: white;
-    font-size: 1em;
+    font-size: 1.2em;
     font-weight: bolder;
     cursor: pointer;
     border: unset;

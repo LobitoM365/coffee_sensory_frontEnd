@@ -3,10 +3,8 @@ import { Tablas } from "../componentes/tablas.jsx"
 import Api, { host } from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 import { FormResultados } from '../componentes/FormResultados.jsx'
-import { GlobalModal } from '../componentes/globalModal.jsx'
-import { GlobalInputs } from '../componentes/globalInputs.jsx'
 
-export const Analisis = (userInfo) => {
+export const Formatos = (userInfo) => {
     if (userInfo.socket) {
         const socket = userInfo.socket;
 
@@ -23,35 +21,6 @@ export const Analisis = (userInfo) => {
     const [dataModalResultado, setDataModalResultado] = useState(false);
     const [filterPdfLimit, setFilterPdflimit] = useState({ status: false });
     const [dataModalResultadoAnalisis, setDataModalResultadoAnalisis] = useState(false);
-    const [statusModalAsignar, setStatusModalAsignar] = useState(false);
-    const [analisisAsignar, setAnalisisAsignar] = useState();
-
-    const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
-        "buttons": {
-            "add": true,
-            "asignar": {
-                "normal": true,
-                "inputs": {
-                    "ver": {
-                        "type": "button",
-                        "referencia": "Asignar",
-                        "function": {
-                            "value": asignarAnalisis,
-                            "execute": {
-                                "type": "table",
-                                "value": "an_id"
-                            }
-                        },
-                        "class": "button-asignar-analisis"
-                    }
-                },
-                "class": "div-reporte-pdf",
-                "upper_case": true
-            },
-            "reporte": true,
-        }
-
-    });
 
 
 
@@ -77,44 +46,7 @@ export const Analisis = (userInfo) => {
     const [tipoAnalisis, setTipoAnalisis] = useState(null);
     const [idAnalisisResult, setIdAnalisisResult] = useState(null);
 
-    useEffect(() => {
-        if (userInfo.userInfo) {
-            if (userInfo.userInfo.rol) {
-                const cloneButtonsHeaderTable = { ...buttonsHeaderTable }
-                if (userInfo.userInfo.rol == "administrador") {
-                    delete cloneButtonsHeaderTable["buttons"]["add"]
-                    cloneButtonsHeaderTable["buttons"]["asignar"] = {
-                        "normal": true,
-                        "inputs": {
-                            "ver": {
-                                "type": "button",
-                                "referencia": "Asignar",
-                                "function": {
-                                    "value": getEncargadosAnalisis,
-                                    "execute": {
-                                        "type": "table",
-                                        "value": "an_id"
-                                    }
-                                },
-                                "class": "button-asignar-analisis"
-                            }
-                        },
-                        "class": "div-reporte-pdf",
-                        "upper_case": true
-                    }
-                } else {
-                    delete cloneButtonsHeaderTable["buttons"]["asignar"]
-                    cloneButtonsHeaderTable["buttons"]["add"] = true
-                }
-                setButtonsHeaderTable(cloneButtonsHeaderTable)
 
-            }
-        }
-    }, [userInfo])
-
-    async function asignarAnalisis() {
-        setStatusModalAsignar(true)
-    }
     useEffect(() => {
         const cloneInputsForm = { ...inputsForm };
 
@@ -364,7 +296,6 @@ export const Analisis = (userInfo) => {
     const keys = {
         "an_id": {
             "referencia": "Id",
-            "priority" : 1
         },
         "calidad": {
             "referencia": "Calidad",
@@ -388,7 +319,7 @@ export const Analisis = (userInfo) => {
         "lote": {
             "referencia": "Lote",
             "upper_case": true
-        }/* ,
+        },
         "permission_formato_sca": {
             "referencia": "Catador Formato Sca",
             "conditions": {
@@ -440,30 +371,10 @@ export const Analisis = (userInfo) => {
                 }
             },
             "upper_case": true
-        } */,
+        },
         "fecha_creacion": {
             "referencia": "Fecha de creación",
             "format": true
-        },
-        "encargados": {
-            "referencia": "Encargados",
-            "normal": true,
-            "inputs": {
-                "ver": {
-                    "type": "button",
-                    "referencia": "Ver",
-                    "function": {
-                        "value": getEncargadosAnalisis,
-                        "execute": {
-                            "type": "table",
-                            "value": "an_id"
-                        }
-                    },
-                    "class": "icon-ver-encargados",
-                }
-            },
-            "class": "div-reporte-pdf",
-            "upper_case": true
         },
         "estado": {
             "referencia": "Estado"
@@ -502,135 +413,7 @@ export const Analisis = (userInfo) => {
                 }
             },
             "class": "div-reporte-pdf",
-            "upper_case": true,
-            "priority" : 2
-        }
-    }
-
-
-    const keysUsuarios = {
-        "us_id": {
-            "referencia": "Id",
-            "priority": 1,
-        },
-        "nombre": {
-            "referencia": "Nombre",
-            "upper_case": true,
-            "priority": 4,
-        },
-        "apellido": {
-            "referencia": "Apelido",
-            "upper_case": true,
-            "priority": 5,
-        },
-        "numero_documento": {
-            "referencia": "Numero de documento",
-            "upper_case": true,
-            "priority": 6,
-        },
-        "rol": {
-            "referencia": "Rol",
-            "upper_case": true,
-            "priority": 7,
-        },
-        "cargo": {
-            "referencia": "Cargo",
-            "upper_case": true,
-            "priority": 8,
-        },
-        "estado": {
-            "referencia": "Estado",
-            "priority": 9,
-        },
-        "formato_fisico": {
-            "referencia": "Formato Sca",
-            "normal": true,
-            "inputs": {
-                "ver": {
-                    "type": "button",
-                    "referencia": "Agregar",
-                    "function": {
-                        "value": agregarFormatoSca,
-                        "execute": {
-                            "type": "table",
-                            "value": "us_id"
-                        }
-                    }
-                }
-            },
-            "upper_case": true,
-            "priority" : 2
-        },
-        "formato_sca": {
-            "referencia": "Formato Físico",
-            "normal": true,
-            "inputs": {
-                "ver": {
-                    "type": "button",
-                    "referencia": "Agregar",
-                    "function": {
-                        "value": agregarFormatoFisico,
-                        "execute": {
-                            "type": "table",
-                            "value": "us_id"
-                        }
-                    }
-                }
-            },
-            "upper_case": true,
-            "priority" : 1
-        }
-    }
-    const [usuariosAsignar, setUsuariosAsignar] = useState([])
-    const [countRegistersAsignar, setCountRegistersAsignar] = useState(0)
-    const [usersAddAsignar, setUsersAddAsignar] = useState({});
-
-    async function agregarFormatoFisico(id) {
-        console.log(analisisAsignar, "nalisissssssssssssssASIGGGGGGGGGGGGGGGGN")
-        const cloneUsersAddAsignar = { ...usersAddAsignar }
-        cloneUsersAddAsignar["tipo"] = 2
-        setUsersAddAsignar(cloneUsersAddAsignar)
-    }
-    async function agregarFormatoSca(id) {
-        const cloneUsersAddAsignar = { ...usersAddAsignar }
-        cloneUsersAddAsignar["tipo"] = 2
-        setUsersAddAsignar(cloneUsersAddAsignar)
-    }
-
-    let [dataFilterTableAsignar, setDataFilterTableAsignar] = useState({
-        "filter": {
-            "where": {
-                "us.rol": {
-                    "value": "catador",
-                    "require": "and"
-                },
-                "us.cargo": {
-                    "value": "instructor",
-                    "require": "and"
-                },
-                "us.estado": {
-                    "value": 1,
-                    "require": "=",
-                    "require": "and"
-                }
-            }
-        }
-    })
-    async function getusuariosAsignar() {
-        try {
-            const response = await Api.post("usuarios/listar", dataFilterTableAsignar);
-            console.log(response, "usuariosssssss")
-            if (response.data.status == true) {
-                setUsuariosAsignar(response.data.data)
-                setCountRegistersAsignar(response.data.count)
-            } else if (response.data.find_error) {
-                setCountRegistersAsignar(0)
-                setUsuariosAsignar(response.data)
-            } else {
-                setUsuariosAsignar(response.data)
-            }
-        } catch (e) {
-
+            "upper_case": true
         }
     }
     const filterEstado = {
@@ -643,7 +426,6 @@ export const Analisis = (userInfo) => {
     }
     useEffect(() => {
         getAnalisis()
-        getusuariosAsignar()
     }, [])
     useEffect(() => {
         getusuarios()
@@ -657,9 +439,7 @@ export const Analisis = (userInfo) => {
     function xd2(id) {
         setInfoFormato(id, 1)
     }
-    async function getEncargadosAnalisis() {
-        setStatusModalAsignar(true)
-    }
+
     async function setInfoFormato(id, tipo) {
         try {
             setTipoAnalisis(tipo)
@@ -1382,45 +1162,10 @@ export const Analisis = (userInfo) => {
         <>
             <link rel="stylesheet" href="../../public/css/analisis.css" />
 
-            <Tablas buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <FormResultados inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
-
-            {userInfo.userInfo ?
-                userInfo.userInfo.rol ?
-                    userInfo.userInfo.rol == "administrador" ?
-                        statusModalAsignar ? (
-                            <GlobalModal statusModal={setStatusModalAsignar} key={"icons-img"} class="modal-table" content={
-                                <div className='div-content-asignar'>
-                                    <div className='div-asign-elements'>
-                                        <div>
-                                            <GlobalInputs
-                                                input={setAnalisisAsignar}
-                                                value={analisisAsignar}
-                                                class={"input-global"}
-                                                errors={{proceso:""}}
-                                                data={{
-                                                    proceso: {
-                                                        type: "select",
-                                                        referencia: "Tipo de Proceso",
-                                                        values: ["nombre"],
-                                                        opciones: [{ nombre: "certificar" }, { nombre: "practica" }],
-                                                        upper_case: true,
-                                                        key: "nombre",
-                                                    },
-                                                }} />
-                                        </div>
-                                    </div>
-                                    <Tablas class="table-asignar" userInfo={userInfo.userInfo} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} filterSeacth={filterSeacth} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegistersAsignar} data={usuariosAsignar} keys={keysUsuarios} tittle={"Usuarios"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
-                                </div>
-                            } />
-                        )
-                            : ""
-                        : ""
-                    : ""
-                : ""}
-
         </>
     )
 }

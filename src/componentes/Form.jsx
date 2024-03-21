@@ -1,5 +1,5 @@
 import { object, string } from "prop-types";
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 
 
 
@@ -12,6 +12,7 @@ export const Form = forwardRef((data, ref) => {
     const [dataSelect, setDataSelects] = useState({});
     const [inputValor, setInputValor] = useState({});
     const [keyDown, setKeydown] = useState();
+    const modalRef = useRef(null);
     const handleInputChange = (e, key, type) => {
         if (type === "text") {
             e.target.value = e.target.value.replace("  ", " ").replace(/[@!#$%^¨¨.&*()-+=[{}|;:'",_<>/?`~¡¿´´°ç-]/, "").replace(/\d+/g, "").replace("]", "").replace("[", "").trimStart()
@@ -153,67 +154,69 @@ export const Form = forwardRef((data, ref) => {
     }, [])
 
     useEffect(() => {
+        if (modalRef.current != null) {
+            const modal = modalRef.current
+            let modalForm = modalRef.current.querySelector("#modalForm");
+            let divContentForm = modalRef.current.querySelector("#divContentForm");
+            let divFondomodalForm = modalRef.current.querySelector("#divFondomodalForm");
+            let labelErrorSubmitForm = modalRef.current.querySelector(".label-error-submit-form");
 
-        let modalForm = document.getElementById("modalForm");
-        let divContentForm = document.getElementById("divContentForm");
-        let divFondomodalForm = document.getElementById("divFondomodalForm");
-        let labelErrorSubmitForm = document.querySelectorAll(".label-error-submit-form");
-
-        setTimeout(() => {
-            resizeForm()
-        }, 100);
-        document.addEventListener('keydown', function (event) {
-            setKeydown(event.key)
-        })
-        function resizeForm() {
-            if (modalForm) {
-                let displayNone = false;
-                if (modalForm.style.display == "none") {
-                    modalForm.style.display = "block"
-                    displayNone = true
-                }
+            setTimeout(() => {
+                resizeForm()
+            }, 100);
+            document.addEventListener('keydown', function (event) {
+                setKeydown(event.key)
+            })
+            function resizeForm() {
+                if (modalForm) {
+                    let displayNone = false;
+                    if (modalForm.style.display == "none") {
+                        modalForm.style.display = "block"
+                        displayNone = true
+                    }
 
 
-                if (divContentForm.scrollHeight > document.body.clientHeight) {
-                    modalForm.style.alignItems = "unset"
-                    modalForm.style.padding = "20px 20px"
-                    modalForm.style.height = "calc(100% - 40px)"
-                    modalForm.style.width = "calc(100% - 40px)"
-                    divFondomodalForm.style.height = divContentForm.clientHeight + 40 + "px"
-                    divFondomodalForm.style.width = modalForm.clientWidth + "px"
-                } else {
+                    if (divContentForm.scrollHeight > document.body.clientHeight) {
+                        modalForm.style.alignItems = "unset"
+                        modalForm.style.padding = "20px 20px"
+                        modalForm.style.height = "calc(100% - 40px)"
+                        modalForm.style.width = "calc(100% - 40px)"
+                        divFondomodalForm.style.height = divContentForm.clientHeight + 40 + "px"
+                        divFondomodalForm.style.width = modalForm.clientWidth + "px"
+                    } else {
 
+                        for (let x = 0; x < labelErrorSubmitForm.length; x++) {
+                            labelErrorSubmitForm[x].style.height = ""
+                        }
+                        divFondomodalForm.style.height = "100vh"
+                        divFondomodalForm.style.width = "100vw"
+                        modalForm.style.alignItems = "center"
+                        modalForm.style.padding = ""
+                        modalForm.style.height = "100%"
+                        modalForm.style.width = "100%"
+                    }
+                    if (displayNone) {
+                        modalForm.style.display = "none"
+                    }
                     for (let x = 0; x < labelErrorSubmitForm.length; x++) {
-                        labelErrorSubmitForm[x].style.height = ""
+
+
+                        if ((labelErrorSubmitForm[x].scrollHeight) > labelErrorSubmitForm[x].clientHeight) {
+
+                            labelErrorSubmitForm[x].style.height = "max-content"
+                        }
                     }
-                    divFondomodalForm.style.height = "100vh"
-                    divFondomodalForm.style.width = "100vw"
-                    modalForm.style.alignItems = "center"
-                    modalForm.style.padding = ""
-                    modalForm.style.height = "100%"
-                    modalForm.style.width = "100%"
-                }
-                if (displayNone) {
-                    modalForm.style.display = "none"
-                }
-                for (let x = 0; x < labelErrorSubmitForm.length; x++) {
 
-
-                    if ((labelErrorSubmitForm[x].scrollHeight) > labelErrorSubmitForm[x].clientHeight) {
-
-                        labelErrorSubmitForm[x].style.height = "max-content"
-                    }
                 }
 
             }
+            resizeForm()
+            window.addEventListener("resize", function () {
+                resizeForm()
+            })
 
         }
-        resizeForm()
-        window.addEventListener("resize", function () {
-            resizeForm()
-        })
-
-    }, [data])
+    }, [data, modalRef.current])
 
 
     const chageData = (event) => {
@@ -244,7 +247,7 @@ export const Form = forwardRef((data, ref) => {
         <>
             <link rel="stylesheet" href="/public/css/form.css" />
 
-            <div style={{ display: (!data.modalForm && !data.updateStatus) ? "none" : "" }} className="modal-form" id="modalForm">
+            <div ref={modalRef} style={{ display: (!data.modalForm && !data.updateStatus) ? "none" : "" }} className="modal-form" id="modalForm">
                 <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="div-fondo-modal-form" id="divFondomodalForm">
                 </div>
                 <div id="divContentForm" className="div-content-form">
@@ -270,7 +273,6 @@ export const Form = forwardRef((data, ref) => {
                                     {
                                         inputs.map((key, index) => {
                                             if (data.userInfo && dataInputs[key]["rol"]) {
-                                                console.log(data.userInfo,"ahahahhahah")
                                                 if (data.userInfo != undefined) {
                                                     if (!dataInputs[key]["rol"].includes(data.userInfo.rol)) {
                                                         return
@@ -395,7 +397,6 @@ export const Form = forwardRef((data, ref) => {
                                                                         const parentElement = e.target.closest(".div-select");
                                                                         const divOptions = parentElement.querySelectorAll(".opciones-input-select")
                                                                         divOptions[0] ? divOptions[0].style.display == "none" ? divOptions[0].style.display = "block" : divOptions[0].style.display = "none" : ""
-                                                                        console.log(parentElement)
                                                                     }} className="icon-chevron-estado">
                                                                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                                                             <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>

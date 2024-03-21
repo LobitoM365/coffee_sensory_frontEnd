@@ -239,28 +239,152 @@
 
 .modal-table #divContentForm {
     background-color: rgb(255, 255, 255);
+    height: max-content;
 }
 
 .input-global .head-input {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
     flex-direction: row;
     gap: 30px;
 }
-.input-global .head-input label{
+
+/* .input-global .head-input label{
     
-}
+} */
 
 .div-asign-elements {
-    width: 600px;
+    width: 850px;
     flex: none;
 }
 
 @media screen and (max-width : 1080px) {
-    .div-asign-elements{
+    .div-asign-elements {
         width: 100%;
     }
+
     .div-content-asignar {
         flex-direction: column;
     }
-    
+
+}
+
+.fiv-asignar-analisis {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.div-encargados {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+}
+
+.div-encargados>div {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.table-add-asignar {
+    width: 100%;
+}
+
+.table-add-asignar th {
+    padding: 10px;
+    background-color: orange;
+    color: white;
+    font-size: 1.2em;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.table-add-asignar td {
+    padding: 20px;
+    text-align: right;
+}
+
+.table-add-asignar td h4 {
+    text-align: left;
+}
+
+.input-cantidad-formatos {
+    width: 70px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 1.4em;
+    max-width: calc(100% - 20px);
+}
+
+.table-add-asignar svg {
+    width: 45px;
+    fill: red;
+}
+
+.button-asing-agregado {
+    background-color: gray !important;
+    cursor: unset !important;
+}
+
+.div-encargados .div-table-asignados thead {
+    position: sticky;
+    top: 0;
+}
+
+.div-encargados .div-table-asignados {
+    height: 450px;
+    overflow: auto;
+}
+
+.div-encargados .div-table-asignados::-webkit-scrollbar {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 10px;
+}
+
+.div-encargados .div-table-asignados::-webkit-scrollbar-thumb {
+    background-color: #25337c;
+    border-radius: 100px;
+}
+
+.div-encargados .div-table-asignados td div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.button-set-asignar-analisis {
+    padding: 10px 20px;
+    border: unset;
+    color: white;
+    font-weight: bolder;
+    border-radius: 2px;
+    cursor: pointer;
+    background: orange;
+}
+
+.footer-asignar {
+    display: flex;
+    justify-content: end;
+}
+
+.tr-error-table-asignar td {
+    padding: 0 !important;
+    text-align: center !important;
+    border-bottom: 1px solid red;
+    background-color: #ff00001f;
+}
+
+.tr-error-table-asignar td h4 {
+    color: red;
+    text-align: center !important;
+}
+.head-asignar-analisis{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }

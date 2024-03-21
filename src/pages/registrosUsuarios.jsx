@@ -23,7 +23,12 @@ export const RegistrosUsuarios = () => {
     const [dataAlert, setdataAlert] = useState({});
     const [modalForm, changeModalForm] = useState(false);
     let idUsuarioCambiarEstado = 0;
-
+    const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
+        "buttons": {
+            "add": true,
+            "reporte": true,
+        }
+    });
     let [inputsForm, setInputsForm] = useState(
         {
             nombre: {
@@ -571,7 +576,7 @@ export const RegistrosUsuarios = () => {
 
     return (
         <>
-            <Tablas getDataPdf={getDataPdf} clearInputs={clearInputs} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas buttonsHeaderTable={buttonsHeaderTable} getDataPdf={getDataPdf} clearInputs={clearInputs} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />

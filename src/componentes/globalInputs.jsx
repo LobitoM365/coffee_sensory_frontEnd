@@ -217,6 +217,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                 <div key={key} className="input-content-form-register">
                                     <div className="head-input">
                                         <label htmlFor={key} className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
+                                        <div>
                                         <div key={key} className="filter-estado div-select">
                                             <div key={index} style={{ display: "none" }} className="opciones opciones-input-select">
                                                 <h4 onClick={(e) => {
@@ -290,8 +291,10 @@ export const GlobalInputs = forwardRef((data, ref) => {
 
                                             </div>
                                         </div>
+                                        <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
+                                        </div>
                                     </div>
-                                    <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
+                                    
                                 </div>
                             );
                         } else if (dataInputs[key]["type"] === "date" && dataInputs[key]["visibility"] != false) {

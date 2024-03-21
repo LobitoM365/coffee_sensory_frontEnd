@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Tablas } from "../componentes/tablas.jsx"
 import Api, { host } from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 import { FormResultados } from '../componentes/FormResultados.jsx'
 import { GlobalModal } from '../componentes/globalModal.jsx'
 import { GlobalInputs } from '../componentes/globalInputs.jsx'
+import ReactDOM from "react-dom/client";
 
 export const Analisis = (userInfo) => {
     if (userInfo.socket) {
@@ -25,6 +26,10 @@ export const Analisis = (userInfo) => {
     const [dataModalResultadoAnalisis, setDataModalResultadoAnalisis] = useState(false);
     const [statusModalAsignar, setStatusModalAsignar] = useState(false);
     const [analisisAsignar, setAnalisisAsignar] = useState();
+    const [muestrasAsignar, setMuestraAsignar] = useState([]);
+    const asignarFormatoFisico = useRef(null);
+    const asignarFormatoSca = useRef(null);
+    const [errorsAsignar, setErrorsAsignar] = useState({})
 
     const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
         "buttons": {
@@ -364,7 +369,7 @@ export const Analisis = (userInfo) => {
     const keys = {
         "an_id": {
             "referencia": "Id",
-            "priority" : 1
+            "priority": 1
         },
         "calidad": {
             "referencia": "Calidad",
@@ -503,7 +508,7 @@ export const Analisis = (userInfo) => {
             },
             "class": "div-reporte-pdf",
             "upper_case": true,
-            "priority" : 2
+            "priority": 2
         }
     }
 
@@ -552,6 +557,11 @@ export const Analisis = (userInfo) => {
                     "function": {
                         "value": agregarFormatoSca,
                         "execute": {
+                            "type": "all-table"
+                        }
+                    },
+                    "data-element": {
+                        "value": {
                             "type": "table",
                             "value": "us_id"
                         }
@@ -559,7 +569,7 @@ export const Analisis = (userInfo) => {
                 }
             },
             "upper_case": true,
-            "priority" : 2
+            "priority": 2
         },
         "formato_sca": {
             "referencia": "Formato Físico",
@@ -571,6 +581,11 @@ export const Analisis = (userInfo) => {
                     "function": {
                         "value": agregarFormatoFisico,
                         "execute": {
+                            "type": "all-table"
+                        }
+                    },
+                    "data-element": {
+                        "value": {
                             "type": "table",
                             "value": "us_id"
                         }
@@ -578,23 +593,124 @@ export const Analisis = (userInfo) => {
                 }
             },
             "upper_case": true,
-            "priority" : 1
+            "priority": 1
         }
     }
     const [usuariosAsignar, setUsuariosAsignar] = useState([])
     const [countRegistersAsignar, setCountRegistersAsignar] = useState(0)
     const [usersAddAsignar, setUsersAddAsignar] = useState({});
+    const [usersAsignarFormatoFisico, setUsersAsignarFormatoFisico] = useState({});
+    const [usersAsignarFormatoSca, setUsersAsignarFormatoSca] = useState({});
+    let [deleteAsignarFormatoSca, setDeleteAsignarFormatoSca] = useState({});
 
-    async function agregarFormatoFisico(id) {
-        console.log(analisisAsignar, "nalisissssssssssssssASIGGGGGGGGGGGGGGGGN")
-        const cloneUsersAddAsignar = { ...usersAddAsignar }
-        cloneUsersAddAsignar["tipo"] = 2
-        setUsersAddAsignar(cloneUsersAddAsignar)
+    async function agregarFormatoFisico(data, e) {
+        if (!usersAsignarFormatoFisico[data.id]) {
+            let cloneUsersAsignarFormatoFisico = { ...usersAsignarFormatoFisico }
+            cloneUsersAsignarFormatoFisico[data.id] = {
+                "cantidad": 1
+            }
+            setUsersAsignarFormatoFisico(cloneUsersAsignarFormatoFisico)
+            if (asignarFormatoFisico.current != null) {
+                e.target.innerHTML = "Agregado"
+                e.target.classList.add("button-asing-agregado")
+                let tr = document.createElement("tr");
+                tr.setAttribute("id", "fisico_" + data.id)
+                tr.innerHTML = "<td> <div><svg version='1.0' viewBox='0 0 512.000000 512.000000'><g transform='translate(0.000000,512.000000) scale(0.100000,-0.100000)'  stroke='none'> <path d='M2235 5105 c-471 -62 -895 -241 -1280 -543 -91 -71 -326 -307 -398 -399 -305 -386 -489 -833 -546 -1318 -14 -114 -14 -454 -1 -565 51 -430 185 -795 422 -1150 313 -467 780 -823 1311 -1001 142 -47 240 -72 402 -100 173 -31 541 -38 726 -14 579 72 1085 320 1500 734 420 421 677 954 739 1533 15 144 12 455 -5 598 -73 585 -342 1118 -777 1535 -399 384 -901 621 -1458 691 -141 17 -496 17 -635 -1z m-401 -1547 c35 -10 95 -65 384 -352 l342 -340 343 340 c355 354 368 364 448 364 111 0 219 -108 219 -219 0 -80 -10 -93 -364 -448 l-340 -343 340 -343 c354 -355 364 -368 364 -448 0 -111 -108 -219 -219 -219 -80 0 -93 10 -448 364 l-343 340 -342 -340 c-356 -354 -369 -364 -449 -364 -111 0 -219 108 -219 219 0 80 10 93 364 449 l340 342 -340 343 c-354 355 -364 368 -364 448 0 108 107 217 214 219 16 0 47 -5 70 -12z'/></g></svg></div></td> <td><div> <h4>" + (data.id + ", " + data.numero_documento + ", " + data.nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) + "</h4> <div> </td> <td><div><input value='1' class='input-cantidad-formatos' type='text' /><div> </td> ";
+                asignarFormatoFisico.current.append(tr)
+                tr.querySelector("input").addEventListener("input", function (e) {
+                    e.target.value = e.target.value.replace(/\D/g, '')
+                    if (e.target.value == "") {
+
+                    } else if (e.target.value > 10) {
+                        e.target.value = 10
+                    } else if (e.target.value < 0) {
+                        e.target.value = 1
+                    }
+                    setUsersAsignarFormatoFisico(prevState => {
+                        let cloneUsersAsignarFormatoFisico = { ...prevState }
+                        if (cloneUsersAsignarFormatoFisico[data.id]) {
+                            cloneUsersAsignarFormatoFisico[data.id]["cantidad"] = e.target.value
+                        }
+                        return cloneUsersAsignarFormatoFisico;
+                    });
+                })
+                tr.querySelector("svg").addEventListener("click", function () {
+                    /*  usersAsignarFormatoFisico = usersAsignarFormatoFisico.filter(item => item !== data.id); */
+                    setUsersAsignarFormatoFisico(prevState => {
+                        let cloneUsersAsignarFormatoFisico = { ...prevState };
+                        if (cloneUsersAsignarFormatoFisico[data.id]) {
+                            delete cloneUsersAsignarFormatoFisico[data.id];
+                        }
+                        return cloneUsersAsignarFormatoFisico;
+                    });
+
+
+                    e.target.innerHTML = "Agregar"
+                    e.target.classList.remove("button-asing-agregado")
+                    tr.remove()
+                })
+            }
+        }
+
     }
-    async function agregarFormatoSca(id) {
-        const cloneUsersAddAsignar = { ...usersAddAsignar }
-        cloneUsersAddAsignar["tipo"] = 2
-        setUsersAddAsignar(cloneUsersAddAsignar)
+    async function agregarFormatoSca(data, e) {
+        console.log(data.id, usersAsignarFormatoSca)
+
+        if (!usersAsignarFormatoSca[data.id]) {
+            /* usersAsignarFormatoSca.push(data.id) */
+            let cloneUsersAsignarFormatoSca = { ...usersAsignarFormatoSca }
+            cloneUsersAsignarFormatoSca[data.id] = {
+                "cantidad": 1
+            }
+            setUsersAsignarFormatoSca(cloneUsersAsignarFormatoSca)
+
+            if (asignarFormatoSca.current != null) {
+                e.target.innerHTML = "Agregado"
+                e.target.classList.add("button-asing-agregado")
+                let tr = document.createElement("tr");
+                tr.setAttribute("id", "sca_" + data.id)
+                tr.innerHTML = "<td> <div><svg version='1.0' viewBox='0 0 512.000000 512.000000'><g transform='translate(0.000000,512.000000) scale(0.100000,-0.100000)'  stroke='none'> <path d='M2235 5105 c-471 -62 -895 -241 -1280 -543 -91 -71 -326 -307 -398 -399 -305 -386 -489 -833 -546 -1318 -14 -114 -14 -454 -1 -565 51 -430 185 -795 422 -1150 313 -467 780 -823 1311 -1001 142 -47 240 -72 402 -100 173 -31 541 -38 726 -14 579 72 1085 320 1500 734 420 421 677 954 739 1533 15 144 12 455 -5 598 -73 585 -342 1118 -777 1535 -399 384 -901 621 -1458 691 -141 17 -496 17 -635 -1z m-401 -1547 c35 -10 95 -65 384 -352 l342 -340 343 340 c355 354 368 364 448 364 111 0 219 -108 219 -219 0 -80 -10 -93 -364 -448 l-340 -343 340 -343 c354 -355 364 -368 364 -448 0 -111 -108 -219 -219 -219 -80 0 -93 10 -448 364 l-343 340 -342 -340 c-356 -354 -369 -364 -449 -364 -111 0 -219 108 -219 219 0 80 10 93 364 449 l340 342 -340 343 c-354 355 -364 368 -364 448 0 108 107 217 214 219 16 0 47 -5 70 -12z'/></g></svg></div></td> <td><div> <h4>" + (data.id + ", " + data.numero_documento + ", " + data.nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) + "</h4> <div> </td> <td><div><input value='1' class='input-cantidad-formatos' type='text' /><div> </td> ";
+                asignarFormatoSca.current.append(tr)
+                tr.querySelector("input").addEventListener("input", function (e) {
+                    e.target.value = e.target.value.replace(/\D/g, '')
+                    if (e.target.value == "") {
+
+                    } else if (e.target.value > 10) {
+                        e.target.value = 10
+                    } else if (e.target.value < 0) {
+                        e.target.value = 1
+                    }
+                    /*   if (usersAsignarFormatoSca[data.id]) {
+                          usersAsignarFormatoSca[data.id]["cantidad"] = e.target.value
+                      } */
+                    setUsersAsignarFormatoSca(prevState => {
+                        let cloneUsersAsignarFormatoSca = { ...prevState }
+                        if (cloneUsersAsignarFormatoSca[data.id]) {
+                            cloneUsersAsignarFormatoSca[data.id]["cantidad"] = e.target.value
+                        }
+                        return cloneUsersAsignarFormatoSca;
+                    });
+                })
+                tr.querySelector("svg").addEventListener("click", function () {
+                    
+                    if(tr.nextSibling){
+                        if(tr.nextSibling.classList.contains("tr-error-table-asignar")){
+                            tr.nextSibling.remove()
+                        }
+                    }
+                    setUsersAsignarFormatoSca(prevState => {
+                        let cloneUsersAsignarFormatoSca = { ...prevState }
+                        if (cloneUsersAsignarFormatoSca[data.id]) {
+                            delete cloneUsersAsignarFormatoSca[data.id]
+                        }
+                        return cloneUsersAsignarFormatoSca;
+                    });
+                    e.target.innerHTML = "Agregar"
+                    e.target.classList.remove("button-asing-agregado")
+                    tr.remove()
+                })
+            }
+        }
     }
 
     let [dataFilterTableAsignar, setDataFilterTableAsignar] = useState({
@@ -606,11 +722,6 @@ export const Analisis = (userInfo) => {
                 },
                 "us.cargo": {
                     "value": "instructor",
-                    "require": "and"
-                },
-                "us.estado": {
-                    "value": 1,
-                    "require": "=",
                     "require": "and"
                 }
             }
@@ -720,6 +831,7 @@ export const Analisis = (userInfo) => {
         }
     }
     useEffect(() => {
+        getMuestrasAsignar()
         setTimeout(() => {
             async function openAsing() {
                 if (localStorage.getItem("analisis_id") && localStorage.getItem("tipos_analisis_id")) {
@@ -1377,7 +1489,90 @@ export const Analisis = (userInfo) => {
             console.error('Error:', error);
         }
     }
+    async function getMuestrasAsignar() {
+        try {
+            const filterMuestra = {
+                "filter": {
+                    "where": {
+                        "us.rol": {
+                            "value": "cafetero",
+                            "require": "and"
+                        },
+                        "us.cargo": {
+                            "value": "cliente",
+                            "require": "and"
+                        }
+                    }
+                }
+            }
+            console.log("---------------    ")
+            const response = await Api.post("muestra/listar", filterMuestra);
+            if (response.data.status == true) {
+                setMuestraAsignar(response.data.data)
+            }
+            console.log(response, "muestraaaaaaaaaa")
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
+    async function setAsignarAnalisis() {
+        try {
+            const trError = document.querySelectorAll(".tr-error-table-asignar")
+            for (let x = 0; x < trError.length; x++) {
+                if (trError[x].previousSibling) {
+                    trError[x].previousSibling.style.background = ""
+                }
+                trError[x].remove()
+            }
+            const data = {
+                "muestras_id": analisisAsignar,
+                "formato_fisico": usersAsignarFormatoFisico,
+                "formato_sca": usersAsignarFormatoSca,
+            }
+            const response = await Api.post("analisis/asignar", data)
+            setErrorsAsignar({})
 
+            if (response.data.status == true) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Inténtalo de nuevo"
+                    }
+                )
+            } else if (response.data.register_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.register_error,
+                        "tittle": "Inténtalo de nuevo"
+                    }
+                )
+            } else if (response.data.errors) {
+                const keysErrors = Object.keys(response.data.errors)
+                for (let x = 0; x < keysErrors.length; x++) {
+                    const element = document.getElementById(keysErrors[x])
+                    if (element) {
+                        element.style.background = "#ff00001f"
+                        let trError = document.createElement("tr")
+                        trError.classList.add("tr-error-table-asignar")
+                        let tdError = document.createElement("td")
+                        tdError.innerHTML = "<h4>" + response.data.errors[keysErrors[x]] + " </h4>"
+                        tdError.setAttribute("colspan", "9999")
+                        trError.appendChild(tdError)
+                        element.parentNode.insertBefore(trError, element.nextSibling)
+                        console.log(element.parentNode)
+                    }
+                }
+                setErrorsAsignar(response.data.errors)
+            }
+            console.log(response, "resssssssss")
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
     return (
         <>
             <link rel="stylesheet" href="../../public/css/analisis.css" />
@@ -1394,22 +1589,67 @@ export const Analisis = (userInfo) => {
                             <GlobalModal statusModal={setStatusModalAsignar} key={"icons-img"} class="modal-table" content={
                                 <div className='div-content-asignar'>
                                     <div className='div-asign-elements'>
-                                        <div>
-                                            <GlobalInputs
-                                                input={setAnalisisAsignar}
-                                                value={analisisAsignar}
-                                                class={"input-global"}
-                                                errors={{proceso:""}}
-                                                data={{
-                                                    proceso: {
-                                                        type: "select",
-                                                        referencia: "Tipo de Proceso",
-                                                        values: ["nombre"],
-                                                        opciones: [{ nombre: "certificar" }, { nombre: "practica" }],
-                                                        upper_case: true,
-                                                        key: "nombre",
-                                                    },
-                                                }} />
+                                        <div className='fiv-asignar-analisis'>
+                                            <div className='head-asignar-analisis'>
+                                                <h2>Asignar análisis</h2>
+                                                <GlobalInputs
+                                                    input={setAnalisisAsignar}
+                                                    value={analisisAsignar}
+                                                    class={"input-global"}
+                                                    errors={errorsAsignar}
+                                                    data={{
+                                                        muestras_id: {
+                                                            type: "select",
+                                                            referencia: "Muestra",
+                                                            values: ["id", "numero_documento", "nombre_completo", "finca", "lote"],
+                                                            opciones: muestrasAsignar,
+                                                            upper_case: true,
+                                                            key: "id",
+                                                        },
+                                                    }} />
+                                            </div>
+
+                                            <h2>Encargados</h2>
+
+                                            <div className='div-encargados'>
+                                                <div>
+                                                    <h3>Formato Físico</h3>
+                                                    <div className='div-table-asignados'>
+                                                        <table cellSpacing={0} className='table-add-asignar'>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th>Instructor</th>
+                                                                    <th>Cantidad</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody ref={asignarFormatoFisico} id='formatoFisico'>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h3>Formato Sca</h3>
+                                                    <div className='div-table-asignados'>
+                                                        <table cellSpacing={0} className='table-add-asignar'>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th>Instructor</th>
+                                                                    <th>Cantidad</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody ref={asignarFormatoSca} id='formatoSca'>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className='footer-asignar'>
+                                                <button onClick={() => { setAsignarAnalisis() }} className='button-set-asignar-analisis'>Asignar</button>
+                                            </div>
                                         </div>
                                     </div>
                                     <Tablas class="table-asignar" userInfo={userInfo.userInfo} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} filterSeacth={filterSeacth} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegistersAsignar} data={usuariosAsignar} keys={keysUsuarios} tittle={"Usuarios"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />

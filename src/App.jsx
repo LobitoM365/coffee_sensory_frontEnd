@@ -126,7 +126,7 @@ export default function App(data) {
             <Route path='muestras/verRegistros' element={<VerRegistros />} />
           </Route>
         </Route>
-
+ 
       </Routes>
 
     </>

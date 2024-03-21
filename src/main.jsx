@@ -11,8 +11,7 @@ const socket = io('http://' + host + ':3000', {
   withCredentials: true
 });
 socket.on('connect_error', (error) => {
-  console.error('Error de conexión:', error.message);
-  alert('¡Ups! Parece que el servidor no está disponible en este momento.');
+
 });
 const Root = () => {
   useEffect(() => {

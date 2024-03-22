@@ -11,8 +11,7 @@ export const Fincas = (userInfo) => {
 
             }
         }
-    })
-        ;
+    });
     const [fincas, setFincas] = useState([])
     const [fincaEdit, setfincaEdit] = useState([])
     const [updateStatus, setUpdateStatus] = useState(false)
@@ -29,6 +28,13 @@ export const Fincas = (userInfo) => {
     const [focusImgChange, setFocusImgChange] = useState({})
     const [focusFinca, setFocusFinca] = useState(0)
     const [imgs, setImgs] = useState([])
+
+    const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
+        "buttons": {
+            "add": true,
+            "reporte": true,
+        }
+    });
 
     async function listarIconos() {
         try {
@@ -162,14 +168,14 @@ export const Fincas = (userInfo) => {
                 referencia: "Nombre",
                 upper_case: true,
             },
-            longitud: {
-                type: "ubicacion",
-                referencia: "Longitud",
-            },
-            latitud: {
-                type: "ubicacion",
-                referencia: "Latitud"
-            },
+            // longitud: {
+            //     type: "ubicacion",
+            //     referencia: "Longitud",
+            // },
+            // latitud: {
+            //     type: "ubicacion",
+            //     referencia: "Latitud"
+            // },
             usuarios_id: {
                 type: "select",
                 referencia: "Usuario",
@@ -237,15 +243,15 @@ export const Fincas = (userInfo) => {
                 "numero_documento_usuario",
                 "nombre_completo_usuario"
             ],
-            "referencia": "Usuario",
+            "referencia": "Propietario",
             "upper_case": true
         },
-        "latitud": {
+        /* "latitud": {
             "referencia": "Latitud"
         },
         "longitud": {
             "referencia": "Longitud"
-        },
+        }, */
         "nombre_municipio": {
             "referencia": "Municipio",
             "upper_case": true
@@ -850,7 +856,7 @@ export const Fincas = (userInfo) => {
     return (
         <>
             <link rel="stylesheet" href="../../public/css/fincas.css" />
-            <Tablas getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} userInfo={userInfo.userInfo} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} userInfo={userInfo.userInfo} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
 
             {modalImg ? <GlobalModal statusModal={setModaImgs} key={"icons-img"} class="modal-img" content={

@@ -12,7 +12,14 @@ export const Muestras = () => {
             }
         }
     })
-        ;
+
+    const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
+        "buttons": {
+            "add": true,
+            "reporte": true,
+        }
+    });
+
     const [fincas, setMuestras] = useState([])
     const [fincaEdit, setMuestraEdit] = useState([])
     const [updateStatus, setUpdateStatus] = useState(false)
@@ -86,44 +93,14 @@ export const Muestras = () => {
                 referencia: "Muestreo",
                 upper_case: true,
             },
-            preparacion_muestra: {
-                type: "normal",
-                referencia: "Preparación",
-                upper_case: true,
-            },
-            tipo_molienda: {
-                type: "normal",
-                referencia: "Tipo de Molienda",
-                upper_case: true,
-            },
             tipo_fermentacion: {
                 type: "normal",
                 referencia: "Tipo de Fermentación",
                 upper_case: true,
             },
-            densidad_cafe_verde: {
-                type: "normal",
-                referencia: "Densidad de Café Verde",
-                upper_case: true,
-            },
-            tipo_tostion: {
-                type: "normal",
-                referencia: "Tipo de Tostión",
-                upper_case: true,
-            },
             tiempo_fermentacion: {
                 type: "normal",
                 referencia: "Tiempo de Fermentación",
-                upper_case: true,
-            },
-            codigo_muestra: {
-                type: "normal",
-                referencia: "Código Muestra",
-                upper_case: true,
-            },
-            actividad_agua: {
-                type: "normal",
-                referencia: "Actividad de Agua",
                 upper_case: true,
             },
             tiempo_secado: {
@@ -606,7 +583,7 @@ export const Muestras = () => {
 
     return (
         <>
-            <Tablas getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setMuestra} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateMuestra} tittle={"Muestra"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setMuestra} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateMuestra} tittle={"Muestra"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

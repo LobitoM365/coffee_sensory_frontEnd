@@ -20,16 +20,21 @@ export const Analisis = (userInfo) => {
     }
     ///Variables para abrir modal de resultados
     const [modalFormResults, changeModalFormResults] = useState(false);
+    const [keyAsignarAnalisis, setKeyAsignarAnalisis] = useState(0);
     const [dataModalAnalisis, setDataModalAnalisis] = useState(false);
     const [dataModalResultado, setDataModalResultado] = useState(false);
     const [filterPdfLimit, setFilterPdflimit] = useState({ status: false });
     const [dataModalResultadoAnalisis, setDataModalResultadoAnalisis] = useState(false);
     const [statusModalAsignar, setStatusModalAsignar] = useState(false);
     const [analisisAsignar, setAnalisisAsignar] = useState();
+    const [valueGlobalInput, setValueGlobalInput] = useState({});
     const [muestrasAsignar, setMuestraAsignar] = useState([]);
+    const [muestraIdAsignar, setMuestraIdAsignar] = useState({});
     const asignarFormatoFisico = useRef(null);
     const asignarFormatoSca = useRef(null);
     const [errorsAsignar, setErrorsAsignar] = useState({})
+    const [statusUpdateAsignar, setStatusUpdateAsignar] = useState(false)
+    const [errorsInputGlobal, setErrorsInputGlobal] = useState({})
 
     const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
         "buttons": {
@@ -41,11 +46,7 @@ export const Analisis = (userInfo) => {
                         "type": "button",
                         "referencia": "Asignar",
                         "function": {
-                            "value": asignarAnalisis,
-                            "execute": {
-                                "type": "table",
-                                "value": "an_id"
-                            }
+                            "value": getAsignarAnalisis,
                         },
                         "class": "button-asignar-analisis"
                     }
@@ -95,7 +96,7 @@ export const Analisis = (userInfo) => {
                                 "type": "button",
                                 "referencia": "Asignar",
                                 "function": {
-                                    "value": getEncargadosAnalisis,
+                                    "value": getAsignarAnalisis,
                                     "execute": {
                                         "type": "table",
                                         "value": "an_id"
@@ -117,9 +118,7 @@ export const Analisis = (userInfo) => {
         }
     }, [userInfo])
 
-    async function asignarAnalisis() {
-        setStatusModalAsignar(true)
-    }
+
     useEffect(() => {
         const cloneInputsForm = { ...inputsForm };
 
@@ -458,7 +457,7 @@ export const Analisis = (userInfo) => {
                     "type": "button",
                     "referencia": "Ver",
                     "function": {
-                        "value": getEncargadosAnalisis,
+                        "value": getEncargadosAnalisisUpdate,
                         "execute": {
                             "type": "table",
                             "value": "an_id"
@@ -615,7 +614,7 @@ export const Analisis = (userInfo) => {
                 e.target.classList.add("button-asing-agregado")
                 let tr = document.createElement("tr");
                 tr.setAttribute("id", "fisico_" + data.id)
-                tr.innerHTML = "<td> <div><svg version='1.0' viewBox='0 0 512.000000 512.000000'><g transform='translate(0.000000,512.000000) scale(0.100000,-0.100000)'  stroke='none'> <path d='M2235 5105 c-471 -62 -895 -241 -1280 -543 -91 -71 -326 -307 -398 -399 -305 -386 -489 -833 -546 -1318 -14 -114 -14 -454 -1 -565 51 -430 185 -795 422 -1150 313 -467 780 -823 1311 -1001 142 -47 240 -72 402 -100 173 -31 541 -38 726 -14 579 72 1085 320 1500 734 420 421 677 954 739 1533 15 144 12 455 -5 598 -73 585 -342 1118 -777 1535 -399 384 -901 621 -1458 691 -141 17 -496 17 -635 -1z m-401 -1547 c35 -10 95 -65 384 -352 l342 -340 343 340 c355 354 368 364 448 364 111 0 219 -108 219 -219 0 -80 -10 -93 -364 -448 l-340 -343 340 -343 c354 -355 364 -368 364 -448 0 -111 -108 -219 -219 -219 -80 0 -93 10 -448 364 l-343 340 -342 -340 c-356 -354 -369 -364 -449 -364 -111 0 -219 108 -219 219 0 80 10 93 364 449 l340 342 -340 343 c-354 355 -364 368 -364 448 0 108 107 217 214 219 16 0 47 -5 70 -12z'/></g></svg></div></td> <td><div> <h4>" + (data.id + ", " + data.numero_documento + ", " + data.nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) + "</h4> <div> </td> <td><div><input value='1' class='input-cantidad-formatos' type='text' /><div> </td> ";
+                tr.innerHTML = "<td> <div><svg class='svg-icon-quit-table-asing' version='1.0' viewBox='0 0 512.000000 512.000000'><g transform='translate(0.000000,512.000000) scale(0.100000,-0.100000)'  stroke='none'> <path d='M2235 5105 c-471 -62 -895 -241 -1280 -543 -91 -71 -326 -307 -398 -399 -305 -386 -489 -833 -546 -1318 -14 -114 -14 -454 -1 -565 51 -430 185 -795 422 -1150 313 -467 780 -823 1311 -1001 142 -47 240 -72 402 -100 173 -31 541 -38 726 -14 579 72 1085 320 1500 734 420 421 677 954 739 1533 15 144 12 455 -5 598 -73 585 -342 1118 -777 1535 -399 384 -901 621 -1458 691 -141 17 -496 17 -635 -1z m-401 -1547 c35 -10 95 -65 384 -352 l342 -340 343 340 c355 354 368 364 448 364 111 0 219 -108 219 -219 0 -80 -10 -93 -364 -448 l-340 -343 340 -343 c354 -355 364 -368 364 -448 0 -111 -108 -219 -219 -219 -80 0 -93 10 -448 364 l-343 340 -342 -340 c-356 -354 -369 -364 -449 -364 -111 0 -219 108 -219 219 0 80 10 93 364 449 l340 342 -340 343 c-354 355 -364 368 -364 448 0 108 107 217 214 219 16 0 47 -5 70 -12z'/></g></svg></div></td> <td><div> <h4>" + (data.id + ", " + data.numero_documento + ", " + data.nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) + "</h4> <div> </td> <td><div><input value='1' class='input-cantidad-formatos' type='text' /><div> </td> ";
                 asignarFormatoFisico.current.append(tr)
                 tr.querySelector("input").addEventListener("input", function (e) {
                     e.target.value = e.target.value.replace(/\D/g, '')
@@ -635,6 +634,11 @@ export const Analisis = (userInfo) => {
                     });
                 })
                 tr.querySelector("svg").addEventListener("click", function () {
+                    if (tr.nextSibling) {
+                        if (tr.nextSibling.classList.contains("tr-error-table-asignar")) {
+                            tr.nextSibling.remove()
+                        }
+                    }
                     /*  usersAsignarFormatoFisico = usersAsignarFormatoFisico.filter(item => item !== data.id); */
                     setUsersAsignarFormatoFisico(prevState => {
                         let cloneUsersAsignarFormatoFisico = { ...prevState };
@@ -654,8 +658,6 @@ export const Analisis = (userInfo) => {
 
     }
     async function agregarFormatoSca(data, e) {
-        console.log(data.id, usersAsignarFormatoSca)
-
         if (!usersAsignarFormatoSca[data.id]) {
             /* usersAsignarFormatoSca.push(data.id) */
             let cloneUsersAsignarFormatoSca = { ...usersAsignarFormatoSca }
@@ -669,7 +671,7 @@ export const Analisis = (userInfo) => {
                 e.target.classList.add("button-asing-agregado")
                 let tr = document.createElement("tr");
                 tr.setAttribute("id", "sca_" + data.id)
-                tr.innerHTML = "<td> <div><svg version='1.0' viewBox='0 0 512.000000 512.000000'><g transform='translate(0.000000,512.000000) scale(0.100000,-0.100000)'  stroke='none'> <path d='M2235 5105 c-471 -62 -895 -241 -1280 -543 -91 -71 -326 -307 -398 -399 -305 -386 -489 -833 -546 -1318 -14 -114 -14 -454 -1 -565 51 -430 185 -795 422 -1150 313 -467 780 -823 1311 -1001 142 -47 240 -72 402 -100 173 -31 541 -38 726 -14 579 72 1085 320 1500 734 420 421 677 954 739 1533 15 144 12 455 -5 598 -73 585 -342 1118 -777 1535 -399 384 -901 621 -1458 691 -141 17 -496 17 -635 -1z m-401 -1547 c35 -10 95 -65 384 -352 l342 -340 343 340 c355 354 368 364 448 364 111 0 219 -108 219 -219 0 -80 -10 -93 -364 -448 l-340 -343 340 -343 c354 -355 364 -368 364 -448 0 -111 -108 -219 -219 -219 -80 0 -93 10 -448 364 l-343 340 -342 -340 c-356 -354 -369 -364 -449 -364 -111 0 -219 108 -219 219 0 80 10 93 364 449 l340 342 -340 343 c-354 355 -364 368 -364 448 0 108 107 217 214 219 16 0 47 -5 70 -12z'/></g></svg></div></td> <td><div> <h4>" + (data.id + ", " + data.numero_documento + ", " + data.nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) + "</h4> <div> </td> <td><div><input value='1' class='input-cantidad-formatos' type='text' /><div> </td> ";
+                tr.innerHTML = "<td> <div><svg class='svg-icon-quit-table-asing' version='1.0' viewBox='0 0 512.000000 512.000000'><g transform='translate(0.000000,512.000000) scale(0.100000,-0.100000)'  stroke='none'> <path d='M2235 5105 c-471 -62 -895 -241 -1280 -543 -91 -71 -326 -307 -398 -399 -305 -386 -489 -833 -546 -1318 -14 -114 -14 -454 -1 -565 51 -430 185 -795 422 -1150 313 -467 780 -823 1311 -1001 142 -47 240 -72 402 -100 173 -31 541 -38 726 -14 579 72 1085 320 1500 734 420 421 677 954 739 1533 15 144 12 455 -5 598 -73 585 -342 1118 -777 1535 -399 384 -901 621 -1458 691 -141 17 -496 17 -635 -1z m-401 -1547 c35 -10 95 -65 384 -352 l342 -340 343 340 c355 354 368 364 448 364 111 0 219 -108 219 -219 0 -80 -10 -93 -364 -448 l-340 -343 340 -343 c354 -355 364 -368 364 -448 0 -111 -108 -219 -219 -219 -80 0 -93 10 -448 364 l-343 340 -342 -340 c-356 -354 -369 -364 -449 -364 -111 0 -219 108 -219 219 0 80 10 93 364 449 l340 342 -340 343 c-354 355 -364 368 -364 448 0 108 107 217 214 219 16 0 47 -5 70 -12z'/></g></svg></div></td> <td><div> <h4>" + (data.id + ", " + data.numero_documento + ", " + data.nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) + "</h4> <div> </td> <td><div><input value='1' class='input-cantidad-formatos' type='text' /><div> </td> ";
                 asignarFormatoSca.current.append(tr)
                 tr.querySelector("input").addEventListener("input", function (e) {
                     e.target.value = e.target.value.replace(/\D/g, '')
@@ -692,9 +694,9 @@ export const Analisis = (userInfo) => {
                     });
                 })
                 tr.querySelector("svg").addEventListener("click", function () {
-                    
-                    if(tr.nextSibling){
-                        if(tr.nextSibling.classList.contains("tr-error-table-asignar")){
+
+                    if (tr.nextSibling) {
+                        if (tr.nextSibling.classList.contains("tr-error-table-asignar")) {
                             tr.nextSibling.remove()
                         }
                     }
@@ -723,6 +725,10 @@ export const Analisis = (userInfo) => {
                 "us.cargo": {
                     "value": "instructor",
                     "require": "and"
+                },
+                "us.estado": {
+                    "value": 1,
+                    "require": "and"
                 }
             }
         }
@@ -730,7 +736,6 @@ export const Analisis = (userInfo) => {
     async function getusuariosAsignar() {
         try {
             const response = await Api.post("usuarios/listar", dataFilterTableAsignar);
-            console.log(response, "usuariosssssss")
             if (response.data.status == true) {
                 setUsuariosAsignar(response.data.data)
                 setCountRegistersAsignar(response.data.count)
@@ -759,7 +764,6 @@ export const Analisis = (userInfo) => {
     useEffect(() => {
         getusuarios()
         getMuestras()
-
     }, [userInfo])
 
     async function xd(id) {
@@ -768,8 +772,82 @@ export const Analisis = (userInfo) => {
     function xd2(id) {
         setInfoFormato(id, 1)
     }
-    async function getEncargadosAnalisis() {
+
+
+    const [infoAnalisisUpdateAsignar, setInfoAnalisisUpdateAsignar] = useState([])
+    const [infoFormatoFisicoUpdateAsignar, setInfoFormatoFisicoUpdateAsignar] = useState([])
+    const [infoFormatoScaUpdateAsignar, setInfoFormatoScaUpdateAsignar] = useState([])
+    async function getAsignarAnalisis(id) {
+        setMuestraIdAsignar({})
+        setUsersAsignarFormatoFisico({})
+        setErrorsAsignar({})
+        setUsersAsignarFormatoSca({})
+        setAnalisisAsignar()
+        setInfoAnalisisUpdateAsignar([])
+        setInfoFormatoFisicoUpdateAsignar([])
+        setInfoFormatoScaUpdateAsignar([])
+        setStatusUpdateAsignar(false)
         setStatusModalAsignar(true)
+    }
+    async function getEncargadosAnalisisUpdate(id) {
+        setMuestraIdAsignar({})
+        setErrorsAsignar({})
+        setUsersAsignarFormatoFisico({})
+        setUsersAsignarFormatoSca({})
+        setInfoAnalisisUpdateAsignar([])
+        setInfoFormatoFisicoUpdateAsignar([])
+        setInfoFormatoScaUpdateAsignar([])
+        setStatusUpdateAsignar(true)
+        const response = await Api.post("analisis/buscar/" + id + "");
+        if (response.data.status == true) {
+            setKeyAsignarAnalisis(keyAsignarAnalisis + 1)
+
+            setInfoAnalisisUpdateAsignar(response.data.data)
+            const filterFormato = {
+                "filter": {
+                    "where": {
+                        "an.id": {
+                            "value": id,
+                            "require": "and",
+                        },
+                        "forma.tipos_analisis_id": {
+                            "value": 1,
+                            "require": "and",
+                        }
+                    }
+                }
+            }
+            const formatoFisico = await Api.post("formatos/listar", filterFormato);
+            if (formatoFisico.data.status == true) {
+                setInfoFormatoFisicoUpdateAsignar(formatoFisico.data.data)
+            }
+            filterFormato.filter.where["forma.tipos_analisis_id"].value = 2;
+            const formatoSca = await Api.post("formatos/listar", filterFormato);
+            if (formatoSca.data.status == true) {
+                setInfoFormatoScaUpdateAsignar(formatoSca.data.data)
+            }
+            setAnalisisAsignar(id)
+            setStatusModalAsignar(true)
+        } else if (response.data.find_error) {
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "false",
+                    description: response.data.find_error,
+                    "tittle": "Inténtalo de nuevo",
+                }
+            )
+        } else {
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "false",
+                    description: response.data.modal_error,
+                    "tittle": "Inténtalo de nuevo",
+                }
+            )
+        }
+
     }
     async function setInfoFormato(id, tipo) {
         try {
@@ -805,7 +883,6 @@ export const Analisis = (userInfo) => {
                 if (formato.data.status == true) {
                     setDataModalResultado(formato.data.data)
                     const resultado = await Api.post("resultado/buscar/" + formato.data.data[0].id + "");
-                    console.log(resultado, "resulttt")
                     if (resultado.data.status == true) {
                         setDataModalResultadoAnalisis(resultado.data.data)
                     } else {
@@ -838,7 +915,6 @@ export const Analisis = (userInfo) => {
                     await setInfoFormato(localStorage.getItem("analisis_id"), localStorage.getItem("tipos_analisis_id"))
                     localStorage.removeItem("analisis_id")
                     localStorage.removeItem("tipos_analisis_id")
-                    console.log(dataModalAnalisis, "annnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
                 }
             }
             openAsing()
@@ -865,7 +941,6 @@ export const Analisis = (userInfo) => {
                         }
                     }
                     const response = await Api.post("usuarios/listar", filter);
-                    console.log(response, "useeeeeeeeeeeeer")
                     let cafes = inputsForm;
                     let asignar = selectAsignar;
                     if (!cafes["usuario_formato_sca"]) {
@@ -934,14 +1009,12 @@ export const Analisis = (userInfo) => {
     async function getAnalisis() {
         try {
             const response = await Api.post("analisis/listar", dataFilterTable);
-            console.log(response, "annnnnnnnnnnnnnnnnnnn")
             if (response.data.status == true) {
                 setUsuarios(response.data.data)
                 setCountRegisters(response.data.count)
             } else if (response.data.find_error) {
                 setCountRegisters(0)
                 setUsuarios(response.data)
-                console.log(response, "ahhhh")
             } else {
                 setUsuarios(response.data)
             }
@@ -1046,8 +1119,6 @@ export const Analisis = (userInfo) => {
         try {
 
             const axios = await Api.post("analisis/registrar/", data);
-            console.log(axios, "analisis")
-
             if (axios.data.status == true) {
                 getAnalisis();
                 setErrors({})
@@ -1226,7 +1297,6 @@ export const Analisis = (userInfo) => {
                 )
             }
         } catch (error) {
-            console.error('ERROR GET USER: ', error);
             setStatusAlert(true)
             setdataAlert(
                 {
@@ -1290,8 +1360,6 @@ export const Analisis = (userInfo) => {
                 }
             )
         }
-        console.log(axios)
-
     }
 
     async function asignarFormato(idAnalisis, tipo, usuario) {
@@ -1338,7 +1406,6 @@ export const Analisis = (userInfo) => {
                 "usuarios_id": usuario
             }
             const response = await Api.put("formatos/actualizar/" + idFormato, data);
-            console.log(response, "formtoooo")
             if (response.data.status == true) {
                 setInfoFormato(idAnalisis, tipoAnalisis)
                 setStatusAlert(true)
@@ -1397,7 +1464,6 @@ export const Analisis = (userInfo) => {
                 }
             }
             const response = await Api.post("analisis/listar", filterReport);
-            console.log(response)
             if (response.data.status == true) {
                 if (tipo == "pdf") {
                     if (response.data.count > 100) {
@@ -1452,7 +1518,6 @@ export const Analisis = (userInfo) => {
         delete cloneTable["permission_formato_sca"]
         delete cloneTable["actualizar"]
         delete cloneTable["reporte"]
-        console.log(cloneTable, "hahsd")
         const data = {
             dataTable,
             filter,
@@ -1486,7 +1551,6 @@ export const Analisis = (userInfo) => {
                     "tittle": "Inténtalo de nuevo"
                 }
             )
-            console.error('Error:', error);
         }
     }
     async function getMuestrasAsignar() {
@@ -1501,22 +1565,29 @@ export const Analisis = (userInfo) => {
                         "us.cargo": {
                             "value": "cliente",
                             "require": "and"
+                        },
+                        "mu.estado": {
+                            "value": 1,
+                            "require": "and"
                         }
                     }
                 }
             }
-            console.log("---------------    ")
             const response = await Api.post("muestra/listar", filterMuestra);
             if (response.data.status == true) {
                 setMuestraAsignar(response.data.data)
             }
-            console.log(response, "muestraaaaaaaaaa")
         } catch (e) {
             console.log("Error: " + e)
         }
     }
+
+    function setModalAsignarFalse() {
+        setStatusModalAsignar(false)
+    }
     async function setAsignarAnalisis() {
         try {
+
             const trError = document.querySelectorAll(".tr-error-table-asignar")
             for (let x = 0; x < trError.length; x++) {
                 if (trError[x].previousSibling) {
@@ -1524,23 +1595,58 @@ export const Analisis = (userInfo) => {
                 }
                 trError[x].remove()
             }
-            const data = {
-                "muestras_id": analisisAsignar,
+            let data = {
+
                 "formato_fisico": usersAsignarFormatoFisico,
                 "formato_sca": usersAsignarFormatoSca,
             }
-            const response = await Api.post("analisis/asignar", data)
+            let route = ""
+            if (statusUpdateAsignar) {
+                data["analisis_id"] = analisisAsignar
+                route = "/nuevo"
+            } else {
+                data["muestras_id"] = muestraIdAsignar["muestras_id"]
+            }
             setErrorsAsignar({})
 
+            const response = await Api.post("analisis/asignar" + route, data)
+            console.log(route, "routeeeeeeeee", response)
+
             if (response.data.status == true) {
+                if (statusUpdateAsignar) {
+                    getEncargadosAnalisisUpdate(analisisAsignar)
+                } else {
+                    getAnalisis()
+                }
+                let widthErrors = []
+                if (response.data.width_errors) {
+                    let keysWidthErrors = Object.keys(response.data.width_errors)
+                    for (let x = 0; x < keysWidthErrors.length; x++) {
+                        widthErrors.push(
+                            <div className='span-width-errors' key={x}>
+                                <h3>
+                                    {keysWidthErrors[x]}:
+                                </h3>
+                                <h4>
+                                    {response.data.width_errors[keysWidthErrors[x]]}
+                                </h4>
+                            </div>
+                        );
+                    }
+                }
+
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: response.data.message,
-                        "tittle": "Inténtalo de nuevo"
+                        description: <span > <h4 className='span-message-alerta'>{response.data.message}</h4>  <br /> {widthErrors}</span>,
+                        "tittle": "Excelente",
+                        continue: {
+                            "function": !statusUpdateAsignar ? setModalAsignarFalse : "",
+                        }
                     }
                 )
+
             } else if (response.data.register_error) {
                 setStatusAlert(true)
                 setdataAlert(
@@ -1563,12 +1669,132 @@ export const Analisis = (userInfo) => {
                         tdError.setAttribute("colspan", "9999")
                         trError.appendChild(tdError)
                         element.parentNode.insertBefore(trError, element.nextSibling)
-                        console.log(element.parentNode)
                     }
                 }
                 setErrorsAsignar(response.data.errors)
             }
             console.log(response, "resssssssss")
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
+    async function cambiarFormato(id, usuario, name) {
+        setErrorsInputGlobal()
+        try {
+
+            const data = {
+                "usuarios_id": usuario
+            }
+            const response = await Api.put("formatos/actualizar/" + id, data)
+            if (response.data.status == true) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Excelente"
+                    }
+                )
+                getEncargadosAnalisisUpdate(analisisAsignar)
+            } else if (response.data.errors) {
+                const keys = Object.keys(response.data.errors)
+                let cloneSetErrrosInputGlobal = { ...errorsInputGlobal }
+                cloneSetErrrosInputGlobal[name] = response.data.errors[keys[0]]
+                setErrorsInputGlobal(cloneSetErrrosInputGlobal)
+            } else if (response.data.update_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.update_error,
+                        "tittle": "Excelente"
+                    }
+                )
+            }
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
+    async function editarAnalisis(id, muestra) {
+        try {
+            const data = {
+                "muestras_id": muestra
+            }
+            const response = await Api.put("analisis/actualizar/" + id, data)
+            if (response.data.status == true) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Excelente"
+                    }
+                )
+                getEncargadosAnalisisUpdate(id)
+            } else if (response.data.errors) {
+                const keys = Object.keys(response.data.errors)
+                setErrorsAsignar(response.data.errors)
+            } else if (response.data.update_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.update_error,
+                        "tittle": "Excelente"
+                    }
+                )
+            }
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
+    async function getNewView() {
+        getEncargadosAnalisisUpdate(analisisAsignar)
+    }
+    async function eliminarFormato(id) {
+        try {
+            const response = await Api.delete("formatos/eliminar/" + id)
+            if (response.data.status == true) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Excelente",
+                        continue: {
+                            "function": statusUpdateAsignar ? getNewView : "",
+                        }
+                    }
+                )
+            } else if (response.data.delete_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.delete_error,
+                        "tittle": "Excelente"
+                    }
+                )
+            } else if (response.data.modal_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.modal_error,
+                        "tittle": "Excelente"
+                    }
+                )
+            } else {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.message,
+                        "tittle": "Excelente"
+                    }
+                )
+            }
+            console.log(response)
         } catch (e) {
             console.log("Error: " + e)
         }
@@ -1587,14 +1813,56 @@ export const Analisis = (userInfo) => {
                     userInfo.userInfo.rol == "administrador" ?
                         statusModalAsignar ? (
                             <GlobalModal statusModal={setStatusModalAsignar} key={"icons-img"} class="modal-table" content={
-                                <div className='div-content-asignar'>
-                                    <div className='div-asign-elements'>
-                                        <div className='fiv-asignar-analisis'>
-                                            <div className='head-asignar-analisis'>
-                                                <h2>Asignar análisis</h2>
-                                                <GlobalInputs
-                                                    input={setAnalisisAsignar}
-                                                    value={analisisAsignar}
+                                <div key={keyAsignarAnalisis} className='div-content-asignar'>
+                                    <div className='head-asignar-analisis'>
+                                        <h2>Asignar análisis</h2>
+                                        {
+                                            statusUpdateAsignar ?
+                                                infoAnalisisUpdateAsignar.length > 0 ?
+                                                    infoAnalisisUpdateAsignar[0].permission_update != 'false' ?
+                                                        <div>
+                                                            <GlobalInputs
+                                                                input={setMuestraIdAsignar}
+                                                                value={muestraIdAsignar}
+                                                                class={"input-global"}
+                                                                errors={errorsAsignar}
+                                                                elementEdit={infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0].mu_id : ""}
+                                                                data={{
+                                                                    muestras_id: {
+                                                                        type: "select",
+                                                                        referencia: "Muestra",
+                                                                        values: ["id", "numero_documento", "nombre_completo", "finca", "lote"],
+                                                                        opciones: muestrasAsignar,
+                                                                        upper_case: true,
+                                                                        key: "id",
+                                                                    },
+                                                                }} />
+                                                            <button onClick={() => { editarAnalisis(analisisAsignar, muestraIdAsignar["muestras_id"]) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                        </div>
+                                                        :
+                                                        <div>
+                                                            <div className='div-anaisis-finalizado-asignar-formato'>
+                                                                <div>
+                                                                    <h4>Muestra:</h4>
+                                                                    <h5>{(infoAnalisisUpdateAsignar[0].mu_id + ", " + infoAnalisisUpdateAsignar[0].documento_propietario + ", " + infoAnalisisUpdateAsignar[0].nombre_propietario + ", " + infoAnalisisUpdateAsignar[0].finca + ", " + infoAnalisisUpdateAsignar[0].lote).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h5>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Estado: </h4>
+                                                                    {
+                                                                        infoAnalisisUpdateAsignar[0].estado == 4 ? <h4 className='h4-estado-formato-asing h4-estado-formato-asing-finalizado'>
+                                                                            Finalizado
+                                                                        </h4> :
+                                                                            <h4 className='h4-estado-formato-asing
+                                                                         h4-estado-formato-asing-pendiente'>
+                                                                                Pendiente
+                                                                            </h4>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div> : ""
+                                                : <GlobalInputs
+                                                    input={setMuestraIdAsignar}
+                                                    value={muestraIdAsignar}
                                                     class={"input-global"}
                                                     errors={errorsAsignar}
                                                     data={{
@@ -1607,43 +1875,226 @@ export const Analisis = (userInfo) => {
                                                             key: "id",
                                                         },
                                                     }} />
-                                            </div>
+                                        }
+                                    </div>
+                                    <h2 className='h2-table-asign-formato'>
+                                        Usuarios disponibles
+                                    </h2>
 
-                                            <h2>Encargados</h2>
+                                    <div className='div-asign-elements'>
+                                        <div className='fiv-asignar-analisis'>
+                                            {
+                                                statusUpdateAsignar ?
+                                                    <div className='body-asignar-analisis'>
+                                                        <h2>Formatos</h2>
 
-                                            <div className='div-encargados'>
-                                                <div>
-                                                    <h3>Formato Físico</h3>
-                                                    <div className='div-table-asignados'>
-                                                        <table cellSpacing={0} className='table-add-asignar'>
-                                                            <thead>
-                                                                <tr>
-                                                                    <th></th>
-                                                                    <th>Instructor</th>
-                                                                    <th>Cantidad</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody ref={asignarFormatoFisico} id='formatoFisico'>
+                                                        <div className='div-encargados'>
+                                                            <div>
+                                                                <h3>Formato Físico</h3>
+                                                                <div className='div-table-asignados'>
+                                                                    <table cellSpacing={0} className='table-add-asignar'>
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Id</th>
+                                                                                <th>Instructor</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            {infoFormatoFisicoUpdateAsignar ?
+                                                                                infoFormatoFisicoUpdateAsignar.length > 0 ?
+                                                                                    infoFormatoFisicoUpdateAsignar.map((value, index) => {
 
-                                                            </tbody>
-                                                        </table>
+                                                                                        return <tr key={value.id}>
+                                                                                            <td>
+                                                                                                <h4>                                                 {value.id}
+                                                                                                </h4>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                {value.estado != 4 ?
+                                                                                                    <div>
+                                                                                                        < GlobalInputs
+                                                                                                            input={setValueGlobalInput}
+                                                                                                            value={valueGlobalInput}
+                                                                                                            /* class={"input-global"} */
+                                                                                                            errors={errorsInputGlobal}
+                                                                                                            elementEdit={value.catador_id}
+                                                                                                            data={{
+                                                                                                                ["catador_fisico_" + value.catador_id + "" + index]: {
+                                                                                                                    type: "select",
+                                                                                                                    referencia: false,
+                                                                                                                    values: ["id", "numero_documento", "nombre_completo"],
+                                                                                                                    opciones: usuariosAsignar,
+                                                                                                                    upper_case: true,
+                                                                                                                    key: "id",
+                                                                                                                },
+                                                                                                            }} />
+
+                                                                                                        <div className='div-footer-users-formatos'>
+                                                                                                            {value.estado == 2 ?
+                                                                                                                <h4 className='h4-estado-formato-asing
+                                                                                                                h4-estado-formato-asing-pendiente'>
+                                                                                                                    Pendiente
+                                                                                                                </h4>
+                                                                                                                : value.estado == 3 ?
+                                                                                                                    <h4 className='h4-estado-formato-asing h4-estado-formato-asing-asignado'>
+                                                                                                                        Asignado
+                                                                                                                    </h4>
+                                                                                                                    : ""}
+                                                                                                            <button onClick={() => { cambiarFormato(value.id, valueGlobalInput["catador_fisico_" + value.catador_id + "" + index], "catador_fisico_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                                                            <button
+                                                                                                                onClick={() => { eliminarFormato(value.id) }}
+                                                                                                                className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    :
+                                                                                                    <div className='div-formato-finalizado'>
+                                                                                                        <h4 className='catador-no-options-asignar'>
+                                                                                                            {(value.catador_id + ", " + value.catador_documento + ", " + value.catador_nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}
+                                                                                                        </h4>
+
+                                                                                                        <div>
+                                                                                                            {value.estado == 4 ?
+                                                                                                                <h4 className='h4-estado-formato-asing
+                                                                                                            h4-estado-formato-asing-finalizado'>
+                                                                                                                    Finalizado
+                                                                                                                </h4>
+                                                                                                                : ""}
+                                                                                                        </div>
+
+                                                                                                    </div>}
+
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    })
+                                                                                    : <tr></tr>
+                                                                                : <tr></tr>}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <h3>Formato Sca</h3>
+                                                                <div className='div-table-asignados'>
+                                                                    <table cellSpacing={0} className='table-add-asignar'>
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Id</th>
+                                                                                <th>Instructor</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            {infoFormatoScaUpdateAsignar ?
+                                                                                infoFormatoScaUpdateAsignar.length > 0 ?
+                                                                                    infoFormatoScaUpdateAsignar.map((value, index) => {
+
+                                                                                        return <tr key={value.id}>
+                                                                                            <td>
+                                                                                                <h4>                                                 {value.id}
+                                                                                                </h4>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                {value.estado != 4 ?
+                                                                                                    <div>
+                                                                                                        < GlobalInputs
+                                                                                                            input={setValueGlobalInput}
+                                                                                                            value={valueGlobalInput}
+                                                                                                            /* class={"input-global"} */
+                                                                                                            errors={errorsInputGlobal}
+                                                                                                            elementEdit={value.catador_id}
+                                                                                                            data={{
+                                                                                                                ["catador_sca_" + value.catador_id + "" + index]: {
+                                                                                                                    type: "select",
+                                                                                                                    referencia: false,
+                                                                                                                    values: ["id", "numero_documento", "nombre_completo"],
+                                                                                                                    opciones: usuariosAsignar,
+                                                                                                                    upper_case: true,
+                                                                                                                    key: "id",
+                                                                                                                },
+                                                                                                            }} />
+
+                                                                                                        <div className='div-footer-users-formatos'>
+                                                                                                            {value.estado == 2 ?
+                                                                                                                <h4 className='h4-estado-formato-asing
+                                                                                                            h4-estado-formato-asing-pendiente'>
+                                                                                                                    Pendiente
+                                                                                                                </h4>
+                                                                                                                : value.estado == 3 ?
+                                                                                                                    <h4 className='h4-estado-formato-asing h4-estado-formato-asing-asignado'>
+                                                                                                                        Asignado
+                                                                                                                    </h4>
+                                                                                                                    : ""}
+                                                                                                            <button onClick={() => { cambiarFormato(value.id, valueGlobalInput["catador_sca_" + value.catador_id + "" + index], "catador_sca_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                                                            <button
+                                                                                                                onClick={() => { eliminarFormato(value.id) }}
+                                                                                                                className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    :
+                                                                                                    <div className='div-formato-finalizado'>
+                                                                                                        <h4 className='catador-no-options-asignar'>
+                                                                                                            {(value.catador_id + ", " + value.catador_documento + ", " + value.catador_nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}
+                                                                                                        </h4>
+
+                                                                                                        <div>
+                                                                                                            {value.estado == 4 ?
+                                                                                                                <h4 className='h4-estado-formato-asing
+                                                                                                        h4-estado-formato-asing-finalizado'>
+                                                                                                                    Finalizado
+                                                                                                                </h4>
+                                                                                                                : ""}
+                                                                                                        </div>
+
+                                                                                                    </div>}
+
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    })
+                                                                                    : <tr></tr>
+                                                                                : <tr></tr>}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div> : ""
+                                            }
+                                            <div className='body-asignar-analisis'>
+                                                <h2>Asignados</h2>
+
+                                                <div className='div-encargados'>
+                                                    <div>
+                                                        <h3>Formato Físico</h3>
+                                                        <div className='div-table-asignados'>
+                                                            <table cellSpacing={0} className='table-add-asignar'>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th></th>
+                                                                        <th>Instructor</th>
+                                                                        <th>Cantidad</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody ref={asignarFormatoFisico} id='formatoFisico'>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div>
-                                                    <h3>Formato Sca</h3>
-                                                    <div className='div-table-asignados'>
-                                                        <table cellSpacing={0} className='table-add-asignar'>
-                                                            <thead>
-                                                                <tr>
-                                                                    <th></th>
-                                                                    <th>Instructor</th>
-                                                                    <th>Cantidad</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody ref={asignarFormatoSca} id='formatoSca'>
+                                                    <div>
+                                                        <h3>Formato Sca</h3>
+                                                        <div className='div-table-asignados'>
+                                                            <table cellSpacing={0} className='table-add-asignar'>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th></th>
+                                                                        <th>Instructor</th>
+                                                                        <th>Cantidad</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody ref={asignarFormatoSca} id='formatoSca'>
 
-                                                            </tbody>
-                                                        </table>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1652,7 +2103,9 @@ export const Analisis = (userInfo) => {
                                             </div>
                                         </div>
                                     </div>
-                                    <Tablas class="table-asignar" userInfo={userInfo.userInfo} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} filterSeacth={filterSeacth} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegistersAsignar} data={usuariosAsignar} keys={keysUsuarios} tittle={"Usuarios"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+                                    <div className='div-table-asing'>
+                                        <Tablas class="table-asignar" userInfo={userInfo.userInfo} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} filterSeacth={filterSeacth} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegistersAsignar} data={usuariosAsignar} keys={keysUsuarios} tittle={"Usuarios"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+                                    </div>
                                 </div>
                             } />
                         )

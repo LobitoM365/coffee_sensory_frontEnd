@@ -17,8 +17,8 @@ export const Formatos = (userInfo) => {
     }
     ///Variables para abrir modal de resultados
     const [modalFormResults, changeModalFormResults] = useState(false);
-    const [dataModalAnalisis, setDataModalAnalisis] = useState(false);
     const [dataModalResultado, setDataModalResultado] = useState(false);
+    const [modalFormNormal, setModalFormNormal] = useState(false);
     const [filterPdfLimit, setFilterPdflimit] = useState({ status: false });
     const [dataModalResultadoAnalisis, setDataModalResultadoAnalisis] = useState(false);
 
@@ -33,6 +33,7 @@ export const Formatos = (userInfo) => {
         }
     })
         ;
+    const [dataModalAnalisis, setDataModalAnalisis] = useState(false);
     const [usuarios, setUsuarios] = useState([])
     const [usuarioEdit, setUsuarioEdit] = useState([])
     const [updateStatus, setUpdateStatus] = useState(false)
@@ -294,33 +295,17 @@ export const Formatos = (userInfo) => {
     )
 
     const keys = {
-        "an_id": {
+        "forma_id": {
             "referencia": "Id",
         },
-        "calidad": {
-            "referencia": "Calidad",
+        "an_id": {
+            "referencia": "Analisis",
         },
-        "proceso": {
-            "referencia": "Tipo de proceso",
-            "upper_case": true
-        },
-        "muestras_id": {
+        "muestra_codigo": {
             "referencia": "Muestra",
             "upper_case": true
         },
-        "variedad": {
-            "referencia": "Variedad",
-            "upper_case": true
-        },
-        "finca": {
-            "referencia": "Finca",
-            "upper_case": true,
-        },
-        "lote": {
-            "referencia": "Lote",
-            "upper_case": true
-        },
-        "permission_formato_sca": {
+        /* "permission_formato_sca": {
             "referencia": "Catador Formato Sca",
             "conditions": {
                 "true": {
@@ -371,50 +356,107 @@ export const Formatos = (userInfo) => {
                 }
             },
             "upper_case": true
+        }, */
+
+        "tipos_analisis_id": {
+            "referencia": "Tipo de análisis",
+            "conditions": {
+                "1": {
+                    "element": {
+                        "type": "free",
+                        "element": <div><h4 className='h4-tipo-analisis h4-tipo-analisis-fisico'>Físico</h4></div>,
+                    }
+                },
+                "2": {
+                    "element": {
+                        "type": "free",
+                        "element": <div><h4 className='h4-tipo-analisis h4-tipo-analisis-sca'>Sensorial</h4></div>,
+                    }
+                }
+            },
+            "upper_case": true
+        },
+        "forma_tipos_analisis_id": {
+            "referencia": "Formato",
+            "conditions": {
+                "1": {
+                    "element": {
+                        "type": "button",
+                        "referencia": "Ver",
+                        "function": {
+                            "value": setInfoFormato,
+                            "execute": {
+                                "type": "table",
+                                "value": "forma_id"
+                            }
+                        }
+                    }
+                },
+                "2": {
+                    "element": {
+                        "type": "button",
+                        "referencia": "Ver",
+                        "function": {
+                            "value": setInfoFormato,
+                            "execute": {
+                                "type": "table",
+                                "value": "forma_id"
+                            }
+                        }
+                    }
+                }
+            },
+            "upper_case": true
         },
         "fecha_creacion": {
             "referencia": "Fecha de creación",
             "format": true
         },
+        "fecha_analisis": {
+            "referencia": "Fecha de análisis",
+            "format": true
+        },
+        "fecha_actualizacion": {
+            "referencia": "Fecha de actualización",
+            "format": true
+        },
         "estado": {
-            "referencia": "Estado"
-        },
-        "actualizar": {
-            "referencia": "actualizar"
-        },
-        "reporte": {
-            "normal": true,
-            "referencia": "Reporte",
-            "inputs": {
-                /* "reporte": {
-                    "type": "button",
-                    "referencia": "PDF",
-                    "class": "button-table-pdf",
-                    "function": {
-                        "value": xd,
-                        "execute": {
-                            "type": "table",
-                            "value": "an_id"
-                        }
-                    }
-                }, */
-                "pdf": {
-                    "type": "free",
-                    "element": "icon-pdf",
-                    "redirect-value": {
-                        "type": "new-window",
-                        "value": "/dashboard/generateReporteAnalisis",
-                        "execute": {
-                            "type": "table",
-                            "value": "an_id"
-                        }
-                    },
-                    "class": "div-icon-reporte-pdf",
-                }
-            },
-            "class": "div-reporte-pdf",
-            "upper_case": true
+            "referencia": "Estado",
+            "priority": 10,
         }
+        // "reporte": {
+        //     "normal": true,
+        //     "referencia": "Reporte",
+        //     "inputs": {
+        //         /* "reporte": {
+        //             "type": "button",
+        //             "referencia": "PDF",
+        //             "class": "button-table-pdf",
+        //             "function": {
+        //                 "value": xd,
+        //                 "execute": {
+        //                     "type": "table",
+        //                     "value": "an_id"
+        //                 }
+        //             }
+        //         }, */
+        //         "pdf": {
+        //             "type": "free",
+        //             "element": "icon-pdf",
+        //             "redirect-value": {
+        //                 "type": "new-window",
+        //                 "value": "/dashboard/generateReporteAnalisis",
+        //                 "execute": {
+        //                     "type": "table",
+        //                     "value": "an_id"
+        //                 }
+        //             },
+        //             "class": "div-icon-reporte-pdf",
+        //         }
+        //     },
+        //     "class": "div-reporte-pdf",
+        //     "upper_case": true
+        // }
     }
     const filterEstado = {
         "Activo": {
@@ -433,68 +475,70 @@ export const Formatos = (userInfo) => {
 
     }, [userInfo])
 
-    async function xd(id) {
-        setInfoFormato(id, 2)
-    }
-    function xd2(id) {
-        setInfoFormato(id, 1)
-    }
 
-    async function setInfoFormato(id, tipo) {
+
+    async function setInfoFormato(id) {
         try {
-            setTipoAnalisis(tipo)
+            setModalFormNormal(false)
+            setDataModalResultadoAnalisis([])
             setIdAnalisisResult(id)
-            let asignar = selectAsignar;
-            asignar["usuarios_id"]["referencia"] = "Catador para el Formato " + (tipo == 2 ? "SCA" : "Físico")
-
             setDataModalAnalisis([])
             setDataModalResultado([])
-            setDataModalResultadoAnalisis([])
-            const response = await Api.post("analisis/buscar/" + id + "");
 
-            if (response.data.status == true) {
-                setDataModalAnalisis(response.data.data)
-                const filterFormato = {
-                    "filter": {
-                        "where": {
-                            "forma.analisis_id": {
-                                "value": id,
-                                "require": "and",
-                                "group": 2
-                            },
-                            "forma.tipos_analisis_id": {
-                                "value": tipo,
-                                "require": "and",
-                                "group": 2
-                            }
-                        }
-                    },
+            const formato = await Api.post("formatos/buscar/" + id);
+            if (formato.data.status == true) {
+                let tipo = formato.data.data[0]["tipos_analisis_id"]
+                let idAnalisis = formato.data.data[0]["an_id"]
+                let asignar = selectAsignar;
+
+                setTipoAnalisis(tipo)
+                asignar["usuarios_id"]["referencia"] = "Catador para el Formato " + (tipo == 2 ? "SCA" : "Físico")
+                setDataModalResultado(formato.data.data)
+                const resultado = await Api.post("resultado/buscar/" + formato.data.data[0].id + "");
+                console.log(resultado, "resulttt")
+                if (resultado.data.status == true) {
+                    setDataModalResultadoAnalisis(resultado.data.data)
+                } else {
+
                 }
-                const formato = await Api.post("formatos/buscar/not", filterFormato);
-                if (formato.data.status == true) {
-                    setDataModalResultado(formato.data.data)
-                    const resultado = await Api.post("resultado/buscar/" + formato.data.data[0].id + "");
-                    console.log(resultado, "resulttt")
-                    if (resultado.data.status == true) {
-                        setDataModalResultadoAnalisis(resultado.data.data)
-                    } else {
+                const response = await Api.post("analisis/buscar/" + idAnalisis + "");
+
+                if (response.data.status == true) {
+                    setDataModalAnalisis(response.data.data)
+                    const filterFormato = {
+                        "filter": {
+                            "where": {
+                                "forma.analisis_id": {
+                                    "value": id,
+                                    "require": "and",
+                                    "group": 2
+                                },
+                                "forma.tipos_analisis_id": {
+                                    "value": tipo,
+                                    "require": "and",
+                                    "group": 2
+                                }
+                            }
+                        },
                     }
-                } else if (formato.data.find_error) {
+
+                    changeModalFormResults(true)
+
+                } else if (response.data.find_error) {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.find_error,
+                            "tittle": "Inténtalo de nuevo",
+                        }
+                    )
                 } else {
                 }
-                changeModalFormResults(true)
-
-            } else if (response.data.find_error) {
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.find_error,
-                        "tittle": "Inténtalo de nuevo",
-                    }
-                )
+            } else if (formato.data.find_error) {
             } else {
             }
+
         } catch (e) {
             console.log(e)
         }
@@ -601,7 +645,7 @@ export const Formatos = (userInfo) => {
 
     async function getAnalisis() {
         try {
-            const response = await Api.post("analisis/listar", dataFilterTable);
+            const response = await Api.post("/formatos/listar", dataFilterTable);
             console.log(response, "annnnnnnnnnnnnnnnnnnn")
             if (response.data.status == true) {
                 setUsuarios(response.data.data)
@@ -843,13 +887,13 @@ export const Formatos = (userInfo) => {
     async function getFilterEstado(value) {
         let cloneDataFilterTable = { ...dataFilterTable }
         if (value !== false) {
-            cloneDataFilterTable.filter.where["an.estado"] = {
+            cloneDataFilterTable.filter.where["forma.estado"] = {
                 "value": value,
                 "require": "and"
             }
 
         } else {
-            delete cloneDataFilterTable.filter.where["an.estado"]
+            delete cloneDataFilterTable.filter.where["forma.estado"]
         }
         setDataFilterTable(cloneDataFilterTable)
         getAnalisis(dataFilterTable)
@@ -934,6 +978,9 @@ export const Formatos = (userInfo) => {
         }
         const axios = await Api[method](route, data);
         if (axios.data.status == true) {
+            getAnalisis()
+            setDataModalAnalisis([])
+            setDataModalResultado([])
             setInfoFormato(idAnalisisResult, tipoAnalisis)
             setStatusAlert(true)
             setdataAlert(
@@ -971,6 +1018,7 @@ export const Formatos = (userInfo) => {
             }
             const response = await Api.post("formatos/registrar", data);
             if (response.data.status == true) {
+                getAnalisis()
                 setInfoFormato(idAnalisis, tipoAnalisis)
                 setStatusAlert(true)
                 setdataAlert(
@@ -1001,6 +1049,7 @@ export const Formatos = (userInfo) => {
     }
     async function actualizarFormato(idAnalisis, idFormato, tipo, usuario) {
         try {
+            alert("xd")
             const data = {
                 "tipos_analisis_id": tipo,
                 "usuarios_id": usuario
@@ -1008,6 +1057,9 @@ export const Formatos = (userInfo) => {
             const response = await Api.put("formatos/actualizar/" + idFormato, data);
             console.log(response, "formtoooo")
             if (response.data.status == true) {
+                getAnalisis()
+                setDataModalAnalisis([])
+                setDataModalResultado([])
                 setInfoFormato(idAnalisis, tipoAnalisis)
                 setStatusAlert(true)
                 setdataAlert(
@@ -1046,7 +1098,7 @@ export const Formatos = (userInfo) => {
 
                     },
                     "date": {
-                        "an.fecha_creacion": {
+                        "forma.fecha_creacion": {
                             "desde": filter.desde_registro ? filter.desde_registro : "",
                             "hasta": filter.hasta_registro ? filter.hasta_registro : ""
                         }
@@ -1058,7 +1110,7 @@ export const Formatos = (userInfo) => {
                 }
             }
             if (filter.estado != "" && filter.estado) {
-                filterReport["filter"]["where"]["an.estado"] = {
+                filterReport["filter"]["where"]["forma.estado"] = {
                     "value": filter.estado ? filter.estado : "",
                     "operador": "=",
                     "require": "and"
@@ -1158,13 +1210,78 @@ export const Formatos = (userInfo) => {
         }
     }
 
+    async function setFinalizarFormato(id) {
+        try {
+            const response = await Api.put("formatos/finalizar/" + id)
+            if (response.data.status == true) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Excelente"
+                    }
+                )
+            } else if (response.data.modal_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.modal_error,
+                        "tittle": "Inténtalo de nuevo."
+                    }
+                )
+            } else if (response.data.delete_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.delete_error,
+                        "tittle": "Inténtalo de nuevo."
+                    }
+                )
+            } else {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.message,
+                        "tittle": "Inténtalo de nuevo."
+                    }
+                )
+            }
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
+
+    async function finalizarFormato(id) {
+        try {
+            let tittle = "¿Deseas finalizar el formato " + id + " ?";
+            let descripcion = "Estás apunto de finalizar el formato " + id + ", esta accion conlleva a no poder realizar ningún cambio a partir del momento en el que se se ejecuta esta acción."
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "warning",
+                    description: descripcion,
+                    tittle: tittle,
+                    continue: {
+                        "function": setFinalizarFormato,
+                        "execute": id
+                    }
+                }
+            )
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
     return (
         <>
             <link rel="stylesheet" href="../../public/css/analisis.css" />
 
             <Tablas userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
-            <FormResultados inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
+            <FormResultados finalizarFormato={finalizarFormato} setModalFormNormal={setModalFormNormal} modalFormNormal={modalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

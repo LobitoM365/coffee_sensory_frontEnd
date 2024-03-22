@@ -216,8 +216,11 @@
 }
 
 .div-content-asignar {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
     gap: 70px;
+    width: 2100px;
+    max-width: 100%;
 }
 
 .table-asignar .div-table {
@@ -272,7 +275,7 @@
 .fiv-asignar-analisis {
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    gap: 90px;
 }
 
 .div-encargados {
@@ -319,7 +322,7 @@
     max-width: calc(100% - 20px);
 }
 
-.table-add-asignar svg {
+.table-add-asignar .svg-icon-quit-table-asing {
     width: 45px;
     fill: red;
 }
@@ -332,6 +335,7 @@
 .div-encargados .div-table-asignados thead {
     position: sticky;
     top: 0;
+    z-index: 2;
 }
 
 .div-encargados .div-table-asignados {
@@ -350,7 +354,7 @@
     border-radius: 100px;
 }
 
-.div-encargados .div-table-asignados td div {
+.div-encargados .div-table-asignados td>div {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -383,8 +387,135 @@
     color: red;
     text-align: center !important;
 }
-.head-asignar-analisis{
+
+.head-asignar-analisis {
     display: flex;
     flex-direction: column;
     gap: 40px;
+}
+
+.div-footer-users-formatos {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button-users-formatos,
+.h4-estado-formato-asing {
+    padding: 10px 20px;
+    border: unset;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+.h4-estado-formato-asing {
+    padding: 7.5px 20px;
+    cursor: unset;
+}
+
+.h4-estado-formato-asing-finalizado {
+    background-color: #39b189;
+}
+
+.h4-estado-formato-asing-asignado {
+    background-color: orange;
+}
+
+.h4-estado-formato-asing-pendiente {
+    background-color: gray;
+}
+
+.button-users-formatos-cambiar {
+    background-color: rgb(41 153 136);
+}
+
+.button-users-formatos-eliminar {
+    background-color: red;
+}
+
+.catador-no-options-asignar {
+    padding: 10px;
+    color: black;
+    border-radius: 4px;
+    border: 1px solid rgba(122, 122, 122, 0.368);
+}
+
+.div-formato-finalizado {
+    gap: 20px;
+}
+
+.div-formato-finalizado div {
+    display: flex;
+    width: 100%;
+}
+
+.div-anaisis-finalizado-asignar-formato {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.div-anaisis-finalizado-asignar-formato>div {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.div-anaisis-finalizado-asignar-formato>div h5 {
+    font-size: 1.1em;
+}
+
+.div-anaisis-finalizado-asignar-formato>div h4 {
+    font-size: 1.3em;
+}
+
+.div-content-asignar h2 {
+    font-size: 1.9em;
+}
+
+.body-asignar-analisis {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.div-table-asing {
+    overflow: hidden;
+}
+
+.span-width-errors {
+    text-align: left;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr;
+    margin-bottom: 10px;
+}
+
+.span-width-errors h3 {
+    color: red;
+}
+
+.span-message-alerta {
+    margin-bottom: 20px;
+}
+
+.h4-tipo-analisis {
+    padding: 10px;
+    width: 80px;
+    max-width: 100%;
+    text-align: center;
+    color: white;
+    border-radius: 4px;
+}
+
+.h4-tipo-analisis-fisico {
+    background-color: rgb(246, 106, 109);
+}
+
+.h4-tipo-analisis-sca {
+    color: rgb(255, 255, 255);
+    background-color: rgb(252, 201, 80);
 }

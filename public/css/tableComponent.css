@@ -60,7 +60,10 @@
 
 .estado-0,
 .estado-1,
-.estado-2 {
+.estado-2,
+.estado-3,
+.estado-4,
+.estado-5 {
     width: 70px;
     max-width: 100px;
     padding: 10px;
@@ -81,6 +84,18 @@
 
 .estado-2 {
     background-color: gray;
+}
+
+.estado-3 {
+    background-color: orange;
+}
+
+.estado-4 {
+    background-color: #57b394;
+}
+
+.estado-5 {
+    background-color: blue;
 }
 
 .table-component .table-error {
@@ -141,7 +156,7 @@
     background-color: white;
     width: calc(100% - 40px);
     border-radius: 8px;
-   /*  display: grid;
+    /*  display: grid;
     grid-template-columns: 1fr auto; */
     align-items: center;
     height: max-content;
@@ -642,7 +657,7 @@
 .button-table-normal {
     width: 100px;
     max-width: 100%;
-/*     word-wrap: break-word;
+    /*     word-wrap: break-word;
     word-break: break-all; */
 }
 
@@ -797,9 +812,11 @@
         width: 30px;
         width: 30px;
     }
+
     .new-div-table td {
         width: 100%;
     }
+
     .new-div-table .button-table-normal,
     .new-div-table .estado-1,
     .new-div-table .estado-2,
@@ -836,15 +853,70 @@
     align-items: center;
 }
 
-.new-div-table .div-reporte-pdf div{
-   justify-content: left;
+.new-div-table .div-reporte-pdf div {
+    justify-content: left;
 }
+
 .div-icon-reporte-pdf {
     cursor: pointer;
     padding: 9px;
     border-radius: 4px;
 }
-.div-icon-reporte-pdf:hover{
+
+.div-icon-reporte-pdf:hover {
     background-color: rgba(255, 11, 11, 0.131);
-    
+
+}
+
+.div-ampliar-table svg {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+#contentComponent {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.div-content-component {
+    width: 100%;
+}
+
+.table-fixed>div .div-table {
+    width: 100%;
+    height: 100%;
+}
+
+.table-fixed>div {
+    width: calc(100% - 80px) !important;
+    height: calc(100% - 80px) !important;
+    border-radius: 4px;
+    background-color: rgb(235 237 234);
+    padding: 40px;
+    box-shadow: 0px 0px 8px 1px gray;
+    overflow: auto;
+}
+
+.table-fixed {
+    z-index: 99;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: calc(100% - 40px) !important;
+    height: calc(100% - 40px) !important;
+    top: 0;
+    left: 0;
+    padding: 20px;
+}
+
+.table-fixed .div-filters,
+.table-fixed .table-component,
+.table-fixed thead,
+.table-fixed #inputSearch {
+    background-color: white !important;
 }

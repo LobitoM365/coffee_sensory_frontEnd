@@ -46,7 +46,7 @@ export const Tablas = (array) => {
     const [modalReporte, setStatusModalReporte] = useState(false)
     const [tipoReporte, setTipoReporte] = useState("")
     const formRef = useRef(null);
-    let [limit, setLimit] = useState(5);
+    let [limit, setLimit] = useState(50);
     let [inicio, setInicio] = useState(0);
     let [fin, setFin] = useState(limit);
     let [positionFocusPaginate, setPositionFocusPaginate] = useState(1);

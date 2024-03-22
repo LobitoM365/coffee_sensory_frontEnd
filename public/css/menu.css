@@ -636,7 +636,7 @@ body {
 }
 
 .nav-main .selected-li svg {
-    fill: black;
+    fill: white;
 }
 
 @media screen and (max-width:610px) {

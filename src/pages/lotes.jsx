@@ -12,7 +12,12 @@ export const Lotes = () => {
             }
         }
     })
-        ;
+    const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
+        "buttons": {
+            "add": true,
+            "reporte": true,
+        }
+    });
     const [lotes, setLotes] = useState([])
     const [fincaEdit, setLoteEdit] = useState([])
     const [updateStatus, setUpdateStatus] = useState(false)
@@ -534,7 +539,7 @@ export const Lotes = () => {
 
     return (
         <>
-            <Tablas getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/img-form-state.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarLote} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setLote} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={lotes} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateLote} tittle={"Lotes"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/img-form-state.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarLote} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setLote} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={lotes} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateLote} tittle={"Lotes"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

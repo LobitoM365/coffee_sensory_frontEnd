@@ -1,6 +1,6 @@
 import { object, string } from "prop-types";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
-
+import "../../public/css/form.css"
 
 
 export const Form = forwardRef((data, ref) => {
@@ -13,6 +13,7 @@ export const Form = forwardRef((data, ref) => {
     const [inputValor, setInputValor] = useState({});
     const [keyDown, setKeydown] = useState();
     const modalRef = useRef(null);
+    const divContentFormRef = useRef(null);
     const handleInputChange = (e, key, type) => {
         if (type === "text") {
             e.target.value = e.target.value.replace("  ", " ").replace(/[@!#$%^¨¨.&*()-+=[{}|;:'",_<>/?`~¡¿´´°ç-]/, "").replace(/\d+/g, "").replace("]", "").replace("[", "").trimStart()
@@ -156,9 +157,8 @@ export const Form = forwardRef((data, ref) => {
     useEffect(() => {
         if (modalRef.current != null) {
             const modal = modalRef.current
-            let modalForm = modalRef.current.querySelector("#modalForm");
+            let modalForm = modalRef.current;
             let divContentForm = modalRef.current.querySelector("#divContentForm");
-            let divFondomodalForm = modalRef.current.querySelector("#divFondomodalForm");
             let labelErrorSubmitForm = modalRef.current.querySelector(".label-error-submit-form");
 
             setTimeout(() => {
@@ -168,28 +168,25 @@ export const Form = forwardRef((data, ref) => {
                 setKeydown(event.key)
             })
             function resizeForm() {
-                if (modalForm) {
+                if (modalForm && divContentForm) {
                     let displayNone = false;
                     if (modalForm.style.display == "none") {
                         modalForm.style.display = "block"
                         displayNone = true
                     }
 
-
                     if (divContentForm.scrollHeight > document.body.clientHeight) {
                         modalForm.style.alignItems = "unset"
                         modalForm.style.padding = "20px 20px"
                         modalForm.style.height = "calc(100% - 40px)"
                         modalForm.style.width = "calc(100% - 40px)"
-                        divFondomodalForm.style.height = divContentForm.clientHeight + 40 + "px"
-                        divFondomodalForm.style.width = modalForm.clientWidth + "px"
                     } else {
-
-                        for (let x = 0; x < labelErrorSubmitForm.length; x++) {
-                            labelErrorSubmitForm[x].style.height = ""
+                        if (labelErrorSubmitForm) {
+                            for (let x = 0; x < labelErrorSubmitForm.length; x++) {
+                                labelErrorSubmitForm[x].style.height = ""
+                            }
                         }
-                        divFondomodalForm.style.height = "100vh"
-                        divFondomodalForm.style.width = "100vw"
+
                         modalForm.style.alignItems = "center"
                         modalForm.style.padding = ""
                         modalForm.style.height = "100%"
@@ -198,15 +195,13 @@ export const Form = forwardRef((data, ref) => {
                     if (displayNone) {
                         modalForm.style.display = "none"
                     }
-                    for (let x = 0; x < labelErrorSubmitForm.length; x++) {
-
-
-                        if ((labelErrorSubmitForm[x].scrollHeight) > labelErrorSubmitForm[x].clientHeight) {
-
-                            labelErrorSubmitForm[x].style.height = "max-content"
+                    if (labelErrorSubmitForm) {
+                        for (let x = 0; x < labelErrorSubmitForm.length; x++) {
+                            if ((labelErrorSubmitForm[x].scrollHeight) > labelErrorSubmitForm[x].clientHeight) {
+                                labelErrorSubmitForm[x].style.height = "max-content"
+                            }
                         }
                     }
-
                 }
 
             }
@@ -244,13 +239,18 @@ export const Form = forwardRef((data, ref) => {
 
     };
     return (
-        <>
-            <link rel="stylesheet" href="/public/css/form.css" />
+        <div id="mainModalForm">
 
-            <div ref={modalRef} style={{ display: (!data.modalForm && !data.updateStatus) ? "none" : "" }} className="modal-form" id="modalForm">
-                <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="div-fondo-modal-form" id="divFondomodalForm">
-                </div>
-                <div id="divContentForm" className="div-content-form">
+            <div onClick={(e) => {
+                if (divContentFormRef.current != null) {
+                    console.log(e.target)
+                    if (e.target != divContentFormRef.current && !divContentFormRef.current.contains(e.target)) {
+                        data.changeModalForm(false); data.editarStatus(false)
+                    }
+                }
+            }} ref={modalRef} style={{ display: (!data.modalForm && !data.updateStatus) ? "none" : "" }} className="modal-form" id="modalForm">
+
+                <div ref={divContentFormRef} id="divContentForm" className="div-content-form">
                     <form onSubmit={chageData} action="" >
                         <div className="header-form">
                             <h3 className="tittle-form-register">{!data.updateStatus ? "Registrar " + data.tittle + "" : "Actualizar " + data.tittle + ""} </h3>
@@ -437,6 +437,6 @@ export const Form = forwardRef((data, ref) => {
 
             </div>
 
-        </>
+        </div>
     )
 })

@@ -17,7 +17,7 @@
     font-weight: bolder;
     font-size: 2em;
     text-shadow: rgb(241, 235, 235) 1px 5px ;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     padding: 5px;
 }
 

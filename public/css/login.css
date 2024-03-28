@@ -1,29 +1,28 @@
 * {
   margin: 0;
   padding: 0;
-  color: black;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
 }
 
-input {
+#mainLogin input {
   color: rgb(67, 67, 67);
   background-color: transparent;
 }
 
-img {
+#mainLogin img {
   height: 100%;
   width: 100%;
 }
 
-.title-login {
+#mainLogin .title-login {
   font-weight: bold;
   color: rgb(5, 150, 105);
   font-size: 1.9em;
   margin-bottom: 40px;
 }
 
-.main-container {
+#mainLogin {
   background-image: url('../img/login/bg-login-2.png');
   background-size: cover;
   display: flex;
@@ -32,14 +31,14 @@ img {
   height: 100vh;
 }
 
-.bg-img {
+#mainLogin .bg-img {
   backdrop-filter: blur(3px);
   width: 100%;
   height: 100%;
   position: absolute;
 }
 
-.login-container {
+#mainLogin .login-container {
   box-shadow: 0px 0px 16px 0px rgb(88, 88, 88);
   z-index: 1;
   background-color: white;
@@ -52,18 +51,18 @@ img {
   align-items: center;
 }
 
-.login-image-container {
+#mainLogin .login-image-container {
   height: 100%;
   width: 100%;
 }
 
-.login-image {
+#mainLogin .login-image {
   transform: scaleX(-1);
   border-top-left-radius: 7px;
   border-bottom-left-radius: 7px;
 }
 
-.login-form-container {
+#mainLogin .login-form-container {
   height: 100%;
   width: 100%;
   display: flex;
@@ -71,7 +70,7 @@ img {
   justify-content: center;
 }
 
-.login-form {
+#mainLogin .login-form {
   padding: 0px 23px 0px 23px;
   background-color: white;
   transition: margin-bottom 0.5s, opacity 0.1s;
@@ -81,11 +80,11 @@ img {
   width: 100%;
 }
 
-.container-inputs {
+#mainLogin .container-inputs {
   position: relative;
 }
 
-.container-inputs-span {
+#mainLogin .container-inputs-span {
   position: absolute;
   color: rgb(53, 168, 150);
   padding: 0px 5px 0px 5px;
@@ -96,7 +95,7 @@ img {
   transition: all 0.1s;
 }
 
-.span-input {
+#mainLogin .span-input {
   transition: all 100ms ease-in;
   color: rgb(172, 172, 172);
   visibility: hidden;
@@ -107,7 +106,7 @@ img {
   padding-left: 11px;
 }
 
-.login-form input {
+#mainLogin .login-form input {
   font-size: 0.9em;
   width: calc(100% - 30px);
   outline: unset;
@@ -118,17 +117,17 @@ img {
   /* border: 1px solid #ccc; */
 }
 
-.input-password {
+#mainLogin .input-password {
   width: 72% !important;
 }
 
-.login-form input::placeholder {
+#mainLogin .login-form input::placeholder {
   font-size: 1.1em;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   color: rgb(155, 155, 155)
 }
 
-.login-form button {
+#mainLogin .login-form button {
   font-weight: bolder;
   font-size: 0.9em;
   padding: 15px;
@@ -142,26 +141,26 @@ img {
   letter-spacing: 1px;
 }
 
-.login-form button:hover {
+#mainLogin .login-form button:hover {
   box-shadow: 0px 0px 4px 0px rgb(158, 158, 158);
   background: radial-gradient(rgb(12, 90, 12), rgb(42, 166, 42));
 }
 
 /* Error validation */
-.credentials-error {
+#mainLogin .credentials-error {
   position: absolute;
   bottom: -20px;
   font-size: 0.7em;
   color: orangered;
 }
 
-.input-error {
+#mainLogin .input-error {
   box-shadow: 0px 0px 3px 1px rgb(238, 125, 44) inset;
   transition: box-shadow 0.2s ease-in;
   /* border: 10px solid red; */
 }
 
-.eyes-container {
+#mainLogin .eyes-container {
   position: absolute;
   top: calc(0px + 2px);
   left: 83%;
@@ -173,28 +172,28 @@ img {
   align-items: center;
 }
 
-.eyes-container svg {
+#mainLogin .eyes-container svg {
   width: 24px;
   /* top: 2px; */
   position: relative;
 }
 
-.eyes-closed {
+#mainLogin .eyes-closed {
   position: relative;
   top: 4px;
   width: 47px !important;
 }
 
-.container-input {
+#mainLogin .container-input {
   border-radius: 3px;
   border: 0.2px solid #ccc;
 }
 
-.recover-password {
+#mainLogin .recover-password {
   font-weight: 600;
 }
 
-.recover-password p {
+#mainLogin .recover-password p {
   margin-top: 8px;
   width: max-content;
   padding: 3px;
@@ -206,21 +205,21 @@ img {
   color: rgb(0, 0, 152);
 }
 
-.recover-password p:hover {
+#mainLogin .recover-password p:hover {
   background-color: #eaeaea;
   color: rgb(0, 0, 152);
 }
 
-.recoveryForm {
+#mainLogin .recoveryForm {
   z-index: -1;
   display: none;
 }
 
-.text-recovery {
+#mainLogin .text-recovery {
   margin-bottom: 0px;
 }
 
-.text-info {
+#mainLogin .text-info {
   box-shadow: 0px 0px 3px rgba(0, 128, 49, 0.656);
   color: rgb(49, 49, 49);
   padding: 10px;
@@ -229,7 +228,7 @@ img {
   background-color: rgb(249, 249, 249);
 }
 
-.container-loader {
+#mainLogin .container-loader {
   padding: 15px;
   margin-bottom: 25px;
   border: none;
@@ -240,7 +239,7 @@ img {
   background-color: gainsboro;
 }
 
-.container-loader-mini {
+#mainLogin .container-loader-mini {
   /* z-index: 1; */
   position: relative;
   width: 20px;
@@ -252,7 +251,7 @@ img {
   border-radius: 50%;
 }
 
-.loader-bold {
+#mainLogin .loader-bold {
   position: absolute;
   /* padding: 2px !important; */
   width: 6px;
@@ -275,36 +274,36 @@ img {
 
 
 @media screen and (max-width:760px) {
-  .login-container {
+  #mainLogin .login-container {
     width: 90%;
     grid-template: 490px/ 1fr 0fr;
     /* padding: 50px 0px; */
   }
 
-  .title-login {
+  #mainLogin .title-login {
     margin-bottom: 0;
     text-align: center;
   }
 }
 
 @media screen and (max-width:400px) {
-  .title-login {
+  #mainLogin .title-login {
     font-size: 1.4em;
   }
 
-  .login-container {
+  #mainLogin .login-container {
     grid-template: 450px/ 1fr 0fr;
   }
 
-  .login-form input {
+  #mainLogin .login-form input {
     font-size: 0.8em;
   }
 
-  .eyes-container {
+  #mainLogin .eyes-container {
     width: 35px;
   }
 
-  .svg-eyes-two svg {
+  #mainLogin .svg-eyes-two svg {
     width: 17px;
   }
 

@@ -469,8 +469,42 @@ export const Analisis = (userInfo) => {
             "class": "div-reporte-pdf",
             "upper_case": true
         },
-        "estado": {
-            "referencia": "Estado"
+        "permission_formato_fisico": {
+            "referencia": "Catador Formato Físico",
+            "normal": true,
+            "conditions": {
+                "value": {
+                    "type": "table",
+                    "reference": "estado"
+                },
+                "inputs": {
+                    "2": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 class="estado-no-pointer estado-2">Pendiente</h4>,
+                            "class" : "xd"
+                        }
+                    },
+                    "4": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 class="estado-no-pointer estado-4">Finalizado</h4>,
+                        }
+                    },
+                },
+                "default": {
+                    "type": "button",
+                    "referencia": "Ver",
+                    "function": {
+                        "value": xd2,
+                        "execute": {
+                            "type": "table",
+                            "value": "an_id"
+                        }
+                    }
+                }
+            },
+            "upper_case": true
         },
         "actualizar": {
             "referencia": "actualizar"

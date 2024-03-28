@@ -519,3 +519,6 @@
     color: rgb(255, 255, 255);
     background-color: rgb(252, 201, 80);
 }
+.estado-no-pointer{
+    cursor: unset;
+}

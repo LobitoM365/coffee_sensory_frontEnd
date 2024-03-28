@@ -9,6 +9,7 @@ body {
 }
 
 .formato-sca {
+    font-size: 0.8vw;
     border: 0.1vw solid black;
     width: 100%;
     height: auto;

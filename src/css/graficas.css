@@ -11,7 +11,7 @@
 }
 h2{
     color: white;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     text-align: center;
     font-size: bolder;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -19,7 +19,7 @@ h2{
 }
 h3{
     font-size: 1em;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     text-align: center;
     font-size: bolder;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;

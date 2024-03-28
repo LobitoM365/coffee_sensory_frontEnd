@@ -4,6 +4,19 @@
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+.contenido {
+    color: black;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    padding: 50px;
+    background-color: rgb(234, 241, 243);
+}
+
+.component {
+    width: 100%;
+}
+
 
 /* Estilos para general */
 .main-content {
@@ -15,7 +28,7 @@
     grid-template-rows: auto 1fr;
 }
 
-body {
+#mainMenu body {
     background-color: rgb(243, 243, 244);
     height: calc(100%);
     width: calc(100%);
@@ -32,7 +45,6 @@ body {
     display: block;
 }
 
-/* Estilos para menu de navegacion */
 
 
 /* Estilos para nav-vertical */
@@ -52,47 +64,46 @@ body {
 
 }
 
-.nav-main a {
+#mainMenu .nav-main a {
     font-weight: 500;
     text-decoration: none;
 }
 
-
-.nav-horizontal>ul {
+#mainMenu .nav-horizontal>ul {
     overflow-y: auto;
     overflow-x: hidden;
     padding: 10px 10px;
 }
 
-.nav-horizontal>ul::-webkit-scrollbar {
+#mainMenu .nav-horizontal>ul::-webkit-scrollbar {
     -webkit-appearance: none;
     appearance: none;
     background-color: transparent;
     width: 10px;
 }
 
-.nav-horizontal>ul::-webkit-scrollbar-thumb {
+#mainMenu .nav-horizontal>ul::-webkit-scrollbar-thumb {
     background-color: rgb(11, 46, 75);
     border-radius: 4px;
 
 }
 
-.nav-main .img-logo-nav {
+#mainMenu .nav-main .img-logo-nav {
     width: 50px;
     border-radius: 4px;
 }
 
-.nav-main .div-header-nav {
+#mainMenu .nav-main .div-header-nav {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.nav-main .title-header-nav-horizontal {
+#mainMenu .nav-main .title-header-nav-horizontal {
     font-size: 1em;
 }
 
-.nav-main .header-nav {
+#mainMenu .nav-main .header-nav {
     display: flex;
     justify-content: space-between;
     margin-bottom: 55px;
@@ -100,14 +111,14 @@ body {
     width: calc(100% - 20px);
 }
 
-.nav-horizontal ul {
+#mainMenu .nav-horizontal ul {
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.nav-horizontal ul li ul li,
+#mainMenu .nav-horizontal ul li ul li,
 .nav-main .footer-nav li {
     cursor: pointer;
     padding: 5px 10px;
@@ -116,47 +127,47 @@ body {
     gap: 15px;
 }
 
-.nav-horizontal ul li ul a {
+#mainMenu .nav-horizontal ul li ul a {
     border-radius: 2px;
 }
 
-.nav-main .footer-nav li {
+#mainMenu .nav-main .footer-nav li {
     width: max-content;
 }
 
-.nav-main .footer-nav ul {
+#mainMenu .nav-main .footer-nav ul {
     width: calc(100% - 20px);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.nav-main .footer-nav {
+#mainMenu .nav-main .footer-nav {
     display: flex;
     justify-content: center;
 }
 
-.nav-horizontal ul li ul a:hover,
+#mainMenu .nav-horizontal ul li ul a:hover,
 .nav-main .footer-nav li:hover {
     background-color: rgba(0, 170, 108, 0.611);
 }
 
-.nav-main .icon-li-nav-horizontal {
+#mainMenu .nav-main .icon-li-nav-horizontal {
     width: 25px;
     fill: white;
 
 }
 
-.nav-main .title-li {
+#mainMenu .nav-main .title-li {
     padding: 0px 0px 20px 0px;
 }
 
-.nav-main .icon-li-dark-mode-nav-horizontal {
+#mainMenu .nav-main .icon-li-dark-mode-nav-horizontal {
     fill: white;
     width: 20px;
 }
 
-.nav-main .toogle-footer-nav-horizontal {
+#mainMenu .nav-main .toogle-footer-nav-horizontal {
     width: 44px;
     height: 18px;
     border-radius: 100px;
@@ -166,17 +177,17 @@ body {
     align-items: center;
 }
 
-.nav-main .footer-nav .li-dark-mode-nav-horizontal {
+#mainMenu .nav-main .footer-nav .li-dark-mode-nav-horizontal {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.nav-main .footer-nav .li-dark-mode-nav-horizontal:hover {
+#mainMenu .nav-main .footer-nav .li-dark-mode-nav-horizontal:hover {
     background-color: unset;
 }
 
-.nav-main .circle-footer-nav-horizontal {
+#mainMenu .nav-main .circle-footer-nav-horizontal {
     width: 20px;
     height: 20px;
     background-color: white;
@@ -184,50 +195,51 @@ body {
     transition: margin 0.5s;
 }
 
-.nav-main .content-1-footer-nav-horizontal {
+#mainMenu .nav-main .content-1-footer-nav-horizontal {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
 }
 
-.nav-main .icon-moon-li-dark-mode-nav-horizontal {
+#mainMenu .nav-main .icon-moon-li-dark-mode-nav-horizontal {
     rotate: -10deg;
     transform: rotate(-10deg);
 }
 
-.nav-main .link-memu-horizontal {
+#mainMenu .nav-main .link-memu-horizontal {
     color: white;
 }
 
-.nav-main .link-memu-horizontal:hover {
+#mainMenu .nav-main .link-memu-horizontal:hover {
     color: white;
 }
 
-.footer-nav ul {
+#mainMenu .footer-nav ul {
     border-top: 1px solid white;
     padding: 20px 0px 0px 0px;
 }
 
-.nav-main .line-nav-li {
+#mainMenu .nav-main .line-nav-li {
     border-bottom: 1px solid white;
     padding-bottom: 20px;
 }
 
-.nav-main .icon-hamburguer-li-nav-horizontal {
+#mainMenu .nav-main .icon-hamburguer-li-nav-horizontal {
     cursor: pointer;
     padding: 6px;
     border-radius: 4px;
 }
 
-.nav-main .icon-hamburguer-li-nav-horizontal:hover {
+#mainMenu .nav-main .icon-hamburguer-li-nav-horizontal:hover {
     background-color: rgb(102, 122, 138);
 }
 
-.nav-main .selected-li {
+#mainMenu .nav-main .selected-li {
     background-color: rgba(0, 135, 81, 0.829);
 }
 
+#mainMenu
 /* Estilos para nav Horizontal */
 
 .nav-vertical {
@@ -241,16 +253,8 @@ body {
     color: black;
 }
 
-.contenido {
-    color: black;
-    overflow: auto;
-    display: flex;
-    justify-content: center;
-    padding: 50px;
-    background-color: rgb(234, 241, 243);
-}
 
-.nav-main .component {
+#mainMenu .nav-main .component {
     word-wrap: break-word;
     word-break: break-all;
     width: 100%;
@@ -259,42 +263,42 @@ body {
     position: relative;
 }
 
-.nav-main .seccion-usuario-notificaciones {
+#mainMenu .nav-main .seccion-usuario-notificaciones {
     display: flex;
     position: relative;
     gap: 20px;
 }
 
-.nav-main .div-info-usuario {
+#mainMenu .nav-main .div-info-usuario {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
 }
 
-.nav-main .notificaciones {
+#mainMenu .nav-main .notificaciones {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.nav-main .icono-notificaciones {
+#mainMenu .nav-main .icono-notificaciones {
     width: 35px;
     padding: 8px;
     border-radius: 100%;
     cursor: pointer;
 }
 
-.nav-main .icono-notificaciones:hover {
+#mainMenu .nav-main .icono-notificaciones:hover {
     background-color: rgba(212, 210, 210, 0.235)
 }
 
-.nav-main .secccion-notificaciones {
+#mainMenu .nav-main .secccion-notificaciones {
     position: relative;
 }
 
-.nav-main .cantidad-notificaciones {
+#mainMenu .nav-main .cantidad-notificaciones {
     background-color: orange;
     padding: 3px;
     height: 14px;
@@ -312,7 +316,7 @@ body {
     font-weight: bolder;
 }
 
-.nav-main .esquina-notificaciones {
+#mainMenu .nav-main .esquina-notificaciones {
     position: absolute;
     border-top: 0px solid transparent;
     border-bottom: 10px solid white;
@@ -323,7 +327,7 @@ body {
     top: calc(100% - 6px);
 }
 
-.nav-main .contenido-notificaciones {
+#mainMenu .nav-main .contenido-notificaciones {
     width: 400px;
     min-width: max-content;
     height: max-content;
@@ -341,20 +345,20 @@ body {
     top: 120%;
 }
 
-.nav-main .header-notificaciones {
+#mainMenu .nav-main .header-notificaciones {
     padding: 20px 25px;
     border-bottom: 1px solid rgb(234, 234, 234);
     display: flex;
     justify-content: space-between;
 }
 
-.nav-main .titulo-notififcaciones {
+#mainMenu .nav-main .titulo-notififcaciones {
     font-size: 1em;
     color: black;
 
 }
 
-.nav-main .quit-notificaciones {
+#mainMenu .nav-main .quit-notificaciones {
     color: black;
     padding: 8px;
     width: 10px;
@@ -366,11 +370,11 @@ body {
     cursor: pointer;
 }
 
-.nav-main .quit-notificaciones:hover {
+#mainMenu .nav-main .quit-notificaciones:hover {
     background-color: rgba(3, 3, 3, 0.326);
 }
 
-.nav-main .contenido-analisis {
+#mainMenu .nav-main .contenido-analisis {
     padding: 10px 0px 10px 0px;
     overflow: hidden;
     display: flex;
@@ -378,7 +382,7 @@ body {
     align-items: center;
 }
 
-.nav-main .notificacion-analisis {
+#mainMenu .nav-main .notificacion-analisis {
     max-width: 100%;
     display: flex;
     flex-direction: column;
@@ -388,33 +392,33 @@ body {
     box-shadow: 0px 0px 5px rgb(199, 199, 199) inset;
 }
 
-.nav-main .notificacion-analisis:hover {
+#mainMenu .nav-main .notificacion-analisis:hover {
     background-color: rgba(170, 170, 170, 0.235);
     border-radius: 8px;
 }
 
-.nav-main .h4-informacion-notificacion-analisis {
+#mainMenu .nav-main .h4-informacion-notificacion-analisis {
     color: black;
 }
 
-.container-data {
+#mainMenu .container-data {
     display: flex;
     flex-direction: column;
     gap: 5px;
     margin-bottom: 10px;
 }
 
-.container-data h4 {
+#mainMenu .container-data h4 {
     font-weight: 500;
 
 }
 
-.nav-main .informacion-analisis {
+#mainMenu .nav-main .informacion-analisis {
     display: flex;
     gap: 20px;
 }
 
-.nav-main .asignaciones-notificaciones {
+#mainMenu .nav-main .asignaciones-notificaciones {
     overflow: auto;
     height: 100%;
     max-width: 380px;
@@ -425,38 +429,38 @@ body {
     padding: 5px;
 }
 
-.nav-main .asignaciones-notificaciones::-webkit-scrollbar {
+#mainMenu .nav-main .asignaciones-notificaciones::-webkit-scrollbar {
     width: 10px;
     background-color: rgb(31, 41, 55);
     border-radius: 8px;
 }
 
-.nav-main .asignaciones-notificaciones::-webkit-scrollbar-thumb {
+#mainMenu .nav-main .asignaciones-notificaciones::-webkit-scrollbar-thumb {
     background-color: gray;
     border-radius: 8px;
 }
 
-.nav-main .img-analisis {
+#mainMenu .nav-main .img-analisis {
     margin-top: 10px;
     width: 65px;
     border-radius: 8px;
 }
 
-.nav-main .asignado,
+#mainMenu .nav-main .asignado,
 .nav-main .pendiente {
     padding: 2px 4px 2px 4px;
     border-radius: 4px;
 }
 
-.nav-main .asignado {
+#mainMenu .nav-main .asignado {
     background-color: rgb(254, 197, 90);
 }
 
-.nav-main .pendiente {
+#mainMenu .nav-main .pendiente {
     background-color: gray;
 }
 
-.nav-main .input-proceder-analisis {
+#mainMenu .nav-main .input-proceder-analisis {
     color: white;
     width: 60%;
     padding: 8px 10px;
@@ -468,22 +472,20 @@ body {
     margin-right: 60px;
 }
 
-
-
-.nav-main .input-proceder-analisis:hover {
+#mainMenu .nav-main .input-proceder-analisis:hover {
     background-color: rgb(17, 124, 143)
 }
 
-.nav-main .h4-notificaciones-vacias {
+#mainMenu .nav-main .h4-notificaciones-vacias {
     color: rgb(141, 141, 141);
     text-align: center;
 }
 
-.nav-main .section-opciones-usuario {
+#mainMenu .nav-main .section-opciones-usuario {
     position: relative;
 }
 
-.nav-main .icon-opciones-usuario {
+#mainMenu .nav-main .icon-opciones-usuario {
     width: 20px;
     fill: black;
     padding: 6px;
@@ -491,7 +493,7 @@ body {
     position: relative;
 }
 
-.nav-main .contenido-opciones-usuario {
+#mainMenu .nav-main .contenido-opciones-usuario {
     width: max-content;
     min-width: max-content;
     height: max-content;
@@ -504,7 +506,7 @@ body {
     top: calc(100% + 9px);
 }
 
-.nav-main .esquina-opciones-usuario {
+#mainMenu .nav-main .esquina-opciones-usuario {
     position: absolute;
     border-top: 0px solid transparent;
     border-bottom: 10px solid white;
@@ -515,7 +517,7 @@ body {
     top: calc(100% + 1px);
 }
 
-.nav-main .opciones-usuario {
+#mainMenu .nav-main .opciones-usuario {
     padding: 10px 10px;
     overflow: hidden;
     display: flex;
@@ -526,12 +528,12 @@ body {
 
 }
 
-.nav-main .link-opciones-usuarios {
+#mainMenu .nav-main .link-opciones-usuarios {
     color: black;
     font-size: 0.8em;
 }
 
-.nav-main .li-opciones-usuario {
+#mainMenu .nav-main .li-opciones-usuario {
     list-style: none;
     display: flex;
     align-items: center;
@@ -541,45 +543,45 @@ body {
 
 }
 
-.nav-main .li-content-usuarios {
+#mainMenu .nav-main .li-content-usuarios {
     display: flex;
     gap: 10px;
 }
 
-.nav-main .li-opciones-usuario:hover {
+#mainMenu .nav-main .li-opciones-usuario:hover {
     background-color: rgb(30, 41, 59);
 }
 
-.nav-main .selected-li-perfil {
+#mainMenu .nav-main .selected-li-perfil {
     background-color: rgb(30, 41, 59);
     fill: white;
 }
 
-.nav-main .selected-li-perfil .link-opciones-usuarios {
+#mainMenu .nav-main .selected-li-perfil .link-opciones-usuarios {
     color: white;
     fill: white;
     display: flex;
 }
 
-.nav-main .li-opciones-usuario:hover .link-opciones-usuarios,
+#mainMenu .nav-main .li-opciones-usuario:hover .link-opciones-usuarios,
 .nav-main .li-opciones-usuario:hover .icon-li-opciones-usuario {
     color: white;
     fill: white;
 }
 
-.nav-main .icon-li-opciones-usuario {
+#mainMenu .nav-main .icon-li-opciones-usuario {
     width: 20px;
 }
 
-.nav-main .nombre-usuario {
+#mainMenu .nav-main .nombre-usuario {
     font-size: 1.1em;
 }
 
-.nav-main .rol-usuario {
+#mainMenu .nav-main .rol-usuario {
     font-size: 0.7em;
 }
 
-.div-img-perfil-nav {
+#mainMenu .div-img-perfil-nav {
     overflow: hidden;
     border-radius: 100%;
     display: flex;
@@ -590,15 +592,15 @@ body {
     flex: none;
 }
 
-.div-img-perfil-nav img {
+#mainMenu .div-img-perfil-nav img {
     height: 100%;
 }
 
-.btn-cerrar-sesion {
+#mainMenu .btn-cerrar-sesion {
     border: none;
 }
 
-.nav-horizontal h1,
+#mainMenu .nav-horizontal h1,
 .nav-horizontal h2,
 .nav-horizontal h3,
 .nav-horizontal h4,
@@ -607,18 +609,18 @@ body {
     color: white;
 }
 
-#navHorizontal {
+#mainMenu #navHorizontal {
     transition: width 0.5s;
 }
 
-.div-img-nav {
+#mainMenu .div-img-nav {
     position: absolute;
     width: 100%;
     height: 100%;
     z-index: -1;
 }
 
-.img-nav {
+#mainMenu .img-nav {
     position: absolute;
     z-index: -2;
     width: 100%;
@@ -627,7 +629,7 @@ body {
 
 }
 
-.logo-menu {
+#mainMenu .logo-menu {
     width: 75px;
     bottom: 0;
     position: absolute;
@@ -635,7 +637,7 @@ body {
 
 }
 
-.nav-main .selected-li svg {
+#mainMenu .nav-main .selected-li svg {
     fill: white;
 }
 
@@ -644,36 +646,36 @@ body {
         flex-wrap: wrap;
     }
 
-    .nav-main .header-nav {
+    #mainMenu .nav-main .header-nav {
         width: auto;
     }
 
-    .main-content {
+    #mainMenu .main-content {
         grid-template-columns: 1fr;
     }
 
-    #navHorizontal {
+    #mainMenu #navHorizontal {
         position: absolute;
         z-index: 9;
         right: 0;
         transition: transform 0.5s;
     }
 
-    .nav-vertical {
+    #mainMenu .nav-vertical {
         grid-template-columns: 1fr 1fr 1fr;
         padding: 10px 10px;
 
     }
 
-    #iconHamburguer {
+    #mainMenu #iconHamburguer {
         fill: black;
     }
 
-    #iconHamburguer:hover {
+    #mainMenu #iconHamburguer:hover {
         background-color: #00000012;
     }
 
-    .header-nav {
+    #mainMenu .header-nav {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -682,6 +684,451 @@ body {
     }
 }
 
-.div-ver-iconos .img-icono{
+#mainMenu .div-ver-iconos .img-icono {
     border-radius: 100%;
+}
+
+@media screen and (max-width:320px) {
+    #mainMenu .div-info-usuario .div-img-perfil-nav {
+        display: none;
+    }
+}
+
+@media screen and (max-width:240px) {
+
+
+    #mainMenu .div-info-usuario .info-usuario {
+        display: none;
+    }
+}
+
+@media screen and (max-width:240px) {
+
+    #mainMenu .contenido {
+        padding: 10px;
+    }
+}
+
+.div-modal-configuraciones #divContentForm {
+    background-color: rgb(244, 245, 249) !important;
+    padding: 55px !important;
+}
+
+#mainModalConfifuraciones .div-items-configuraciones {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#mainModalConfifuraciones .div-items-configuraciones>div {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    gap: 20px;
+    width: max-content;
+}
+
+#mainModalConfifuraciones .div-content-configuraciones {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-direction: column;
+}
+
+#mainModalConfifuraciones .div-items-configuraciones img {
+    width: 100%;
+}
+
+#mainModalConfifuraciones .h4-title-configuracion {
+    position: absolute;
+    right: 0;
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 4px;
+    font-size: 0.9em;
+    padding: 4px 7px;
+    left: 80%;
+    width: max-content;
+    z-index: 2;
+    display: none;
+}
+
+#mainModalConfifuraciones .div-item-cofiguracion {
+    padding: 20px;
+    background-color: white;
+    border-radius: 4px;
+    width: 70px;
+    height: 70px;
+    filter: grayscale(1);
+    z-index: 1;
+}
+
+#mainModalConfifuraciones .item-configuracion-activa {
+    cursor: pointer;
+}
+
+#mainModalConfifuraciones .item-configuracion-activa:hover .h4-title-configuracion {
+    display: block;
+}
+
+#mainModalConfifuraciones .item-configuracion-activa:hover {
+    z-index: 3;
+    filter: grayscale(0);
+}
+
+#mainModalConfifuraciones .div-color-configuraciones {
+    width: 100%;
+    height: 7px;
+    background-color: black;
+}
+
+#mainModalConfifuraciones .div-title-configuraciones>div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 7px;
+}
+
+#mainModalConfifuraciones .title-configuraciones {
+    font-size: 1.7em;
+}
+
+#mainModalConfifuraciones .div-title-color {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 8px;
+}
+
+#mainModalConfifuraciones .div-color-configuraciones-title {
+    height: 5px;
+    width: 100%;
+}
+
+#mainModalConfifuraciones {
+    width: max-content;
+    max-width: 100%;
+    gap: 40px;
+}
+
+#mainModalConfifuraciones .color-cofiguraciones-1 {
+    background-color: rgb(44, 189, 230);
+}
+
+#mainModalConfifuraciones .color-cofiguraciones-2 {
+    background-color: rgb(123, 100, 194);
+}
+
+#mainModalConfifuraciones .color-cofiguraciones-3 {
+    background-color: rgb(202, 71, 154);
+}
+
+#mainModalConfifuraciones .color-cofiguraciones-4 {
+    background-color: rgb(250, 158, 63);
+}
+
+#mainModalConfifuraciones .color-cofiguraciones-5 {
+    background-color: rgb(246, 186, 66);
+}
+
+#modalConfiguracionVariablesFisico {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+}
+
+#modalConfiguracionVariablesFisico .div-operadores-opciones-variables-fisico {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+#modalConfiguracionVariablesFisico .div-operadores-opciones-variables-fisico>div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+#modalConfiguracionVariablesFisico .div-operadores-opciones-variables-fisico>div>svg {
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.228);
+
+}
+
+#modalConfiguracionVariablesFisico .div-operadores-opciones-variables-fisico svg:hover {
+    background-color: rgba(0, 0, 0, 0.228);
+}
+
+#modalConfiguracionVariablesFisico>div {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#modalConfiguracionVariablesFisico>div {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto;
+    align-items: center;
+    justify-content: center;
+    gap: 70px;
+}
+
+#modalConfiguracionVariablesFisico .div-icon-delete {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    border-radius: 4px;
+    fill: red;
+    cursor: pointer;
+    filter: grayscale(1);
+    background-color: rgba(255, 0, 0, 0.256);
+
+}
+
+#modalConfiguracionVariablesFisico .div-icon-delete-focus {
+    background-color: rgba(255, 0, 0, 0.256);
+    filter: grayscale(0);
+}
+
+#modalConfiguracionVariablesFisico .div-leyenda span {
+    font-weight: bolder;
+    font-size: 0.8em;
+    color: orange;
+}
+
+#modalConfiguracionVariablesFisico .div-leyenda h3 {
+    font-size: 1.3em;
+}
+
+#modalConfiguracionVariablesFisico .div-leyenda h4 {
+    color: rgb(123, 122, 122);
+}
+
+#modalConfiguracionVariablesFisico .div-leyenda {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#modalConfiguracionVariablesFisico .div-content-leyenda>div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#modalConfiguracionVariablesFisico .div-content-leyenda {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 30px;
+}
+
+#modalConfiguracionVariablesFisico .div-content-input-variables>div>div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#modalConfiguracionVariablesFisico .div-content-input-variables>div {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0px 30px;
+}
+
+#modalConfiguracionVariablesFisico .div-content-formula {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    width: 100%;
+}
+
+#modalConfiguracionVariablesFisico .div-crear-formula {
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 4px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.div-movement-focus {
+    z-index: 9999999999999999999;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
+#modalConfiguracionVariablesFisico .item-operador-formula {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+
+}
+
+#modalConfiguracionVariablesFisico .operador-focus-movement svg {
+    width: 100%;
+    height: 100%;
+}
+
+
+#modalConfiguracionVariablesFisico .div-operador-add>div>svg,
+#modalConfiguracionVariablesFisico .div-operador-add>div {
+    width: 100%;
+    height: 100%;
+}
+
+#modalConfiguracionVariablesFisico .div-operador-add-movement {
+    border: 2px solid orange;
+}
+
+#modalConfiguracionVariablesFisico .div-operador-add {
+    width: 20px;
+    height: 20px;
+    position: relative;
+}
+
+#modalConfiguracionVariablesFisico .div-focus-movement {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 2;
+}
+
+#modalConfiguracionVariablesFisico .input-operar:focus {
+    outline: none;
+}
+
+#modalConfiguracionVariablesFisico .input-operar {
+    padding: 4px;
+    width: 50px;
+    height: calc(100% - 12px);
+}
+
+#modalConfiguracionVariablesFisico .div-input-operar>div {
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+
+#modalConfiguracionVariablesFisico .div-input-operar {
+    width: max-content;
+    height: 25px;
+}
+
+#modalConfiguracionVariablesFisico .button-ejecutar-formula:hover {
+    filter: brightness(1.1);
+}
+
+#modalConfiguracionVariablesFisico .button-ejecutar-formula {
+    padding: 10px;
+    border: unset;
+    color: white;
+    background-color: green;
+    border-radius: 2px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+#modalConfiguracionVariablesFisico .h4-variable-formula {
+    font-size: 1.2em;
+    border: 1px solid black;
+    padding: 0px 4px;
+    border-radius: 2px;
+}
+
+#modalConfiguracionVariablesFisico .operador-focus-movement {
+    position: fixed;
+    width: max-content !important;
+    height: 25px;
+    padding: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.228);
+    border: 2px solid orange;
+}
+
+#modalConfiguracionVariablesFisico .resultado-formula>h4 {
+    font-size: 1.3em;
+}
+
+#modalConfiguracionVariablesFisico .resultado-formula>svg {
+    width: 20px;
+}
+
+#modalConfiguracionVariablesFisico .resultado-formula {
+    display: flex;
+    gap: 20px;
+    width: 150px;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1em;
+    word-break: break-all;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
+
+#modalConfiguracionVariablesFisico .h6-error-formula-variable {
+    color: red;
+}
+
+#modalConfiguracionVariablesFisico .error-formula-variable {
+    border: 2px solid red;
+}
+
+#modalConfiguracionVariablesFisico .div-formulas {
+    display: flex;
+    gap: 40px;
+    flex-direction: column;
+}
+
+#modalConfiguracionVariablesFisico .div-operador-add .operador-focus-movement {
+    position: fixed;
+    width: 25px;
+    height: 25px;
+    padding: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.228);
+    border: 2px solid orange;
+}
+
+
+#modalConfiguracionVariablesFisico .input-form {
+    padding: 8px 15px;
+    font-size: 1.1em;
+    border-radius: 4px;
+    border: unset;
+    background-color: rgb(227, 242, 247);
+    width: calc(100% - 30px);
+    color: rgb(148, 164, 184);
+}
+
+#modalConfiguracionVariablesFisico .input-form:focus {
+    outline: none;
+}
+
+#modalConfiguracionVariablesFisico .label-from-register {
+    font-weight: 700;
+    font-size: 1.1em;
+    word-break: break-all;
 }

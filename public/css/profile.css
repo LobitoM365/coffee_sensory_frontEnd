@@ -3,18 +3,18 @@
     margin: 0;
 }
 
-.contenido {
+#mainProfile {
     padding: 0px 0px 20px 0px;
     position: relative;
 }
 
-.header-profile {
+#mainProfile .header-profile {
     position: relative;
     width: 100%;
     height: max-content;
 }
 
-.contenido-profile {
+#mainProfile .contenido-profile {
     width: calc(100% - 40px);
     top: 72%;
     position: absolute;
@@ -25,14 +25,14 @@
     gap: 25px;
 }
 
-.img-head-profile {
+#mainProfile .img-head-profile {
     width: 100%;
     height: auto;
     border-radius: 4px;
     min-height: 80px;
 }
 
-.info-profile,
+#mainProfile .info-profile,
 .form-profile {
     background-color: white;
     padding: 20px;
@@ -40,12 +40,12 @@
     border: 1px solid rgb(221, 225, 229);
 }
 
-.form-profile {
+#mainProfile .form-profile {
     /* position: absolute; */
     width: calc(100% - 40px);
 }
 
-.head-info-profile {
+#mainProfile .head-info-profile {
     display: grid;
     gap: 10px;
     flex-direction: column;
@@ -54,21 +54,21 @@
     position: relative;
 }
 
-.element-form {
+#mainProfile .element-form {
     display: flex;
     flex-direction: column;
     gap: 10px;
 
 }
 
-.form-update-profile {
+#mainProfile .form-update-profile {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px 20px;
     height: max-content;
 }
 
-.input-update-profile {
+#mainProfile .input-update-profile {
     padding: 8px 12px;
     width: calc(100% - 24px);
     border: 1px solid rgb(218, 219, 222);
@@ -77,16 +77,16 @@
     color: black;
 }
 
-.input-update-profile:focus {
+#mainProfile .input-update-profile:focus {
     outline: none;
 }
 
-.opciones-formulario {
+#mainProfile .opciones-formulario {
     display: flex;
     justify-content: end;
 }
 
-.button-opcion-formulario {
+#mainProfile .button-opcion-formulario {
     padding: 8px 10px;
     border: unset;
     border-radius: 4px;
@@ -96,13 +96,13 @@
     cursor: pointer;
 }
 
-.img-perfil-usuario {
+#mainProfile .img-perfil-usuario {
     width: 100%;
     hyphens: 100%;
     border-radius: 100%;
 }
 
-.div-img-perfil-usuario {
+#mainProfile .div-img-perfil-usuario {
     width: 100px;
     height: 100px;
     border-radius: 100%;
@@ -118,7 +118,7 @@
     align-items: center;
 }
 
-.button-update-user {
+#mainProfile .button-update-user {
     padding: 10px 15px;
     background-color: green;
     border: unset;
@@ -130,46 +130,46 @@
     width: max-content;
 }
 
-.div-input-error {
+#mainProfile .div-input-error {
     height: 15px;
 }
 
-.input-error {
+#mainProfile .input-error {
     color: red;
 }
 
-.form-update {
+#mainProfile .form-update {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr auto;
 }
 
-.content-form-update {
+#mainProfile .content-form-update {
     height: max-content;
 }
 
-.div-form-profile {
+#mainProfile .div-form-profile {
     width: 100%;
     position: relative;
 }
 
-.component {
+#mainProfile>div {
     width: 1000px;
     max-width: 100%;
     padding: 25px;
 }
 
-.img-icono {
+#mainProfile .img-icono {
     height: 100%;
 }
 
-.div-imgs-iconos {
+#mainProfile .div-imgs-iconos {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
 }
 
-.load-icono {
+#mainProfile .load-icono {
     border: 3px solid black;
     width: 100px;
     height: 100px;
@@ -180,28 +180,28 @@
     cursor: pointer;
 }
 
-.load-icono svg {
+#mainProfile .load-icono svg {
     width: 70%;
     fill: rgb(0, 0, 0);
     margin-top: 5px;
 }
 
-.load-icono:hover {
+#mainProfile .load-icono:hover {
     background-color: gray;
 }
 
-.load-icono:hover svg {
+#mainProfile .load-icono:hover svg {
     fill: rgb(44, 44, 44) !important;
 }
 
-.div-icons-img {
+#mainProfile .div-icons-img {
     display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
 }
 
-.div-ver-iconos {
+#mainProfile .div-ver-iconos {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -218,12 +218,12 @@
     display: none;
 }
 
-.div-img-perfil-usuario:hover .div-ver-iconos {
+#mainProfile .div-img-perfil-usuario:hover .div-ver-iconos {
     display: flex;
 
 }
 
-.div-img-focus {
+#mainProfile .div-img-focus {
     width: 300px;
     height: 300px;
     max-width: 100%;
@@ -236,11 +236,11 @@
     border: 2px solid rgb(28, 15, 65);
 }
 
-.div-img-focus img {
+#mainProfile .div-img-focus img {
     height: 100%;
 }
 
-.div-img-focus {
+#mainProfile .div-img-focus {
     width: 300px;
     max-width: 100%;
     height: 0;
@@ -248,17 +248,17 @@
     position: relative;
 }
 
-.div-img-focus img {
+#mainProfile .div-img-focus img {
     position: absolute;
     top: 0;
     height: 100%;
 }
 
-.div-img-focus:hover .div-ver-iconos {
+#mainProfile .div-img-focus:hover .div-ver-iconos {
     display: flex;
 }
 
-.div-buttons-img-focus {
+#mainProfile .div-buttons-img-focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -267,7 +267,7 @@
     padding: 15px 10px 0px 10px;
 }
 
-.div-buttons-img-focus button {
+#mainProfile .div-buttons-img-focus button {
     padding: 10px;
     border: unset;
     border-radius: 4px;
@@ -279,24 +279,24 @@
     word-wrap: break-word;
 }
 
-.button-eliminar-img-focus {
+#mainProfile .button-eliminar-img-focus {
     background-color: red;
 }
 
-.button-predeterminar-img-focus {
+#mainProfile .button-predeterminar-img-focus {
     background-color: orange;
 }
 
-.button-cambiar-img-focus {
+#mainProfile .button-cambiar-img-focus {
     background-color: rgb(13, 187, 106);
 }
 
-.div-imgs-iconos-add:hover .div-ver-iconos {
+#mainProfile .div-imgs-iconos-add:hover .div-ver-iconos {
     display: flex;
 }
 
-.div-imgs-iconos-add,
-.load-icono {
+#mainProfile .div-imgs-iconos-add,
+#mainProfile .load-icono {
     position: relative;
     border-radius: 100%;
     overflow: hidden;

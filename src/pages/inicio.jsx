@@ -4,7 +4,7 @@ import {
     Radar, RadarChart, PolarGrid,
     PolarAngleAxis, PolarRadiusAxis, ReferenceDot
 } from 'recharts';
-
+import "../../public/css/style.css"
 
 
 import $, { contains, data } from "jquery"
@@ -488,7 +488,7 @@ export const Inicio = () => {
         })
     }, [])
     return (
-        <>
+        <div id='mainInicio'>
             {modalStatus ?
 
                 analisis ? analisis.length > 0 ?
@@ -806,10 +806,10 @@ export const Inicio = () => {
                             : "" : ""}
                     </div>
                     : "" : "" : ""}
-            <link rel="stylesheet" href="css/style.css" />
+            
             <img className='img-fondo' src="/public/img/fondoMapa2.jpg" alt="" />
 
             <iframe id='iframeMapa' className='iframe' src="src/mapa/MapaV4/index.html" frameBorder={0}></iframe>
-        </>
+        </div>
     )
 }

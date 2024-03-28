@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert } from "../componentes/alert";
 import { useNavigate } from "react-router-dom";
 import { host } from "../componentes/Api";
+import "../../public/css/login.css";
 
 export const Login = (data) => {
     const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ export const Login = (data) => {
 
 
     // useEffect(() => {
-        
+
 
     // }, [data.socket]);
 
@@ -52,7 +53,7 @@ export const Login = (data) => {
                         let nameInput = inputs[i].getAttribute('data-place');
 
                         if (nameInput == originalPlaceholder[nameInput]) {
-                
+
                             inputs[i].placeholder = nameInput;
                         }
                     }, 100)
@@ -203,8 +204,7 @@ export const Login = (data) => {
     }
 
     return (
-        <div className="main-container">
-            <link rel="stylesheet" href="../../public/css/login.css" />
+        <div id="mainLogin" className="main-container">
             <div className="bg-img">
                 {/* <img className='' src="../img/login/bg-login-2.png" alt="" /> */}
                 {/* <svg id="visual" viewBox="0 0 1000 600" width="900" height="600"  version="1.1"><path d="M0 483L30 478.8C60 474.7 120 466.3 180 469.8C240 473.3 300 488.7 360 477.2C420 465.7 480 427.3 540 417.2C600 407 660 425 720 426.2C780 427.3 840 411.7 870 403.8L900 396" fill="none" stroke-linecap="round" stroke-linejoin="miter" stroke="#009473" stroke-width="40"></path></svg>

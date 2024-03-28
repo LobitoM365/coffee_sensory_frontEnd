@@ -1,6 +1,6 @@
 import { object, string } from "prop-types";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
-
+import "../../public/css/globalInputs.css"
 
 
 export const GlobalInputs = forwardRef((data, ref) => {
@@ -188,9 +188,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
 
 
     return (
-        <>
-            <link rel="stylesheet" href="/public/css/form.css" />
-
+        <div id="mainGlobalInput">
             <div ref={inputRef} style={{ display: Object.keys(inputs).length == 1 ? "unset" : "" }} className={(data.class ? data.class : "") + " form-register"}>
                 {
                     inputs.map((key, index) => {
@@ -212,10 +210,12 @@ export const GlobalInputs = forwardRef((data, ref) => {
                             return (
                                 <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
                                     <div className="head-input">
-                                        <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : dataInputs[key]["referencia"] === false ? "" : "Campo"}</label>
+                                        <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : dataInputs[key]["referencia"] === false ? "" : ""}</label>
                                         <input id={key} name={key} autoComplete="false" onChange={(e) => { inputChange(e, key, dataInputs[key]["type"]); setStatusInputDefault(false);/*  data.setStatusInput(false) */ }} value={statusInputDefault && elementEdit ? dataInputs[key]["upper_case"] ? typeof elementEdit === "string" ? elementEdit.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit === "string" ? elementEdit.toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit ?? '' : elementEdit ?? "" : inputValor} className="input-form" type="text" />
                                     </div>
-                                    <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
+
+                                    {data.errors ? <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4> : ""}
+
                                 </div>
                             );
                         } else if (dataInputs[key]["type"] === "select" && dataInputs[key]["visibility"] != false) {
@@ -233,11 +233,15 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                             if (type == "own") {
                                                 if (value == "key") {
                                                     execute = "key";
+                                                } else if (value == "all") {
+                                                    execute = "all"
                                                 }
                                             }
                                         }
 
                                     }
+                                } else {
+                                    execute = dataInputs[key]["function"]["execute"]["value"];
                                 }
                             }
                             if (data.statusSelect) {
@@ -254,7 +258,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
                             return (
                                 <div key={key} className="input-content-form-register">
                                     <div className="head-input">
-                                        <label htmlFor={key} className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : dataInputs[key]["referencia"] === false ? "" : "Campo"}</label>
+                                        {dataInputs[key]["referencia"] ? <label htmlFor={key} className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : dataInputs[key]["referencia"] === false ? "" : ""}</label> : ""}
                                         <div>
                                             <div key={key} className="filter-estado div-select">
                                                 <div key={index} style={{ display: "none" }} className="opciones opciones-input-select">
@@ -276,6 +280,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
 
                                                     {
                                                         dataInputs[key]["opciones"] ? dataInputs[key]["opciones"].map((select, indexSelect) => {
+
                                                             let value = ""
                                                             if (dataInputs[key]["values"]) {
                                                                 dataInputs[key]["values"].map((nameSelect, nameIndexSelect) => {
@@ -296,7 +301,6 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                                                     if (typeof data.value == "object") {
                                                                         data.value[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
                                                                     } else {
-                                                                        console.log(data.value,"dataaaaa")
                                                                         data.value = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
                                                                     }
                                                                 }
@@ -306,7 +310,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                                             return <h4 key={indexSelect} onClick={(e) => {
                                                                 clearOptionsSelect(key);
                                                                 if (typeof functionExecute == "function") {
-                                                                    functionExecute(execute == "key" ? dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] : "");
+                                                                    functionExecute(execute == "key" ? dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] : execute == "all" ? dataInputs[key]["opciones"][indexSelect] : "", dataInputs[key]["index"] ? indexSelect : "");
                                                                 }
 
                                                                 const parentElement = e.target.parentElement.parentElement;
@@ -346,7 +350,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
 
                                                 </div>
                                             </div>
-                                            <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
+                                            {data.errors ? <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4> : ""}
                                         </div>
                                     </div>
 
@@ -357,7 +361,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
 
                                 <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
                                     <div className="head-input">
-                                        <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : dataInputs[key]["referencia"] === false ? "" : "Campo"}</label>
+                                        <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : dataInputs[key]["referencia"] === false ? "" : ""}</label>
                                         <input id={key} name={key} className='input-date' type="datetime-local" />
                                     </div>
 
@@ -371,6 +375,6 @@ export const GlobalInputs = forwardRef((data, ref) => {
                     })
                 }
             </div >
-        </>
+        </div>
     )
 })

@@ -1,4 +1,4 @@
-.modal-form {
+#mainModalForm .modal-form {
     position: fixed;
     top: 0;
     left: 0;
@@ -10,9 +10,10 @@
     align-items: center;
     overflow-x: hidden;
     overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.519);
 }
 
-.div-fondo-modal-form {
+#mainModalForm .div-fondo-modal-form {
     background-color: rgba(10, 10, 10, 0.435);
     position: absolute;
     width: 100%;
@@ -22,7 +23,7 @@
     z-index: 9;
 }
 
-.div-form {
+#mainModalForm .div-form {
     background-color: white;
     display: flex;
     grid-template-columns: 1fr;
@@ -31,19 +32,19 @@
     border-radius: 8px;
     position: relative;
     z-index: 999999;
-    
+
     justify-content: center;
     align-items: center;
     max-width: 100%;
 
 }
 
-.tittle-form-register {
+#mainModalForm .tittle-form-register {
     word-break: break-all;
     font-size: 2em;
 }
 
-.form-register {
+#mainModalForm .form-register {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: max-content;
@@ -51,7 +52,7 @@
     width: 100%;
 }
 
-.input-form {
+#mainModalForm .input-form {
     padding: 8px 15px;
     font-size: 1.1em;
     border-radius: 4px;
@@ -61,28 +62,28 @@
     color: rgb(148, 164, 184);
 }
 
-.input-form:focus {
+#mainModalForm .input-form:focus {
     outline: none;
 }
 
-.input-content-form-register {
+#mainModalForm .input-content-form-register {
     display: flex;
     flex-direction: column;
     height: max-content;
 }
 
-.input-email {
+#mainModalForm .input-email {
     grid-column-start: 1;
     grid-column-end: 3;
 }
 
-.label-from-register {
+#mainModalForm .label-from-register {
     font-weight: 700;
     font-size: 1.1em;
     word-break: break-all;
 }
 
-.button-submit-form {
+#mainModalForm .button-submit-form {
     padding: 12px;
     border-radius: 4px;
     border: unset;
@@ -94,7 +95,7 @@
     ;
 }
 
-.div-div-input-submit-form {
+#mainModalForm .div-div-input-submit-form {
     padding-top: 20px;
     width: 100%;
     display: flex;
@@ -103,13 +104,13 @@
     grid-column-end: 3;
 }
 
-.label-error-submit-form {
+#mainModalForm .label-error-submit-form {
     color: red;
     font-size: 0.7em;
     height: 30px;
 }
 
-.icon-quit-svg-form {
+#mainModalForm .icon-quit-svg-form {
     width: 20px;
     cursor: pointer;
     padding: 8px;
@@ -120,11 +121,11 @@
 
 }
 
-.icon-quit-svg-form:hover {
+#mainModalForm .icon-quit-svg-form:hover {
     background-color: rgba(150, 149, 149, 0.358);
 }
 
-.header-form {
+#mainModalForm .header-form {
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
@@ -132,14 +133,14 @@
     padding-bottom: 20px;
 }
 
-.div-select {
+#mainModalForm .div-select {
     font-size: 0.9em;
     width: calc(100%);
     height: auto;
     word-break: break-all;
 }
 
-.input-select {
+#mainModalForm .input-select {
     padding: 11.5px 0px 11.5px 15px;
     font-size: 0.8em;
     border-radius: 4px;
@@ -149,81 +150,130 @@
     color: rgb(148, 164, 184);
 }
 
-.input-select-search {
+#mainModalForm .input-select-search {
     display: grid;
     grid-template-columns: 1fr auto;
     padding: 0;
+    width: 100%;
 }
 
-.input-select:focus {
+#mainModalForm .input-select:focus {
     outline: none;
 }
 
-.icon-chevron-estado {
+#mainModalForm .icon-chevron-estado {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 10px;
+    cursor: pointer;
 }
 
-.opciones-input-select {
+#mainModalForm .opciones-input-select {
     padding-left: 10px;
     width: calc(100% - 30px);
 }
 
-.option-focus {
+#mainModalForm .option-focus {
     background-color: rgba(106, 106, 106, 0.129);
 }
 
-.div-content-form {
+#mainModalForm .div-content-form {
     z-index: 99999;
     background-color: white;
     border-radius: 4px;
     width: max-content;
     /* display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr; */
+     grid-template-columns: 1fr;
+     grid-template-rows: auto 1fr; */
     padding: 30px;
     max-width: calc(100% - 100px);
     height: max-content;
 }
 
-.div-body-form {
+#mainModalForm .div-body-form {
     width: max-content;
     max-width: 100%;
     display: flex;
     gap: 30px;
 }
 
-.img-form {
+#mainModalForm .img-form {
     height: auto;
     width: 100%;
     border-radius: 4px;
 }
 
-.div-img-form {
+#mainModalForm .div-img-form {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 420px;
 }
-.head-input{
+
+#mainModalForm .head-input {
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
 @media screen and (max-width : 670px) {
-    .div-img-form {
+    #mainModalForm .div-img-form {
         display: none;
     }
 }
+
 @media screen and (max-width : 450px) {
-    .form-register { 
+    #mainModalForm .form-register {
         grid-template-columns: 1fr;
     }
-    .input-email{
+
+    #mainModalForm .input-email {
         grid-column-start: auto;
         grid-column-end: auto;
     }
+}
+
+#mainModalForm .filter-estado {
+    height: 100%;
+    border: 1px solid rgba(122, 122, 122, 0.368);
+    border-radius: 4px;
+    color: rgba(122, 121, 121, 0.618);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#mainModalForm .opciones {
+    position: absolute;
+    top: 100%;
+    border: 1px solid rgba(122, 122, 122, 0.368);
+    background-color: white;
+    width: calc(100% - 40px);
+    padding: 5px 20px;
+    border-radius: 0px 0px 4px 4px;
+    max-height: 110px;
+    overflow: auto;
+    z-index: 9;
+}
+
+#mainModalForm .select-option {
+    border-radius: 4px;
+    padding: 7px 5px;
+    cursor: pointer;
+    font-size: 0.8em;
+}
+
+#mainModalForm .select-option:hover {
+    background-color: rgba(181, 181, 181, 0.477);
+}
+
+#mainModalForm .icon-chevron-estado {
+    width: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }

@@ -3,6 +3,7 @@ import { Tablas } from "../componentes/tablas.jsx"
 import Api, { host } from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 import { FormResultados } from '../componentes/FormResultados.jsx'
+import { GlobalModal } from '../componentes/globalModal.jsx'
 
 export const Formatos = (userInfo) => {
     if (userInfo.socket) {
@@ -420,9 +421,72 @@ export const Formatos = (userInfo) => {
             "referencia": "Fecha de actualización",
             "format": true
         },
-        "estado": {
+        "fecha_finalizacion": {
+            "referencia": "Fecha de Finalización",
+            "format": true
+        },
+        "estado_formato": {
             "referencia": "Estado",
-            "priority": 10,
+            "normal": true,
+            "conditions": {
+                "value": {
+                    "type": "table",
+                    "reference": "estado"
+                },
+                "inputs": {
+                    "2": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-no-pointer estado-2">Pendiente</h4>,
+                            "class": "xd"
+                        }
+                    },
+                    "3": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-no-pointer estado-3">Asignado</h4>,
+                            "class": "xd"
+                        }
+                    }
+                    ,
+                    "5": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-no-pointer estado-5">Registrado</h4>,
+                            "class": "xd"
+                        }
+                    },
+                    "4": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-no-pointer estado-4">Finalizado</h4>,
+                        }
+                    },
+                    "1": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-no-pointer estado-1">Activo</h4>,
+                        }
+                    },
+                    "0": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-no-pointer estado-0">Inactivo</h4>,
+                        }
+                    },
+                    "0": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-no-pointer estado-0">Inactivo</h4>,
+                        }
+                    },
+                },
+                "default": {
+                    "type": "button",
+                    "referencia": "Ver"
+                }
+            },
+            "upper_case": true
         }
         // "reporte": {
         //     "normal": true,
@@ -1210,16 +1274,23 @@ export const Formatos = (userInfo) => {
         }
     }
 
+    async function getAnalisisModal() {
+        changeModalFormResults(false)
+    }
     async function setFinalizarFormato(id) {
         try {
             const response = await Api.put("formatos/finalizar/" + id)
             if (response.data.status == true) {
+                getAnalisis()
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
                         description: response.data.message,
-                        "tittle": "Excelente"
+                        "tittle": "Excelente",
+                        "continue": {
+                            "function": getAnalisisModal
+                        }
                     }
                 )
             } else if (response.data.modal_error) {
@@ -1279,7 +1350,7 @@ export const Formatos = (userInfo) => {
         <>
             <link rel="stylesheet" href="../../public/css/analisis.css" />
 
-            <Tablas userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Formatos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <FormResultados finalizarFormato={finalizarFormato} setModalFormNormal={setModalFormNormal} modalFormNormal={modalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />

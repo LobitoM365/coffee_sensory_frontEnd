@@ -114,7 +114,15 @@ export const Login = (data) => {
         Api.post('/auth/credentials', form)
             .then((response) => {
 
-                if (response.data.errors) {
+                if (response.data.permission == false) {
+                    setStatusAlert(true);
+                    setdataAlert({
+                        icon: <img className="icon-ban-alert" src="../../public/img/imgBan.png" alt="" />,
+                        status: "false",
+                        description: response.data.message,
+                        "tittle": "No tienes acceso!",
+                    });
+                } else if (response.data.errors) {
 
                     const credentialsError = response.data.errors;
 

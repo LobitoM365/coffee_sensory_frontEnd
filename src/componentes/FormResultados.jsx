@@ -3,6 +3,7 @@ import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { formatDate } from "./tablas";
 import { $ } from "jquery"
 import "../../public/css/formResultados.css"
+import { GlobalModal } from "./globalModal";
 
 
 export const FormResultados = forwardRef((data, ref) => {
@@ -180,7 +181,7 @@ export const FormResultados = forwardRef((data, ref) => {
                     setKeydown(event.key)
                 })
                 function resizeForm() {
-                    console.log(modalForm, divContentForm)
+
                     if (modalForm && divContentForm) {
                         let displayNone = false;
                         if (modalForm.style.display == "none") {
@@ -189,7 +190,8 @@ export const FormResultados = forwardRef((data, ref) => {
                         }
 
                         if (divContentForm.scrollHeight > document.body.clientHeight) {
-                            modalForm.style.alignItems = "unset"
+                            modalForm.style.justifyContent = "unset"
+                            modalForm.style.flexDirection = "column"
                             modalForm.style.padding = "20px 20px"
                             modalForm.style.height = "calc(100% - 40px)"
                             modalForm.style.width = "calc(100% - 40px)"
@@ -200,7 +202,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                 }
                             }
 
-                            modalForm.style.alignItems = "center"
+                            modalForm.style.justifyContent = "center"
                             modalForm.style.padding = ""
                             modalForm.style.height = "100%"
                             modalForm.style.width = "100%"
@@ -260,8 +262,12 @@ export const FormResultados = forwardRef((data, ref) => {
                     resizeFormatoSca();
                 });
             });
-            resizeObserver.observe(contenidoComponent);
-            resizeObserver.observe(contentModal);
+            if (contenidoComponent) {
+                resizeObserver.observe(contenidoComponent);
+            }
+            if (contentModal) {
+                resizeObserver.observe(contentModal);
+            }
         }
     }, [data, data.modalFormResults])
 
@@ -543,7 +549,11 @@ export const FormResultados = forwardRef((data, ref) => {
             data.setAnalisisFormato(jsonData, idFormato, tipoRegistro, modeFormato)
         }
     }
-
+    useEffect(() => {
+        if (data.setErrorsFormato) {
+            data.setErrorsFormato({})
+        }
+    }, [data.modalFormNormal])
 
     return (
 
@@ -554,7 +564,6 @@ export const FormResultados = forwardRef((data, ref) => {
 
                     <div onClick={(e) => {
                         if (divContentFormRef.current != null) {
-                            console.log(e.target)
                             if (e.target != divContentFormRef.current && !divContentFormRef.current.contains(e.target)) {
                                 setDataSelects({}), data.changeModalFormResults(false)
                             }
@@ -1148,39 +1157,27 @@ export const FormResultados = forwardRef((data, ref) => {
 
                     </div>
 
-                    <div style={{ display: (!data.modalFormNormal) ? "none" : "" }} className="div-modal-form modal-form" >
-                        <div onClick={() => { setIdFormato(null), setModeFormato(null); setTipoRegistro(null); data.setModalFormNormal(false) }} className="div-fondo-modal div-fondo-modal-form" >
-                        </div>
-                        <div id="contentModal" className="div-content-modal div-content-form">
+                    {data.modalFormNormal ? <GlobalModal statusModal={data.setModalFormNormal} content={
 
-                            <div className="header-form">
-                                <h3 className="tittle-form-register">Registro de análisis  {data.tipoAnalisis == 1 ? "Físico" : "Sensorial"}</h3>
-                                <div onClick={() => { setIdFormato(null), setModeFormato(null); setTipoRegistro(null); data.setModalFormNormal(false) }} className="icon-quit-svg-form">
-                                    <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
-                                        <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                        <g><g><path d="M150.7,128l90.6-90.7c6.3-6.3,6.3-16.4,0-22.7c-6.3-6.3-16.4-6.3-22.7,0L128,105.3L37.4,14.7c-6.3-6.3-16.4-6.3-22.7,0s-6.3,16.4,0,22.7l90.6,90.6l-90.6,90.6c-6.3,6.3-6.3,16.4,0,22.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7l90.7-90.6l90.6,90.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7c6.3-6.3,6.3-16.4,0-22.7L150.7,128z" /></g></g>
-                                    </svg>
-                                </div>
-                            </div>
-                            <div className="div-body-form">
-                                {modeFormato == 2 ?
-                                    (
-                                        <div>
+                        <div className="div-body-form">
+                            {modeFormato == 2 ?
+                                (
+                                    <div>
 
-                                            {tipoRegistro == 1 ? (
-                                                <div>
-                                                    <iframe id="iframeFormRegister" className="iframe-formato-sca" src="/src/formatoSca/formatoSca.html" frameBorder="0"></iframe>
-                                                    <button onClick={() => { registerFormatoSca("iframeFormRegister", 1, data.dataModalAnalisis[0].id) }} type="button" className="button-submit-form">Registrar</button>
-                                                </div>
-                                            ) : (
-                                                <div>
-                                                    <iframe id="iframeFormUpdate" className="iframe-formato-sca" src="/src/formatoSca/formatoSca.html" frameBorder="0"></iframe>
-                                                    <button onClick={() => { registerFormatoSca("iframeFormUpdate", 2, data.dataModalAnalisis[0].id) }} type="button" className="button-submit-form">Guardar</button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )
-                                    :
+                                        {tipoRegistro == 1 ? (
+                                            <div>
+                                                <iframe id="iframeFormRegister" className="iframe-formato-sca" src="/src/formatoSca/formatoSca.html" frameBorder="0"></iframe>
+                                                <button onClick={() => { registerFormatoSca("iframeFormRegister", 1, data.dataModalAnalisis[0].id) }} type="button" className="button-submit-form">Registrar</button>
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <iframe id="iframeFormUpdate" className="iframe-formato-sca" src="/src/formatoSca/formatoSca.html" frameBorder="0"></iframe>
+                                                <button onClick={() => { registerFormatoSca("iframeFormUpdate", 2, data.dataModalAnalisis[0].id) }} type="button" className="button-submit-form">Guardar</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                )
+                                : modeFormato == 1 ?
                                     <div id="divFormFormatoFisico" className="div-form-formato-fisico">
                                         <form onSubmit={(e) => { registerFormatoFisico(e) }}>
                                             <div style={{ display: Object.keys(inputsFormatoFisico).length == 1 ? "unset" : "" }} className="form-register-formato-fisico">
@@ -1312,11 +1309,12 @@ export const FormResultados = forwardRef((data, ref) => {
                                             )}
                                         </form>
                                     </div>
-                                }
-                            </div>
-                        </div >
+                                    : ""}
+                        </div>
 
-                    </div >
+
+                    } /> : ""}
+
 
                 </div>
                     : ""

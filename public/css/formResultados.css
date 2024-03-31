@@ -10,6 +10,7 @@
     align-items: center;
     overflow-x: hidden;
     overflow-y: auto;
+    flex-direction: column;
     background-color: rgba(0, 0, 0, 0.519);
 }
 
@@ -148,6 +149,7 @@
     background-color: rgb(255, 255, 255);
     width: calc(100% - 15px);
     color: rgb(148, 164, 184);
+    cursor: pointer;
 }
 
 #mainFormResultados .input-select-search {

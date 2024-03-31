@@ -8,6 +8,7 @@ import "../../public/css/menu.css";
 import { GlobalModal } from "../componentes/globalModal.jsx"
 import { Alert } from "../componentes/alert.jsx";
 import { GlobalInputs } from "../componentes/globalInputs.jsx";
+import { fn } from "jquery";
 
 export const Menu = (data) => {
     const [statusAlert, setStatusAlert] = useState(false);
@@ -20,6 +21,10 @@ export const Menu = (data) => {
     const [formulaVariables, setFormulaVariables] = useState("");
     const [globalInputsValue, setGlobalInputsValue] = useState({});
     const [variablesFormatoFisico, setvariablesFormatoFisico] = useState([]);
+    const [variableFocus, setVariableFocus] = useState({});
+    const [errorsInputGlobal, setErrorsInputGlobal] = useState({})
+    const [keyTipoValor, setKeyTipoValor] = useState(0);
+    const [statusVariables, setStatusVariables] = useState(false);
 
     useEffect(() => {
 
@@ -28,6 +33,10 @@ export const Menu = (data) => {
                 console.log("el perfil cambioooo", message)
                 getUser();
             };
+            const userBan = (message) => {
+                console.log(message, "mesageeeeeeeeee")
+                location.reload()
+            }
 
             const ok = (message) => {
                 console.log("oaskdkasdkas", message)
@@ -53,9 +62,11 @@ export const Menu = (data) => {
             data.socket.on('perfilChange', perfilChange);
             data.socket.on('ok', ok);
             data.socket.on("asignAnalisis", asignAnalisis);
+            data.socket.on("userBan", userBan);
 
             // Limpiar los suscriptores de eventos cuando el componente se desmonte
             return () => {
+                data.socket.off('asignAnalisis', userBan);
                 data.socket.off('perfilChange', perfilChange);
                 data.socket.off('ok', ok);
                 data.socket.off('asignAnalisis', asignAnalisis);
@@ -71,7 +82,7 @@ export const Menu = (data) => {
 
 
 
-    let haburguerMode = queryMenu ? 1 : 0;
+    let hamburguerMode = queryMenu ? 0 : 1;
     const [user, setUser] = useState({});
     const [modalConfiguracion, setModalConfiguracion] = useState(false);
     const [asignaciones, setAsignaciones] = useState([]);
@@ -116,8 +127,10 @@ export const Menu = (data) => {
     }
     function stateMenu() {
         let linkMenu = document.querySelectorAll(".change-hamburguer-quit");
+        let liHamburguerCentered = document.querySelectorAll(".li-hamburguer-centered");
         let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
         let navHorizontal = document.getElementById("navHorizontal");
+        let divHeaderNav = document.getElementById("headerNav");
         if (queryMenu) {
             let height = document.querySelectorAll(".nav-vertical")
 
@@ -144,19 +157,17 @@ export const Menu = (data) => {
             navHorizontal.style.height = "";
             navHorizontal.style.transform = "";
         }
-        if (haburguerMode == 0) {
+        if (hamburguerMode == 0) {
             if (queryMenu) {
                 navHorizontal.style.transform = "translateX(0%)";
 
             } else {
                 for (let x = 0; x < linkMenu.length; x++) {
-
-                    linkMenu[x].style.transition = "all  0.3s"
+                    linkMenu[x].style.transition = "all 0.3s"
                     linkMenu[x].style.opacity = "0"
                     linkMenu[x].style.fontSize = "10px"
                     setTimeout(() => {
                         linkMenu[x].style.display = "none"
-
                     }, 100)
 
                 }
@@ -164,14 +175,17 @@ export const Menu = (data) => {
                     setTimeout(() => {
                         hamburguerCentered[x].style.display = "flex"
                         hamburguerCentered[x].style.justifyContent = "center"
+                        hamburguerCentered[x].style.alignItems = "center"
                     }, 100)
 
                 }
                 navHorizontal.style.width = "75px";
+                divHeaderNav.style.width = "";
             }
 
-            haburguerMode = 1;
+            hamburguerMode = 1;
         } else {
+
             if (queryMenu) {
                 navHorizontal.style.transform = "translateX(-100%)";
             } else {
@@ -181,18 +195,39 @@ export const Menu = (data) => {
                     linkMenu[x].style.opacity = "1"
                     linkMenu[x].style.fontSize = ""
                     setTimeout(() => {
-                        linkMenu[x].style.display = "block"
+                        linkMenu[x].style.setProperty('display', 'block', 'important');
+
                     }, 100)
 
                 }
                 for (let x = 0; x < hamburguerCentered.length; x++) {
                     setTimeout(() => {
-                        hamburguerCentered[x].style.display = ""
-                        hamburguerCentered[x].style.justifyContent = ""
+                        console.log(hamburguerCentered)
+                        /* hamburguerCentered[x].style.setProperty('display', 'unset', 'important'); */
+                        hamburguerCentered[x].style.cssText = "justify-content: unset !important";
+
+
+
+                        // hamburguerCentered[x].style.display = ""
+                        // hamburguerCentered[x].style.justifyContent = ""
                     }, 100)
                 }
+                for (let x = 0; x < liHamburguerCentered.length; x++) {
+                    setTimeout(() => {
+                        liHamburguerCentered[x].style.setProperty('display', 'unset', 'important');
+                        liHamburguerCentered[x].style.setProperty('justifyContent', 'unset', 'important');
+                        liHamburguerCentered[x].style.setProperty('alignItems', 'unset', 'important');
+
+                        // hamburguerCentered[x].style.display = ""
+                        // hamburguerCentered[x].style.justifyContent = ""
+                    }, 100)
+                }
+
+                navHorizontal.style.width = "240px";
+                divHeaderNav.style.width = "calc(100% - 30px)";
+
             }
-            haburguerMode = 0;
+            hamburguerMode = 0;
 
         }
     }
@@ -239,8 +274,8 @@ export const Menu = (data) => {
         }, 100);
         function resizeMenuToOverFlowUl() {
             if (ulContentLi.scrollHeight > ulContentLi.clientHeight) {
-                divHeaderNav.style.width = "calc(100% - 10px)"
-                footerNav.style.width = "calc(100% - 10px)"
+                divHeaderNav.style.width = "calc(100%)"
+                footerNav.style.width = "calc(100%)"
             } else {
                 divHeaderNav.style.width = ""
                 footerNav.style.width = ""
@@ -256,7 +291,7 @@ export const Menu = (data) => {
 
             resizeMenuToOverFlowUl()
         })
-        stateMenu()
+        /*  stateMenu() */
         let iconHamburguer = document.getElementById("iconHamburguer")
 
         iconHamburguer.addEventListener("click", function () {
@@ -285,7 +320,7 @@ export const Menu = (data) => {
                 stateMenu();
             })
 
-            stateMenu()
+            /*  stateMenu() */
 
         }
 
@@ -331,11 +366,20 @@ export const Menu = (data) => {
            getVariablesFormatoFisico()
        }, []) */
     useEffect(() => {
+
+        setGlobalInputsValue({})
+        setFormulaVariables("")
+        setErrorsInputGlobal("")
         divCrearFormula = null
         refModalConfiguracionFormatoFisico = null
+        setStatusVariables(false)
     }, [modalConfiguracionFormatoFisico])
     useEffect(() => {
-        if (modalConfiguracionFormatoFisico && divCrearFormula != null && refModalConfiguracionFormatoFisico != null) {
+        console.log(statusVariables, "statussssssssssssssssssssssssssssssssssssssssssssssss")
+        if (!statusVariables && modalConfiguracionFormatoFisico && divCrearFormula != null && refModalConfiguracionFormatoFisico != null) {
+            setStatusVariables(true)
+
+            console.log("siuuuuuuuuuuuuuuuuuuuuuu")
             let divIconDelete = document.getElementById("divIconDelete");
             let operadorFocus;
             let operadorFocusAdd;
@@ -355,6 +399,7 @@ export const Menu = (data) => {
                 }
             }
             function setItemDivFormular(event) {
+                let divIconDelete = document.getElementById("divIconDelete");
                 const bbox = divCrearFormula.current.getBoundingClientRect();
                 const operadorFocusBbox = operadorFocus.getBoundingClientRect();
                 const bboxDelete = divIconDelete.getBoundingClientRect();
@@ -401,6 +446,7 @@ export const Menu = (data) => {
             }
             function setDivAddMovement(event) {
                 if (operadorFocusAdd) {
+                    let divIconDelete = document.getElementById("divIconDelete");
                     divOperadorFocusAdd.classList.remove("div-input-operar")
                     operadorFocusAdd.classList.add("operador-focus-movement")
                     divOperadorFocusAdd.classList.add("div-operador-add-movement")
@@ -437,7 +483,7 @@ export const Menu = (data) => {
                 }
             }
             let operadores = refModalConfiguracionFormatoFisico.current.querySelectorAll(".item-operador-formula")
-
+            console.log("changeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", refModalConfiguracionFormatoFisico.current)
             refModalConfiguracionFormatoFisico.current.addEventListener("mousedown", function (event) {
                 for (let x = 0; x < operadores.length; x++) {
                     if (event.target == operadores[x]) {
@@ -472,6 +518,7 @@ export const Menu = (data) => {
                 }
             })
             refModalConfiguracionFormatoFisico.current.addEventListener("mouseup", function () {
+                let divIconDelete = document.getElementById("divIconDelete");
 
                 if (deleteStatus) {
                     let h4Resultado = document.getElementById("resultadoFormula")
@@ -550,9 +597,94 @@ export const Menu = (data) => {
                 operadorFocus = null
                 deleteStatus = null;
             })
-        }
 
+            if (divCrearFormula) {
+                if (divCrearFormula.current) {
+                    if (variableFocus) {
+                        if (typeof variableFocus == "object") {
+                            const keys = Object.keys(variableFocus)
+                            if (keys.length > 0) {
+                                let regexFormula = /(\d*\.?\d+)|([+\-*/%()])|parseFloat\s*\([^)]*\)/g
+
+                                let tokens = [];
+                                let match;
+                                const formula = (variableFocus["formula"] ? variableFocus["formula"] : "").toString();
+                                if (variableFocus["formula"]) {
+                                    while ((match = regexFormula.exec(formula)) !== null) {
+                                        const token = match[0].trim();
+                                        tokens.push(token);
+                                    }
+                                }
+                                for (let x = 0; x < tokens.length; x++) {
+                                    setFormulaVariable(tokens[x])
+                                }
+                                evaluarFormula()
+                            }
+                        }
+                    }
+                }
+            }
+            function setFormulaVariable(element) {
+                let div = document.createElement("div")
+                div.classList.add("div-operador-add")
+
+                if (element == "(" || element == ")" || element == "*" || element == "/" || element == "+" || element == "-" || element == "%") {
+                    const svgs = document.querySelectorAll('svg[data-signo="' + element + '"]');
+                    if (svgs[0].parentNode) {
+                        if (divCrearFormula) {
+                            if (divCrearFormula.current) {
+                                const cloneSvg = svgs[0].parentNode.cloneNode(true)
+                                div.appendChild(cloneSvg)
+                                cloneSvg.querySelector("svg").classList.add("signo-formula")
+                                console.log(cloneSvg, "vhwwwwwwwwwwwwwwwwww")
+                                divCrearFormula.current.appendChild(div)
+                            }
+                        }
+                    }
+                } else if (!isNaN(element)) {
+                    div.classList.add("div-input-operar")
+                    const divElement = document.createElement("div")
+                    divElement.innerHTML = '<div class="item-operador-formula"></div>'
+                    let input = document.createElement("input")
+                    input.classList.add("input-operar")
+                    input.classList.add("signo-formula")
+                    input.value = element
+                    input.setAttribute("data-signo", element)
+                    input.addEventListener("input", function (e) {
+                        e.target.value = e.target.value.replace(/[^\d.]/g, '');
+                        input.setAttribute("data-signo", e.target.value)
+                        evaluarFormula()
+                    })
+                    divElement.appendChild(input)
+                    div.appendChild(divElement)
+                    divCrearFormula.current.appendChild(div)
+                } else {
+                    div.classList.add("div-input-operar")
+
+                    let match = element.match(/parseFloat\(\w+\.(\w+)/);
+                    /* let match = element.match(/parseFloat\((.*?)\)/); */
+                    let contenidoParseFloat = match ? match[1] : null;
+                    /* let indice = variablesFormatoFisico.indexOf(contenidoParseFloat); */
+                    let indice = 0;
+
+                    for (let x = 0; x < variablesFormatoFisico.length; x++) {
+                        if (variablesFormatoFisico[x]["nombre"] == contenidoParseFloat) {
+                            indice = x
+                            break
+                        }
+                    }
+                    console.log(indice, contenidoParseFloat, variablesFormatoFisico)
+                    div.innerHTML = '<div class="" style="top: 471.5px; left: 624.5px;"><div class="item-operador-formula"></div><h4 class="h4-variable-formula signo-formula" data-signo="' + contenidoParseFloat + '">V_' + (indice + 1) + '</h4></div>'
+                    divCrearFormula.current.appendChild(div)
+
+                }
+            }
+        }
     }, [divCrearFormula.current, refModalConfiguracionFormatoFisico.current])
+
+
+
+
     async function getVariablesFormatoFisico() {
         try {
             const dataVariables = {
@@ -569,7 +701,7 @@ export const Menu = (data) => {
             if (response.data.status == true) {
                 setvariablesFormatoFisico(response.data.data)
                 setModalConfiguracionFormatoFisico(true)
-            } else if (response.data.find_error == true) {
+            } else if (response.data.find_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -610,25 +742,29 @@ export const Menu = (data) => {
 
             }
         }
-
     }
     pageLoad[location.pathname] = false
 
     function evaluarFormula() {
         if (divEvaluarFormula.current != null) {
-            divLLenarCamporFormulario.current.innerHTML = ""
-            setDataVariables(prevState => {
+            if (divLLenarCamporFormulario) {
+                if (divLLenarCamporFormulario.current) {
+                    divLLenarCamporFormulario.current.innerHTML = ""
+                }
+            }
+
+            /* setDataVariables(prevState => {
                 let cloneDataVariables = { ...prevState }
                 cloneDataVariables = {}
                 return cloneDataVariables
-            })
+            }) */
             let itemOperadorFormula = document.querySelectorAll(".signo-formula")
             let formula = "";
             divEvaluarFormula.current.innerHTML = ""
             for (let x = 0; x < itemOperadorFormula.length; x++) {
                 if (itemOperadorFormula[x].getAttribute("data-signo")) {
                     if (!isNaN(itemOperadorFormula[x].getAttribute("data-signo")) || itemOperadorFormula[x].getAttribute("data-signo") == ")" || itemOperadorFormula[x].getAttribute("data-signo") == "(" || itemOperadorFormula[x].getAttribute("data-signo") == "+" || itemOperadorFormula[x].getAttribute("data-signo") == "-" || itemOperadorFormula[x].getAttribute("data-signo") == "*" || itemOperadorFormula[x].getAttribute("data-signo") == "=" || itemOperadorFormula[x].getAttribute("data-signo") == "/" || itemOperadorFormula[x].getAttribute("data-signo") == "%") {
-                        divEvaluarFormula.current.innerHTML += itemOperadorFormula[x].getAttribute("data-signo")
+                        divEvaluarFormula.current.innerHTML += "<h4 class='h4-variable-" + itemOperadorFormula[x].getAttribute("data-signo") + " '>" + itemOperadorFormula[x].getAttribute("data-signo") + " </h4>"
                         formula += itemOperadorFormula[x].getAttribute("data-signo") + " ";
                     } else {
                         let divVariable = document.createElement("div")
@@ -636,6 +772,13 @@ export const Menu = (data) => {
                         let input = document.createElement("input")
                         input.setAttribute("id", itemOperadorFormula[x].getAttribute("data-signo"))
                         input.classList.add("input-form")
+
+                        setDataVariables(prevState => {
+                            if (typeof prevState == "object") {
+                                input.setAttribute("value", prevState[itemOperadorFormula[x].getAttribute("data-signo")] ? prevState[itemOperadorFormula[x].getAttribute("data-signo")] : 0)
+                            }
+                            return prevState
+                        })
                         if (!document.getElementById(itemOperadorFormula[x].getAttribute("data-signo"))) {
                             input.addEventListener("input", function (e) {
                                 e.target.value = e.target.value.replace(/[^\d.]/g, '');
@@ -651,10 +794,21 @@ export const Menu = (data) => {
 
                             })
                             divVariable.appendChild(input)
-                            divLLenarCamporFormulario.current.appendChild(divVariable)
+                            if (divLLenarCamporFormulario) {
+                                if (divLLenarCamporFormulario.current) {
+                                    divLLenarCamporFormulario.current.appendChild(divVariable)
+                                }
+                            }
                         }
-                        formula += "parseFloat(dataVariables." + itemOperadorFormula[x].getAttribute("data-signo") + " )";
-                        divEvaluarFormula.current.innerHTML += "<h4 class='h4-variable-" + itemOperadorFormula[x].getAttribute("data-signo") + " '>0</h4>"
+                        formula += "parseFloat(dataVariables." + itemOperadorFormula[x].getAttribute("data-signo") + ") ";
+
+                        let dataH4 = 0;
+                        if (dataVariables[itemOperadorFormula[x].getAttribute("data-signo")]) {
+                            dataH4 = dataVariables[itemOperadorFormula[x].getAttribute("data-signo")]
+                        }
+                        divEvaluarFormula.current.innerHTML += "<h4 class='h4-variable-" + itemOperadorFormula[x].getAttribute("data-signo") + " '>" + dataH4 + " </h4>"
+
+
                     }
 
                 }
@@ -694,7 +848,90 @@ export const Menu = (data) => {
 
         }
     }
+    /*     useEffect(() => {
+            globalInputsValue["tipo_valor"] = variableFocus["tipo_valor"]
+        }, [variableFocus]) */
 
+    function getInfoVariable(variable, index) {
+        setVariableFocus(variable)
+        clearFormula()
+        globalInputsValue["variables"] = ""
+
+        /*    if (globalInputsValue["tipo_valor"] != variable["tipo_valor"]) { */
+        globalInputsValue["tipo_valor"] = variable["tipo_valor"]
+        const clonetGlobalInputsValue = { ...globalInputsValue }
+        clonetGlobalInputsValue["tipo_valor"] = variable["tipo_valor"]
+        setGlobalInputsValue(clonetGlobalInputsValue)
+
+        /*   } */
+        divCrearFormula = null
+        refModalConfiguracionFormatoFisico = null
+        setStatusVariables(false)
+        setKeyTipoValor(keyTipoValor + 1)
+    }
+    function clearFormula() {
+        if (divCrearFormula.current) {
+            setDataVariables(prevState => {
+                return {}
+            })
+            divCrearFormula.current.innerHTML = ""
+            evaluarFormula()
+            let h4Resultado = document.getElementById("resultadoFormula")
+            let h6ErrorFormulaVariable = document.getElementById("h6ErrorFormulaVariable")
+            if (h6ErrorFormulaVariable) {
+                h6ErrorFormulaVariable.remove()
+            }
+            if (divCrearFormula.current) {
+                divCrearFormula.current.classList.remove("error-formula-variable")
+            }
+            h4Resultado.innerHTML = ""
+        }
+    }
+
+    async function updateVariable() {
+        try {
+            setErrorsInputGlobal({})
+            const data = {
+                "tipo_valor": globalInputsValue["tipo_valor"],
+                "formula": formulaVariables
+            }
+            const response = await Api.put("variables/actualizar/" + variableFocus["id"], data)
+            if (response.data.errors) {
+                setErrorsInputGlobal(response.data.errors)
+            } else if (response.data.status == true) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Excelente",
+                    }
+                )
+                getVariablesFormatoFisico()
+            } else if (response.data.update_error == true) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.update_error,
+                        "tittle": "Inténtalo de nuevo.",
+                    }
+                )
+            }
+
+
+            console.log("--------------", variableFocus, formulaVariables, globalInputsValue["tipo_valor"], "-------------------")
+            console.log(response, "resssssssssssssssssss")
+
+
+
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
+    function setTipoValor(variable) {
+        setStatusVariables(false)
+    }
     return (
 
         <div>
@@ -712,7 +949,7 @@ export const Menu = (data) => {
 
                         </div>
                         <div id="divHeaderNav" className="div-header-nav">
-                            {!queryMenu ? <div className="header-nav hamburguer-centered">
+                            {!queryMenu ? <div id="headerNav" className="header-nav ">
                                 <img className="img-logo-nav change-hamburguer-quit" src="../../public/img/logo-coffee-sensory.png" alt="" />
 
                                 <h2 className="title-header-nav-horizontal change-hamburguer-quit">Dashboard</h2>
@@ -727,7 +964,7 @@ export const Menu = (data) => {
                             </div> : ""}
                         </div>
                         <ul id="ulContentLi">
-                            <li className="hamburguer-centered line-nav-li">
+                            <li className="li-hamburguer-centered hamburguer-centered line-nav-li">
                                 <h4 className="title-li change-hamburguer-quit">Principal</h4>
                                 <ul>
                                     <Link title="Inicio" to={"/dashboard"} onClick={() => { selectedLi("/dashboard") }} className={`link-memu-horizontal  ${liSelected == "/dashboard" ? "selected-li" : ""}`}>
@@ -744,7 +981,7 @@ export const Menu = (data) => {
                                     </Link>
                                 </ul>
                             </li>
-                            <li className="hamburguer-centered">
+                            <li className="li-hamburguer-centered hamburguer-centered">
                                 <h4 className="title-li change-hamburguer-quit">Registros</h4>
                                 <ul>
 
@@ -939,10 +1176,15 @@ export const Menu = (data) => {
                                     </div>
                                     <div className="div-opciones-usuario">
                                         <div className="section-opciones-usuario">
-                                            <svg onClick={verOpcionesPerfil} className="icon-opciones-usuario" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 256 256"  >
+                                            <svg onClick={(e) => {
+                                                let divModal = e.target.closest(".section-opciones-usuario").querySelectorAll(".child-div-modal")
+                                                if (divModal[0]) {
+                                                    divModal[0].style.display = divModal[0].style.display == "none" ? "block" : "none"
+                                                }
+                                            }} className="father-div-modal icon-opciones-usuario" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 256 256"  >
                                                 <g><g><path d="M240.2,64.9c-7.8-7.8-20.3-7.8-28.1,0L128,149.1L43.9,64.9c-7.8-7.8-20.3-7.8-28.1,0c-7.7,7.8-7.7,20.3,0,28.1l98.2,98.2c3.9,3.9,9,5.8,14,5.8c5.1,0,10.2-1.9,14-5.8L240.2,93C247.9,85.2,247.9,72.7,240.2,64.9z" /></g></g>
                                             </svg>
-                                            <div style={{ display: !modalPerfil ? "none" : "" }}>
+                                            <div style={{ display: "none" }} className="child-div-modal">
                                                 <div className="esquina-opciones-usuario"></div>
                                                 <div className="contenido-opciones-usuario">
 
@@ -964,13 +1206,13 @@ export const Menu = (data) => {
                                                             </svg>
                                                             <Link className="link-opciones-usuarios ">Configuracion</Link>
                                                         </li>
-                                                        <button onClick={() => LogoutSesion()} className="li-opciones-usuario btn-cerrar-sesion">
+                                                        <li onClick={() => LogoutSesion()} className="li-opciones-usuario btn-cerrar-sesion">
                                                             <svg className="icon-li-opciones-usuario" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
                                                                 <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                                                 <g><g><path d="M175.3,64V24.2c0-6.4-5.2-11.5-11.5-11.5H21.5c-6.3,0-11.5,5.2-11.5,11.5v163c0,4.2,2.5,8.3,6.1,10.2l87.7,45.4c3.9,1.9,8.5-0.8,8.5-5.2v-44.2h51.5c6.4,0,11.5-5.2,11.5-11.5v-63h-23.1v45.8c0,3.3-2.5,5.8-5.8,5.8h-34V72.4c0-4.2-2.5-8.3-6.2-10.2L54.6,35.7h91.9c3.3,0,5.8,2.5,5.8,5.8v22.7h23.1V64L175.3,64z" /><path d="M204.9,45.1l37.5,37.5c4.8,4.8,4.8,11.9,0,16.7l-37.5,37.5c-4.8,4.8-12.1,5-16.9,0.2c-4.6-4.6-4-12.3,0.4-16.9l16.9-16.7h-65.5c-3.3,0-6.5-1.3-8.6-3.9c-5.4-5.8-4-16,2.9-19.8c1.7-1,3.9-1.5,5.8-1.5h65.5c0,0-16.7-16.7-16.9-16.7c-4.4-4.4-5-12.3-0.4-16.7C192.6,40.1,200.1,40.3,204.9,45.1" /></g></g>
                                                             </svg>
                                                             <div className="link-opciones-usuarios">  Cerrar sesión</div>
-                                                        </button>
+                                                        </li>
 
                                                     </div>
                                                 </div>
@@ -1044,284 +1286,368 @@ export const Menu = (data) => {
                     </div>
 
                 </div >
-            </div>
-            {modalConfiguracion ?
-                <GlobalModal class={"div-modal-configuraciones"} statusModal={setModalConfiguracion} content={
-                    <div id="mainModalConfifuraciones" >
-                        <div className="div-content-configuraciones">
-                            <div className="div-title-configuraciones">
-                                <div>
-                                    <h3 className="title-configuraciones">Configuraciones</h3>
-                                    <div className="div-title-color">
-                                        <div className="div-color-configuraciones-title color-cofiguraciones-1"></div>
-                                        <div className="div-color-configuraciones-title color-cofiguraciones-2"></div>
-                                        <div className="div-color-configuraciones-title color-cofiguraciones-3"></div>
-                                        <div className="div-color-configuraciones-title color-cofiguraciones-4"></div>
-                                        <div className="div-color-configuraciones-title color-cofiguraciones-5"></div>
+            </div >
+            {
+                modalConfiguracion ?
+                    <GlobalModal class={"div-modal-configuraciones"} statusModal={setModalConfiguracion} content={
+                        < div id="mainModalConfifuraciones" >
+                            <div className="div-content-configuraciones">
+                                <div className="div-title-configuraciones">
+                                    <div>
+                                        <h3 className="title-configuraciones">Configuraciones</h3>
+                                        <div className="div-title-color">
+                                            <div className="div-color-configuraciones-title color-cofiguraciones-1"></div>
+                                            <div className="div-color-configuraciones-title color-cofiguraciones-2"></div>
+                                            <div className="div-color-configuraciones-title color-cofiguraciones-3"></div>
+                                            <div className="div-color-configuraciones-title color-cofiguraciones-4"></div>
+                                            <div className="div-color-configuraciones-title color-cofiguraciones-5"></div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="div-items-configuraciones">
-                                <div>
-                                    <div onClick={() => { getVariablesFormatoFisico() }} className="item-configuracion-activa div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (15).png" alt="" />
-                                        <h4 className="h4-title-configuracion">Formato Físico</h4></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (1).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (2).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (3).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (4).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (5).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (6).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (7).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (8).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (9).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (10).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (11).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (12).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (13).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (14).png" alt="" /></div>
+                                <div className="div-items-configuraciones">
+                                    <div>
+                                        <div onClick={() => { getVariablesFormatoFisico() }} className="item-configuracion-activa div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (15).png" alt="" />
+                                            <h4 className="h4-title-configuracion">Formato Físico</h4></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (1).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (2).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (3).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (4).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (5).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (6).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (7).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (8).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (9).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (10).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (11).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (12).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (13).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (14).png" alt="" /></div>
 
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (16).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (17).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (18).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (19).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (20).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (21).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (22).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (23).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (24).png" alt="" /></div>
-                                    <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (25).png" alt="" /></div>
-                                    <div className="div-color-configuraciones color-cofiguraciones-1"></div>
-                                    <div className="div-color-configuraciones color-cofiguraciones-2"></div>
-                                    <div className="div-color-configuraciones color-cofiguraciones-3"></div>
-                                    <div className="div-color-configuraciones color-cofiguraciones-4"></div>
-                                    <div className="div-color-configuraciones color-cofiguraciones-5"></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (16).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (17).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (18).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (19).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (20).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (21).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (22).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (23).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (24).png" alt="" /></div>
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (25).png" alt="" /></div>
+                                        <div className="div-color-configuraciones color-cofiguraciones-1"></div>
+                                        <div className="div-color-configuraciones color-cofiguraciones-2"></div>
+                                        <div className="div-color-configuraciones color-cofiguraciones-3"></div>
+                                        <div className="div-color-configuraciones color-cofiguraciones-4"></div>
+                                        <div className="div-color-configuraciones color-cofiguraciones-5"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                } /> : ""}
+                    } /> : ""}
 
-            {modalConfiguracionFormatoFisico ?
-                <GlobalModal statusModal={setModalConfiguracionFormatoFisico} content={
-                    <div ref={refModalConfiguracionFormatoFisico} id="modalConfiguracionVariablesFisico">
-                        <h2>Crear Fórmula</h2>
-                        <div>
+            {
+                modalConfiguracionFormatoFisico ?
+                    <GlobalModal statusModal={setModalConfiguracionFormatoFisico} content={
+                        <div ref={refModalConfiguracionFormatoFisico} id="modalConfiguracionVariablesFisico">
+                            <h2>Crear Fórmula</h2>
+                            <div className="div-crear-formula-main">
 
-                            <div>
-                                <GlobalInputs
-                                    input={setGlobalInputsValue}
-                                    value={globalInputsValue}
-                                    class={"input-global"}
-                                    /*  errors={errorsAsignar}
-                                     elementEdit={infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0].mu_id : ""} */
-                                    data={{
-                                        muestras_id: {
-                                            type: "select",
-                                            referencia: "Elegir Campo",
-                                            values: ["nombre"],
-                                            opciones: variablesFormatoFisico,
-                                            upper_case: true,
-                                            key: "id",
-                                        },
-                                    }} />
-                            </div>
-                            <div>
-                                <h3>Elegir operador</h3>
-                                <div className="div-operadores-opciones-variables-fisico">
-                                    <div>
-                                        <div className="item-operador-formula">
+                                <div>
+                                    <GlobalInputs
 
+                                        input={setGlobalInputsValue}
+                                        value={globalInputsValue}
+                                        class={"input-global"}
+                                        /*  errors={errorsAsignar}
+                                         elementEdit={infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0].mu_id : ""} */
+                                        data={{
+                                            variable_focus: {
+                                                function: {
+                                                    "value": getInfoVariable,
+                                                    "execute": {
+                                                        "type": "own",
+                                                        "value": "all"
+                                                    }
+                                                },
+                                                index: true,
+                                                type: "select",
+                                                referencia: "Elegir Campo",
+                                                values: ["nombre"],
+                                                opciones: variablesFormatoFisico,
+                                                upper_case: true,
+                                                key: "id",
+                                            },
+                                        }} />
+                                </div>
+
+
+                                {globalInputsValue ? globalInputsValue["variable_focus"] ?
+
+                                    <div key={keyTipoValor} className={"div-main-content-formula" + (globalInputsValue["tipo_valor"] ? globalInputsValue["tipo_valor"] != "calculado" ? " div-main-coontent-formula-normal" : "" : "")}>
+                                        <div >
+                                            <GlobalInputs
+                                                input={setGlobalInputsValue}
+                                                value={globalInputsValue}
+                                                class={"input-global"}
+                                                errors={errorsInputGlobal}
+                                                elementEdit={variableFocus ? variableFocus["tipo_valor"] ? variableFocus["tipo_valor"] : "" : ""}
+                                                data={{
+                                                    tipo_valor: {
+                                                        function: {
+                                                            "value": setTipoValor,
+                                                            "execute": {
+                                                                "type": "own",
+                                                                "value": "all"
+                                                            }
+                                                        },
+                                                        index: true,
+                                                        type: "select",
+                                                        referencia: "Tipo de valor",
+                                                        values: ["nombre"],
+                                                        opciones: [
+                                                            { "nombre": "Normal", "id": "normal" },
+                                                            { "nombre": "Calculado", "id": "calculado" }
+                                                        ],
+                                                        upper_case: true,
+                                                        key: "id",
+                                                    },
+                                                }} />
                                         </div>
-                                        <svg data-signo="/" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256" >
-                                            <g><g><g><path d="M178.5,17.2L51.6,222.8c-4.4,7.2-2.2,16.5,5,21c2.5,1.5,5.3,2.3,8,2.3c5.1,0,10.1-2.6,13-7.2L204.4,33.2c4.4-7.2,2.2-16.5-5-21C192.3,7.9,182.9,10.1,178.5,17.2z" /></g></g></g>
-                                        </svg>
-                                    </div>
-                                    {/* <div>
-                                    <div className="item-operador-formula">
+                                        <div >
+                                            {globalInputsValue["tipo_valor"] ? globalInputsValue["tipo_valor"] === "calculado" ?
+                                                <div>
+                                                    {console.log(globalInputsValue["variable_focus"], "aaaaaaaaaaa------------------------------------", globalInputsValue["tipo_valor"])}
+                                                    <div>
+                                                        <h3>Elegir operador</h3>
+                                                        <div className="div-operadores-opciones-variables-fisico">
+                                                            <div>
+                                                                <div className="item-operador-formula">
 
-                                    </div>
-                                    <svg data-signo="=" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256" >
-                                        <g><g><g><path d="M31.9,55.9c-10.3,2.3-18.3,10.2-21,20.9c-1.6,6.3-0.9,12.8,2.2,19c2.2,4.5,7.8,10.2,12.1,12.3c6.8,3.4-1.8,3.1,103.3,3.1h94.3l3.7-1.2c14.1-4.8,22.3-19.4,18.7-33.2c-2.4-9.5-9-16.8-18-20.1l-3.5-1.2l-94.5-0.1C51.8,55.3,34.1,55.4,31.9,55.9z" /><path d="M34.4,145.1c-6.5,0.8-12.3,3.9-17.1,9.1C3.8,169,9.9,192.5,29,199.5l3.3,1.2H128h95.7l3.3-1.2c9.2-3.4,15.7-10.7,18.2-20.2c3.6-13.8-4.7-28.4-18.7-33.2l-3.7-1.2l-92.7,0C79.1,144.8,36.1,144.9,34.4,145.1z" /></g></g></g>
-                                    </svg>
-                                </div> */}
-                                    <div>
-                                        <div className="item-operador-formula">
+                                                                </div>
+                                                                <svg data-signo="/" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256" >
+                                                                    <g><g><g><path d="M178.5,17.2L51.6,222.8c-4.4,7.2-2.2,16.5,5,21c2.5,1.5,5.3,2.3,8,2.3c5.1,0,10.1-2.6,13-7.2L204.4,33.2c4.4-7.2,2.2-16.5-5-21C192.3,7.9,182.9,10.1,178.5,17.2z" /></g></g></g>
+                                                                </svg>
+                                                            </div>
+                                                            {/* <div>
+                                <div className="item-operador-formula">
 
-                                        </div>
-                                        <svg data-signo="%" version="1.0" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 600.000000 615.000000"
-                                            preserveAspectRatio="xMidYMid meet">
+                                </div>
+                                <svg data-signo="=" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256" >
+                                    <g><g><g><path d="M31.9,55.9c-10.3,2.3-18.3,10.2-21,20.9c-1.6,6.3-0.9,12.8,2.2,19c2.2,4.5,7.8,10.2,12.1,12.3c6.8,3.4-1.8,3.1,103.3,3.1h94.3l3.7-1.2c14.1-4.8,22.3-19.4,18.7-33.2c-2.4-9.5-9-16.8-18-20.1l-3.5-1.2l-94.5-0.1C51.8,55.3,34.1,55.4,31.9,55.9z" /><path d="M34.4,145.1c-6.5,0.8-12.3,3.9-17.1,9.1C3.8,169,9.9,192.5,29,199.5l3.3,1.2H128h95.7l3.3-1.2c9.2-3.4,15.7-10.7,18.2-20.2c3.6-13.8-4.7-28.4-18.7-33.2l-3.7-1.2l-92.7,0C79.1,144.8,36.1,144.9,34.4,145.1z" /></g></g></g>
+                                </svg>
+                            </div> */}
+                                                            <div>
+                                                                <div className="item-operador-formula">
 
-                                            <g transform="translate(0.000000,615.000000) scale(0.100000,-0.100000)"
-                                                stroke="none">
-                                                <path d="M1621 5685 c-333 -75 -604 -303 -732 -616 -58 -142 -73 -226 -73
+                                                                </div>
+                                                                <svg data-signo="%" version="1.0" xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 600.000000 615.000000"
+                                                                    preserveAspectRatio="xMidYMid meet">
+
+                                                                    <g transform="translate(0.000000,615.000000) scale(0.100000,-0.100000)"
+                                                                        stroke="none">
+                                                                        <path d="M1621 5685 c-333 -75 -604 -303 -732 -616 -58 -142 -73 -226 -73
 -409 1 -138 4 -179 23 -250 126 -480 508 -790 971 -790 124 0 203 13 322 54
 144 49 244 113 368 236 185 183 279 379 311 648 23 194 -12 386 -106 577 -127
 262 -367 463 -640 536 -104 28 -347 36 -444 14z m321 -752 c92 -52 139 -143
 139 -268 0 -174 -89 -291 -238 -311 -177 -23 -317 135 -301 340 18 219 221
 340 400 239z"/>
-                                                <path d="M3954 5688 c-56 -19 -128 -81 -194 -170 -36 -48 -218 -355 -406 -685
+                                                                        <path d="M3954 5688 c-56 -19 -128 -81 -194 -170 -36 -48 -218 -355 -406 -685
 -188 -329 -606 -1061 -929 -1628 -710 -1245 -808 -1417 -896 -1566 -38 -63
 -85 -151 -106 -195 -37 -77 -38 -82 -38 -194 0 -105 2 -119 27 -166 35 -67
 108 -138 176 -171 72 -35 195 -44 271 -18 61 20 141 90 204 178 24 34 172 287
 329 562 157 275 469 822 693 1215 224 393 572 1003 773 1355 201 352 392 685
 425 740 157 261 187 400 116 550 -30 64 -104 135 -175 170 -49 24 -74 29 -149
 31 -49 2 -104 -2 -121 -8z"/>
-                                                <path d="M3895 2959 c-410 -44 -760 -354 -865 -765 -65 -253 -41 -505 71 -744
+                                                                        <path d="M3895 2959 c-410 -44 -760 -354 -865 -765 -65 -253 -41 -505 71 -744
 57 -122 118 -207 218 -303 135 -130 284 -209 471 -249 137 -29 347 -22 473 16
 324 97 577 349 687 685 72 220 64 488 -19 699 -132 335 -418 585 -736 646
 -109 20 -205 25 -300 15z m228 -767 c128 -72 183 -261 118 -407 -51 -115 -126
 -167 -240 -167 -111 -1 -185 45 -239 147 -24 45 -27 61 -27 155 0 95 3 110 27
 156 74 140 230 190 361 116z"/>
-                                            </g>
-                                        </svg>
+                                                                    </g>
+                                                                </svg>
 
-                                    </div>
-                                    <div>
-                                        <div className="item-operador-formula">
+                                                            </div>
+                                                            <div>
+                                                                <div className="item-operador-formula">
 
-                                        </div>
-                                        <svg data-signo="(" version="1.0" viewBox="0 0 121.000000 419.000000"
-                                            preserveAspectRatio="xMidYMid meet">
-                                            <g transform="translate(0.000000,419.000000) scale(0.100000,-0.100000)"
-                                                stroke="none">
-                                                <path d="M1005 4180 c-109 -25 -357 -235 -503 -427 -314 -413 -482 -981 -482
+                                                                </div>
+                                                                <svg data-signo="(" version="1.0" viewBox="0 0 121.000000 419.000000"
+                                                                    preserveAspectRatio="xMidYMid meet">
+                                                                    <g transform="translate(0.000000,419.000000) scale(0.100000,-0.100000)"
+                                                                        stroke="none">
+                                                                        <path d="M1005 4180 c-109 -25 -357 -235 -503 -427 -314 -413 -482 -981 -482
 -1628 0 -684 188 -1293 530 -1719 135 -168 382 -376 464 -391 78 -15 164 38
 187 115 23 77 -10 149 -93 203 -292 191 -560 613 -672 1062 -63 254 -80 415
 -80 735 0 414 47 685 171 995 127 316 356 612 573 739 75 44 100 83 100 156 0
 43 -6 65 -23 90 -37 57 -108 85 -172 70z"/>
-                                            </g>
-                                        </svg>
+                                                                    </g>
+                                                                </svg>
 
-                                    </div>
-                                    <div>
-                                        <div className="item-operador-formula">
+                                                            </div>
+                                                            <div>
+                                                                <div className="item-operador-formula">
 
-                                        </div>
-                                        <svg data-signo=")" version="1.0" viewBox="0 0 120.000000 417.000000"
-                                            preserveAspectRatio="xMidYMid meet">
+                                                                </div>
+                                                                <svg data-signo=")" version="1.0" viewBox="0 0 120.000000 417.000000"
+                                                                    preserveAspectRatio="xMidYMid meet">
 
-                                            <g transform="translate(0.000000,417.000000) scale(0.100000,-0.100000)"
-                                                stroke="none">
-                                                <path d="M133 4160 c-78 -18 -123 -75 -123 -158 0 -74 20 -106 98 -156 292
+                                                                    <g transform="translate(0.000000,417.000000) scale(0.100000,-0.100000)"
+                                                                        stroke="none">
+                                                                        <path d="M133 4160 c-78 -18 -123 -75 -123 -158 0 -74 20 -106 98 -156 292
 -187 523 -529 648 -956 125 -428 136 -1004 28 -1470 -110 -473 -379 -909 -682
 -1107 -69 -45 -92 -83 -92 -153 0 -101 60 -160 162 -160 51 0 63 5 134 52 154
 103 347 309 478 509 342 527 481 1315 366 2073 -94 613 -374 1132 -769 1425
 -128 95 -181 116 -248 101z"/>
-                                            </g>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div className="item-operador-formula">
+                                                                    </g>
+                                                                </svg>
+                                                            </div>
+                                                            <div>
+                                                                <div className="item-operador-formula">
 
+                                                                </div>
+                                                                <svg data-signo="-" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256" >
+                                                                    <g><g><path d="M246,144.1c0,4.5-1.6,8.3-4.7,11.4c-3.1,3.1-6.9,4.7-11.4,4.7H26.1c-4.5,0-8.3-1.6-11.4-4.7c-3.1-3.1-4.7-6.9-4.7-11.4v-32.2c0-4.5,1.6-8.3,4.7-11.4c3.1-3.1,6.9-4.7,11.4-4.7h203.8c4.5,0,8.3,1.6,11.4,4.7c3.1,3.1,4.7,6.9,4.7,11.4V144.1L246,144.1z" /></g></g>
+                                                                </svg>
+                                                            </div>
+                                                            <div>
+                                                                <div className="item-operador-formula">
+
+                                                                </div>
+                                                                <svg data-signo="+" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256">
+                                                                    <g><g><g><path d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z" /></g></g></g>
+                                                                </svg>
+                                                            </div>
+                                                            <div>
+                                                                <div className="item-operador-formula">
+
+                                                                </div>
+                                                                <svg data-signo="#" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 122.88 113.29" style={{ fillRule: "evenodd" }} ><g><path d="M72.17,60.87l38-6.11c3.37-0.54,6.58,1.78,7.12,5.15l5.51,34.24c0.54,3.37-1.78,6.58-5.15,7.12l-38,6.11 c-3.37,0.54-6.58-1.78-7.12-5.15l-5.51-34.24C66.48,64.62,68.8,61.41,72.17,60.87L72.17,60.87z M91.64,76.94l-7.35-0.08 c0.22-2.37,1.06-4.3,2.55-5.8c1.48-1.49,3.77-2.5,6.85-3.01c3.55-0.59,6.21-0.36,8.02,0.7c1.8,1.06,2.87,2.59,3.2,4.59 c0.2,1.17,0.05,2.29-0.43,3.35s-1.3,2.05-2.48,2.98c1.09,0.08,1.95,0.25,2.56,0.51c1,0.41,1.82,1.02,2.47,1.85 c0.65,0.83,1.09,1.87,1.3,3.13c0.26,1.58,0.11,3.17-0.48,4.77c-0.59,1.59-1.59,2.91-3.02,3.95c-1.43,1.04-3.41,1.78-5.95,2.2 c-2.47,0.41-4.47,0.45-5.99,0.1c-1.53-0.34-2.84-1-3.95-1.96c-1.1-0.97-2.05-2.26-2.83-3.88l7.39-2.27 c0.55,1.48,1.19,2.46,1.91,2.95c0.72,0.49,1.56,0.65,2.53,0.49c1.01-0.17,1.79-0.68,2.34-1.54c0.55-0.85,0.72-1.9,0.51-3.14 c-0.21-1.26-0.7-2.18-1.46-2.77c-0.76-0.58-1.7-0.78-2.81-0.6c-0.59,0.1-1.38,0.38-2.36,0.85l-0.51-5.47 c0.42-0.01,0.75-0.03,0.98-0.07c0.98-0.16,1.74-0.62,2.29-1.35c0.55-0.74,0.75-1.53,0.61-2.39c-0.14-0.83-0.5-1.45-1.06-1.85 c-0.58-0.41-1.29-0.55-2.15-0.4c-0.89,0.15-1.56,0.53-2.03,1.16C91.83,74.57,91.61,75.57,91.64,76.94L91.64,76.94z M62.77,11.41 l4.62,27.72l-7.65,1.28l-3.02-18.13c-1.08,1.15-2.15,2.1-3.22,2.87c-1.06,0.77-2.43,1.57-4.08,2.39l-1.03-6.17 c2.44-1.27,4.27-2.6,5.5-4.01c1.23-1.41,2.11-3.04,2.63-4.9L62.77,11.41L62.77,11.41z M17.77,56.97l36.92,10.88 c3.28,0.97,5.17,4.44,4.2,7.72l-9.8,33.26c-0.97,3.28-4.44,5.17-7.72,4.2L4.46,102.16c-3.28-0.97-5.17-4.44-4.2-7.72l9.8-33.26 C11.02,57.9,14.49,56.01,17.77,56.97L17.77,56.97z M44.48,86l-5.06-0.72c-0.28,0.32-0.59,0.63-0.93,0.92 c-1.28,1.1-3.32,2.13-6.12,3.08c-1.66,0.54-2.77,0.94-3.35,1.18c-0.58,0.25-1.27,0.58-2.08,1.01l10.68,3.16l-1.65,5.56l-20.51-6.06 c0.83-1.95,2.11-3.65,3.83-5.07c1.72-1.43,4.57-2.88,8.57-4.34c0.76-0.28,1.43-0.54,2.03-0.79l0,0c1.34-0.56,2.28-1.04,2.83-1.46 c0.79-0.61,1.29-1.26,1.49-1.95c0.22-0.75,0.14-1.47-0.26-2.17c-0.4-0.7-1.02-1.17-1.86-1.42c-0.87-0.26-1.67-0.19-2.38,0.19 c-0.72,0.39-1.38,1.25-1.98,2.59l-6.67-2.58c0.84-1.85,1.78-3.2,2.81-4.07c1.04-0.87,2.29-1.4,3.76-1.59 c1.48-0.19,3.36,0.05,5.67,0.74c2.4,0.71,4.19,1.54,5.37,2.48c1.17,0.94,1.98,2.09,2.4,3.45c0.43,1.37,0.44,2.75,0.02,4.16 c-0.33,1.1-0.88,2.09-1.66,2.99L44.48,86L44.48,86z M36.49,6.19l38-6.11c3.37-0.54,6.58,1.78,7.12,5.15l5.51,34.24 c0.54,3.37-1.78,6.58-5.15,7.12l-38,6.11c-3.37,0.54-6.58-1.78-7.12-5.15l-5.51-34.24C30.8,9.94,33.12,6.73,36.49,6.19L36.49,6.19z" /></g></svg>
+                                                            </div>
+                                                            <div>
+                                                                <div className="item-operador-formula">
+
+                                                                </div>
+                                                                <svg data-signo="*" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256" >
+
+                                                                    <g><g><path d="M83.5,138.5c0,0,0-0.6,0-1.1c0-0.5-0.6-0.6-0.6-0.6s-0.9,0-1.3,0s-0.6,0.6-0.6,0.6v1.1h-0.6c0,0,0,1.8,0,2.2s0.6,0.6,0.6,0.6s2,0,2.4,0c0.5,0,0.6-0.6,0.6-0.6v-2.2H83.5z M82.7,139.6l-0.3,0.3v0.6h-0.3v-0.6l-0.3-0.3v-0.3l0.3-0.3h0.3l0.3,0.3V139.6z M83,138.5h-1.3v-0.8c0,0,0.2-0.3,0.6-0.3h0.3c0.4,0,0.6,0.3,0.6,0.3L83,138.5L83,138.5z" /><path d="M199.1,241.8L128,170.7l-71.1,71.1c-17.7,17.7-60.3-25-42.7-42.7L85.3,128L14.2,56.9c-17.7-17.7,25-60.3,42.6-42.7L128,85.3l71.1-71.1c17.7-17.7,60.3,25,42.7,42.7L170.7,128l71.1,71.1C259.4,216.8,216.8,259.4,199.1,241.8z" /></g></g>
+                                                                </svg>
+                                                            </div>
+                                                            <div>
+                                                                <GlobalInputs
+                                                                    input={setGlobalInputsValue}
+                                                                    value={globalInputsValue}
+                                                                    class={"input-global"}
+                                                                    /*  errors={errorsAsignar}
+                                                                     elementEdit={infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0].mu_id : ""} */
+                                                                    data={{
+                                                                        variables: {
+                                                                            function: {
+                                                                                "value": IserterVariable,
+                                                                                "execute": {
+                                                                                    "type": "own",
+                                                                                    "value": "all"
+                                                                                }
+                                                                            },
+                                                                            index: true,
+                                                                            type: "select",
+                                                                            values: ["nombre"],
+                                                                            opciones: variablesFormatoFisico,
+                                                                            upper_case: true,
+                                                                            key: "nombre",
+                                                                        },
+                                                                    }} />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="div-formulas">
+                                                        <h3>Fórmula</h3>
+                                                        <div>
+                                                            <div className="div-content-formula">
+
+                                                                <div>
+                                                                    <div className="div-crear-formula" ref={divCrearFormula}>
+
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="div-delete-formula">
+                                                                    <div id="divIconDelete" className="div-icon-delete">
+                                                                        <svg version="1.0" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
+                                                                            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" stroke="none">
+                                                                                <path d="M1785 5111 c-31 -13 -64 -54 -75 -92 -6 -19 -10 -116 -10 -216 l0 -183 860 0 860 0 0 183 c0 100 -5 198 -10 218 -5 19 -24 48 -41 65 l-30 29 -767 2 c-422 1 -776 -2 -787 -6z" />
+                                                                                <path d="M730 4323 c-99 -34 -177 -115 -206 -211 -10 -32 -14 -105 -14 -244 l0 -198 2051 0 2050 0 -3 218 c-3 207 -4 219 -27 267 -32 63 -92 124 -156 155 l-50 25 -1800 2 c-1617 2 -1805 1 -1845 -14z" />
+                                                                                <path d="M840 3373 c0 -10 49 -737 110 -1615 119 -1748 108 -1635 177 -1699 68 -64 -42 -59 1437 -57 l1344 3 44 30 c49 35 85 92 93 150 3 22 55 722 115 1555 60 833 112 1545 116 1583 l6 67 -1721 0 c-1632 0 -1721 -1 -1721 -17z m1259 -468 c16 -8 40 -28 55 -46 l26 -31 -2 -1063 -3 -1063 -25 -27 c-54 -58 -108 -69 -170 -34 -75 43 -70 -45 -70 1129 0 1172 -5 1086 69 1129 43 24 81 27 120 6z m1039 -5 c18 -11 41 -34 52 -52 20 -32 20 -53 20 -1076 0 -1136 3 -1075 -56 -1121 -62 -49 -154 -31 -197 38 l-22 36 0 1045 0 1045 23 36 c40 65 118 87 180 49z" />
+                                                                            </g>
+                                                                        </svg>
+                                                                    </div>
+                                                                    <div onClick={() => { clearFormula() }} className="div-icon-reload">
+                                                                        <svg version="1.0" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
+                                                                            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                                                                                <path d="M2414 4419 c-373 -27 -767 -189 -1063 -439 l-74 -62 -161 159 c-88 88 -172 168 -186 177 -56 37 -166 8 -212 -56 l-23 -33 0 -590 c0 -656 -3 -621 68 -679 l39 -31 591 0 c579 0 593 0 627 21 69 40 103 155 64 214 -9 14 -94 103 -188 197 l-171 173 35 30 c52 45 187 134 255 168 341 170 756 167 1098 -7 349 -177 578 -481 663 -876 23 -109 23 -331 0 -448 -48 -249 -165 -468 -345 -648 -180 -180 -400 -297 -648 -345 -107 -21 -318 -23 -423 -5 -293 51 -554 205 -762 449 -32 37 -41 42 -80 42 -43 0 -44 -1 -225 -187 -222 -226 -220 -219 -120 -334 191 -222 490 -417 792 -518 555 -185 1149 -104 1640 224 208 138 362 292 500 500 376 563 426 1250 135 1853 -179 372 -443 647 -802 837 -321 169 -662 240 -1024 214z" />
+                                                                            </g>
+                                                                        </svg>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <h4 className="label-error-submit-form" htmlFor="">{errorsInputGlobal ? errorsInputGlobal["formula"] ? errorsInputGlobal["formula"] : "" : ""}</h4>
+
+                                                        </div>
+                                                        <h3>Evaluar</h3>
+                                                        <div className="div-content-formula">
+                                                            <div ref={divEvaluarFormula} className="div-crear-formula" >
+
+                                                            </div>
+                                                            <div className="resultado-formula">
+                                                                <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256"><g><g><g><path d="M31.9,55.9c-10.3,2.3-18.3,10.2-21,20.9c-1.6,6.3-0.9,12.8,2.2,19c2.2,4.5,7.8,10.2,12.1,12.3c6.8,3.4-1.8,3.1,103.3,3.1h94.3l3.7-1.2c14.1-4.8,22.3-19.4,18.7-33.2c-2.4-9.5-9-16.8-18-20.1l-3.5-1.2l-94.5-0.1C51.8,55.3,34.1,55.4,31.9,55.9z"></path><path d="M34.4,145.1c-6.5,0.8-12.3,3.9-17.1,9.1C3.8,169,9.9,192.5,29,199.5l3.3,1.2H128h95.7l3.3-1.2c9.2-3.4,15.7-10.7,18.2-20.2c3.6-13.8-4.7-28.4-18.7-33.2l-3.7-1.2l-92.7,0C79.1,144.8,36.1,144.9,34.4,145.1z"></path></g></g></g></svg>
+                                                                <h4 id="resultadoFormula"></h4>
+                                                            </div>
+                                                            <button className="button-ejecutar-formula" onClick={() => { getResultadoFormula() }}>Ejecutar</button>
+
+                                                        </div>
+                                                        <h3>LLenar</h3>
+                                                        <div className="div-content-input-variables div-content-formula">
+                                                            <div ref={divLLenarCamporFormulario} >
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                : "" : ""}
                                         </div>
-                                        <svg data-signo="-" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256" >
-                                            <g><g><path d="M246,144.1c0,4.5-1.6,8.3-4.7,11.4c-3.1,3.1-6.9,4.7-11.4,4.7H26.1c-4.5,0-8.3-1.6-11.4-4.7c-3.1-3.1-4.7-6.9-4.7-11.4v-32.2c0-4.5,1.6-8.3,4.7-11.4c3.1-3.1,6.9-4.7,11.4-4.7h203.8c4.5,0,8.3,1.6,11.4,4.7c3.1,3.1,4.7,6.9,4.7,11.4V144.1L246,144.1z" /></g></g>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div className="item-operador-formula">
 
-                                        </div>
-                                        <svg data-signo="+" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256">
-                                            <g><g><g><path d="M109,10.5c-1.8,0.8-3.4,2.6-4.1,4.4c-0.4,0.9-0.5,15.4-0.5,45.4v44.1l-44.8,0.1c-44.4,0.1-44.8,0.1-46.2,1.2c-0.7,0.5-1.8,1.6-2.4,2.4c-1,1.3-1,1.9-1,20c0,18.1,0,18.7,1,20c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.8,1,46.2,1.2l44.8,0.1l0.1,44.8c0.1,44.4,0.1,44.8,1.2,46.2c0.5,0.7,1.6,1.8,2.4,2.4c1.3,1,1.9,1,20,1c18.1,0,18.7,0,20-1c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.8,1.2-46.2l0.1-44.8l44.8-0.1c44.4-0.1,44.8-0.1,46.2-1.2c0.7-0.5,1.8-1.6,2.4-2.4c1-1.3,1-1.9,1-20c0-18.1,0-18.7-1-20c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-1.8-1-46.2-1.2l-44.8-0.1l-0.1-44.8c-0.1-44.4-0.1-44.8-1.2-46.2c-0.5-0.7-1.6-1.8-2.4-2.4c-1.3-1-2-1-19.4-1.1C114.3,9.9,110.2,10,109,10.5z" /></g></g></g>
-                                        </svg>
                                     </div>
-                                    <div>
-                                        <div className="item-operador-formula">
+                                    :
+                                    <div className="div-no-campo-select">
+                                        <h4>Por favor seleccione un campo</h4>
+                                    </div> :
+                                    <div className="div-no-campo-select">
+                                        <h4>Por favor seleccione un campo</h4>
+                                    </div>}
 
-                                        </div>
-                                        <svg data-signo="#" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 122.88 113.29" style={{ fillRule: "evenodd" }} ><g><path d="M72.17,60.87l38-6.11c3.37-0.54,6.58,1.78,7.12,5.15l5.51,34.24c0.54,3.37-1.78,6.58-5.15,7.12l-38,6.11 c-3.37,0.54-6.58-1.78-7.12-5.15l-5.51-34.24C66.48,64.62,68.8,61.41,72.17,60.87L72.17,60.87z M91.64,76.94l-7.35-0.08 c0.22-2.37,1.06-4.3,2.55-5.8c1.48-1.49,3.77-2.5,6.85-3.01c3.55-0.59,6.21-0.36,8.02,0.7c1.8,1.06,2.87,2.59,3.2,4.59 c0.2,1.17,0.05,2.29-0.43,3.35s-1.3,2.05-2.48,2.98c1.09,0.08,1.95,0.25,2.56,0.51c1,0.41,1.82,1.02,2.47,1.85 c0.65,0.83,1.09,1.87,1.3,3.13c0.26,1.58,0.11,3.17-0.48,4.77c-0.59,1.59-1.59,2.91-3.02,3.95c-1.43,1.04-3.41,1.78-5.95,2.2 c-2.47,0.41-4.47,0.45-5.99,0.1c-1.53-0.34-2.84-1-3.95-1.96c-1.1-0.97-2.05-2.26-2.83-3.88l7.39-2.27 c0.55,1.48,1.19,2.46,1.91,2.95c0.72,0.49,1.56,0.65,2.53,0.49c1.01-0.17,1.79-0.68,2.34-1.54c0.55-0.85,0.72-1.9,0.51-3.14 c-0.21-1.26-0.7-2.18-1.46-2.77c-0.76-0.58-1.7-0.78-2.81-0.6c-0.59,0.1-1.38,0.38-2.36,0.85l-0.51-5.47 c0.42-0.01,0.75-0.03,0.98-0.07c0.98-0.16,1.74-0.62,2.29-1.35c0.55-0.74,0.75-1.53,0.61-2.39c-0.14-0.83-0.5-1.45-1.06-1.85 c-0.58-0.41-1.29-0.55-2.15-0.4c-0.89,0.15-1.56,0.53-2.03,1.16C91.83,74.57,91.61,75.57,91.64,76.94L91.64,76.94z M62.77,11.41 l4.62,27.72l-7.65,1.28l-3.02-18.13c-1.08,1.15-2.15,2.1-3.22,2.87c-1.06,0.77-2.43,1.57-4.08,2.39l-1.03-6.17 c2.44-1.27,4.27-2.6,5.5-4.01c1.23-1.41,2.11-3.04,2.63-4.9L62.77,11.41L62.77,11.41z M17.77,56.97l36.92,10.88 c3.28,0.97,5.17,4.44,4.2,7.72l-9.8,33.26c-0.97,3.28-4.44,5.17-7.72,4.2L4.46,102.16c-3.28-0.97-5.17-4.44-4.2-7.72l9.8-33.26 C11.02,57.9,14.49,56.01,17.77,56.97L17.77,56.97z M44.48,86l-5.06-0.72c-0.28,0.32-0.59,0.63-0.93,0.92 c-1.28,1.1-3.32,2.13-6.12,3.08c-1.66,0.54-2.77,0.94-3.35,1.18c-0.58,0.25-1.27,0.58-2.08,1.01l10.68,3.16l-1.65,5.56l-20.51-6.06 c0.83-1.95,2.11-3.65,3.83-5.07c1.72-1.43,4.57-2.88,8.57-4.34c0.76-0.28,1.43-0.54,2.03-0.79l0,0c1.34-0.56,2.28-1.04,2.83-1.46 c0.79-0.61,1.29-1.26,1.49-1.95c0.22-0.75,0.14-1.47-0.26-2.17c-0.4-0.7-1.02-1.17-1.86-1.42c-0.87-0.26-1.67-0.19-2.38,0.19 c-0.72,0.39-1.38,1.25-1.98,2.59l-6.67-2.58c0.84-1.85,1.78-3.2,2.81-4.07c1.04-0.87,2.29-1.4,3.76-1.59 c1.48-0.19,3.36,0.05,5.67,0.74c2.4,0.71,4.19,1.54,5.37,2.48c1.17,0.94,1.98,2.09,2.4,3.45c0.43,1.37,0.44,2.75,0.02,4.16 c-0.33,1.1-0.88,2.09-1.66,2.99L44.48,86L44.48,86z M36.49,6.19l38-6.11c3.37-0.54,6.58,1.78,7.12,5.15l5.51,34.24 c0.54,3.37-1.78,6.58-5.15,7.12l-38,6.11c-3.37,0.54-6.58-1.78-7.12-5.15l-5.51-34.24C30.8,9.94,33.12,6.73,36.49,6.19L36.49,6.19z" /></g></svg>
-                                    </div>
-                                    <div>
-                                        <div className="item-operador-formula">
-
-                                        </div>
-                                        <svg data-signo="*" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256" >
-
-                                            <g><g><path d="M83.5,138.5c0,0,0-0.6,0-1.1c0-0.5-0.6-0.6-0.6-0.6s-0.9,0-1.3,0s-0.6,0.6-0.6,0.6v1.1h-0.6c0,0,0,1.8,0,2.2s0.6,0.6,0.6,0.6s2,0,2.4,0c0.5,0,0.6-0.6,0.6-0.6v-2.2H83.5z M82.7,139.6l-0.3,0.3v0.6h-0.3v-0.6l-0.3-0.3v-0.3l0.3-0.3h0.3l0.3,0.3V139.6z M83,138.5h-1.3v-0.8c0,0,0.2-0.3,0.6-0.3h0.3c0.4,0,0.6,0.3,0.6,0.3L83,138.5L83,138.5z" /><path d="M199.1,241.8L128,170.7l-71.1,71.1c-17.7,17.7-60.3-25-42.7-42.7L85.3,128L14.2,56.9c-17.7-17.7,25-60.3,42.6-42.7L128,85.3l71.1-71.1c17.7-17.7,60.3,25,42.7,42.7L170.7,128l71.1,71.1C259.4,216.8,216.8,259.4,199.1,241.8z" /></g></g>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <GlobalInputs
-                                            input={setGlobalInputsValue}
-                                            value={globalInputsValue}
-                                            class={"input-global"}
-                                            /*  errors={errorsAsignar}
-                                             elementEdit={infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0].mu_id : ""} */
-                                            data={{
-                                                variables: {
-                                                    function: {
-                                                        "value": IserterVariable,
-                                                        "execute": {
-                                                            "type": "own",
-                                                            "value": "all"
-                                                        }
-                                                    },
-                                                    index: true,
-                                                    type: "select",
-                                                    values: ["nombre"],
-                                                    opciones: variablesFormatoFisico,
-                                                    upper_case: true,
-                                                    key: "nombre",
-                                                },
-                                            }} />
+                                <div className="div-leyenda">
+                                    <h3>Leyenda</h3>
+                                    <div className="div-content-leyenda">
+                                        {variablesFormatoFisico ? variablesFormatoFisico.length > 0 ?
+                                            variablesFormatoFisico.map((value, index) => {
+                                                return <div key={index}>
+                                                    <span>V_{(index + 1) + ") "}</span><h4>{value["nombre"]}</h4>
+                                                </div>
+                                            })
+                                            : "No hay nada para mostrar." : "No hay nada para mostrar."}
                                     </div>
                                 </div>
                             </div>
-                            <div className="div-leyenda">
-                                <h3>Leyenda</h3>
-                                <div className="div-content-leyenda">
-                                    {variablesFormatoFisico ? variablesFormatoFisico.length > 0 ?
-                                        variablesFormatoFisico.map((value, index) => {
-                                            return <div key={index}>
-                                                <span>V_{(index + 1) + ") "}</span><h4>{value["nombre"]}</h4>
-                                            </div>
-                                        })
-                                        : "No hay nada para mostrar." : "No hay nada para mostrar."}
-                                </div>
-                            </div>
-                            <div className="div-formulas">
-                                <h3>Fórmula</h3>
-                                <div className="div-content-formula">
-                                    <div className="div-crear-formula" ref={divCrearFormula}>
+                            {variableFocus ? Object.keys(variableFocus).length > 0 ? <div className="div-footer">
+                                <button onClick={() => { updateVariable() }} className="input-register">Guardar</button>
+                            </div> : "" : ""}
 
-                                    </div>
-                                    <div id="divIconDelete" className="div-icon-delete">
-                                        <svg version="1.0" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
-                                            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" stroke="none">
-                                                <path d="M1785 5111 c-31 -13 -64 -54 -75 -92 -6 -19 -10 -116 -10 -216 l0 -183 860 0 860 0 0 183 c0 100 -5 198 -10 218 -5 19 -24 48 -41 65 l-30 29 -767 2 c-422 1 -776 -2 -787 -6z" />
-                                                <path d="M730 4323 c-99 -34 -177 -115 -206 -211 -10 -32 -14 -105 -14 -244 l0 -198 2051 0 2050 0 -3 218 c-3 207 -4 219 -27 267 -32 63 -92 124 -156 155 l-50 25 -1800 2 c-1617 2 -1805 1 -1845 -14z" />
-                                                <path d="M840 3373 c0 -10 49 -737 110 -1615 119 -1748 108 -1635 177 -1699 68 -64 -42 -59 1437 -57 l1344 3 44 30 c49 35 85 92 93 150 3 22 55 722 115 1555 60 833 112 1545 116 1583 l6 67 -1721 0 c-1632 0 -1721 -1 -1721 -17z m1259 -468 c16 -8 40 -28 55 -46 l26 -31 -2 -1063 -3 -1063 -25 -27 c-54 -58 -108 -69 -170 -34 -75 43 -70 -45 -70 1129 0 1172 -5 1086 69 1129 43 24 81 27 120 6z m1039 -5 c18 -11 41 -34 52 -52 20 -32 20 -53 20 -1076 0 -1136 3 -1075 -56 -1121 -62 -49 -154 -31 -197 38 l-22 36 0 1045 0 1045 23 36 c40 65 118 87 180 49z" />
-                                            </g>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <h3>Evaluar</h3>
-                                <div className="div-content-formula">
-                                    <div ref={divEvaluarFormula} className="div-crear-formula" >
-
-                                    </div>
-                                    <div className="resultado-formula">
-                                        <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256"><g><g><g><path d="M31.9,55.9c-10.3,2.3-18.3,10.2-21,20.9c-1.6,6.3-0.9,12.8,2.2,19c2.2,4.5,7.8,10.2,12.1,12.3c6.8,3.4-1.8,3.1,103.3,3.1h94.3l3.7-1.2c14.1-4.8,22.3-19.4,18.7-33.2c-2.4-9.5-9-16.8-18-20.1l-3.5-1.2l-94.5-0.1C51.8,55.3,34.1,55.4,31.9,55.9z"></path><path d="M34.4,145.1c-6.5,0.8-12.3,3.9-17.1,9.1C3.8,169,9.9,192.5,29,199.5l3.3,1.2H128h95.7l3.3-1.2c9.2-3.4,15.7-10.7,18.2-20.2c3.6-13.8-4.7-28.4-18.7-33.2l-3.7-1.2l-92.7,0C79.1,144.8,36.1,144.9,34.4,145.1z"></path></g></g></g></svg>
-                                        <h4 id="resultadoFormula"></h4>
-                                    </div>
-                                    <button className="button-ejecutar-formula" onClick={() => { getResultadoFormula() }}>Ejecutar</button>
-
-                                </div>
-                                <h3>LLenar</h3>
-                                <div className="div-content-input-variables div-content-formula">
-                                    <div ref={divLLenarCamporFormulario} >
-
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                } />
-                : ""}
+                    } />
+                    : ""
+            }
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
-        </div>
+        </div >
     )
 }

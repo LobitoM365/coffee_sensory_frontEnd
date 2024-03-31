@@ -30,12 +30,13 @@ export const GlobalModal = forwardRef((data, ref) => {
 
 
                     if (divContentForm.scrollHeight > document.body.clientHeight) {
-                        modalForm.style.alignItems = "unset"
+                        modalForm.style.justifyContent = "unset"
+                        modalForm.style.flexDirection = "column"
                         modalForm.style.padding = "20px 20px"
                         modalForm.style.height = "calc(100% - 40px)"
                         modalForm.style.width = "calc(100% - 40px)"
                     } else {
-                        modalForm.style.alignItems = "center"
+                        modalForm.style.justifyContent = "center"
                         modalForm.style.padding = ""
                         modalForm.style.height = "100%"
                         modalForm.style.width = "100%"

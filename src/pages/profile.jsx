@@ -79,6 +79,8 @@ export const Profile = (data) => {
         try {
             console.log("listaaaaaaaaaaaa")
             const response = await Api.post("/img/icono/listar");
+            console.log("listaaaaaaaaaaaa",response,"reee")
+
             if (response.data.status == true) {
                 setImgs(response.data.data)
             } else {

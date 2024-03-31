@@ -215,12 +215,17 @@
     background-color: rgb(235, 130, 11) !important;
 }
 
-.div-content-asignar {
-    display: grid;
-    grid-template-columns: auto 1fr;
+.div-content-asignar >div{
+    display: flex;
+    flex-direction: column;
     gap: 70px;
-    width: 2100px;
+}
+.div-content-asignar {
+    display: flex;
+    gap: 70px;
+    width: max-content;
     max-width: 100%;
+    /* flex-wrap: wrap; */
 }
 
 .table-asignar .div-table {
@@ -521,4 +526,7 @@
 }
 .estado-no-pointer{
     cursor: unset;
+}
+#mainGlobalInput{
+    width: 100%;
 }

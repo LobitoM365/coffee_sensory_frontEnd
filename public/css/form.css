@@ -148,6 +148,7 @@
     background-color: rgb(255, 255, 255);
     width: calc(100% - 15px);
     color: rgb(148, 164, 184);
+    cursor: pointer;
 }
 
 #mainModalForm .input-select-search {

@@ -36,18 +36,46 @@ export default function App(data) {
   const [dataAlert, setdataAlert] = useState({});
   const responseValidateViews = validateViews();
   const [userInfo, setUserInfo] = useState(null);
-  const location = useLocation();
+  const locationPath = useLocation();
   const [valueDarkMode, changeDarkMode] = useState(JSON.parse(localStorage.getItem("darkMode")));
 
   useEffect(() => {
 
     if (!responseValidateViews) {
- 
-      return;   
-    }
-  
 
-    if (responseValidateViews.data !== undefined) {
+      return;
+    }
+
+
+    console.log()
+    async function LogoutSesion() {
+      // alert('?xd')
+      // const navigate = useNavigate();
+      try {
+        const response = await Api.post("/auth/close");
+        console.log(response, "resssssssssss")
+        location.href = '/Login'
+
+      } catch (e) {
+        location.href = '/Login'
+
+      }
+
+    };
+    if (responseValidateViews.data.permission == false) {
+      setStatusAlert(true);
+      setdataAlert({
+        buttonDefault: "Continuar",
+        backGroundColor: "rgb(4 22 37)",
+        icon: <img className="icon-ban-alert" src="../../public/img/imgBan.png" alt="" />,
+        status: "false",
+        description: responseValidateViews.data.message,
+        continue: {
+          "function": LogoutSesion,
+        },
+        tittle: "No tienes acceso!",
+      });
+    } else if (responseValidateViews.data !== undefined) {
       setUserInfo(responseValidateViews.data.user);
     } else {
       setStatusAlert(true);
@@ -59,18 +87,19 @@ export default function App(data) {
     }
   }, [responseValidateViews]);
 
-  async function validateViewsxd() {    
+  async function validateViewsxd() {
     let responseValidate;
     const authorized = async () => {
       try {
         const response = await Api.post('auth/protectViews', {});
 
-        if (!response.data.authorized) {
-          if (location.pathname.includes('dashboard')) {
+        if (response.data.permission == false) {
+        } else if (!response.data.authorized) {
+          if (locationPath.pathname.includes('dashboard')) {
             window.location.href = '/login';
           }
         } else {
-          if (location.pathname === '/login') {
+          if (locationPath.pathname.toLocaleLowerCase() === '/login') {
             window.history.go(-1);
           }
         }
@@ -87,47 +116,47 @@ export default function App(data) {
   };
   useEffect(() => {
     validateViewsxd();
-  }, [location.pathname])
+  }, [locationPath.pathname])
   return (
     <>
-
       <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
+      {responseValidateViews ? responseValidateViews.data ? responseValidateViews.data["permission"] == false ? "" :
+        <Routes>
+          <Route path='*' element={<NotFound />} />
+          <Route path='pruebaPdf' element={<PruebaPdf />} />
+          <Route path='/dashboard/generatePdfTable/' element={<GeneratePdfTable />} />
+          <Route path='/dashboard/generateReporteAnalisis/:id' element={<GenerateReporteAnalisis />} />
+          <Route path='/recover' element={<RecoveryPassword />} />
+          <Route path='/' /* element={<Loader valueDarkMode={valueDarkMode} />} */>
+            {/* <Route path='/modalfinca' element={<ModalFinca />}></Route> */}
+            <Route path='/' element={<MenuInicio userInfo={userInfo} />}>
+              <Route path='/' element={<Inicio />} />
+              <Route path='login' element={<Login socket={data.socket} />} />
+            </Route>
 
-      <Routes>
-        <Route path='*' element={<NotFound />} />
-        <Route path='pruebaPdf' element={<PruebaPdf />} />
-        <Route path='/dashboard/generatePdfTable/' element={<GeneratePdfTable />} />
-        <Route path='/dashboard/generateReporteAnalisis/:id' element={<GenerateReporteAnalisis />} />
-        <Route path='/recover' element={<RecoveryPassword />} />
-        <Route path='/' /* element={<Loader valueDarkMode={valueDarkMode} />} */>
-          <Route path='/modalfinca' element={<ModalFinca />}></Route>
-          <Route path='/' element={<MenuInicio userInfo={userInfo} />}>
-            <Route path='/' element={<Inicio />} />
-            <Route path='login' element={<Login socket={data.socket} />} />
+
+            <Route path='/dashboard' element={<Menu socket={data.socket} valueDarkMode={valueDarkMode} changeDarkMode={changeDarkMode} />}>
+              <Route path='' element={<Home userInfo={userInfo} />} />
+              <Route path='profile' element={<Profile userInfo={userInfo} valueDarkMode={valueDarkMode} />} />
+              <Route path="usuarios/registros" element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} /> : ""} />
+              <Route path='formulario' element={<FormRegiser />} />
+              <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
+              <Route path='fincas/registros' element={<Fincas userInfo={userInfo} />} />
+              <Route path='analisis/registros' element={<Analisis socket={data.socket} userInfo={userInfo} />} />
+              <Route path='formatos/registros' element={<Formatos socket={data.socket} userInfo={userInfo} />} />
+              <Route path='cafes/registros' element={<Cafes />} />
+              <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} /> : ""} />
+              <Route path='municipios/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Municipios} /> : ""} />
+              <Route path='variedades/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Variedades} /> : ""} />
+              <Route path='muestras/registros' element={<Muestras />} />
+              <Route path='lotes/registros' element={<Lotes userInfo={userInfo} />} />
+              <Route path='muestras/verRegistros' element={<VerRegistros />} />
+            </Route>
           </Route>
 
+        </Routes>
+        : "" : ""}
 
-
-          <Route path='/dashboard' element={<Menu socket={data.socket} valueDarkMode={valueDarkMode} changeDarkMode={changeDarkMode} />}>
-            <Route path='' element={<Home userInfo={userInfo} />} />
-            <Route path='profile' element={<Profile userInfo={userInfo} valueDarkMode={valueDarkMode} />} />
-            <Route path="usuarios/registros" element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} /> : ""} />
-            <Route path='formulario' element={<FormRegiser />} />
-            <Route path='formatoSCA/registros' element={<RegistroFormatoSca />} />
-            <Route path='fincas/registros' element={<Fincas userInfo={userInfo}/>} />
-            <Route path='analisis/registros' element={<Analisis socket={data.socket} userInfo={userInfo} />} />
-            <Route path='formatos/registros' element={<Formatos socket={data.socket} userInfo={userInfo} />} />
-            <Route path='cafes/registros' element={<Cafes />} />
-            <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} /> : ""} />
-            <Route path='municipios/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Municipios} /> : ""} />
-            <Route path='variedades/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Variedades} /> : ""} />
-            <Route path='muestras/registros' element={<Muestras />} />
-            <Route path='lotes/registros' element={<Lotes  userInfo={userInfo} />} />
-            <Route path='muestras/verRegistros' element={<VerRegistros />} />
-          </Route>
-        </Route>
- 
-      </Routes>
 
     </>
   )

@@ -38,8 +38,9 @@ export const Fincas = (userInfo) => {
 
     async function listarIconos() {
         try {
-            console.log("listaaaaaaaaaaaa")
             const response = await Api.post("/img/finca/listar");
+            console.log("listaaaaaaaaaaaa", response, "reee")
+
             if (response.data.status == true) {
                 setImgs(response.data.data)
             } else {
@@ -81,7 +82,7 @@ export const Fincas = (userInfo) => {
                         }
                         const response = await Api[method]("/img/finca/" + route, formData);
                         if (response.data.status == true) {
-                            fetchUser()
+
                             listarIconos();
                             setModalImgChange();
                         } else if (response.data.register_error) {
@@ -119,7 +120,6 @@ export const Fincas = (userInfo) => {
         try {
             const response = await Api.delete("/img/finca/eliminar/" + id)
             if (response.data.status == true) {
-                fetchUser()
                 listarIconos()
                 setModalImgChange()
             }
@@ -853,6 +853,18 @@ export const Fincas = (userInfo) => {
     useEffect(() => {
         getUsers()
     }, [])
+    async function predeterminarImg(id) {
+        try {
+            const response = await Api.post("/img/finca/predeterminar/" + id)
+            if (response.data.status == true) {
+                listarIconos()
+                setModalImgChange()
+            }
+            console.log(response, "siuuuuuuu")
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
     return (
         <>
             <link rel="stylesheet" href="../../public/css/fincas.css" />
@@ -880,8 +892,8 @@ export const Fincas = (userInfo) => {
                                 {
                                     imgs.map((value, key) => {
                                         return <div key={key} className='div-imgs-iconos-add'>
-                                            <img className='img-icono' src={"http://" + host + ":3000/img/usuarios/" + (value.usuarios_id ? value.usuarios_id : "") + "/iconos/" + (value.nombre ? value.nombre : "")} />
-                                            <div onClick={(e) => { setFocusImgChange({ id: value.id, src: "http://" + host + ":3000/img/usuarios/" + (value.usuarios_id ? value.usuarios_id : "") + "/iconos/" + (value.nombre ? value.nombre : ""), estado: value.estado }); setModalImgChange(true) }} className='div-ver-iconos'>
+                                            <img className='img-icono' src={"http://" + host + ":3000/img/usuarios/" + (value.usuarios_id ? value.usuarios_id : "") + "/fincas/" + (value.nombre ? value.nombre : "")} />
+                                            <div onClick={(e) => { setFocusImgChange({ id: value.id, src: "http://" + host + ":3000/img/usuarios/" + (value.usuarios_id ? value.usuarios_id : "") + "/fincas/" + (value.nombre ? value.nombre : ""), estado: value.estado }); setModalImgChange(true) }} className='div-ver-iconos'>
                                                 <h4>Ver</h4>
                                             </div>
                                         </div>
@@ -904,6 +916,7 @@ export const Fincas = (userInfo) => {
                         <div className='div-buttons-img-focus'>
                             {/* <button className='button-cambiar-img-focus'>Cambiar</button> */}
                             {/*  <button onClick={() => { predeterminarImg(focusImgChange.id) }} className='button-predeterminar-img-focus'>{focusImgChange.estado == 0 ? "Predeterminar" : "Quitar"}</button> */}
+                            <button onClick={() => { predeterminarImg(focusImgChange.id) }} className='button-predeterminar-img-focus'>{focusImgChange.estado == 0 ? "Predeterminar" : "Quitar"}</button>
                             <button onClick={() => { eliminarImg(focusImgChange.id) }} className='button-eliminar-img-focus'>Eliminar</button>
                         </div>
                     </div>

@@ -336,6 +336,10 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                                         const divOptions = parentElement.querySelectorAll(".opciones-input-select")
                                                         divOptions[0] ? divOptions[0].style.display = "block" : ""
                                                         selectSearch(e.target.value, key, functionExecute, execute == "key" ? "key" : "");
+                                                    }} onClick={(e) => {
+                                                        const parentElement = e.target.closest(".div-select");
+                                                        const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                        divOptions[0] ? divOptions[0].style.display == "block" ? divOptions[0].style.display = "none" : divOptions[0].style.display = "block" : ""
                                                     }} placeholder={"Seleccione una opción..."} value={inputValor != "Seleccione una opción..." ? inputValor : ""} />
                                                     <div onClick={(e) => {
                                                         const parentElement = e.target.closest(".div-select");

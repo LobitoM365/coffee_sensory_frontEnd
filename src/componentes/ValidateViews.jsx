@@ -7,14 +7,18 @@ export const validateViews = () => {
     useEffect(() => {
         const authorized = async () => {
             try {
+
                 const response = await Api.post('auth/protectViews', {});
-                if (!response.data.authorized) {
+                console.log(response, "ressssssssssssssssss")
+                if (response.data.permission == false) {
+
+                } else if (!response.data.authorized) {
                     if (location.pathname.includes('dashboard')) {
                         window.location.href = '/login';
                     }
-                    // if (location.pathname !== '/' && location.pathname !== '/login') {
-                    //     window.location.href = '/login';
-                    // }
+                    if (location.pathname !== '/' && location.pathname !== '/login') {
+                        window.location.href = '/login';
+                    }
                 } else {
                     if (location.pathname === '/login') {
                         window.history.go(-1);
@@ -22,6 +26,7 @@ export const validateViews = () => {
                 }
                 setResponse(response);
             } catch (error) {
+                console.log("errooooooooooooo " + error)
                 setResponse(error);
             }
         };
@@ -33,7 +38,7 @@ export const validateViews = () => {
 };
 
 export const ProtectedRoute = ({ Element, allowRoles, userInfo }) => {
-  
+
     const rol = userInfo ? userInfo.rol : null;
 
     if (rol && allowRoles.includes(rol)) {

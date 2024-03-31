@@ -1,107 +1,123 @@
-.div-alert {
+ .div-alert {
 
-    background-color: rgba(10, 10, 10, 0.435);
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 99999999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+     background-color: rgba(10, 10, 10, 0.435);
+     position: fixed;
+     width: 100%;
+     height: 100%;
+     top: 0;
+     left: 0;
+     z-index: 99999999;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+ }
 
-.alert {
-    width: 480px;
-    height: max-content;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    max-width: calc(100% - 50px);
-    word-break: break-all;
-}
+ #mainAlert .alert {
+     width: 480px;
+     height: max-content;
+     padding: 20px;
+     background-color: white;
+     border-radius: 8px;
+     max-width: calc(100% - 50px);
+     word-break: break-all;
+ }
 
-.div-img-alert,
-.titulo-alert,
-.description-alert {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-.titulo-alert,
-.description-alert{
-    padding: 15px;
-    font-size: 1.3em;
-}
+ #mainAlert .div-img-alert,
+ .titulo-alert,
+ .description-alert {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     text-align: center;
+ }
 
-.div-img-alert svg {
-    width: 75px;
-}
+ #mainAlert .titulo-alert,
+ .description-alert {
+     padding: 15px;
+     font-size: 1.3em;
+ }
 
-.icon-false-alert{
-    fill: red;
-}
-.icon-true-alert {
-    fill: green;
-}
-.icon-warning-alert{
-    fill: orange;
-}
-.alert {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto auto;
-}
+ #mainAlert .div-img-alert svg {
+     width: 75px;
+ }
 
-.input-alert {
-    padding: 10px;
-    border: unset;
-    color: white;
-    width: 150px;
-    border-radius: 4px;
-    font-size: 1.1em;
-    font-weight: bolder;
-    cursor: pointer;
-    max-width: calc(100% - 20px);
-}
+ #mainAlert  .icon-ban-alert {
+     width: 130px;
+ }
 
-.inputs-alert{
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-}
-.input-cancelar-alert {
-    background-color: gray;
-}
-.input-ok-alert {
-    background-color: rgb(11, 46, 75);
+ #mainAlert .icon-false-alert {
+     fill: red;
+ }
 
-}
-.input-warning-alert {
-    background-color: orange;
-}
-.input-entiendo-alert{
-background-color: rgb(255, 162, 2);
-}
-.div-content-inpunts-alert{
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-}
-.tittle-warning-alert{
-    color: red;
-}
-.interrogative-rotate-alert{
-    transform: rotate(180deg);
-}
-.icon-interrogative-alert{
-    fill: rgb(255, 204, 1);
-}
+ #mainAlert .icon-true-alert {
+     fill: green;
+ }
 
-@media screen and (max-width: 260px) {
-    .input-alert{
-        width: 100%;
-    }
-}
+ #mainAlert .icon-warning-alert {
+     fill: orange;
+ }
+
+ #mainAlert .alert {
+     display: grid;
+     grid-template-columns: 1fr;
+     grid-template-rows: auto auto auto auto;
+ }
+
+ #mainAlert .input-alert {
+     padding: 10px;
+     border: unset;
+     color: white;
+     width: 150px;
+     border-radius: 4px;
+     font-size: 1.1em;
+     font-weight: bolder;
+     cursor: pointer;
+     max-width: calc(100% - 20px);
+ }
+
+ #mainAlert .inputs-alert {
+     margin-top: 30px;
+     display: flex;
+     justify-content: center;
+ }
+
+ #mainAlert .input-cancelar-alert {
+     background-color: gray;
+ }
+
+ #mainAlert .input-ok-alert {
+     background-color: rgb(11, 46, 75);
+
+ }
+
+ #mainAlert .input-warning-alert {
+     background-color: orange;
+ }
+
+ #mainAlert .input-entiendo-alert {
+     background-color: rgb(255, 162, 2);
+ }
+
+ #mainAlert .div-content-inpunts-alert {
+     display: flex;
+     justify-content: center;
+     gap: 40px;
+ }
+
+ #mainAlert .tittle-warning-alert {
+     color: red;
+ }
+
+ #mainAlert .interrogative-rotate-alert {
+     transform: rotate(180deg);
+ }
+
+ #mainAlert .icon-interrogative-alert {
+     fill: rgb(255, 204, 1);
+ }
+
+ @media screen and (max-width: 260px) {
+     #mainAlert .input-alert {
+         width: 100%;
+     }
+ }

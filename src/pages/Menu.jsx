@@ -25,6 +25,7 @@ export const Menu = (data) => {
     const [errorsInputGlobal, setErrorsInputGlobal] = useState({})
     const [keyTipoValor, setKeyTipoValor] = useState(0);
     const [statusVariables, setStatusVariables] = useState(false);
+    const [movementImgPerfil, setmMovementImgPerfil] = useState(false);
 
     useEffect(() => {
 
@@ -1162,12 +1163,84 @@ export const Menu = (data) => {
 
                             {Object.keys(user).length > 0 ? (
                                 <div className="div-info-usuario">
-                                    <div className="div-img-perfil-nav">
+                                    <div id="divImgPerfilNav" className="div-img-perfil-nav" onClick={(e) => {
+                                        console.log(movementImgPerfil)
+                                        const parent = document.getElementById("divImgPerfilFocus")
+                                        const divImgPerfilNav = document.getElementById("divImgPerfilNav")
+                                        let widthParent = 0;
+                                        if (parent && divImgPerfilNav) {
+                                            const img = divImgPerfilNav.querySelectorAll(".img-icono")
+                                            if (img[0]) {
+                                                if (e.target == img[0]) {
+                                                    const contentImgFocus = document.getElementById("contentImgFocus")
+
+                                                    if (movementImgPerfil == false) {
+                                                        setmMovementImgPerfil(null)
+                                                        const bbox = divImgPerfilNav.getBoundingClientRect()
+                                                        parent.style.top = (bbox.top + (divImgPerfilNav.scrollHeight / 2) - (parent.scrollHeight / 2)) + "px"
+                                                        parent.style.left = (bbox.left + (divImgPerfilNav.scrollWidth / 2) - (parent.scrollWidth / 2)) + "px"
+                                                        widthParent = parent.scrollHeight
+                                                        const img = divImgPerfilNav.querySelectorAll(".img-icono")
+
+                                                        img[0].style.zIndex = "9999"
+                                                        /*  const cloneImg = img[0].cloneNode(true)
+                                                         const div = document.createElement("div")
+                                                         div.setAttribute("id", "contentImgFocus")
+                                                         div.appendChild(cloneImg)
+                                                         parent.appendChild(div) */
+                                                        parent.style.zIndex = "99"
+                                                        parent.style.padding = "30px"
+                                                        parent.style.opacity = "1"
+                                                        setTimeout(() => {
+                                                            parent.style.top = "100%"
+                                                            parent.style.left = "0%"
+                                                            setTimeout(() => {
+                                                                parent.style.top = "0%"
+                                                                parent.style.left = "0%"
+                                                                parent.style.width = "calc(100% - 60px)"
+                                                                parent.style.height = "calc(100% - 60px)"
+                                                                setTimeout(() => {
+                                                                    parent.style.top = "0%"
+                                                                    parent.style.left = "0%"
+                                                                    setmMovementImgPerfil(true)
+                                                                }, 800);
+                                                            }, 100);
+                                                        }, 50);
+                                                    } else if (movementImgPerfil == true) {
+                                                        setmMovementImgPerfil(null)
+                                                        const parent = document.getElementById("divImgPerfilFocus")
+                                                        parent.style.width = "10px"
+                                                        parent.style.height = "10px"
+                                                        const divImgPerfilNav = document.getElementById("divImgPerfilNav")
+                                                        const bbox = divImgPerfilNav.getBoundingClientRect()
+                                                        parent.style.top = (bbox.top + (divImgPerfilNav.scrollHeight / 2) - (20 / 2)) + "px"
+                                                        parent.style.left = (bbox.left) + "px"
+                                                        parent.style.opacity = "0"
+                                                        setTimeout(() => {
+                                                            parent.style.zIndex = "2"
+                                                            /* parent.style.top = ""
+                                                            parent.style.left = "" */
+                                                            parent.style.padding = "5px"
+                                                            setmMovementImgPerfil(false)
+                                                        }, 900);
+                                                    }
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                    }>
                                         {Object.keys(user).length > 0 ? user.img ? <img className='img-icono' src={"http://" + host + ":3000/img/usuarios/" + (user.id ? user.id : "") + "/iconos/" + (user.img ? user.img : "")} /> : user.cargo == "administrador" ? <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" /> : user.cargo == "instructor" ? <img className='img-perfil-usuario' src="/img/img_instructor.jpg" alt="" /> : user.cargo == "aprendiz" ? <img className='img-perfil-usuario' src="/img/img_aprendiz.jpg" alt="" /> : user.cargo == "cliente" ? <img className='img-perfil-usuario' src="/img/img_client.jpg" alt="" /> : <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" />
 
                                             :
                                             <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" />}
-
+                                        <div className="div-img-perfil-focus" id="divImgPerfilFocus">
+                                            <div id="contentImgFocus">
+                                                {Object.keys(user).length > 0 ? user.img ? <img className='img-icono' src={"http://" + host + ":3000/img/usuarios/" + (user.id ? user.id : "") + "/iconos/" + (user.img ? user.img : "")} /> : user.cargo == "administrador" ? <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" /> : user.cargo == "instructor" ? <img className='img-perfil-usuario' src="/img/img_instructor.jpg" alt="" /> : user.cargo == "aprendiz" ? <img className='img-perfil-usuario' src="/img/img_aprendiz.jpg" alt="" /> : user.cargo == "cliente" ? <img className='img-perfil-usuario' src="/img/img_client.jpg" alt="" /> : <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" />
+                                                    :
+                                                    <img className='img-perfil-usuario' src="/img/analisisPrueba.jpg" alt="" />}
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="info-usuario">
                                         <h4 className="nombre-usuario">{Object.keys(user).length > 0 ? (user.nombre.replace(/(?:^|\s)\S/g, match => match.toUpperCase())) : ""}</h4>
@@ -1372,7 +1445,7 @@ export const Menu = (data) => {
                                                 index: true,
                                                 type: "select",
                                                 referencia: "Elegir Campo",
-                                                values: ["nombre"],
+                                                values: ["visual_name"],
                                                 opciones: variablesFormatoFisico,
                                                 upper_case: true,
                                                 key: "id",
@@ -1552,7 +1625,7 @@ export const Menu = (data) => {
                                                                             },
                                                                             index: true,
                                                                             type: "select",
-                                                                            values: ["nombre"],
+                                                                            values: ["visual_name"],
                                                                             opciones: variablesFormatoFisico,
                                                                             upper_case: true,
                                                                             key: "nombre",
@@ -1632,7 +1705,9 @@ export const Menu = (data) => {
                                         {variablesFormatoFisico ? variablesFormatoFisico.length > 0 ?
                                             variablesFormatoFisico.map((value, index) => {
                                                 return <div key={index}>
-                                                    <span>V_{(index + 1) + ") "}</span><h4>{value["nombre"]}</h4>
+                                                    <span>V_{(index + 1) + ") "}</span><h4>{value["visual_name"].toString().replace(/\b\w{4,}\b/g, function (match) {
+                                                        return match.charAt(0).toUpperCase() + match.slice(1);
+                                                    })}</h4>
                                                 </div>
                                             })
                                             : "No hay nada para mostrar." : "No hay nada para mostrar."}

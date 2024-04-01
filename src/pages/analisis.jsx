@@ -7,6 +7,7 @@ import { GlobalModal } from '../componentes/globalModal.jsx'
 import { GlobalInputs } from '../componentes/globalInputs.jsx'
 import ReactDOM from "react-dom/client";
 import { cssNumber } from 'jquery'
+import "../../public/css/analisis.css"
 
 export const Analisis = (userInfo) => {
     if (userInfo.socket) {
@@ -1824,6 +1825,7 @@ export const Analisis = (userInfo) => {
                 "muestras_id": muestra
             }
             const response = await Api.put("analisis/actualizar/" + id, data)
+            console.log(response)
             if (response.data.status == true) {
                 setStatusAlert(true)
                 setdataAlert(
@@ -1903,331 +1905,331 @@ export const Analisis = (userInfo) => {
         }
     }
     return (
-        <>
-            <link rel="stylesheet" href="../../public/css/analisis.css" />
+        <div>
+            <div id='mainAnalisis'>
 
-            <Tablas buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+                <Tablas buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
-            <FormResultados modalFormNormal={modalFormNormal} setModalFormNormal={setModalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
-            <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
+                <FormResultados modalFormNormal={modalFormNormal} setModalFormNormal={setModalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
+                <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
 
-            {userInfo.userInfo ?
-                userInfo.userInfo.rol ?
-                    userInfo.userInfo.rol == "administrador" ?
-                        statusModalAsignar ? (
-                            <GlobalModal statusModal={setStatusModalAsignar} key={"icons-img"} class="modal-table" content={
-                                <div key={keyAsignarAnalisis} className='div-content-asignar'>
-                                    <div>
-                                        <div className='head-asignar-analisis'>
-                                            <h2>Encargados del Análisis {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["id"] ? infoAnalisisUpdateAsignar[0]["id"] : "" : ""}</h2>
-                                            {
-                                                statusUpdateAsignar ?
-                                                    infoAnalisisUpdateAsignar.length > 0 ?
-                                                        infoAnalisisUpdateAsignar[0].permission_update != 'false' ?
-                                                            <div>
-                                                                <GlobalInputs
-                                                                    input={setMuestraIdAsignar}
-                                                                    value={muestraIdAsignar}
-                                                                    class={"input-global"}
-                                                                    errors={errorsAsignar}
-                                                                    elementEdit={infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0].mu_id : ""}
-                                                                    data={{
-                                                                        muestras_id: {
-                                                                            type: "select",
-                                                                            referencia: "Muestra",
-                                                                            values: ["id", "numero_documento", "nombre_completo", "finca", "lote"],
-                                                                            opciones: muestrasAsignar,
-                                                                            upper_case: true,
-                                                                            key: "id",
-                                                                        },
-                                                                    }} />
-                                                                <button onClick={() => { editarAnalisis(analisisAsignar, muestraIdAsignar["muestras_id"]) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
-                                                            </div>
-                                                            :
-                                                            <div>
-                                                                <div className='div-anaisis-finalizado-asignar-formato'>
+                {userInfo.userInfo ?
+                    userInfo.userInfo.rol ?
+                        userInfo.userInfo.rol == "administrador" ?
+                            statusModalAsignar ? (
+                                <GlobalModal statusModal={setStatusModalAsignar} key={"icons-img"} class="modal-table" content={
+                                    <div key={keyAsignarAnalisis} className='div-content-asignar'>
+                                        <div>
+                                            <div className='head-asignar-analisis'>
+                                                <h2>Encargados del Análisis {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["id"] ? infoAnalisisUpdateAsignar[0]["id"] : "" : ""}</h2>
+                                                {
+                                                    statusUpdateAsignar ?
+                                                        infoAnalisisUpdateAsignar.length > 0 ?
+                                                            infoAnalisisUpdateAsignar[0].permission_update != 'false' ?
+                                                                <div>
+                                                                    <GlobalInputs
+                                                                        input={setMuestraIdAsignar}
+                                                                        value={muestraIdAsignar}
+                                                                        class={"input-global"}
+                                                                        errors={errorsAsignar}
+                                                                        elementEdit={infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0].mu_id : ""}
+                                                                        data={{
+                                                                            muestras_id: {
+                                                                                type: "select",
+                                                                                referencia: "Muestra",
+                                                                                values: ["id", "numero_documento", "nombre_completo", "finca", "lote"],
+                                                                                opciones: muestrasAsignar,
+                                                                                upper_case: true,
+                                                                                key: "id",
+                                                                            },
+                                                                        }} />
+                                                                    <button onClick={() => { editarAnalisis(analisisAsignar, muestraIdAsignar["muestras_id"]) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                </div>
+                                                                :
+                                                                <div>
+                                                                    <div className='div-anaisis-finalizado-asignar-formato'>
+                                                                        <div>
+                                                                            <h4>Muestra:</h4>
+                                                                            <h5>{(infoAnalisisUpdateAsignar[0].mu_id + ", " + infoAnalisisUpdateAsignar[0].documento_propietario + ", " + infoAnalisisUpdateAsignar[0].nombre_propietario + ", " + infoAnalisisUpdateAsignar[0].finca + ", " + infoAnalisisUpdateAsignar[0].lote).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h5>
+                                                                        </div>
+                                                                        <div>
+                                                                            <h4>Estado: </h4>
+                                                                            {
+                                                                                infoAnalisisUpdateAsignar[0].estado == 4 ? <h4 className='h4-estado-formato-asing h4-estado-formato-asing-finalizado'>
+                                                                                    Finalizado
+                                                                                </h4> :
+                                                                                    <h4 className='h4-estado-formato-asing
+                                                             h4-estado-formato-asing-pendiente'>
+                                                                                        Pendiente
+                                                                                    </h4>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                </div> : ""
+                                                        : <GlobalInputs
+                                                            input={setMuestraIdAsignar}
+                                                            value={muestraIdAsignar}
+                                                            class={"input-global"}
+                                                            errors={errorsAsignar}
+                                                            data={{
+                                                                muestras_id: {
+                                                                    type: "select",
+                                                                    referencia: "Muestra",
+                                                                    values: ["id", "numero_documento", "nombre_completo", "finca", "lote"],
+                                                                    opciones: muestrasAsignar,
+                                                                    upper_case: true,
+                                                                    key: "id",
+                                                                },
+                                                            }} />
+                                                }
+                                            </div>
+
+
+                                            <div className='div-asign-elements'>
+                                                <div className='fiv-asignar-analisis'>
+                                                    {
+                                                        statusUpdateAsignar ?
+                                                            <div className='body-asignar-analisis'>
+                                                                <h2>Formatos</h2>
+
+                                                                <div className='div-encargados'>
                                                                     <div>
-                                                                        <h4>Muestra:</h4>
-                                                                        <h5>{(infoAnalisisUpdateAsignar[0].mu_id + ", " + infoAnalisisUpdateAsignar[0].documento_propietario + ", " + infoAnalisisUpdateAsignar[0].nombre_propietario + ", " + infoAnalisisUpdateAsignar[0].finca + ", " + infoAnalisisUpdateAsignar[0].lote).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h5>
+                                                                        <h3>Formato Físico</h3>
+                                                                        <div className='div-table-asignados'>
+                                                                            <table cellSpacing={0} className='table-add-asignar'>
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>Id</th>
+                                                                                        <th>Instructor</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    {infoFormatoFisicoUpdateAsignar ?
+                                                                                        infoFormatoFisicoUpdateAsignar.length > 0 ?
+                                                                                            infoFormatoFisicoUpdateAsignar.map((value, index) => {
+
+                                                                                                return <tr key={value.id}>
+                                                                                                    <td>
+                                                                                                        <h4>                                                 {value.id}
+                                                                                                        </h4>
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        {value.estado != 4 ?
+                                                                                                            <div>
+                                                                                                                < GlobalInputs
+                                                                                                                    input={setValueGlobalInput}
+                                                                                                                    value={valueGlobalInput}
+                                                                                                                    /* class={"input-global"} */
+                                                                                                                    errors={errorsInputGlobal}
+                                                                                                                    elementEdit={value.catador_id}
+                                                                                                                    data={{
+                                                                                                                        ["catador_fisico_" + value.catador_id + "" + index]: {
+                                                                                                                            type: "select",
+                                                                                                                            referencia: false,
+                                                                                                                            values: ["id", "numero_documento", "nombre_completo"],
+                                                                                                                            opciones: usuariosAsignar,
+                                                                                                                            upper_case: true,
+                                                                                                                            key: "id",
+                                                                                                                        },
+                                                                                                                    }} />
+
+                                                                                                                <div className='div-footer-users-formatos'>
+                                                                                                                    {value.estado == 2 ?
+                                                                                                                        <h4 className='h4-estado-formato-asing
+                                                                                                    h4-estado-formato-asing-pendiente'>
+                                                                                                                            Pendiente
+                                                                                                                        </h4>
+                                                                                                                        : value.estado == 3 ?
+                                                                                                                            <h4 className='h4-estado-formato-asing h4-estado-formato-asing-asignado'>
+                                                                                                                                Asignado
+                                                                                                                            </h4>
+                                                                                                                            : ""}
+                                                                                                                    <button onClick={() => { cambiarFormato(value.id, valueGlobalInput["catador_fisico_" + value.catador_id + "" + index], "catador_fisico_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                                                                    <button
+                                                                                                                        onClick={() => { eliminarFormato(value.id) }}
+                                                                                                                        className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            :
+                                                                                                            <div className='div-formato-finalizado'>
+                                                                                                                <h4 className='catador-no-options-asignar'>
+                                                                                                                    {(value.catador_id + ", " + value.catador_documento + ", " + value.catador_nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}
+                                                                                                                </h4>
+
+                                                                                                                <div>
+                                                                                                                    {value.estado == 4 ?
+                                                                                                                        <h4 className='h4-estado-formato-asing
+                                                                                                h4-estado-formato-asing-finalizado'>
+                                                                                                                            Finalizado
+                                                                                                                        </h4>
+                                                                                                                        : ""}
+                                                                                                                </div>
+
+                                                                                                            </div>}
+
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            })
+                                                                                            : <tr></tr>
+                                                                                        : <tr></tr>}
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
                                                                     </div>
                                                                     <div>
-                                                                        <h4>Estado: </h4>
-                                                                        {
-                                                                            infoAnalisisUpdateAsignar[0].estado == 4 ? <h4 className='h4-estado-formato-asing h4-estado-formato-asing-finalizado'>
-                                                                                Finalizado
-                                                                            </h4> :
-                                                                                <h4 className='h4-estado-formato-asing
-                                                                         h4-estado-formato-asing-pendiente'>
-                                                                                    Pendiente
-                                                                                </h4>
-                                                                        }
+                                                                        <h3>Formato Sca</h3>
+                                                                        <div className='div-table-asignados'>
+                                                                            <table cellSpacing={0} className='table-add-asignar'>
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>Id</th>
+                                                                                        <th>Instructor</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    {infoFormatoScaUpdateAsignar ?
+                                                                                        infoFormatoScaUpdateAsignar.length > 0 ?
+                                                                                            infoFormatoScaUpdateAsignar.map((value, index) => {
+
+                                                                                                return <tr key={value.id}>
+                                                                                                    <td>
+                                                                                                        <h4>                                                 {value.id}
+                                                                                                        </h4>
+                                                                                                    </td>
+                                                                                                    <td>
+                                                                                                        {value.estado != 4 ?
+                                                                                                            <div>
+                                                                                                                < GlobalInputs
+                                                                                                                    input={setValueGlobalInput}
+                                                                                                                    value={valueGlobalInput}
+                                                                                                                    /* class={"input-global"} */
+                                                                                                                    errors={errorsInputGlobal}
+                                                                                                                    elementEdit={value.catador_id}
+                                                                                                                    data={{
+                                                                                                                        ["catador_sca_" + value.catador_id + "" + index]: {
+                                                                                                                            type: "select",
+                                                                                                                            referencia: false,
+                                                                                                                            values: ["id", "numero_documento", "nombre_completo"],
+                                                                                                                            opciones: usuariosAsignar,
+                                                                                                                            upper_case: true,
+                                                                                                                            key: "id",
+                                                                                                                        },
+                                                                                                                    }} />
+
+                                                                                                                <div className='div-footer-users-formatos'>
+                                                                                                                    {value.estado == 2 ?
+                                                                                                                        <h4 className='h4-estado-formato-asing
+                                                                                                h4-estado-formato-asing-pendiente'>
+                                                                                                                            Pendiente
+                                                                                                                        </h4>
+                                                                                                                        : value.estado == 3 ?
+                                                                                                                            <h4 className='h4-estado-formato-asing h4-estado-formato-asing-asignado'>
+                                                                                                                                Asignado
+                                                                                                                            </h4>
+                                                                                                                            : ""}
+                                                                                                                    <button onClick={() => { cambiarFormato(value.id, valueGlobalInput["catador_sca_" + value.catador_id + "" + index], "catador_sca_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                                                                    <button
+                                                                                                                        onClick={() => { eliminarFormato(value.id) }}
+                                                                                                                        className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            :
+                                                                                                            <div className='div-formato-finalizado'>
+                                                                                                                <h4 className='catador-no-options-asignar'>
+                                                                                                                    {(value.catador_id + ", " + value.catador_documento + ", " + value.catador_nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}
+                                                                                                                </h4>
+
+                                                                                                                <div>
+                                                                                                                    {value.estado == 4 ?
+                                                                                                                        <h4 className='h4-estado-formato-asing
+                                                                                            h4-estado-formato-asing-finalizado'>
+                                                                                                                            Finalizado
+                                                                                                                        </h4>
+                                                                                                                        : ""}
+                                                                                                                </div>
+
+                                                                                                            </div>}
+
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            })
+                                                                                            : <tr></tr>
+                                                                                        : <tr></tr>}
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div> : ""
-                                                    : <GlobalInputs
-                                                        input={setMuestraIdAsignar}
-                                                        value={muestraIdAsignar}
-                                                        class={"input-global"}
-                                                        errors={errorsAsignar}
-                                                        data={{
-                                                            muestras_id: {
-                                                                type: "select",
-                                                                referencia: "Muestra",
-                                                                values: ["id", "numero_documento", "nombre_completo", "finca", "lote"],
-                                                                opciones: muestrasAsignar,
-                                                                upper_case: true,
-                                                                key: "id",
-                                                            },
-                                                        }} />
-                                            }
-                                        </div>
+                                                    }
+                                                    {statusAsignar ?
+                                                        <div>
+                                                            <div className='body-asignar-analisis'>
+                                                                <h2>Asignados</h2>
 
+                                                                <div className='div-encargados'>
+                                                                    <div>
+                                                                        <h3>Formato Físico</h3>
+                                                                        <div className='div-table-asignados'>
+                                                                            <table cellSpacing={0} className='table-add-asignar'>
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th></th>
+                                                                                        <th>Instructor</th>
+                                                                                        <th>Cantidad</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody ref={asignarFormatoFisico} id='formatoFisico'>
 
-                                        <div className='div-asign-elements'>
-                                            <div className='fiv-asignar-analisis'>
-                                                {
-                                                    statusUpdateAsignar ?
-                                                        <div className='body-asignar-analisis'>
-                                                            <h2>Formatos</h2>
-
-                                                            <div className='div-encargados'>
-                                                                <div>
-                                                                    <h3>Formato Físico</h3>
-                                                                    <div className='div-table-asignados'>
-                                                                        <table cellSpacing={0} className='table-add-asignar'>
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th>Id</th>
-                                                                                    <th>Instructor</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                {infoFormatoFisicoUpdateAsignar ?
-                                                                                    infoFormatoFisicoUpdateAsignar.length > 0 ?
-                                                                                        infoFormatoFisicoUpdateAsignar.map((value, index) => {
-
-                                                                                            return <tr key={value.id}>
-                                                                                                <td>
-                                                                                                    <h4>                                                 {value.id}
-                                                                                                    </h4>
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    {value.estado != 4 ?
-                                                                                                        <div>
-                                                                                                            < GlobalInputs
-                                                                                                                input={setValueGlobalInput}
-                                                                                                                value={valueGlobalInput}
-                                                                                                                /* class={"input-global"} */
-                                                                                                                errors={errorsInputGlobal}
-                                                                                                                elementEdit={value.catador_id}
-                                                                                                                data={{
-                                                                                                                    ["catador_fisico_" + value.catador_id + "" + index]: {
-                                                                                                                        type: "select",
-                                                                                                                        referencia: false,
-                                                                                                                        values: ["id", "numero_documento", "nombre_completo"],
-                                                                                                                        opciones: usuariosAsignar,
-                                                                                                                        upper_case: true,
-                                                                                                                        key: "id",
-                                                                                                                    },
-                                                                                                                }} />
-
-                                                                                                            <div className='div-footer-users-formatos'>
-                                                                                                                {value.estado == 2 ?
-                                                                                                                    <h4 className='h4-estado-formato-asing
-                                                                                                                h4-estado-formato-asing-pendiente'>
-                                                                                                                        Pendiente
-                                                                                                                    </h4>
-                                                                                                                    : value.estado == 3 ?
-                                                                                                                        <h4 className='h4-estado-formato-asing h4-estado-formato-asing-asignado'>
-                                                                                                                            Asignado
-                                                                                                                        </h4>
-                                                                                                                        : ""}
-                                                                                                                <button onClick={() => { cambiarFormato(value.id, valueGlobalInput["catador_fisico_" + value.catador_id + "" + index], "catador_fisico_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
-                                                                                                                <button
-                                                                                                                    onClick={() => { eliminarFormato(value.id) }}
-                                                                                                                    className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                        :
-                                                                                                        <div className='div-formato-finalizado'>
-                                                                                                            <h4 className='catador-no-options-asignar'>
-                                                                                                                {(value.catador_id + ", " + value.catador_documento + ", " + value.catador_nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}
-                                                                                                            </h4>
-
-                                                                                                            <div>
-                                                                                                                {value.estado == 4 ?
-                                                                                                                    <h4 className='h4-estado-formato-asing
-                                                                                                            h4-estado-formato-asing-finalizado'>
-                                                                                                                        Finalizado
-                                                                                                                    </h4>
-                                                                                                                    : ""}
-                                                                                                            </div>
-
-                                                                                                        </div>}
-
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        })
-                                                                                        : <tr></tr>
-                                                                                    : <tr></tr>}
-                                                                            </tbody>
-                                                                        </table>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div>
-                                                                    <h3>Formato Sca</h3>
-                                                                    <div className='div-table-asignados'>
-                                                                        <table cellSpacing={0} className='table-add-asignar'>
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th>Id</th>
-                                                                                    <th>Instructor</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                {infoFormatoScaUpdateAsignar ?
-                                                                                    infoFormatoScaUpdateAsignar.length > 0 ?
-                                                                                        infoFormatoScaUpdateAsignar.map((value, index) => {
+                                                                    <div>
+                                                                        <h3>Formato Sca</h3>
+                                                                        <div className='div-table-asignados'>
+                                                                            <table cellSpacing={0} className='table-add-asignar'>
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th></th>
+                                                                                        <th>Instructor</th>
+                                                                                        <th>Cantidad</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody ref={asignarFormatoSca} id='formatoSca'>
 
-                                                                                            return <tr key={value.id}>
-                                                                                                <td>
-                                                                                                    <h4>                                                 {value.id}
-                                                                                                    </h4>
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    {value.estado != 4 ?
-                                                                                                        <div>
-                                                                                                            < GlobalInputs
-                                                                                                                input={setValueGlobalInput}
-                                                                                                                value={valueGlobalInput}
-                                                                                                                /* class={"input-global"} */
-                                                                                                                errors={errorsInputGlobal}
-                                                                                                                elementEdit={value.catador_id}
-                                                                                                                data={{
-                                                                                                                    ["catador_sca_" + value.catador_id + "" + index]: {
-                                                                                                                        type: "select",
-                                                                                                                        referencia: false,
-                                                                                                                        values: ["id", "numero_documento", "nombre_completo"],
-                                                                                                                        opciones: usuariosAsignar,
-                                                                                                                        upper_case: true,
-                                                                                                                        key: "id",
-                                                                                                                    },
-                                                                                                                }} />
-
-                                                                                                            <div className='div-footer-users-formatos'>
-                                                                                                                {value.estado == 2 ?
-                                                                                                                    <h4 className='h4-estado-formato-asing
-                                                                                                            h4-estado-formato-asing-pendiente'>
-                                                                                                                        Pendiente
-                                                                                                                    </h4>
-                                                                                                                    : value.estado == 3 ?
-                                                                                                                        <h4 className='h4-estado-formato-asing h4-estado-formato-asing-asignado'>
-                                                                                                                            Asignado
-                                                                                                                        </h4>
-                                                                                                                        : ""}
-                                                                                                                <button onClick={() => { cambiarFormato(value.id, valueGlobalInput["catador_sca_" + value.catador_id + "" + index], "catador_sca_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
-                                                                                                                <button
-                                                                                                                    onClick={() => { eliminarFormato(value.id) }}
-                                                                                                                    className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                        :
-                                                                                                        <div className='div-formato-finalizado'>
-                                                                                                            <h4 className='catador-no-options-asignar'>
-                                                                                                                {(value.catador_id + ", " + value.catador_documento + ", " + value.catador_nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}
-                                                                                                            </h4>
-
-                                                                                                            <div>
-                                                                                                                {value.estado == 4 ?
-                                                                                                                    <h4 className='h4-estado-formato-asing
-                                                                                                        h4-estado-formato-asing-finalizado'>
-                                                                                                                        Finalizado
-                                                                                                                    </h4>
-                                                                                                                    : ""}
-                                                                                                            </div>
-
-                                                                                                        </div>}
-
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        })
-                                                                                        : <tr></tr>
-                                                                                    : <tr></tr>}
-                                                                            </tbody>
-                                                                        </table>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div> : ""
-                                                }
-                                                {statusAsignar ?
-                                                    <div>
-                                                        <div className='body-asignar-analisis'>
-                                                            <h2>Asignados</h2>
 
-                                                            <div className='div-encargados'>
-                                                                <div>
-                                                                    <h3>Formato Físico</h3>
-                                                                    <div className='div-table-asignados'>
-                                                                        <table cellSpacing={0} className='table-add-asignar'>
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th></th>
-                                                                                    <th>Instructor</th>
-                                                                                    <th>Cantidad</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody ref={asignarFormatoFisico} id='formatoFisico'>
 
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                                <div>
-                                                                    <h3>Formato Sca</h3>
-                                                                    <div className='div-table-asignados'>
-                                                                        <table cellSpacing={0} className='table-add-asignar'>
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th></th>
-                                                                                    <th>Instructor</th>
-                                                                                    <th>Cantidad</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody ref={asignarFormatoSca} id='formatoSca'>
-
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
+                                                            <div className='footer-asignar'>
+                                                                <button onClick={() => { setAsignarAnalisis() }} className='button-set-asignar-analisis'>Asignar</button>
                                                             </div>
                                                         </div>
-
-
-                                                        <div className='footer-asignar'>
-                                                            <button onClick={() => { setAsignarAnalisis() }} className='button-set-asignar-analisis'>Asignar</button>
-                                                        </div>
-                                                    </div>
-                                                    : ""}
+                                                        : ""}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    {statusAsignar ?
-                                        <div className='div-table-asing'>
-                                            <h2 className='h2-table-asign-formato'>
-                                                Usuarios disponibles
-                                            </h2>
-                                            <Tablas class="table-asignar" userInfo={userInfo.userInfo} filterSeacth={filterSearchUsuario} limitRegisters={limitRegistersUsuario} count={countRegistersAsignar} data={usuariosAsignar} keys={keysUsuarios} tittle={"Usuarios"} filterEstado={filterEstado} getFilterEstado={getFilterEstadoUsuario} getFiltersOrden={getFiltersOrdenUsuario} />
-                                        </div>
-                                        : ""}
-                                </div >
-                            } />
-                        )
+                                        {statusAsignar ?
+                                            <div className='div-table-asing'>
+                                                <h2 className='h2-table-asign-formato'>
+                                                    Usuarios disponibles
+                                                </h2>
+                                                <Tablas class="table-asignar" userInfo={userInfo.userInfo} filterSeacth={filterSearchUsuario} limitRegisters={limitRegistersUsuario} count={countRegistersAsignar} data={usuariosAsignar} keys={keysUsuarios} tittle={"Usuarios"} filterEstado={filterEstado} getFilterEstado={getFilterEstadoUsuario} getFiltersOrden={getFiltersOrdenUsuario} />
+                                            </div>
+                                            : ""}
+                                    </div >
+                                } />
+                            )
+                                : ""
                             : ""
                         : ""
-                    : ""
-                : ""}
-
-        </>
+                    : ""}
+            </div>
+        </div>
     )
 }

@@ -4,7 +4,8 @@ import { formatDate } from "./tablas";
 import { $ } from "jquery"
 import "../../public/css/formResultados.css"
 import { GlobalModal } from "./globalModal";
-
+import { GlobalInputs } from '../componentes/globalInputs.jsx'
+import Api from "../componentes/Api.jsx"
 
 export const FormResultados = forwardRef((data, ref) => {
 
@@ -18,8 +19,11 @@ export const FormResultados = forwardRef((data, ref) => {
     const [dataSelect, setDataSelects] = useState({});
     const [statusInputDefault, setStatusInputDefault] = useState(false);
     const [statusInput, setStatusInput] = useState(true);
+    const [variablesFormatoFisico, setVariablesFormatoFisico] = useState({});
     const divContentFormRef = useRef(null);
     const modalRef = useRef(null);
+    const [valueGlobalInput, setValueGlobalInput] = useState({});
+    const [plugisGlobalInput, setPlugisGlobalInput] = useState({});
 
     const [inputValor, setInputValor] = useState({});
     const [keyDown, setKeydown] = useState();
@@ -546,15 +550,44 @@ export const FormResultados = forwardRef((data, ref) => {
 
 
         if (data.setAnalisisFormato) {
-            data.setAnalisisFormato(jsonData, idFormato, tipoRegistro, modeFormato)
+            // data.setAnalisisFormato(jsonData, idFormato, tipoRegistro, modeFormato)
+            data.setAnalisisFormato(valueGlobalInput, idFormato, tipoRegistro, modeFormato)
         }
     }
     useEffect(() => {
         if (data.setErrorsFormato) {
             data.setErrorsFormato({})
+            setPlugisGlobalInput({})
         }
     }, [data.modalFormNormal])
+    async function getVariablesFormatoFisico() {
+        try {
+            const dataVariables = {
+                "filter": {
+                    "where": {
+                        "var.tipos_analisis_id": {
+                            "value": 1,
+                            "require": "and"
+                        }
+                    }
+                }
+            }
+            const response = await Api.post("/variables/listar", dataVariables)
+            if (response.data.status == true) {
+                setVariablesFormatoFisico(response.data.data)
+            } else if (response.data.find_error) {
 
+            } else {
+
+            }
+
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
+    useEffect(() => {
+        getVariablesFormatoFisico()
+    }, [])
     return (
 
         <>
@@ -899,7 +932,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                 </div>
                                                                 <div>
                                                                     <h4>Estado</h4>
-                                                                    <p>{key.estado ? key.estado == 1 ? "Registrado" : key.estado == 2 ? "Pendiente" : key.estado == 3 ? "Asignado" : "No disponible" : "No registra"}</p>
+                                                                    <p>{key.estado ? key.estado == 1 ? "Registrado" : key.estado == 2 ? "Pendiente" : key.estado == 3 ? "Asignado" : key.estado == 4 ? "Finalizado" : key.estado == 5 ? "Registrado" : "No disponible" : "No registra"}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1181,120 +1214,162 @@ export const FormResultados = forwardRef((data, ref) => {
                                     <div id="divFormFormatoFisico" className="div-form-formato-fisico">
                                         <form onSubmit={(e) => { registerFormatoFisico(e) }}>
                                             <div style={{ display: Object.keys(inputsFormatoFisico).length == 1 ? "unset" : "" }} className="form-register-formato-fisico">
-                                                {
-                                                    inputsFormatoFisico.map((key, index) => {
-                                                        if (dataInputsFormatoFisico[key]["type"] === "text" || dataInputsFormatoFisico[key]["type"] === "email" || dataInputsFormatoFisico[key]["type"] === "number" || dataInputsFormatoFisico[key]["type"] === "ubicacion" || dataInputsFormatoFisico[key]["type"] === "normal") {
-                                                            if (statusInputDefault && elementEditFormatoFisico) {
-                                                                inputValor[key] = elementEditFormatoFisico[key] ? dataInputsFormatoFisico[key]["upper_case"] ? typeof elementEditFormatoFisico[key] === "string" ? elementEditFormatoFisico[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEditFormatoFisico[key] ?? '' : dataInputsFormatoFisico[key]["capital_letter"] ? typeof elementEditFormatoFisico[key] === "string" ? elementEditFormatoFisico[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEditFormatoFisico[key] ?? '' : elementEditFormatoFisico[key] ?? "" : ""
-                                                            } else if (statusInput) {
-                                                                inputValor[key] = ""
+                                                {variablesFormatoFisico ? (
+                                                    variablesFormatoFisico.length > 0 ? (
+                                                        (() => { // Función inmediatamente invocada (IIFE)
+                                                            const inputsNormal = [];
+                                                            const inputsCalculado = [];
+                                                            function getValueFormula() {
 
-                                                            }
-                                                            return (
+                                                                const keys = variablesFormatoFisico
+                                                                for (let x = 0; x < keys.length; x++) {
 
-                                                                <div key={key} className={`${dataInputsFormatoFisico[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
-                                                                    <div className="head-input">
-                                                                        <label htmlFor={key} className="label-from-register" >{dataInputsFormatoFisico[key]["referencia"] ? dataInputsFormatoFisico[key]["referencia"] : "Campo"}</label>
-                                                                        <input id={key} name={key} autoComplete="false" onChange={(e) => { setStatusInput(false); setStatusInputDefault(false); handleInputChange(e, key, dataInputsFormatoFisico[key]["type"]); }} value={statusInputDefault && elementEdit ? dataInputsFormatoFisico[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputsFormatoFisico[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} className="input-form" type="text" />
-                                                                    </div>
-                                                                    <h4 className="label-error-submit-form">{data.errorsFormato ? data.errorsFormato[key] ? data.errorsFormato[key] : "" : ""}</h4>
-                                                                </div>
-                                                            );
-
-                                                        } else if (dataInputsFormatoFisico[key]["type"] === "select" && dataInputsFormatoFisico[key]["visibility"] != false) {
-
-                                                            if (data.statusSelect) {
-                                                                selectsValues[key] = "";
-                                                                dataSelect[key] = ""
-                                                            }
-
-                                                            return (
-                                                                <div key={key} className="input-content-form-register">
-                                                                    <div className="head-input">
-                                                                        <label htmlFor={key} className="label-from-register">{dataInputsFormatoFisico[key]["referencia"] ? dataInputsFormatoFisico[key]["referencia"] : "Campo"}</label>
-                                                                        <div key={key} className="filter-estado div-select">
-
-                                                                            <div key={index} style={{ display: "none" }} className="opciones opciones-input-select">
-
-                                                                                <h4 onClick={(e) => {
-                                                                                    const parentElement = e.target.closest(".div-select");
-                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                                    divOptions[0] ? divOptions[0].style.display = "none" : ""
-
-                                                                                    data.setStatusSelect(false); data.setStatusSelectDefault(false); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = ""; changeSelectsValues(cloneSelectsValues); dataSelect[key] = "";
-                                                                                }} className='select-option'>Seleccione una opción...</h4>
-
-                                                                                {
-                                                                                    dataInputsFormatoFisico[key]["opciones"] ? dataInputsFormatoFisico[key]["opciones"].map((select, indexSelect) => {
-                                                                                        let value = ""
-                                                                                        if (dataInputsFormatoFisico[key]["values"]) {
-                                                                                            dataInputsFormatoFisico[key]["values"].map((nameSelect, nameIndexSelect) => {
-                                                                                                value += nameIndexSelect == 0 ? dataInputsFormatoFisico[key]["opciones"][indexSelect][nameSelect] : ", " + dataInputsFormatoFisico[key]["opciones"][indexSelect][nameSelect];
-                                                                                            })
-                                                                                        }
-
-
-
-                                                                                        if (dataInputsFormatoFisico[key]["upper_case"]) {
-                                                                                            value = value.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())
-                                                                                        } else if (dataInputsFormatoFisico[key]["capital_letter"]) {
-                                                                                            value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
-                                                                                        }
-                                                                                        if (elementEdit) {
-                                                                                            if (!data.modalForm && dataInputsFormatoFisico[key]["opciones"][indexSelect][dataInputsFormatoFisico[key]["key"]] == elementEdit[key] && data.statusSelectDefault) {
-                                                                                                selectsValues[key] = value;
-                                                                                                dataSelect[key] = dataInputsFormatoFisico[key]["opciones"][indexSelect][dataInputsFormatoFisico[key]["key"]]
+                                                                    if (keys[x]["tipo_valor"] == "calculado") {
+                                                                        if (plugisGlobalInput[keys[x]["nombre"]]) {
+                                                                            if (plugisGlobalInput[keys[x]["nombre"]]["edit"] == false) {
+                                                                                if (keys[x]["formula"]) {
+                                                                                    const element = document.getElementById(keys[x]["nombre"])
+                                                                                    if (element) {
+                                                                                        try {
+                                                                                            const resultado = eval(keys[x]["formula"].replace(/dataVariables/g, "valueGlobalInput"))
+                                                                                            console.log(resultado)
+                                                                                            if (!isNaN(resultado)) {
+                                                                                                element.innerHTML = resultado
+                                                                                                valueGlobalInput[keys[x]["nombre"]] = resultado
+                                                                                                console.log(valueGlobalInput[keys[x]["nombre"]], "valueeeeeeeee")
+                                                                                            } else {
+                                                                                                element.innerHTML = 0
+                                                                                                valueGlobalInput[keys[x]["nombre"]] = 0
                                                                                             }
+                                                                                        } catch (e) {
+                                                                                            element.innerHTML = 0
+                                                                                            valueGlobalInput[keys[x]["nombre"]] = 0
                                                                                         }
-
-
-                                                                                        return <h4 key={indexSelect} onClick={(e) => {
-                                                                                            const parentElement = e.target.parentElement.parentElement;
-                                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                                            divOptions[0] ? divOptions[0].style.display = "none" : ""; let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); data.setStatusSelect(false); data.setStatusSelectDefault(false); dataSelect[key] = dataInputsFormatoFisico[key]["opciones"][indexSelect][dataInputsFormatoFisico[key]["key"]];
-                                                                                        }} className={`select-option select-option-${key} ${selectsValues[key] == value ? 'option-focus' : ''}`} value="">
-                                                                                            {value}
-                                                                                        </h4>
-                                                                                    }) : ""
+                                                                                    }
                                                                                 }
 
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            variablesFormatoFisico.forEach((key, index) => {
+                                                                if (key.tipo_valor === "normal") {
+                                                                    inputsNormal.push(
+                                                                        <GlobalInputs
+                                                                            key={key.visual_name}
+                                                                            input={setValueGlobalInput}
+                                                                            value={valueGlobalInput}
+                                                                            /* class={"input-global"} */
+                                                                            errors={data.errorsFormato}
+                                                                            elementEdit={data.dataModalResultadoAnalisis[0]}
+                                                                            data={{
+                                                                                [key.nombre]: {
+                                                                                    type: "number",
+                                                                                    function: {
+                                                                                        "value": getValueFormula
+                                                                                    },
+                                                                                    referencia: key.visual_name.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) + " (G)",
+                                                                                    upper_case: true,
+                                                                                },
+                                                                            }}
+                                                                        />
+                                                                    );
+                                                                } else {
+                                                                    if (!plugisGlobalInput[key.nombre]) {
+                                                                        plugisGlobalInput[key.nombre] = {
+                                                                            "edit": false
+                                                                        }
+                                                                    }
+
+                                                                    inputsCalculado.push(
+                                                                        <div key={index} className="div-content-input-calculado">
+
+                                                                            <div onClick={() => {
+                                                                                const clonePluginsGlobalInput = { ...plugisGlobalInput }
+                                                                                clonePluginsGlobalInput[key.nombre] = {
+                                                                                    "edit": !plugisGlobalInput[key.nombre]["edit"]
+                                                                                }
+                                                                                if (!plugisGlobalInput[key.nombre]["edit"] == false) {
+                                                                                    getValueFormula()
+                                                                                } else {
+                                                                                    if (data.dataModalResultadoAnalisis) {
+                                                                                        if (data.dataModalResultadoAnalisis[0]) {
+                                                                                            if (data.dataModalResultadoAnalisis[0][key.nombre]) {
+                                                                                                valueGlobalInput[key.nombre] = data.dataModalResultadoAnalisis[0][key.nombre]
+                                                                                            } else {
+                                                                                                valueGlobalInput[key.nombre] = 0
+                                                                                            }
+                                                                                        } else {
+                                                                                            valueGlobalInput[key.nombre] = 0
+                                                                                        }
+                                                                                    } else {
+                                                                                        valueGlobalInput[key.nombre] = 0
+                                                                                    }
+                                                                                }
+                                                                                setPlugisGlobalInput(clonePluginsGlobalInput)
+                                                                            }} className="div-svg-change">
+                                                                                <h4 className="tittle-change-form-input">
+                                                                                    <div className="punta-tittle"></div>
+                                                                                    Cambiar Valor</h4>
+                                                                                <svg xversion="1.0" viewBox="0 0 501.000000 475.000000" >
+                                                                                    <g transform="translate(0.000000,475.000000) scale(0.100000,-0.100000)" stroke="none">
+                                                                                        <path className="path-one-change-svg" d="M2185 4734 c-439 -48 -845 -205 -1184 -459 -145 -109 -363 -322 -396 -388 -32 -64 -33 -134 -4 -193 24 -50 217 -229 277 -256 20 -10 61 -18 90 -18 61 0 127 23 116 41 -4 7 -3 9 4 5 6 -3 47 31 94 80 519 539 1304 681 1968 356 63 -31 120 -56 127 -55 7 0 11 -3 10 -7 -1 -4 30 -29 68 -55 39 -26 96 -70 128 -97 32 -27 64 -51 72 -52 20 -3 96 -77 89 -87 -6 -10 96 -125 108 -121 5 1 7 -2 4 -7 -3 -4 7 -26 22 -47 32 -44 122 -191 122 -199 0 -3 -5 -5 -12 -5 -14 0 -270 -96 -308 -115 -38 -20 -64 -77 -57 -129 7 -54 10 -56 427 -366 570 -423 535 -400 591 -400 54 0 98 29 117 77 6 16 66 215 132 443 67 228 139 474 161 547 21 72 39 148 39 168 0 74 -51 125 -124 125 -20 0 -104 -25 -187 -55 -83 -31 -152 -54 -153 -53 -20 49 -106 200 -162 283 -313 473 -801 823 -1354 969 -197 53 -319 68 -560 71 -124 2 -243 1 -265 -1z" />
+                                                                                        <path className="path-two-change-svg" d="M240 2289 c-34 -14 -61 -39 -72 -69 -11 -29 -159 -1123 -160 -1190 -2 -56 24 -104 68 -125 59 -28 90 -20 244 66 l145 80 20 -24 c11 -13 47 -60 80 -103 80 -105 271 -295 387 -385 347 -270 732 -430 1178 -490 120 -16 426 -16 550 0 673 86 1234 414 1631 954 99 134 122 180 123 246 0 39 -6 70 -23 104 -20 42 -39 59 -143 129 -178 119 -219 133 -310 108 -53 -15 -90 -50 -158 -149 -295 -429 -758 -694 -1275 -730 -461 -32 -904 122 -1251 434 -97 87 -217 226 -205 238 5 5 71 44 147 86 161 89 189 118 181 190 -3 24 -13 55 -24 69 -23 31 -1026 561 -1074 567 -19 3 -45 0 -59 -6z" />
+                                                                                    </g>
+                                                                                </svg>
                                                                             </div>
-                                                                            <div className='input-select-estado input-select-search' name="" id="">
-
-                                                                                <input id={key} type="text" className="input-select" onInput={(e) => {
-                                                                                    const parentElement = e.target.closest(".div-select");
-                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                                    divOptions[0] ? divOptions[0].style.display = "block" : ""
-                                                                                    selectSearch(e.target.value, key)
-                                                                                }} placeholder={"Seleccione una opción..."} value={selectsValues[key] != "Seleccione una opción..." ? selectsValues[key] : ""} />
-                                                                                <div onClick={(e) => {
-                                                                                    const parentElement = e.target.closest(".div-select");
-                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                                    divOptions[0] ? divOptions[0].style.display == "none" ? divOptions[0].style.display = "block" : divOptions[0].style.display = "none" : ""
-                                                                                }} className="icon-chevron-estado">
-                                                                                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
-                                                                                        <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                                                                        <g><g><path d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
-                                                                                    </svg>
-                                                                                </div>
-
+                                                                            <div>
+                                                                                <label htmlFor=""></label>
+                                                                                <GlobalInputs
+                                                                                    key={key.visual_name}
+                                                                                    edit={plugisGlobalInput ? plugisGlobalInput[key.nombre] ? plugisGlobalInput[key.nombre]["edit"] ? plugisGlobalInput[key.nombre]["edit"] : "" : "" : ""}
+                                                                                    input={setValueGlobalInput}
+                                                                                    value={valueGlobalInput}
+                                                                                    /* class={"input-global"} */
+                                                                                    errors={data.errorsFormato}
+                                                                                    elementEdit={data.dataModalResultadoAnalisis[0]}
+                                                                                    data={{
+                                                                                        [key.nombre]: {
+                                                                                            type: "number",
+                                                                                            referencia: key.visual_name.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) + " (G)",
+                                                                                            upper_case: true,
+                                                                                        },
+                                                                                    }}
+                                                                                />
                                                                             </div>
                                                                         </div>
+                                                                    )
+                                                                }
+                                                            });
+                                                            // Devuelve JSX después de haber procesado los datos
+                                                            return (
+                                                                <div key={1} className="div-inputs-formato-fisco">
+                                                                    <div>
+                                                                        <h3>Campos Para Completar</h3>
+                                                                        <div className={"div-inputs-normal"}>
+                                                                            {inputsNormal}
+                                                                        </div>
                                                                     </div>
-                                                                    <h4 className="label-error-submit-form" htmlFor="">{data.errorsFormato ? data.errorsFormato[key] ? data.errorsFormato[key] : "" : ""}</h4>
-
+                                                                    <div>
+                                                                        <h3>Campos Automáticos</h3>
+                                                                        <div className="div-inputs-calculado">
+                                                                            {inputsCalculado}
+                                                                        </div>
+                                                                    </div>
+                                                                    {getValueFormula()}
                                                                 </div>
+
                                                             );
-                                                        } else {
+                                                        })() // Invoca la función inmediatamente después de definirla
+                                                    ) : (
+                                                        <div>No hay nada para mostrar.</div>
+                                                    )
+                                                ) : (
+                                                    <div>Error interno</div>
+                                                )}
 
-                                                            if (index == inputs.length) {
-                                                                return "No hay nada para mostrar " + key;
-                                                            }
 
-                                                        }
-
-                                                    })
-                                                }
 
                                             </div>
                                             {tipoRegistro == 1 ? (

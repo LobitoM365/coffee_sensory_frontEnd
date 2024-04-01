@@ -36,10 +36,11 @@ export const Fincas = (userInfo) => {
         }
     });
 
-    async function listarIconos() {
+    async function listarIconos(id) {
         try {
-            const response = await Api.post("/img/finca/listar");
-            console.log("listaaaaaaaaaaaa", response, "reee")
+            const response = await Api.post("/img/finca/listar/" + id);
+            console.log(response, "fincaaaaaaaaaaaaaaaaaaaaaaaaaaa---------------iconoooooooooooooooo")
+
 
             if (response.data.status == true) {
                 setImgs(response.data.data)
@@ -57,6 +58,7 @@ export const Fincas = (userInfo) => {
             const father = e.target;
             const input = document.createElement("input")
             input.setAttribute("type", "file")
+            input.setAttribute("accept", ".png, .jpg, .jpeg, .gif, .webp")
             input.style.display = "none"
             document.body.append(input)
             input.click()
@@ -79,11 +81,13 @@ export const Fincas = (userInfo) => {
                         if (tipo == "editar") {
                             route = "actualizar/" + focusImgChange.id
                             method = "put"
+                        } else {
+                            route += "/" + focusFinca
                         }
-                        const response = await Api[method]("/img/finca/" + route, formData);
+                        const response = await Api[method]("/img/finca/" + route + "/", formData);
                         if (response.data.status == true) {
 
-                            listarIconos();
+                            listarIconos(focusFinca);
                             setModalImgChange();
                         } else if (response.data.register_error) {
                             setStatusAlert(true);
@@ -120,7 +124,7 @@ export const Fincas = (userInfo) => {
         try {
             const response = await Api.delete("/img/finca/eliminar/" + id)
             if (response.data.status == true) {
-                listarIconos()
+                listarIconos(focusFinca)
                 setModalImgChange()
             }
             console.log(response, "siuuuuuuu")
@@ -305,7 +309,6 @@ export const Fincas = (userInfo) => {
     }
     useEffect(() => {
         getFincas()
-        listarIconos()
         getDepartamentos();
     }, [])
     getUsers()
@@ -313,6 +316,7 @@ export const Fincas = (userInfo) => {
     async function viewIcons(id) {
         setFocusFinca(id)
         setModaImgs(true)
+        listarIconos(id)
     }
     async function getFincas() {
         try {
@@ -628,6 +632,7 @@ export const Fincas = (userInfo) => {
 
         try {
             const axios = await Api.put("finca/actualizar/" + id, data);
+            console.log(axios)
             if (axios.data.status == true) {
                 getFincas();
                 setErrors({})
@@ -857,7 +862,7 @@ export const Fincas = (userInfo) => {
         try {
             const response = await Api.post("/img/finca/predeterminar/" + id)
             if (response.data.status == true) {
-                listarIconos()
+                listarIconos(focusFinca)
                 setModalImgChange()
             }
             console.log(response, "siuuuuuuu")
@@ -892,8 +897,9 @@ export const Fincas = (userInfo) => {
                                 {
                                     imgs.map((value, key) => {
                                         return <div key={key} className='div-imgs-iconos-add'>
-                                            <img className='img-icono' src={"http://" + host + ":3000/img/usuarios/" + (value.usuarios_id ? value.usuarios_id : "") + "/fincas/" + (value.nombre ? value.nombre : "")} />
-                                            <div onClick={(e) => { setFocusImgChange({ id: value.id, src: "http://" + host + ":3000/img/usuarios/" + (value.usuarios_id ? value.usuarios_id : "") + "/fincas/" + (value.nombre ? value.nombre : ""), estado: value.estado }); setModalImgChange(true) }} className='div-ver-iconos'>
+                                            {console.log(value)}
+                                            <img className='img-icono' src={"http://" + host + ":3000/img/usuarios/" + (value.usuarios_id ? value.usuarios_id : "") + "/fincas/" + value.fincas_id + "/" + (value.nombre ? value.nombre : "")} />
+                                            <div onClick={(e) => { setFocusImgChange({ id: value.id, src: "http://" + host + ":3000/img/usuarios/" + (value.usuarios_id ? value.usuarios_id : "") + "/fincas/" + value.fincas_id + "/" + (value.nombre ? value.nombre : ""), estado: value.estado }); setModalImgChange(true) }} className='div-ver-iconos'>
                                                 <h4>Ver</h4>
                                             </div>
                                         </div>

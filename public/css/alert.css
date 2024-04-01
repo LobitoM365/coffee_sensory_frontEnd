@@ -19,7 +19,7 @@
      background-color: white;
      border-radius: 8px;
      max-width: calc(100% - 50px);
-     word-break: break-all;
+     /* word-break: break-all; */
  }
 
  #mainAlert .div-img-alert,

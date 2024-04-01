@@ -560,6 +560,42 @@
 
 }
 
+#mainMenu .nav-main .div-img-perfil-focus img{
+    cursor: unset;
+}
+#mainMenu .nav-main .div-img-perfil-focus {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(0, 0, 0, 0.675);
+    /* left: revert; */
+    /* right: 50%; */
+    position: fixed;
+    z-index: 999;
+    /* top: 60%; */
+    /* scale: 0.1; */
+    transition: all 1s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    opacity: 0;
+    z-index: 1;
+}
+
+
+
+#contentImgFocus {
+    border-radius: 100%;
+    overflow: hidden;
+    width: 600px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    aspect-ratio: 1/1;
+}
+
 #mainMenu .nav-main .li-content-usuarios {
     display: flex;
     gap: 10px;
@@ -614,6 +650,8 @@
 
 #mainMenu .div-img-perfil-nav img {
     height: 100%;
+    cursor: pointer;
+    z-index: 3;
 }
 
 #mainMenu .btn-cerrar-sesion {

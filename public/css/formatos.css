@@ -1,3 +1,545 @@
-.h4-tipo-analisis{
+#mainFormatos .h4-tipo-analisis {
     padding: 10px;
+}
+
+#mainFormatos >div{
+    width: 100%;
+}
+
+#mainFormatos .div-info-analisis {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+#mainFormatos .div-contenido-info-analisis {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+#mainFormatos .div-table-analisis {
+    width: 600px !important;
+    background-color: rgba(220, 220, 220, 0.331);
+}
+
+#mainFormatos #divContentFormResult {
+    width: max-content;
+}
+
+#mainFormatos #divContentFormResult .div-body-form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+#mainFormatos #divContentFormResult .contenido-info-resultado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#mainFormatos .iframe-formato-sca {
+    width: 1500px;
+    max-width: 100%;
+    height: 500px;
+
+}
+
+#mainFormatos .value-range-item {
+    width: 100%;
+    height: 100%;
+}
+
+#mainFormatos .iframe-vacio-formato-sca {
+    background-color: #00000021;
+    cursor: not-allowed;
+    border-radius: 4px;
+}
+
+#mainFormatos .cotent-info-analisis {
+    /* display: flex; */
+    /* justify-content: center; */
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+#mainFormatos .cotent-info-analisis .div-info-analisis {
+    width: max-content;
+}
+
+#mainFormatos .form-registar-formato-sca {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+#mainFormatos #iframeFormRegister {
+    width: 2500px;
+}
+
+#mainFormatos .table-formato-fisico-template td,
+.table-formato-fisico-template th {
+    border: 1px solid black;
+    padding: 10px 20px;
+}
+
+#mainFormatos .table-formato-fisico-template th {
+    background-color: rgb(13, 136, 97);
+    color: white;
+}
+
+#mainFormatos .table-formato-fisico-template {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#mainFormatos .div-table-formato-fisico-template {
+    width: 1200px;
+    max-width: 100%;
+}
+
+#mainFormatos .div-content-info-analisis-formato {
+    max-width: 100%;
+}
+
+#mainFormatos .no-registra-formato-fisico {
+    display: flex;
+    color: #7171719c;
+    font-weight: bolder;
+    width: max-content;
+    position: relative;
+}
+
+#mainFormatos .line-no-registra-formato-fisico {
+    width: 100%;
+    height: 1.5px;
+    background-color: rgba(113, 113, 113, 0.404);
+    position: absolute;
+    top: 50%;
+    transform: rotate(5deg);
+}
+
+#mainFormatos
+/* #divFormFormatoFisico .form-register-formato-fisico {
+     display: grid;
+     grid-template-columns: 1fr 1fr 1fr 1fr;
+     gap: 20px 80px;
+ } */
+
+#divFormFormatoFisico {
+    width: 100%;
+}
+
+#mainFormatos #divFormFormatoFisico>div>div>div {
+    display: flex;
+}
+
+#mainFormatos .div-body-form {
+    width: 100% !important;
+}
+
+#mainFormatos .contenido-info-resultado {
+    max-width: 100%;
+}
+
+#mainFormatos .contenido-info-resultado h3 {
+    padding: 10px;
+    border-radius: 20px;
+    background-color: rgb(255, 169, 116);
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+#mainFormatos
+/* @media screen and (max-width: 1360px) {
+     #divFormFormatoFisico .form-register-formato-fisico {
+         display: grid;
+         grid-template-columns: 1fr 1fr 1fr;
+         gap: 20px 80px;
+     }
+ }
+ 
+ @media screen and (max-width: 990px) {
+     #divFormFormatoFisico .form-register-formato-fisico {
+         display: grid;
+         grid-template-columns: 1fr 1fr;
+         gap: 20px 80px;
+     }
+ }
+ 
+ @media screen and (max-width: 610px) {
+     #divFormFormatoFisico .form-register-formato-fisico {
+         display: grid;
+         grid-template-columns: 1fr;
+         gap: 20px 80px;
+     }
+ } */
+
+.info-analisis {
+    background-color: rgba(220, 220, 220, 0.149);
+    border-radius: 8px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.386);
+}
+
+#mainFormatos .title-info {
+    display: flex;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 10px;
+    gap: 20px;
+    color: whitesmoke;
+    background-color: rgb(0, 140, 93);
+}
+
+
+.div-info-analisis div {
+    padding: 10px 16px 10px 16px;
+    border: 1px solid rgb(205, 205, 205);
+}
+
+#mainFormatos .div-info-analisis div p {
+    text-transform: capitalize;
+}
+
+#mainFormatos .title-svg {
+    border-radius: 100px;
+    padding: 5px 10px 0px 10px;
+    background-color: white;
+    width: 25px;
+}
+
+#mainFormatos .info-catador>div {
+    padding: 20px;
+}
+
+#mainFormatos .icon-ver-encargados {
+    background-color: orange;
+    font-size: 1.2em;
+    font-weight: bolder;
+}
+
+#mainFormatos .button-asignar-analisis {
+    background-color: rgb(235, 130, 11) !important;
+}
+
+#mainFormatos .div-content-asignar>div {
+    display: flex;
+    flex-direction: column;
+    gap: 70px;
+}
+
+#mainFormatos .div-content-asignar {
+    display: flex;
+    gap: 70px;
+    width: max-content;
+    max-width: 100%;
+    /* flex-wrap: wrap; */
+}
+
+#mainFormatos .table-asignar .div-table {
+    width: 100%;
+}
+
+#mainFormatos .table-asignar .div-filters,
+.table-asignar .table-component,
+.table-asignar thead,
+.table-asignar #inputSearch {
+    background-color: #efecec !important;
+}
+
+#mainFormatos .table-asignar {
+    width: 1300px;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+#mainFormatos .modal-table #divContentForm {
+    background-color: rgb(255, 255, 255);
+    height: max-content;
+}
+
+#mainFormatos .input-global .head-input {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    flex-direction: row;
+    gap: 30px;
+}
+
+#mainFormatos
+/* .input-global .head-input label{
+     
+ } */
+
+.div-asign-elements {
+    width: 850px;
+    flex: none;
+}
+
+@media screen and (max-width : 1080px) {
+    #mainFormatos .div-asign-elements {
+        width: 100%;
+    }
+
+    #mainFormatos .div-content-asignar {
+        flex-direction: column;
+    }
+}
+
+.fiv-asignar-analisis {
+    display: flex;
+    flex-direction: column;
+    gap: 90px;
+}
+
+#mainFormatos .div-encargados {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+}
+
+#mainFormatos .div-encargados>div {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+#mainFormatos .table-add-asignar {
+    width: 100%;
+}
+
+#mainFormatos .table-add-asignar th {
+    padding: 10px;
+    background-color: orange;
+    color: white;
+    font-size: 1.2em;
+    font-weight: bolder;
+    text-align: center;
+}
+
+#mainFormatos .table-add-asignar td {
+    padding: 20px;
+    text-align: right;
+}
+
+#mainFormatos .table-add-asignar td h4 {
+    text-align: left;
+}
+
+#mainFormatos .input-cantidad-formatos {
+    width: 70px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 1.4em;
+    max-width: calc(100% - 20px);
+}
+
+#mainFormatos .table-add-asignar .svg-icon-quit-table-asing {
+    width: 45px;
+    fill: red;
+}
+
+#mainFormatos .button-asing-agregado {
+    background-color: gray !important;
+    cursor: unset !important;
+}
+
+#mainFormatos .div-encargados .div-table-asignados thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+#mainFormatos .div-encargados .div-table-asignados {
+    height: 450px;
+    overflow: auto;
+}
+
+#mainFormatos .div-encargados .div-table-asignados::-webkit-scrollbar {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 10px;
+}
+
+#mainFormatos .div-encargados .div-table-asignados::-webkit-scrollbar-thumb {
+    background-color: #25337c;
+    border-radius: 100px;
+}
+
+#mainFormatos .div-encargados .div-table-asignados td>div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#mainFormatos .button-set-asignar-analisis {
+    padding: 10px 20px;
+    border: unset;
+    color: white;
+    font-weight: bolder;
+    border-radius: 2px;
+    cursor: pointer;
+    background: orange;
+}
+
+#mainFormatos .footer-asignar {
+    display: flex;
+    justify-content: end;
+}
+
+#mainFormatos .tr-error-table-asignar td {
+    padding: 0 !important;
+    text-align: center !important;
+    border-bottom: 1px solid red;
+    background-color: #ff00001f;
+}
+
+#mainFormatos .tr-error-table-asignar td h4 {
+    color: red;
+    text-align: center !important;
+}
+
+#mainFormatos .head-asignar-analisis {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+#mainFormatos .div-footer-users-formatos {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#mainFormatos .button-users-formatos,
+.h4-estado-formato-asing {
+    padding: 10px 20px;
+    border: unset;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bolder;
+}
+
+#mainFormatos .h4-estado-formato-asing {
+    padding: 7.5px 20px;
+    cursor: unset;
+}
+
+#mainFormatos .h4-estado-formato-asing-finalizado {
+    background-color: #39b189;
+}
+
+#mainFormatos .h4-estado-formato-asing-asignado {
+    background-color: orange;
+}
+
+#mainFormatos .h4-estado-formato-asing-pendiente {
+    background-color: gray;
+}
+
+#mainFormatos .button-users-formatos-cambiar {
+    background-color: rgb(41 153 136);
+}
+
+#mainFormatos .button-users-formatos-eliminar {
+    background-color: red;
+}
+
+#mainFormatos .catador-no-options-asignar {
+    padding: 10px;
+    color: black;
+    border-radius: 4px;
+    border: 1px solid rgba(122, 122, 122, 0.368);
+}
+
+#mainFormatos .div-formato-finalizado {
+    gap: 20px;
+}
+
+#mainFormatos .div-formato-finalizado div {
+    display: flex;
+    width: 100%;
+}
+
+#mainFormatos .div-anaisis-finalizado-asignar-formato {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+#mainFormatos .div-anaisis-finalizado-asignar-formato>div {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+#mainFormatos .div-anaisis-finalizado-asignar-formato>div h5 {
+    font-size: 1.1em;
+}
+
+#mainFormatos .div-anaisis-finalizado-asignar-formato>div h4 {
+    font-size: 1.3em;
+}
+
+#mainFormatos .div-content-asignar h2 {
+    font-size: 1.9em;
+}
+
+#mainFormatos .body-asignar-analisis {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+#mainFormatos .div-table-asing {
+    overflow: hidden;
+}
+
+#mainFormatos .span-width-errors {
+    text-align: left;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr;
+    margin-bottom: 10px;
+}
+
+#mainFormatos .span-width-errors h3 {
+    color: red;
+}
+
+#mainFormatos .span-message-alerta {
+    margin-bottom: 20px;
+}
+
+#mainFormatos .h4-tipo-analisis {
+    padding: 10px;
+    width: 80px;
+    max-width: 100%;
+    text-align: center;
+    color: white;
+    border-radius: 4px;
+}
+
+#mainFormatos .h4-tipo-analisis-fisico {
+    background-color: rgb(246, 106, 109);
+}
+
+#mainFormatos .h4-tipo-analisis-sca {
+    color: rgb(255, 255, 255);
+    background-color: rgb(252, 201, 80);
+}
+
+#mainFormatos .estado-no-pointer {
+    cursor: unset;
+}
+
+#mainFormatos #mainGlobalInput {
+    width: 100%;
 }

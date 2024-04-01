@@ -272,10 +272,133 @@
     background-color: rgba(181, 181, 181, 0.477);
 }
 
+#mainFormResultados .div-inputs-normal,
+#mainFormResultados .div-inputs-calculado {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px 80px;
+    width: 100%;
+}
+
+@media screen and (max-width: 1360px) {
+
+    #mainFormResultados .div-inputs-normal,
+    #mainFormResultados .div-inputs-calculado {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px 80px;
+    }
+}
+
+@media screen and (max-width: 990px) {
+
+    #mainFormResultados .div-inputs-normal,
+    #mainFormResultados .div-inputs-calculado {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px 80px;
+    }
+}
+
+@media screen and (max-width: 610px) {
+
+    #mainFormResultados .div-inputs-normal,
+    #mainFormResultados .div-inputs-calculado {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px 80px;
+    }
+}
+
+#mainFormResultados .div-inputs-formato-fisco>div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+}
+
+#mainFormResultados .div-inputs-formato-fisco {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
 #mainFormResultados .icon-chevron-estado {
     width: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+#mainFormResultados .div-svg-change .path-one-change-svg {
+    fill: rgb(63, 125, 183);
+}
+
+#mainFormResultados .div-svg-change .path-two-change-svg {
+    fill: rgb(58, 59, 87);
+}
+
+#mainFormResultados .div-content-input-calculado {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+#mainFormResultados .tittle-change-form-input {
+    position: absolute;
+    top: calc(100% + 5px);
+    width: max-content;
+    background-color: rgb(83, 194, 141);
+    padding: 10px;
+    border-radius: 4px;
+    color: white;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+#mainFormResultados #divFormFormatoFisico form {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+#mainFormResultados .div-svg-change>svg {
+    width: 30px;
+    padding: 7px;
+    border-radius: 2px;
+    cursor: pointer;
+    filter: grayscale(1);
+}
+
+#mainFormResultados .div-svg-change>svg:hover {
+    background-color: rgba(0, 0, 0, 0.18);
+    filter: grayscale(0);
+}
+
+#mainFormResultados .tittle-change-form-input .punta-tittle {
+    border-top: 5px solid currentColor;
+    border-bottom: 5px solid rgb(83, 194, 141);
+    border-left: 5px solid currentColor;
+    border-right: 5px solid currentColor;
+    position: absolute;
+    background-color: black;
+    bottom: 100%;
+}
+
+#mainFormResultados .div-svg-change:hover .tittle-change-form-input {
+    display: flex;
+}
+
+#mainFormResultados .div-svg-change {
+    width: max-content;
+    height: max-content;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

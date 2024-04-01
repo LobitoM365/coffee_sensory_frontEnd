@@ -79,7 +79,7 @@ export const Profile = (data) => {
         try {
             console.log("listaaaaaaaaaaaa")
             const response = await Api.post("/img/icono/listar");
-            console.log("listaaaaaaaaaaaa",response,"reee")
+            console.log("listaaaaaaaaaaaa", response, "reee")
 
             if (response.data.status == true) {
                 setImgs(response.data.data)
@@ -202,6 +202,7 @@ export const Profile = (data) => {
             const father = e.target;
             const input = document.createElement("input")
             input.setAttribute("type", "file")
+            input.setAttribute("accept", ".png, .jpg, .jpeg, .gif, .webp")
             input.style.display = "none"
             document.body.append(input)
             input.click()

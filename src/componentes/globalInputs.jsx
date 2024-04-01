@@ -1,6 +1,7 @@
 import { object, string } from "prop-types";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import "../../public/css/globalInputs.css"
+import { type } from "jquery";
 
 
 export const GlobalInputs = forwardRef((data, ref) => {
@@ -201,17 +202,73 @@ export const GlobalInputs = forwardRef((data, ref) => {
                         }
 
                         if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "ubicacion" || dataInputs[key]["type"] === "normal") {
-                            if (statusInputDefault && elementEdit) {
-                                setInputValor(elementEdit ? dataInputs[key]["upper_case"] ? typeof elementEdit === "string" ? elementEdit.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit === "string" ? elementEdit.toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit ?? '' : elementEdit ?? "" : "")
-                            } else if (data.statusInput) {
-                                setInputValor("")
+                            let functionExecute = "";
+                            let execute = "";
+                            if (dataInputs[key]["function"]) {
+                                if (dataInputs[key]["function"]["value"]) {
+                                    functionExecute = dataInputs[key]["function"]["value"];
+                                }
+                                if (dataInputs[key]["function"]["execute"]) {
+                                    if (dataInputs[key]["function"]["execute"]["type"]) {
+                                        let type = dataInputs[key]["function"]["execute"]["type"];
+                                        if (dataInputs[key]["function"]["execute"]["value"]) {
+                                            let value = dataInputs[key]["function"]["execute"]["value"];
+                                            if (type == "own") {
+                                                if (value == "key") {
+                                                    execute = "key";
+                                                } else if (value == "all") {
+                                                    execute = "all"
+                                                }
+                                            }
+                                        }
 
+                                    } else {
+                                        execute = dataInputs[key]["function"]["execute"]["value"];
+                                    }
+                                }
                             }
+
+                            let value = ""
+                            let edit = true;
+                            if (data.edit != undefined) {
+                                edit = data.edit
+                            }
+
+                            if (typeof elementEdit == "object" && statusInputDefault) {
+                                if (typeof data.value == "object") {
+                                    value = elementEdit[key] ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function(match) {
+    return match.charAt(0).toUpperCase() + match.slice(1);
+}) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : ""
+
+                                    data.value[key] = elementEdit[key] ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function(match) {
+    return match.charAt(0).toUpperCase() + match.slice(1);
+}) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : ""
+                                } else {
+                                    value = elementEdit ? dataInputs[key]["upper_case"] ? typeof elementEdit === "string" ? elementEdit.toString().replace(/\b\w{4,}\b/g, function(match) {
+    return match.charAt(0).toUpperCase() + match.slice(1);
+}) : elementEdit ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit === "string" ? elementEdit.toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit ?? '' : elementEdit ?? "" : ""
+                                    data.value = elementEdit ? dataInputs[key]["upper_case"] ? typeof elementEdit === "string" ? elementEdit.toString().replace(/\b\w{4,}\b/g, function(match) {
+    return match.charAt(0).toUpperCase() + match.slice(1);
+}) : elementEdit ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit === "string" ? elementEdit.toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit ?? '' : elementEdit ?? "" : ""
+                                }
+                                setStatusInputDefault(false)
+                            }
+
                             return (
                                 <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
                                     <div className="head-input">
                                         <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : dataInputs[key]["referencia"] === false ? "" : ""}</label>
-                                        <input id={key} name={key} autoComplete="false" onChange={(e) => { inputChange(e, key, dataInputs[key]["type"]); setStatusInputDefault(false);/*  data.setStatusInput(false) */ }} value={statusInputDefault && elementEdit ? dataInputs[key]["upper_case"] ? typeof elementEdit === "string" ? elementEdit.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit === "string" ? elementEdit.toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit ?? '' : elementEdit ?? "" : inputValor} className="input-form" type="text" />
+                                        {edit == false ?
+                                            < button type="button" id={key} name={key} className="input-form" > {value != "" ? value : data.value[key]}</button> :
+                                            <input id={key} name={key} autoComplete="false" onChange={(e) => { 
+                                                console.log(functionExecute,"functionnnnnnnnn")
+                                                if (typeof functionExecute == "function") {
+                                                    functionExecute(execute == "key" ? dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] : execute == "all" ? dataInputs[key]["opciones"][indexSelect] : "", dataInputs[key]["index"] ? indexSelect : "");
+                                                }
+                                                inputChange(e, key, dataInputs[key]["type"]); setStatusInputDefault(false);/*  data.setStatusInput(false) */ }}
+
+                                                value={value != "" ? value : data.value[key]} className="input-form" type="text" />}
+
                                     </div>
 
                                     {data.errors ? <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4> : ""}
@@ -291,7 +348,9 @@ export const GlobalInputs = forwardRef((data, ref) => {
 
 
                                                             if (dataInputs[key]["upper_case"]) {
-                                                                value = value.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())
+                                                                value = value.toString().replace(/\b\w{4,}\b/g, function(match) {
+    return match.charAt(0).toUpperCase() + match.slice(1);
+})
                                                             } else if (dataInputs[key]["capital_letter"]) {
                                                                 value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
                                                             }
@@ -379,6 +438,6 @@ export const GlobalInputs = forwardRef((data, ref) => {
                     })
                 }
             </div >
-        </div>
+        </div >
     )
 })

@@ -238,207 +238,214 @@ export const Form = forwardRef((data, ref) => {
         }
 
     };
+    useEffect(() => {
+        changeSelectsValues({})
+    }, [data.modalForm, data.updateStatus])
     return (
         <div id="mainModalForm">
-
-            <div onClick={(e) => {
-                if (divContentFormRef.current != null) {
-                    console.log(e.target)
-                    if (e.target != divContentFormRef.current && !divContentFormRef.current.contains(e.target)) {
-                        data.changeModalForm(false); data.editarStatus(false)
+            {data.modalForm || data.updateStatus ?
+                <div onClick={(e) => {
+                    if (divContentFormRef.current != null) {
+                        console.log(e.target)
+                        if (e.target != divContentFormRef.current && !divContentFormRef.current.contains(e.target)) {
+                            data.changeModalForm(false); data.editarStatus(false)
+                        }
                     }
-                }
-            }} ref={modalRef} style={{ display: (!data.modalForm && !data.updateStatus) ? "none" : "" }} className="modal-form" id="modalForm">
+                }} ref={modalRef} className="modal-form" id="modalForm">
 
-                <div ref={divContentFormRef} id="divContentForm" className="div-content-form">
-                    <form onSubmit={chageData} action="" >
-                        <div className="header-form">
-                            <h3 className="tittle-form-register">{!data.updateStatus ? "Registrar " + data.tittle + "" : "Actualizar " + data.tittle + ""} </h3>
-                            <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="icon-quit-svg-form">
-                                <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
-                                    <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                    <g><g><path d="M150.7,128l90.6-90.7c6.3-6.3,6.3-16.4,0-22.7c-6.3-6.3-16.4-6.3-22.7,0L128,105.3L37.4,14.7c-6.3-6.3-16.4-6.3-22.7,0s-6.3,16.4,0,22.7l90.6,90.6l-90.6,90.6c-6.3,6.3-6.3,16.4,0,22.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7l90.7-90.6l90.6,90.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7c6.3-6.3,6.3-16.4,0-22.7L150.7,128z" /></g></g>
-                                </svg>
+                    <div ref={divContentFormRef} id="divContentForm" className="div-content-form">
+                        <form onSubmit={chageData} action="" >
+                            <div className="header-form">
+                                <h3 className="tittle-form-register">{!data.updateStatus ? "Registrar " + data.tittle + "" : "Actualizar " + data.tittle + ""} </h3>
+                                <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="icon-quit-svg-form">
+                                    <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
+                                        <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                        <g><g><path d="M150.7,128l90.6-90.7c6.3-6.3,6.3-16.4,0-22.7c-6.3-6.3-16.4-6.3-22.7,0L128,105.3L37.4,14.7c-6.3-6.3-16.4-6.3-22.7,0s-6.3,16.4,0,22.7l90.6,90.6l-90.6,90.6c-6.3,6.3-6.3,16.4,0,22.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7l90.7-90.6l90.6,90.7c3.1,3.1,7.2,4.7,11.3,4.7c4.1,0,8.2-1.6,11.3-4.7c6.3-6.3,6.3-16.4,0-22.7L150.7,128z" /></g></g>
+                                    </svg>
+                                </div>
                             </div>
-                        </div>
-                        <div className="div-body-form">
-                            <div className="div-img-form">
-                                <img className="img-form" src={data.imgForm ? data.imgForm : "/img/formularios/default-img-form.png"} alt="" />
-                            </div>
+                            <div className="div-body-form">
+                                <div className="div-img-form">
+                                    <img className="img-form" src={data.imgForm ? data.imgForm : "/img/formularios/default-img-form.png"} alt="" />
+                                </div>
 
-                            <div id="divForm" className="div-form">
-
-
-                                <div style={{ display: Object.keys(inputs).length == 1 ? "unset" : "" }} className="form-register">
-                                    {
-                                        inputs.map((key, index) => {
-                                            if (data.userInfo && dataInputs[key]["rol"]) {
-                                                if (data.userInfo != undefined) {
-                                                    if (!dataInputs[key]["rol"].includes(data.userInfo.rol)) {
-                                                        return
-                                                    }
-                                                }
-                                            }
-                                            if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "ubicacion" || dataInputs[key]["type"] === "normal") {
-                                                if (data.statusInputDefault && elementEdit) {
+                                <div id="divForm" className="div-form">
 
 
-                                                    inputValor[key] = elementEdit[key] ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : ""
-                                                } else if (data.statusInput) {
-                                                    inputValor[key] = ""
-
-                                                }
-                                                return (
-
-                                                    <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
-                                                        <div className="head-input">
-                                                            <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                                            <input id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault && elementEdit ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} className="input-form" type="text" />
-                                                        </div>
-                                                        <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
-                                                    </div>
-                                                );
-
-                                            } else if (dataInputs[key]["type"] === "select" && dataInputs[key]["visibility"] != false) {
-                                                let functionExecute = "";
-                                                let execute = "";
-                                                if (dataInputs[key]["function"]) {
-                                                    if (dataInputs[key]["function"]["value"]) {
-                                                        functionExecute = dataInputs[key]["function"]["value"];
-                                                    }
-                                                    if (dataInputs[key]["function"]["execute"]) {
-                                                        if (dataInputs[key]["function"]["execute"]["type"]) {
-                                                            let type = dataInputs[key]["function"]["execute"]["type"];
-                                                            if (dataInputs[key]["function"]["execute"]["value"]) {
-                                                                let value = dataInputs[key]["function"]["execute"]["value"];
-                                                                if (type == "own") {
-                                                                    if (value == "key") {
-                                                                        execute = "key";
-                                                                    }
-                                                                }
-                                                            }
-
+                                    <div style={{ display: Object.keys(inputs).length == 1 ? "unset" : "" }} className="form-register">
+                                        {
+                                            inputs.map((key, index) => {
+                                                if (data.userInfo && dataInputs[key]["rol"]) {
+                                                    if (data.userInfo != undefined) {
+                                                        if (!dataInputs[key]["rol"].includes(data.userInfo.rol)) {
+                                                            return
                                                         }
                                                     }
                                                 }
-                                                if (data.statusSelect) {
-                                                    selectsValues[key] = "";
-                                                    dataSelect[key] = ""
-                                                }
-
-                                                return (
-                                                    <div key={key} className="input-content-form-register">
-                                                        <div className="head-input">
-                                                            <label htmlFor={key} className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                                            <div key={key} className="filter-estado div-select">
-
-                                                                <div key={index} style={{ display: "none" }} className="opciones opciones-input-select">
-
-                                                                    <h4 onClick={(e) => {
-                                                                        const parentElement = e.target.closest(".div-select");
-                                                                        const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                        divOptions[0] ? divOptions[0].style.display = "none" : ""
-
-                                                                        data.setStatusSelect(false); data.setStatusSelectDefault(false); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = ""; changeSelectsValues(cloneSelectsValues); dataSelect[key] = "";
-                                                                        clearOptionsSelect(key);
-                                                                    }} className='select-option'>Seleccione una opción...</h4>
-
-                                                                    {
-                                                                        dataInputs[key]["opciones"] ? dataInputs[key]["opciones"].map((select, indexSelect) => {
-                                                                            let value = ""
-                                                                            if (dataInputs[key]["values"]) {
-                                                                                dataInputs[key]["values"].map((nameSelect, nameIndexSelect) => {
-                                                                                    value += nameIndexSelect == 0 ? dataInputs[key]["opciones"][indexSelect][nameSelect] : ", " + dataInputs[key]["opciones"][indexSelect][nameSelect];
-                                                                                })
-                                                                            }
+                                                if (dataInputs[key]["type"] === "text" || dataInputs[key]["type"] === "email" || dataInputs[key]["type"] === "number" || dataInputs[key]["type"] === "ubicacion" || dataInputs[key]["type"] === "normal") {
+                                                    if (data.statusInputDefault && elementEdit) {
 
 
+                                                        inputValor[key] = elementEdit[key] ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function(match) {
+    return match.charAt(0).toUpperCase() + match.slice(1);
+}) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : ""
+                                                    } else if (data.statusInput) {
+                                                        inputValor[key] = ""
 
-                                                                            if (dataInputs[key]["upper_case"]) {
-                                                                                value = value.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())
-                                                                            } else if (dataInputs[key]["capital_letter"]) {
-                                                                                value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
-                                                                            }
-                                                                            if (elementEdit) {
-                                                                                if (!data.modalForm && dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] == elementEdit[key] && data.statusSelectDefault) {
-                                                                                    selectsValues[key] = value;
-                                                                                    dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
-                                                                                }
-                                                                            }
+                                                    }
+                                                    return (
 
+                                                        <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
+                                                            <div className="head-input">
+                                                                <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
+                                                                <input id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault && elementEdit ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function(match) {
+    return match.charAt(0).toUpperCase() + match.slice(1);
+}) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} className="input-form" type="text" />
+                                                            </div>
+                                                            <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
+                                                        </div>
+                                                    );
 
-                                                                            return <h4 key={indexSelect} onClick={(e) => {
-                                                                                clearOptionsSelect(key);
-                                                                                if (typeof functionExecute == "function") {
-                                                                                    functionExecute(execute == "key" ? dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] : "");
-                                                                                }
-
-                                                                                const parentElement = e.target.parentElement.parentElement;
-                                                                                const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                                divOptions[0] ? divOptions[0].style.display = "none" : ""; let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); data.setStatusSelect(false); data.setStatusSelectDefault(false); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]];
-                                                                            }} className={`select-option select-option-${key} ${selectsValues[key] == value ? 'option-focus' : ''}`} value="">
-                                                                                {value}
-                                                                            </h4>
-                                                                        }) : ""
+                                                } else if (dataInputs[key]["type"] === "select" && dataInputs[key]["visibility"] != false) {
+                                                    let functionExecute = "";
+                                                    let execute = "";
+                                                    if (dataInputs[key]["function"]) {
+                                                        if (dataInputs[key]["function"]["value"]) {
+                                                            functionExecute = dataInputs[key]["function"]["value"];
+                                                        }
+                                                        if (dataInputs[key]["function"]["execute"]) {
+                                                            if (dataInputs[key]["function"]["execute"]["type"]) {
+                                                                let type = dataInputs[key]["function"]["execute"]["type"];
+                                                                if (dataInputs[key]["function"]["execute"]["value"]) {
+                                                                    let value = dataInputs[key]["function"]["execute"]["value"];
+                                                                    if (type == "own") {
+                                                                        if (value == "key") {
+                                                                            execute = "key";
+                                                                        }
                                                                     }
+                                                                }
 
-                                                                </div>
-                                                                <div className='input-select-estado input-select-search' name="" id="">
+                                                            }
+                                                        }
+                                                    }
+                                                    if (data.statusSelect) {
+                                                        selectsValues[key] = "";
+                                                        dataSelect[key] = ""
+                                                    }
 
-                                                                    <input id={key} type="text" className="input-select" onInput={(e) => {
-                                                                        const parentElement = e.target.closest(".div-select");
-                                                                        const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                        divOptions[0] ? divOptions[0].style.display == "block" ? divOptions[0].style.display = "none" : divOptions[0].style.display = "block" : ""
-                                                                        selectSearch(e.target.value, key, functionExecute, execute == "key" ? "key" : "");
-                                                                    }} onClick={(e) => {
-                                                                        const parentElement = e.target.closest(".div-select");
-                                                                        const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                        divOptions[0] ? divOptions[0].style.display = "block" : ""
-                                                                    }} placeholder={"Seleccione una opción..."} value={selectsValues[key] != "Seleccione una opción..." ? selectsValues[key] : ""} />
-                                                                    <div onClick={(e) => {
-                                                                        const parentElement = e.target.closest(".div-select");
-                                                                        const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                        divOptions[0] ? divOptions[0].style.display == "none" ? divOptions[0].style.display = "block" : divOptions[0].style.display = "none" : ""
-                                                                    }} className="icon-chevron-estado">
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
-                                                                            <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                                                            <g><g><path d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
-                                                                        </svg>
+                                                    return (
+                                                        <div key={key} className="input-content-form-register">
+                                                            <div className="head-input">
+                                                                <label htmlFor={key} className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
+                                                                <div key={key} className="filter-estado div-select">
+
+                                                                    <div key={index} style={{ display: "none" }} className="opciones opciones-input-select">
+
+                                                                        <h4 onClick={(e) => {
+                                                                            const parentElement = e.target.closest(".div-select");
+                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                            divOptions[0] ? divOptions[0].style.display = "none" : ""
+
+                                                                            data.setStatusSelect(false); data.setStatusSelectDefault(false); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = ""; changeSelectsValues(cloneSelectsValues); dataSelect[key] = "";
+                                                                            clearOptionsSelect(key);
+                                                                        }} className='select-option'>Seleccione una opción...</h4>
+
+                                                                        {
+                                                                            dataInputs[key]["opciones"] ? dataInputs[key]["opciones"].map((select, indexSelect) => {
+                                                                                let value = ""
+                                                                                if (dataInputs[key]["values"]) {
+                                                                                    dataInputs[key]["values"].map((nameSelect, nameIndexSelect) => {
+                                                                                        value += nameIndexSelect == 0 ? dataInputs[key]["opciones"][indexSelect][nameSelect] : ", " + dataInputs[key]["opciones"][indexSelect][nameSelect];
+                                                                                    })
+                                                                                }
+
+
+
+                                                                                if (dataInputs[key]["upper_case"]) {
+                                                                                    value = value.toString().replace(/\b\w{4,}\b/g, function(match) {
+    return match.charAt(0).toUpperCase() + match.slice(1);
+})
+                                                                                } else if (dataInputs[key]["capital_letter"]) {
+                                                                                    value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
+                                                                                }
+                                                                                if (elementEdit) {
+                                                                                    if (!data.modalForm && dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] == elementEdit[key] && data.statusSelectDefault) {
+                                                                                        selectsValues[key] = value;
+                                                                                        dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
+                                                                                    }
+                                                                                }
+                                                                                return <h4 key={indexSelect} onClick={(e) => {
+                                                                                    clearOptionsSelect(key);
+                                                                                    if (typeof functionExecute == "function") {
+                                                                                        functionExecute(execute == "key" ? dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] : "");
+                                                                                    }
+
+                                                                                    const parentElement = e.target.parentElement.parentElement;
+                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                                    divOptions[0] ? divOptions[0].style.display = "none" : ""; let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); data.setStatusSelect(false); data.setStatusSelectDefault(false); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]];
+                                                                                }} className={`select-option select-option-${key} ${dataSelect[key] == dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] ? 'option-focus' : ''}`} value="">
+                                                                                    {value}
+                                                                                </h4>
+                                                                            }) : ""
+                                                                        }
+
                                                                     </div>
+                                                                    <div className='input-select-estado input-select-search' name="" id="">
 
+                                                                        <input id={key} type="text" className="input-select" onInput={(e) => {
+                                                                            const parentElement = e.target.closest(".div-select");
+                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                            divOptions[0] ? divOptions[0].style.display == "block" ? divOptions[0].style.display = "none" : divOptions[0].style.display = "block" : ""
+                                                                            selectSearch(e.target.value, key, functionExecute, execute == "key" ? "key" : "");
+                                                                        }} onClick={(e) => {
+                                                                            const parentElement = e.target.closest(".div-select");
+                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                            divOptions[0] ? divOptions[0].style.display = "block" : ""
+                                                                        }} placeholder={"Seleccione una opción..."} value={selectsValues[key] != "Seleccione una opción..." ? selectsValues[key] : ""} />
+                                                                        <div onClick={(e) => {
+                                                                            const parentElement = e.target.closest(".div-select");
+                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                            divOptions[0] ? divOptions[0].style.display == "none" ? divOptions[0].style.display = "block" : divOptions[0].style.display = "none" : ""
+                                                                        }} className="icon-chevron-estado">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
+                                                                                <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                                                                <g><g><path d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
+                                                                            </svg>
+                                                                        </div>
+
+                                                                    </div>
                                                                 </div>
                                                             </div>
+                                                            <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
+
                                                         </div>
-                                                        <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
+                                                    );
+                                                } else {
 
-                                                    </div>
-                                                );
-                                            } else {
+                                                    if (index == inputs.length) {
+                                                        return "No hay nada para mostrar " + key;
+                                                    }
 
-                                                if (index == inputs.length) {
-                                                    return "No hay nada para mostrar " + key;
                                                 }
 
-                                            }
-
-                                        })
+                                            })
 
 
-                                    }
+                                        }
+                                    </div>
+
+
                                 </div>
 
-
                             </div>
+                            <div className="div-div-input-submit-form">
+                                <button onClick={() => { clearElementsClick() }} type="submit" className="button-submit-form"> {!data.updateStatus ? "Registrar" : "Actualizar"}</button>
+                            </div>
+                        </form>
+                    </div>
 
-                        </div>
-                        <div className="div-div-input-submit-form">
-                            <button onClick={() => { clearElementsClick() }} type="submit" className="button-submit-form"> {!data.updateStatus ? "Registrar" : "Actualizar"}</button>
-                        </div>
-                    </form>
                 </div>
-
-            </div>
-
+                : ""}
         </div>
     )
 })

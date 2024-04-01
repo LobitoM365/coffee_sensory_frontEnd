@@ -4,6 +4,7 @@ import Api, { host } from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 import { FormResultados } from '../componentes/FormResultados.jsx'
 import { GlobalModal } from '../componentes/globalModal.jsx'
+import "../../public/css/formatos.css"
 
 export const Formatos = (userInfo) => {
     if (userInfo.socket) {
@@ -709,6 +710,7 @@ export const Formatos = (userInfo) => {
 
     async function getAnalisis() {
         try {
+            console.log(dataFilterTable, "filteeeeeeeeer")
             const response = await Api.post("/formatos/listar", dataFilterTable);
             console.log(response, "annnnnnnnnnnnnnnnnnnn")
             if (response.data.status == true) {
@@ -1347,13 +1349,11 @@ export const Formatos = (userInfo) => {
         }
     }
     return (
-        <>
-            <link rel="stylesheet" href="../../public/css/analisis.css" />
-
+        <div id='mainFormatos'>
             <Tablas userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Formatos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <FormResultados finalizarFormato={finalizarFormato} setModalFormNormal={setModalFormNormal} modalFormNormal={modalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
-        </>
+        </div>
     )
 }

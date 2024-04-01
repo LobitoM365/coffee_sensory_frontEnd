@@ -225,6 +225,7 @@ export const Lotes = () => {
     async function setLote(data) {
         try {
             const axios = await Api.post("lotes/registrar/", data);
+            console.log(axios)
             if (axios.data.status == true) {
                 getLotes();
                 setErrors({})

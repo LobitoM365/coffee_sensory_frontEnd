@@ -238,7 +238,7 @@ export const Tablas = (array) => {
             } */
 
             resizeTable()
-            console.log("ahhhhhhhhhhhhhhhh")
+
 
             function resizeTable() {
                 if (tableRef.current) {
@@ -386,7 +386,7 @@ export const Tablas = (array) => {
 
 
                         const keysQuitAdd = Object.keys(quitElements)
-                        console.log("1uitttttttttttttttttttt", quitElements)
+
                         if (keysQuitAdd.length > 0) {
                             const addElement = quitElements[keysQuitAdd[0]][quitElements[keysQuitAdd[0]].length - 1];
 
@@ -1291,8 +1291,6 @@ export const Tablas = (array) => {
                                                                             if (print[keys]["conditions"]["value"]["type"]) {
                                                                                 if (print[keys]["conditions"]["value"]["type"] == "table") {
                                                                                     if (print[keys]["conditions"]["value"]["reference"]) {
-                                                                                        console.log("------------------------------", data[valuesD][print[keys]["conditions"]["value"]["reference"]], value)
-
                                                                                         if (data[valuesD][print[keys]["conditions"]["value"]["reference"]] != null && data[valuesD][print[keys]["conditions"]["value"]["reference"]] != undefined) {
 
                                                                                             value = data[valuesD][print[keys]["conditions"]["value"]["reference"]]

@@ -319,8 +319,10 @@ export const FormResultados = forwardRef((data, ref) => {
                 let content = iframe.contentDocument
 
                 let puntajeTotal = content.getElementById("puntajeTotal")
-                let intensiadDefectos = content.getElementById("intensidadDefectos")
+                let defectos = content.getElementById("defectos")
                 let resultadoTazasXIntensidad = content.getElementById("resultadoTazasXIntensidad")
+                let defectosRechazo = content.getElementById("defectosRechazo");
+                let defectosLigero = content.getElementById("defectosLigero");
                 let puntajeFinal = content.getElementById("puntajeFinal")
                 let notas = content.getElementById("div-notas")
                 let textNotas = content.getElementById("notas")
@@ -329,12 +331,23 @@ export const FormResultados = forwardRef((data, ref) => {
                 }
 
                 let valuePuntajeTotal = ((data[0].fragancia_aroma ? data[0].fragancia_aroma : 0) + (data[0].sabor ? data[0].sabor : 0) + (data[0].sabor_residual ? data[0].sabor_residual : 0) + (data[0].acidez ? data[0].acidez : 0) + (data[0].cuerpo ? data[0].cuerpo : 0) + (data[0].uniformidad ? data[0].uniformidad : 0) + (data[0].taza_limpia ? data[0].taza_limpia : 0) + (data[0].balance ? data[0].balance : 0) + (data[0].dulzor ? data[0].dulzor : 0) + (data[0].puntaje_catador ? data[0].puntaje_catador : 0))
-                let valueTazasXIntensidad = ((data[0].tazas ? data[0].tazas : 0) * (data[0].intensidad ? data[0].intensidad : 0)).toFixed(1);
+                let valueTazasXIntensidad = ((data[0].tazas ? data[0].tazas : 0) * (data[0].defectos ? data[0].defectos : 0));
                 if (puntajeTotal) {
                     puntajeTotal.innerHTML = valuePuntajeTotal;
                 }
-                if (intensiadDefectos) {
-                    intensiadDefectos.innerHTML = (data[0].intensidad ? data[0].intensidad : 0) < 10 ? (data[0].intensidad ? data[0].intensidad : 0).toFixed(1) : (data[0].intensidad ? data[0].intensidad : 0);
+                if (defectos) {
+                    /* intensiadDefectos.innerHTML = (data[0].intensidad ? data[0].intensidad : 0) < 10 ? (data[0].intensidad ? data[0].intensidad : 0).toFixed(1) : (data[0].intensidad ? data[0].intensidad : 0); */
+                    defectos.innerHTML = (data[0].defectos ? data[0].defectos : 0)
+                }
+
+                if (data[0].defectos == 2) {
+                    if (defectosLigero) {
+                        defectosLigero.classList.add("defectos-focus")
+                    }
+                } else if (data[0].defectos == 4) {
+                    if (defectosRechazo) {
+                        defectosRechazo.classList.add("defectos-focus")
+                    }
                 }
                 if (resultadoTazasXIntensidad) {
                     resultadoTazasXIntensidad.innerHTML = valueTazasXIntensidad;
@@ -374,7 +387,17 @@ export const FormResultados = forwardRef((data, ref) => {
                 for (let i = 0; i < keysIntensidad.length; i++) {
                     if (keysResult.includes(keysIntensidad[i])) {
                         let divElement = content.getElementById("div-" + keysIntensidad[i])
+                        let divValue = content.getElementById("value_" + keysIntensidad[i])
                         let divElementInput = content.getElementById(keysIntensidad[i])
+                        if (divValue) {
+                            const value = data[0][keysIntensidad[i]]
+                            if (value - Math.floor(value) > 0) {
+                                divValue.innerHTML = value.toFixed(2).toString().replace("0", "")
+                            } else {
+                                divValue.innerHTML = value
+                            }
+
+                        }
                         if (divElementInput) {
                             divElementInput.value = data[0][keysIntensidad[i]]
                         }
@@ -444,6 +467,7 @@ export const FormResultados = forwardRef((data, ref) => {
     }, [idFormato, data.modalFormResults])
     const [keyModalResultado, setkeyModalResultado] = useState(0)
     useEffect(() => {
+
         if (data.modalFormResults) {
             if (data.dataModalResultadoAnalisis.length == 0) {
                 setkeyModalResultado(keyModalResultado + 1)
@@ -469,9 +493,21 @@ export const FormResultados = forwardRef((data, ref) => {
                 }
             }
         }
+        console.log(data.modalFormResults, "resultttttttttttttts")
+
     }, [data.dataModalResultadoAnalisis, data.modalFormResults]);
 
-
+    useEffect(() => {
+        if (data.modalFormNormal && modeFormato == 2 && tipoRegistro == 2) {
+            const iframe = document.getElementById("iframeFormUpdate");
+            if (iframe) {
+                iframe.addEventListener("load", function () {
+                    console.log(iframe, "iframeeeeeeeeee")
+                    setElementsTemplateFormatoSca("iframeFormUpdate", data.dataModalResultadoAnalisis);
+                });
+            }
+        }
+    }, [data.modalFormNormal])
     useEffect(() => {
         if (data.modalFormResults) {
             const iframe = document.getElementById("iframeFormUpdate");
@@ -482,15 +518,94 @@ export const FormResultados = forwardRef((data, ref) => {
             }
         }
     }, [tipoRegistro, data.modalFormResults])
+    useEffect(() => {
+        let iframe;
+        if (document.getElementById("iframeFormRegister")) {
+            iframe = document.getElementById("iframeFormRegister")
+        } else if (document.getElementById("iframeFormUpdate")) {
+            iframe = document.getElementById("iframeFormUpdate")
+        }
+        if (iframe) {
+            const content = iframe.contentDocument
+
+            const errorsAreaIframe = content.querySelectorAll(".formato-error-area")
+            const errorsInputIframe = content.querySelectorAll(".formato-error-input")
+            const errorsRangeIframe = content.querySelectorAll(".formato-error-area-range")
+            if (errorsAreaIframe.length > 0) {
+                for (let x = 0; x < errorsAreaIframe.length; x++) {
+                    if (errorsAreaIframe[x]) {
+                        errorsAreaIframe[x].classList.remove("formato-error-area")
+                    }
+                }
+            }
+            if (errorsInputIframe.length > 0) {
+                for (let x = 0; x < errorsInputIframe.length; x++) {
+                    if (errorsInputIframe[x]) {
+                        errorsInputIframe[x].classList.remove("formato-error-input")
+                    }
+                }
+            }
+            if (errorsRangeIframe.length > 0) {
+                for (let x = 0; x < errorsRangeIframe.length; x++) {
+                    if (errorsRangeIframe[x]) {
+                        errorsRangeIframe[x].classList.remove("formato-error-area-range")
+                    }
+                }
+            }
+            if (data.errorsFormato) {
+                const keys = Object.keys(data.errorsFormato)
+                if (keys.length > 0) {
+                    const keysErrorsTypeNormalDiv = ["defectos"]
+                    const keysErrorsTypeParent = ["tazas"]
+                    const keysErrorsTypeArea = ["fragancia_aroma", "sabor", "sabor_residual", "acidez", "cuerpo", "balance", "puntaje_catador", "uniformidad", "taza_limpia", "dulzor", "tueste"]
+                    const keysErrorsTypeRange = ["intensidad", "seco", "espuma", "nivel_cuerpo"]
+                    for (let x = 0; x < keys.length; x++) {
+                        const element = content.getElementById(keys[x])
+                        if (element) {
+                            if (keysErrorsTypeParent.includes(keys[x])) {
+                                if (element.parentNode) {
+                                    element.parentNode.classList.add("formato-error-input")
+                                }
+                            } else if (keysErrorsTypeNormalDiv.includes(keys[x])) {
+                                element.classList.add("formato-error-input")
+                            } else if (keysErrorsTypeArea.includes(keys[x])) {
+                                const parentClosest = element.closest(".area-input-range")
+                                if (parentClosest) {
+                                    parentClosest.classList.add("formato-error-area")
+                                }
+                            } else if (keysErrorsTypeRange.includes(keys[x])) {
+                                const parentClosest = element.closest(".area-input-range")
+                                if (parentClosest) {
+                                    parentClosest.classList.add("formato-error-area")
+                                    parentClosest.classList.add("formato-error-area-range")
+                                }
+                            }
+
+                            console.log(data.errorsFormato, "formatoooooooooooooooooooooooo-e")
+                        }
+                    }
+
+                }
+            }
+        }
+
+    }, [data.errorsFormato])
     function registerFormatoSca(iframe, tipo, id) {
         let iframeElement = document.getElementById(iframe);
         if (iframeElement) {
             let dataFormatoSca = {};
             let keysRange = ["fragancia_aroma", "sabor", "sabor_residual", "acidez", "cuerpo", "balance", "puntaje_catador", "seco", "espuma", "intensidad", "nivel_cuerpo", "tueste", "tazas", "notas"]
             let keysCuadro = ["uniformidad", "taza_limpia", "dulzor"]
+            let keysHtml = ["defectos"]
             let content = iframeElement.contentDocument
 
             if (content) {
+                for (let r = 0; r < keysHtml.length; r++) {
+                    let divElement = content.getElementById(keysHtml[r])
+                    if (divElement) {
+                        dataFormatoSca[keysHtml[r]] = divElement.innerHTML
+                    }
+                }
                 for (let r = 0; r < keysRange.length; r++) {
                     let divElement = content.getElementById(keysRange[r])
                     if (divElement) {
@@ -509,7 +624,7 @@ export const FormResultados = forwardRef((data, ref) => {
                     }
                 }
             }
-
+            console.log(dataFormatoSca, "dataaaaaaaaaaaaa")
             if (data.setAnalisisFormato) {
                 data.setAnalisisFormato(dataFormatoSca, idFormato, tipo, modeFormato, id)
             }
@@ -945,117 +1060,125 @@ export const FormResultados = forwardRef((data, ref) => {
                                         {data.dataModalResultadoAnalisis.length > 0 ?
                                             (
                                                 <div className="div-content-info-analisis-formato">
-                                                    <h3>Resultados para el Formato {data.dataModalResultado[0].tipos_analisis_id ? data.dataModalResultado[0].tipos_analisis_id == 1 ? "Físico" : data.dataModalResultado[0].tipos_analisis_id == 2 ? "SCA" : "No disponible" : "No registra"}</h3>
-                                                    {data.tipoAnalisis == 1 ?
-                                                        <div className="div-table-formato-fisico-template">
-                                                            <table cellSpacing={0} className="table-formato-fisico-template">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th colSpan={900000}>Análisis Físico</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>Peso C.P.S (g)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["peso_cps"] ? data.dataModalResultadoAnalisis[0]["peso_cps"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td>Humedad (%)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["humedad"] ? data.dataModalResultadoAnalisis[0]["humedad"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Peso Cisco (g)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["peso_cisco"] ? data.dataModalResultadoAnalisis[0]["peso_cisco"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td> Merma por trilla (%) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["merma_trilla"] ? data.dataModalResultadoAnalisis[0]["merma_trilla"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Peso total de la almendra (g) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["peso_total_almendra"] ? data.dataModalResultadoAnalisis[0]["peso_total_almendra"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td>Porcentaje de almendra sana (%)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["porcentaje_almendra_sana"] ? data.dataModalResultadoAnalisis[0]["porcentaje_almendra_sana"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Peso defectos totales (g)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["peso_defectos_totales"] ? data.dataModalResultadoAnalisis[0]["peso_defectos_totales"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td>Factor de rendimiento (Kg C.P.S) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["factor_rendimiento"] ? data.dataModalResultadoAnalisis[0]["factor_rendimiento"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Peso de almendra sana (g) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["peso_almendra_sana"] ? data.dataModalResultadoAnalisis[0]["peso_almendra_sana"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td>Porcentaje de defectos totales (%) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["porcentaje_defectos_totales"] ? data.dataModalResultadoAnalisis[0]["porcentaje_defectos_totales"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Negro total o parcial (g)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["negro_total"] ? data.dataModalResultadoAnalisis[0]["negro_total"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td>Cardenillo (g)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["cardenillo"] ? data.dataModalResultadoAnalisis[0]["cardenillo"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Vinagre (g)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["vinagre"] ? data.dataModalResultadoAnalisis[0]["vinagre"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td>Cristalizado (g)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["cristalizado"] ? data.dataModalResultadoAnalisis[0]["cristalizado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Veteado (g)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["veteado"] ? data.dataModalResultadoAnalisis[0]["veteado"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td>Ámbar o mantequillo (g) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["ambar"] ? data.dataModalResultadoAnalisis[0]["ambar"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Sobresecado (g) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["sobresecado"] ? data.dataModalResultadoAnalisis[0]["sobresecado"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td>Mordido o cortado (g)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["mordido"] ? data.dataModalResultadoAnalisis[0]["mordido"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Picado por insectos (g) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["picado_insectos"] ? data.dataModalResultadoAnalisis[0]["picado_insectos"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td>Averanado o arrugado (g) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["averanado"] ? data.dataModalResultadoAnalisis[0]["averanado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Inmaduro o paloteado(g) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["inmaduro"] ? data.dataModalResultadoAnalisis[0]["inmaduro"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td>Aplastado (g) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["aplastado"] ? data.dataModalResultadoAnalisis[0]["aplastado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Flojo (g) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["flojo"] ? data.dataModalResultadoAnalisis[0]["flojo"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td>Decolorado o reposado (g)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["decolorado"] ? data.dataModalResultadoAnalisis[0]["decolorado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Malla 18 (g) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["malla18"] ? data.dataModalResultadoAnalisis[0]["malla18"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td>Malla 15 (g)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["malla15"] ? data.dataModalResultadoAnalisis[0]["malla15"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Malla 17 (g) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["malla17"] ? data.dataModalResultadoAnalisis[0]["malla17"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td>Malla 14 (g)</td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["malla14"] ? data.dataModalResultadoAnalisis[0]["malla14"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>Malla 16 (g) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["malla16"] ? data.dataModalResultadoAnalisis[0]["malla16"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                        <td> Mallas menores (g) </td>
-                                                                        <td>{data.dataModalResultadoAnalisis[0]["mallas_menores"] ? data.dataModalResultadoAnalisis[0]["mallas_menores"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                        : <iframe id="iframeFormatoSca" className="iframe-formato-sca" src="/src/formatoSca/formatoScaTemplate.html" frameBorder="0"></iframe>}
+                                                    <div>
+                                                        <h3>Resultados para el Formato {data.dataModalResultado[0].tipos_analisis_id ? data.dataModalResultado[0].tipos_analisis_id == 1 ? "Físico" : data.dataModalResultado[0].tipos_analisis_id == 2 ? "SCA" : "No disponible" : "No registra"}</h3>
+                                                        {data.tipoAnalisis == 1 ?
+                                                            <div className="div-table-formato-fisico-template">
+                                                                <table cellSpacing={0} className="table-formato-fisico-template">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th colSpan={900000}>Análisis Físico</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Peso C.P.S (g)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_cps"] ? data.dataModalResultadoAnalisis[0]["peso_cps"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>Humedad (%)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["humedad"] ? data.dataModalResultadoAnalisis[0]["humedad"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Peso Cisco (g)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_cisco"] ? data.dataModalResultadoAnalisis[0]["peso_cisco"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td> Merma por trilla (%) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["merma_trilla"] ? data.dataModalResultadoAnalisis[0]["merma_trilla"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Peso total de la almendra (g) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_total_almendra"] ? data.dataModalResultadoAnalisis[0]["peso_total_almendra"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>Porcentaje de almendra sana (%)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["porcentaje_almendra_sana"] ? data.dataModalResultadoAnalisis[0]["porcentaje_almendra_sana"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Peso defectos totales (g)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_defectos_totales"] ? data.dataModalResultadoAnalisis[0]["peso_defectos_totales"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>Factor de rendimiento (Kg C.P.S) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["factor_rendimiento"] ? data.dataModalResultadoAnalisis[0]["factor_rendimiento"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Peso de almendra sana (g) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_almendra_sana"] ? data.dataModalResultadoAnalisis[0]["peso_almendra_sana"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>Porcentaje de defectos totales (%) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["porcentaje_defectos_totales"] ? data.dataModalResultadoAnalisis[0]["porcentaje_defectos_totales"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Negro total o parcial (g)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["negro_total"] ? data.dataModalResultadoAnalisis[0]["negro_total"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>Cardenillo (g)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["cardenillo"] ? data.dataModalResultadoAnalisis[0]["cardenillo"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Vinagre (g)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["vinagre"] ? data.dataModalResultadoAnalisis[0]["vinagre"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>Cristalizado (g)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["cristalizado"] ? data.dataModalResultadoAnalisis[0]["cristalizado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Veteado (g)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["veteado"] ? data.dataModalResultadoAnalisis[0]["veteado"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>Ámbar o mantequillo (g) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["ambar"] ? data.dataModalResultadoAnalisis[0]["ambar"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Sobresecado (g) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["sobresecado"] ? data.dataModalResultadoAnalisis[0]["sobresecado"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>Mordido o cortado (g)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["mordido"] ? data.dataModalResultadoAnalisis[0]["mordido"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Picado por insectos (g) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["picado_insectos"] ? data.dataModalResultadoAnalisis[0]["picado_insectos"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>Averanado o arrugado (g) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["averanado"] ? data.dataModalResultadoAnalisis[0]["averanado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Inmaduro o paloteado(g) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["inmaduro"] ? data.dataModalResultadoAnalisis[0]["inmaduro"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>Aplastado (g) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["aplastado"] ? data.dataModalResultadoAnalisis[0]["aplastado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Flojo (g) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["flojo"] ? data.dataModalResultadoAnalisis[0]["flojo"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>Decolorado o reposado (g)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["decolorado"] ? data.dataModalResultadoAnalisis[0]["decolorado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Malla 18 (g) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla18"] ? data.dataModalResultadoAnalisis[0]["malla18"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>Malla 15 (g)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla15"] ? data.dataModalResultadoAnalisis[0]["malla15"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Malla 17 (g) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla17"] ? data.dataModalResultadoAnalisis[0]["malla17"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>Malla 14 (g)</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla14"] ? data.dataModalResultadoAnalisis[0]["malla14"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Malla 16 (g) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla16"] ? data.dataModalResultadoAnalisis[0]["malla16"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td> Mallas menores (g) </td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["mallas_menores"] ? data.dataModalResultadoAnalisis[0]["mallas_menores"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                                <div>
+                                                                    <h4 className="h4-notas-formato-fisico">Notas</h4>
+                                                                    <p>
+                                                                        {data.dataModalResultadoAnalisis[0]["notas"] ? data.dataModalResultadoAnalisis[0]["notas"] : ""}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            : <iframe id="iframeFormatoSca" className="iframe-formato-sca" src="/src/formatoSca/formatoScaTemplate.html" frameBorder="0"></iframe>}
+                                                    </div>
 
 
 
                                                     {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].estado != 4 && data.dataModalResultado[0].permission_formato == "true" ?
-                                                        <div>
+                                                        <div className="footer-content-info-analisis-formato">
                                                             <button onClick={() => { setStatusInputDefault(true); setIdFormato(data.dataModalResultado[0].id); setModeFormato(data.dataModalResultado[0].tipos_analisis_id); setTipoRegistro(2); data.setModalFormNormal(true) }} type="button" className="button-submit-form">Actualizar</button>
-                                                            <button onClick={() => { data.finalizarFormato ? data.finalizarFormato(data.dataModalResultado[0].id) : "" }} type="button" className="button-submit-form">Finalizar</button>
+                                                            <button onClick={() => { data.finalizarFormato ? data.finalizarFormato(data.dataModalResultado[0].id) : "" }} type="button" className="button-submit-form button-finalizar-formato">Finalizar</button>
                                                         </div>
 
                                                         : "" : ""}
@@ -1198,14 +1321,40 @@ export const FormResultados = forwardRef((data, ref) => {
                                     <div>
 
                                         {tipoRegistro == 1 ? (
-                                            <div>
+                                            <div className="div-content-formato-sca">
                                                 <iframe id="iframeFormRegister" className="iframe-formato-sca" src="/src/formatoSca/formatoSca.html" frameBorder="0"></iframe>
-                                                <button onClick={() => { registerFormatoSca("iframeFormRegister", 1, data.dataModalAnalisis[0].id) }} type="button" className="button-submit-form">Registrar</button>
+
+                                                {data.errorsFormato ? Object.keys(data.errorsFormato).length > 0 ?
+
+                                                    <div className="div-text-errror-formato">
+                                                        <h4>Soluciona los siguietes problemas para poder continuar:</h4>
+                                                        <div className="div-content-errros-formato">
+                                                            {
+                                                                Object.keys(data.errorsFormato).map((value, index) => {
+                                                                    return <div key={index} >
+                                                                        <h3>{index + 1})</h3>
+                                                                        <h4>{data.errorsFormato[value]}</h4>
+                                                                    </div>
+                                                                })
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    : ""
+                                                    :
+                                                    ""}
+                                                <div className="div-footer-content-formato">
+                                                    <button onClick={() => { registerFormatoSca("iframeFormRegister", 1, data.dataModalAnalisis[0].id) }} type="button" className="button-submit-form">Registrar</button>
+                                                </div>
                                             </div>
                                         ) : (
-                                            <div>
+                                            <div className="div-content-formato-sca">
                                                 <iframe id="iframeFormUpdate" className="iframe-formato-sca" src="/src/formatoSca/formatoSca.html" frameBorder="0"></iframe>
-                                                <button onClick={() => { registerFormatoSca("iframeFormUpdate", 2, data.dataModalAnalisis[0].id) }} type="button" className="button-submit-form">Guardar</button>
+                                                {data.errorsFormato ? ""
+                                                    :
+                                                    ""}
+                                                <div className="div-footer-content-formato">
+                                                    <button onClick={() => { registerFormatoSca("iframeFormUpdate", 2, data.dataModalAnalisis[0].id) }} type="button" className="button-submit-form">Guardar</button>
+                                                </div>
                                             </div>
                                         )}
                                     </div>
@@ -1358,8 +1507,24 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </div>
                                                                     </div>
                                                                     {getValueFormula()}
-                                                                </div>
+                                                                    <div>
+                                                                        <h3>Observaciones</h3>
 
+                                                                        <GlobalInputs
+                                                                            input={setValueGlobalInput}
+                                                                            value={valueGlobalInput}
+                                                                            errors={data.errorsFormato}
+                                                                            elementEdit={data.dataModalResultadoAnalisis[0]}
+                                                                            data={{
+                                                                                ["notas"]: {
+                                                                                    type: "area",
+                                                                                    referencia: "Notas",
+                                                                                    upper_case: true,
+                                                                                },
+                                                                            }}
+                                                                        />
+                                                                    </div>
+                                                                </div>
                                                             );
                                                         })() // Invoca la función inmediatamente después de definirla
                                                     ) : (
@@ -1370,15 +1535,14 @@ export const FormResultados = forwardRef((data, ref) => {
                                                 )}
 
 
-
                                             </div>
                                             {tipoRegistro == 1 ? (
-                                                <div>
+                                                <div className="div-footer-content-formato">
                                                     <button onClick={() => { }} type="submit" className="button-submit-form">Registrar</button>
 
                                                 </div>
                                             ) : (
-                                                <div>
+                                                <div className="div-footer-content-formato">
                                                     <button onClick={() => { }} type="submit" className="button-submit-form">Guardar</button>
                                                 </div>
                                             )}

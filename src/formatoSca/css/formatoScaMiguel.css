@@ -602,6 +602,7 @@ body {
     font-size: 1.2vw;
     background-color: transparent;
     cursor: pointer;
+    text-align: center;
 }
 
 .input-tazas-defectos:focus,
@@ -654,12 +655,59 @@ body {
     display: none;
     overflow: hidden;
 }
-.value-range-item{
+
+.value-range-item {
     position: absolute;
     background-color: rgba(200, 224, 245, 0.589);
     border-right: 3px solid orange;
 }
 
-.content-iframe-vacio{
+.content-iframe-vacio {
     cursor: not-allowed;
+}
+
+.h6-defectos-valor {
+    font-size: 0.8vw;
+    font-weight: 600;
+}
+
+.div-items-defectos-valor {
+    display: flex;
+    gap: 0.5vw;
+    align-items: end;
+    width: max-content;
+}
+
+
+#defectosRechazo,
+#defectosLigero {
+    font-size: 1.2vw;
+    border-bottom: 0.1vw solid orange;
+    padding: 0.1vw 0.5vw;
+    border-radius: 0.1vw;
+}
+
+.hover-defectos-valor {
+    cursor: pointer;
+}
+
+.hover-defectos-valor:hover {
+    background-color: #0000001f;
+}
+
+.h6-defectos-intensidad {
+    border: 0.1vw solid orange;
+}
+
+.formato-error-area {
+    background-color: rgba(255, 0, 0, 0.247)
+}
+.formato-error-area-range{
+    border-top: 0.2vw solid red;
+}
+.formato-error-input {
+    border: 0.2vw solid red;
+}
+.defectos-focus{
+    background-color: orange !important;
 }

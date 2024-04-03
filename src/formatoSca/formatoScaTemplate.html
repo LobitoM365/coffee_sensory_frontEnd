@@ -24,8 +24,8 @@
                     <div class="linea"></div>
                     <div class="linea"></div>
                     <div class="linea"></div>
-         
-                    <div class="value value-range-intensidad">0</div>
+
+                    <div id="value_tueste" class="value value-range-intensidad">0</div>
                     <div class="range-color-inicial">
                     </div>
                     <div class="div-range-color">
@@ -38,11 +38,11 @@
                     </div>
                 </div>
             </div>
-            <div id="div-fragancia_aroma"  class="fragancia-aroma">
+            <div id="div-fragancia_aroma" class="fragancia-aroma">
                 <div class="area-puntaje">
                     <h4 class="h4-puntaje"> Puntaje:</h4>
                     <h5 class="tittle"> Fragancia/Aroma</h5>
-                    <div  class="puntaje-range puntaje-item">0</div>
+                    <div class="puntaje-range puntaje-item">0</div>
 
                     <div class="div-range">
                         <div class="guia-range-item">
@@ -77,7 +77,7 @@
 
                             </div>
                         </div>
-   
+
                     </div>
                 </div>
                 <div class="area-intensidad">
@@ -91,7 +91,7 @@
                         <div class="linea"></div>
                         <div class="linea"></div>
 
-                        <div class="value value-range-intensidad">0</div>
+                        <div id="value_seco" class="value value-range-intensidad">0</div>
                         <div class="range-color-inicial">
                         </div>
                         <div class="div-range-color">
@@ -121,8 +121,8 @@
                         <div class="linea"></div>
                         <div class="linea"></div>
                         <div class="linea"></div>
- 
-                        <div class="value value-range-intensidad">0</div>
+
+                        <div id="value_espuma" class="value value-range-intensidad">0</div>
                         <div class="range-color-inicial">
                         </div>
                         <div class="div-range-color">
@@ -266,7 +266,7 @@
                         <div class="linea"></div>
                         <div class="linea"></div>
                         <div class="linea"></div>
-                        <div class="value value-range-intensidad">0</div>
+                        <div id="value_intensidad" class="value value-range-intensidad">0</div>
                         <div class="range-color-inicial">
                         </div>
                         <div class="div-range-color">
@@ -333,7 +333,7 @@
                         <div class="linea"></div>
                         <div class="linea"></div>
                         <div class="linea"></div>
-                        <div class="value value-range-intensidad">0</div>
+                        <div id="value_nivel_cuerpo" class="value value-range-intensidad">0</div>
                         <div class="range-color-inicial">
                         </div>
                         <div class="div-range-color">
@@ -475,28 +475,37 @@
                     <h4 class="h4-defectos">(Sustraer)</h4>
                 </div>
                 <div class="items-h4-defectos">
-                    <h6 class="h6-defectos">Ligero = 2</h6>
-                    <h6 class="h6-defectos">Rechazo = 4</h6>
+                    <div class="div-items-defectos-valor">
+                        <h6 class="h6-defectos h6-defectos-valor">Ligero = </h6>
+                        <h4 id="defectosLigero">2</h4>
+                    </div>
+                    <div class="div-items-defectos-valor">
+                        <h6 class="h6-defectos h6-defectos-valor">Rechazo = </h6>
+                        <h4 id="defectosRechazo">4</h4>
+                    </div>
                 </div>
                 <div class="items-defectos">
                     <div class="items-titulos-defectos">
-                        <h6  class="h6-defectos">#Tazas</h6>
-                        <h6  class="h6-defectos">Intensidad</h6>
+                        <h6 class="h6-defectos">#Tazas</h6>
+                        <h6 class="h6-defectos">Intensidad</h6>
                     </div>
                     <div class="inputs-defectos">
                         <div id="div-tazas" class="puntaje-item tazas-defectos">
-                            
+
                         </div>
                         <h2 class="h2-defectos">X</h2>
-                        <div id="intensidadDefectos" class="puntaje-item intensidad-defectos">
-                            
+                        <div>
+                            <div id="defectos" class="puntaje-item intensidad-defectos h6-defectos-intensidad">
+
+                            </div>
                         </div>
                         <h2 class="h2-defectos">=</h2>
-                        <div id="resultadoTazasXIntensidad" class="puntaje-item resultado-tazas-x-intensidad-defectos puntaje-item"></div>
+                        <div id="resultadoTazasXIntensidad"
+                            class="puntaje-item resultado-tazas-x-intensidad-defectos puntaje-item"></div>
                     </div>
                 </div>
             </div>
-            <div  id="notasFinalDiv" class="notas-final">
+            <div id="notasFinalDiv" class="notas-final">
                 <h4 class="h4-tittle-notas">Notas:</h4>
                 <div class="texarea-notas-final" id="div-notas">
 
@@ -504,11 +513,10 @@
             </div>
             <div class="puntaje-final">
                 <h4 class="h4-puntaje-final">Puntaje final</h4>
-                <div  id="puntajeFinal" class="item-puntaje-final">0</div>
+                <div id="puntajeFinal" class="item-puntaje-final">0</div>
             </div>
         </div>
     </div>
 </body>
 
 </html>
-

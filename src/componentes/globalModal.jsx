@@ -7,12 +7,41 @@ export const GlobalModal = forwardRef((data, ref) => {
 
     const modalRef = useRef(null);
     const divContentFormRef = useRef(null);
+    function resizeForm() {
+        if (modalRef.current != null) {
 
+            let modalForm = modalRef.current;
+            const divContentForm = modalRef.current.querySelector('#divContentForm');
+
+            if (modalForm) {
+                let displayNone = false;
+                if (modalForm.style.display == "none") {
+                    modalForm.style.display = "block"
+                    displayNone = true
+                }
+
+
+                if (divContentForm.scrollHeight > document.body.clientHeight) {
+                    modalForm.style.justifyContent = "unset"
+                    modalForm.style.flexDirection = "column"
+                    modalForm.style.padding = "20px 20px"
+                    modalForm.style.height = "calc(100% - 40px)"
+                    modalForm.style.width = "calc(100% - 40px)"
+                } else {
+                    modalForm.style.justifyContent = "center"
+                    modalForm.style.padding = ""
+                    modalForm.style.height = "100%"
+                    modalForm.style.width = "100%"
+                }
+                if (displayNone) {
+                    modalForm.style.display = "none"
+                }
+            }
+        }
+    }
     useEffect(() => {
 
         if (modalRef.current != null) {
-            let modalForm = modalRef.current;
-            const divContentForm = modalRef.current.querySelector('#divContentForm');
 
 
 
@@ -20,33 +49,7 @@ export const GlobalModal = forwardRef((data, ref) => {
                 resizeForm()
             }, 100);
 
-            function resizeForm() {
-                if (modalForm) {
-                    let displayNone = false;
-                    if (modalForm.style.display == "none") {
-                        modalForm.style.display = "block"
-                        displayNone = true
-                    }
 
-
-                    if (divContentForm.scrollHeight > document.body.clientHeight) {
-                        modalForm.style.justifyContent = "unset"
-                        modalForm.style.flexDirection = "column"
-                        modalForm.style.padding = "20px 20px"
-                        modalForm.style.height = "calc(100% - 40px)"
-                        modalForm.style.width = "calc(100% - 40px)"
-                    } else {
-                        modalForm.style.justifyContent = "center"
-                        modalForm.style.padding = ""
-                        modalForm.style.height = "100%"
-                        modalForm.style.width = "100%"
-                    }
-                    if (displayNone) {
-                        modalForm.style.display = "none"
-                    }
-                }
-
-            }
             resizeForm()
             window.addEventListener("resize", function () {
                 resizeForm()
@@ -54,7 +57,9 @@ export const GlobalModal = forwardRef((data, ref) => {
         }
 
     }, [modalRef.current])
-
+    useEffect(() => {
+        resizeForm()
+    }, [data.content])
 
 
     return (

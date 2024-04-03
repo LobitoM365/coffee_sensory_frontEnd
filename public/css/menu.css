@@ -1036,6 +1036,7 @@
     border: 1px solid black;
     border-radius: 4px;
     display: flex;
+    align-items: center;
     gap: 10px;
     flex-wrap: wrap;
 }
@@ -1112,7 +1113,7 @@
 
 #modalConfiguracionVariablesFisico .div-input-operar {
     width: max-content;
-    height: 25px;
+    height: 100%;
 }
 
 #modalConfiguracionVariablesFisico .button-ejecutar-formula:hover {

@@ -132,6 +132,14 @@
     padding-bottom: 20px;
 }
 
+#mainGlobalInput .text-area-form {
+    max-width: calc(100% - 30px);
+    height: 200px;
+    min-height: 300px;
+    max-height: 400px;
+    min-width: calc(100% - 30px);
+}
+
 #mainGlobalInput .div-select {
     font-size: 0.9em;
     width: calc(100%);

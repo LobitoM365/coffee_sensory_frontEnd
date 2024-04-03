@@ -12,10 +12,10 @@
 <body>
     <div id="contenidoFormatoSca" class="contenido">
         <div id="formatoSca" class="formato-sca">
-            <div class="notas1">
+            <!-- <div class="notas1">
                 <h4 class="tittle-notas1">Sample#</h4>
-            </div>
-            <div id="div-tueste"  class="nivel-tostion">
+            </div> -->
+            <div id="div-tueste" class="area-input-range nivel-tostion">
                 <h4 class="tittle-nivel-tostion">Nivel de tostion</h4>
                 <div class="range">
                     <div class="linea-centro"></div>
@@ -25,10 +25,10 @@
                     <div class="linea"></div>
                     <div class="linea"></div>
                     <div class="input-range">
-                        <input id="tueste" class="range-nivel-intensidad range-intensidad" type="range" value="2" min="0" max="4"
-                            step="1">
+                        <input id="tueste" class="range-nivel-intensidad range-intensidad" type="range" value="2"
+                            min="0" max="4" step="1">
                     </div>
-                    <div class="value value-range-intensidad">0</div>
+                    <div id="value_tueste" class="value value-range-intensidad">0</div>
                     <div class="range-color-inicial">
                     </div>
                     <div class="div-range-color">
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div id="div-fragancia_aroma" class="fragancia-aroma">
-                <div class="area-puntaje">
+                <div class="area-input-range area-puntaje">
                     <h4 class="h4-puntaje"> Puntaje:</h4>
                     <h5 class="tittle"> Fragancia/Aroma</h5>
                     <div class="puntaje-range puntaje-item">0</div>
@@ -77,11 +77,11 @@
                                 <h6 class="numero-guia-range-item">10</h6>
                             </div>
                         </div>
-                        <input class="range-puntaje input-range-puntaje" type="range" name="" id="fragancia_aroma" value="0" min="6"
-                            max="10" step="0.25">
+                        <input class="range-puntaje input-range-puntaje" type="range" name="" id="fragancia_aroma"
+                            value="0" min="6" max="10" step="0.25">
                     </div>
                 </div>
-                <div class="area-intensidad">
+                <div class="area-input-range area-intensidad">
                     <div id="div-seco" class="range1-area-intensidad range">
                         <h6 class="seco-area-intensidad tittle-area-intensidad">Seco</h6>
                         <div class="linea-centro"></div>
@@ -92,10 +92,10 @@
                         <div class="linea"></div>
                         <div class="linea"></div>
                         <div class="input-range">
-                            <input id="seco" class="range-nivel-intensidad range-intensidad" type="range" value="0" min="0"
-                                max="5" step="0.1">
+                            <input id="seco" class="range-nivel-intensidad range-intensidad" type="range" value="0"
+                                min="0" max="5" step="0.1">
                         </div>
-                        <div class="value value-range-intensidad">0</div>
+                        <div id="value_seco" class="value value-range-intensidad">0</div>
                         <div class="range-color-inicial">
                         </div>
                         <div class="div-range-color">
@@ -126,10 +126,10 @@
                         <div class="linea"></div>
                         <div class="linea"></div>
                         <div class="input-range">
-                            <input id="espuma" class="range-nivel-intensidad range-intensidad" type="range" value="0" min="0"
-                                max="5" step="0.1">
+                            <input id="espuma" class="range-nivel-intensidad range-intensidad" type="range" value="0"
+                                min="0" max="5" step="0.1">
                         </div>
-                        <div class="value value-range-intensidad">0</div>
+                        <div id="value_espuma" class="value value-range-intensidad">0</div>
                         <div class="range-color-inicial">
                         </div>
                         <div class="div-range-color">
@@ -141,7 +141,7 @@
                     </div>
                 </div>
             </div>
-            <div id="div-sabor" class="sabor">
+            <div id="div-sabor" class="area-input-range sabor">
                 <h4 class="h4-puntaje"> Puntaje:</h4>
                 <h5 class="tittle"> Sabor</h5>
                 <div class="puntaje-range puntaje-item">0</div>
@@ -179,7 +179,7 @@
                         max="10" step="0.25">
                 </div>
             </div>
-            <div id="div-sabor_residual" class="sabor-residual">
+            <div id="div-sabor_residual" class="area-input-range sabor-residual">
                 <h4 class="h4-puntaje"> Puntaje:</h4>
                 <h5 class="tittle"> Sabor residual</h5>
                 <div class="puntaje-range puntaje-item">0</div>
@@ -213,12 +213,12 @@
                             <h6 class="numero-guia-range-item">10</h6>
                         </div>
                     </div>
-                    <input class="range-puntaje input-range-puntaje" type="range" name="" id="sabor_residual" value="0" min="6"
-                        max="10" step="0.25">
+                    <input class="range-puntaje input-range-puntaje" type="range" name="" id="sabor_residual" value="0"
+                        min="6" max="10" step="0.25">
                 </div>
             </div>
             <div id="div-acidez" class="acidez">
-                <div class="area-puntaje">
+                <div class="area-input-range area-puntaje">
                     <h4 class="h4-puntaje"> Puntaje:</h4>
                     <h5 class="tittle"> Acidez</h5>
                     <div class="puntaje-range puntaje-item">0</div>
@@ -253,11 +253,11 @@
                                 <h6 class="numero-guia-range-item">10</h6>
                             </div>
                         </div>
-                        <input class="range-puntaje input-range-puntaje" type="range" name="" id="acidez" value="0" min="6"
-                            max="10" step="0.25">
+                        <input class="range-puntaje input-range-puntaje" type="range" name="" id="acidez" value="0"
+                            min="6" max="10" step="0.25">
                     </div>
                 </div>
-                <div id="div-intensidad" class="area-intensidad">
+                <div id="div-intensidad" class="area-input-range area-intensidad">
                     <div class="range1-area-intensidad range">
                         <h6 class="seco-area-intensidad tittle-intensidad">Intensidad</h6>
                         <div class="linea-centro"></div>
@@ -268,10 +268,10 @@
                         <div class="linea"></div>
                         <div class="linea"></div>
                         <div class="input-range">
-                            <input id="intensidad"  class="range-nivel-intensidad range-intensidad" type="range" value="0" min="0"
-                                max="5" step="0.1">
+                            <input id="intensidad" class="range-nivel-intensidad range-intensidad" type="range"
+                                value="0" min="0" max="5" step="0.1">
                         </div>
-                        <div class="value value-range-intensidad">0</div>
+                        <div id="value_intensidad" class="value value-range-intensidad">0</div>
                         <div class="range-color-inicial">
                         </div>
                         <div class="div-range-color">
@@ -288,7 +288,7 @@
                 </div>
             </div>
             <div id="div-cuerpo" class="cuerpo">
-                <div class="area-puntaje">
+                <div class="area-input-range area-puntaje">
                     <h4 class="h4-puntaje"> Puntaje:</h4>
                     <h5 class="tittle"> Cuerpo</h5>
                     <div class="puntaje-range puntaje-item">0</div>
@@ -323,11 +323,11 @@
                                 <h6 class="numero-guia-range-item">10</h6>
                             </div>
                         </div>
-                        <input class="range-puntaje input-range-puntaje" type="range" name="" id="cuerpo" value="0" min="6"
-                            max="10" step="0.25">
+                        <input class="range-puntaje input-range-puntaje" type="range" name="" id="cuerpo" value="0"
+                            min="6" max="10" step="0.25">
                     </div>
                 </div>
-                <div id="div-nivel_cuerpo" class="area-intensidad">
+                <div id="div-nivel_cuerpo" class="area-input-range area-intensidad">
                     <div class="range1-area-intensidad range">
                         <h6 class="seco-area-intensidad tittle-intensidad">Nivel</h6>
                         <div class="linea-centro"></div>
@@ -338,10 +338,10 @@
                         <div class="linea"></div>
                         <div class="linea"></div>
                         <div class="input-range">
-                            <input id="nivel_cuerpo" class="range-nivel-intensidad range-intensidad" type="range" value="0" min="0"
-                                max="5" step="0.1">
+                            <input id="nivel_cuerpo" class="range-nivel-intensidad range-intensidad" type="range"
+                                value="0" min="0" max="5" step="0.1">
                         </div>
-                        <div class="value value-range-intensidad">0</div>
+                        <div id="value_nivel_cuerpo" class="value value-range-intensidad">0</div>
                         <div class="range-color-inicial">
                         </div>
                         <div class="div-range-color">
@@ -357,7 +357,7 @@
                     </div>
                 </div>
             </div>
-            <div id="div-uniformidad" class="uniformidad">
+            <div id="div-uniformidad" class="area-input-range uniformidad">
                 <h4 class="h4-puntaje"> Puntaje:</h4>
                 <h5 class="tittle"> Uniformidad</h5>
                 <div class="puntaje-select puntaje-item">10</div>
@@ -371,7 +371,7 @@
             </div>
 
 
-            <div id="div-balance" class="balance">
+            <div id="div-balance" class="area-input-range balance">
                 <h4 class="h4-puntaje"> Puntaje:</h4>
                 <h5 class="tittle"> Balance</h5>
                 <div class="puntaje-range puntaje-item">0</div>
@@ -405,11 +405,11 @@
                             <h6 class="numero-guia-range-item">10</h6>
                         </div>
                     </div>
-                    <input  class="range-puntaje input-range-puntaje" type="range" name="" id="balance" value="0" min="6"
+                    <input class="range-puntaje input-range-puntaje" type="range" name="" id="balance" value="0" min="6"
                         max="10" step="0.25">
                 </div>
             </div>
-            <div id="div-taza_limpia" class="taza-limpia">
+            <div id="div-taza_limpia" class="area-input-range taza-limpia">
                 <h4 class="h4-puntaje"> Puntaje:</h4>
                 <h5 class="tittle"> Taza limpia</h5>
                 <div class="puntaje-select puntaje-item">10</div>
@@ -421,7 +421,7 @@
                     <div class="cuadro-select focus-no-active"></div>
                 </div>
             </div>
-            <div id="div-dulzor" class="dulzor">
+            <div id="div-dulzor" class="area-input-range dulzor">
                 <h4 class="h4-puntaje"> Puntaje:</h4>
                 <h5 class="tittle"> Dulzor</h5>
                 <div class="puntaje-select puntaje-item">10</div>
@@ -433,7 +433,7 @@
                     <div class="cuadro-select focus-no-active"></div>
                 </div>
             </div>
-            <div id="div-puntaje_catador" class="puntaje-catador">
+            <div id="div-puntaje_catador" class="area-input-range puntaje-catador">
                 <h4 class="h4-puntaje"> Puntaje:</h4>
                 <h5 class="tittle"> Puntaje catador</h5>
                 <div class="puntaje-range puntaje-item">0</div>
@@ -467,8 +467,8 @@
                             <h6 class="numero-guia-range-item">10</h6>
                         </div>
                     </div>
-                    <input class="range-puntaje input-range-puntaje" type="range" name="" id="puntaje_catador" value="0" min="6"
-                        max="10" step="0.25">
+                    <input class="range-puntaje input-range-puntaje" type="range" name="" id="puntaje_catador" value="0"
+                        min="6" max="10" step="0.25">
                 </div>
             </div>
             <div class="puntaje-total">
@@ -481,8 +481,14 @@
                     <h4 class="h4-defectos">(Sustraer)</h4>
                 </div>
                 <div class="items-h4-defectos">
-                    <h6 class="h6-defectos">Ligero = 2</h6>
-                    <h6 class="h6-defectos">Rechazo = 4</h6>
+                    <div class="div-items-defectos-valor">
+                        <h6 class="h6-defectos h6-defectos-valor">Ligero = </h6>
+                        <h4 class="hover-defectos-valor" id="defectosLigero">2</h4>
+                    </div>
+                    <div class="div-items-defectos-valor">
+                        <h6 class="h6-defectos h6-defectos-valor">Rechazo = </h6>
+                        <h4 class="hover-defectos-valor" id="defectosRechazo">4</h4>
+                    </div>
                 </div>
                 <div class="items-defectos">
                     <div class="items-titulos-defectos">
@@ -491,22 +497,23 @@
                     </div>
                     <div class="inputs-defectos">
                         <div class="tazas-defectos">
-                            <input  class=" input-tazas-defectos" type="text" name="" id="tazas" value="0">
+                            <input class=" input-tazas-defectos" type="text" name="" id="tazas" value="0">
                         </div>
                         <h2 class="h2-defectos">X</h2>
-                        <div id="intensidadDefectos" class="intensidad-defectos">
-                           <!--  <input class="inputTazasIntensidad input-intensidad-defectos" type="text" name="" id="" value="0"> -->
+                        <div>
+                            <div id="defectos" class="intensidad-defectos h6-defectos-intensidad">0</div>
                         </div>
                         <h2 class="h2-defectos">=</h2>
-                        <div id="resultadoTazasXIntensidad" class="resultado-tazas-x-intensidad-defectos puntaje-item"></div>
+                        <div id="resultadoTazasXIntensidad" class="resultado-tazas-x-intensidad-defectos puntaje-item">
+                        </div>
                     </div>
                 </div>
             </div>
             <div id="notasFinalDiv" class="notas-final">
                 <h4 class="h4-tittle-notas">Notas:</h4>
-                <textarea  class="texarea-notas-final" name="" id="notas" cols="30" rows="10"></textarea>
+                <textarea class="texarea-notas-final" name="" id="notas" cols="30" rows="10"></textarea>
                 <input id="button" class="button" type="button" value="Ver mas...">
-                
+
             </div>
             <div class="puntaje-final">
                 <h4 class="h4-puntaje-final">Puntaje final</h4>
@@ -514,6 +521,14 @@
             </div>
         </div>
     </div>
+    <style>
+        .formato-sca {
+            grid-template: "nivel-tostion fragancia-aroma sabor           acidez       cuerpo        uniformidad  taza-limpia      puntaje-catador   puntaje-catador  puntaje-total " auto
+                "nivel-tostion fragancia-aroma sabor-residual  acidez       cuerpo        balance      dulzor           defectos          defectos         defectos" auto
+                "notas-final   notas-final     notas-final     notas-final  notas-final   notas-final  notas-final      notas-final       puntaje-final    puntaje-final" auto/
+                0.2fr 1fr 1fr 1fr 1fr 1fr 1fr 0.6fr 0.4fr 0.6fr;
+        }
+    </style>
 </body>
 
 </html>

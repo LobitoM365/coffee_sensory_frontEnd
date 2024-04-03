@@ -509,6 +509,10 @@ export const Menu = (data) => {
                     const itemOperador = operadoresAdd[x].querySelectorAll(".item-operador-formula")
                     if (itemOperador[0]) {
                         if (event.target == itemOperador[0]) {
+                            const div = document.createElement("div")
+                            div.classList.add("div-movement-focus")
+                            refModalConfiguracionFormatoFisico.current.appendChild(div)
+                            divMovementFocus = div
                             focusIterador = x
                             operadorFocusAdd = itemOperador[0].parentNode
                             divOperadorFocusAdd = itemOperador[0].parentNode.parentNode
@@ -768,8 +772,22 @@ export const Menu = (data) => {
                         divEvaluarFormula.current.innerHTML += "<h4 class='h4-variable-" + itemOperadorFormula[x].getAttribute("data-signo") + " '>" + itemOperadorFormula[x].getAttribute("data-signo") + " </h4>"
                         formula += itemOperadorFormula[x].getAttribute("data-signo") + " ";
                     } else {
+                        let nameVariable = itemOperadorFormula[x].getAttribute("data-signo")
+
+                        if (variablesFormatoFisico) {
+                            if (Array.isArray(variablesFormatoFisico))
+
+                                for (let r = 0; r < variablesFormatoFisico.length; r++) {
+                                    if (variablesFormatoFisico[r]["nombre"] == itemOperadorFormula[x].getAttribute("data-signo")) {
+                                        nameVariable = variablesFormatoFisico[r]["visual_name"].toString().replace(/\b\w{4,}\b/g, function (match) {
+                                            return match.charAt(0).toUpperCase() + match.slice(1);
+                                        });
+                                        break
+                                    }
+                                }
+                        }
                         let divVariable = document.createElement("div")
-                        divVariable.innerHTML = "<span class='label-from-register' >" + itemOperadorFormula[x].getAttribute("data-signo") + "</span>";
+                        divVariable.innerHTML = "<span class='label-from-register' >" + nameVariable + "</span>";
                         let input = document.createElement("input")
                         input.setAttribute("id", itemOperadorFormula[x].getAttribute("data-signo"))
                         input.classList.add("input-form")
@@ -819,7 +837,7 @@ export const Menu = (data) => {
     }
 
     function getResultadoFormula() {
-        console.log(formulaVariables, dataVariables)
+        console.log(formulaVariables, dataVariables, "formulaaaaaaaaaa")
         let h4Resultado = document.getElementById("resultadoFormula")
         let h6ErrorFormulaVariable = document.getElementById("h6ErrorFormulaVariable")
         if (h6ErrorFormulaVariable) {

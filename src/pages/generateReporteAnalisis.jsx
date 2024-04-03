@@ -21,6 +21,7 @@ export const GenerateReporteAnalisis = () => {
     const [resultadoFisico, setResultadoFisico] = useState({});
     const [formatoSensorial, setFormatoSensorial] = useState({});
     const [resultadoSensorial, setResultadoSensorial] = useState({});
+    const [resultadoSensorialPromedio, setResultadoSensorialPromedio] = useState({});
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
 
@@ -44,7 +45,6 @@ export const GenerateReporteAnalisis = () => {
     useEffect(() => {
         async function getInfo() {
             const response = await Api.post("analisis/buscar/" + id + "");
-            console.log(response, "repossssssssss")
             if (response.data.status == true) {
                 const filterMuestra = {
                     "filter": {
@@ -72,12 +72,16 @@ export const GenerateReporteAnalisis = () => {
                                 "require": "and",
                                 "group": 2
                             }
+                        },
+                        "limit": {
+                            "inicio": "4444",
+                            "fin": "4444"
                         }
                     },
                 }
                 const formatoFisico = await Api.post("formatos/buscar/not", filterFormatoFisico);
                 if (formatoFisico.data.status == true) {
-                    setFormatoFisico(formatoFisico.data.data[0])
+                    setFormatoFisico(formatoFisico.data.data)
                     const resultado = await Api.post("resultado/buscar/" + formatoFisico.data.data[0].id + "");
 
                     if (resultado.data.status == true) {
@@ -100,30 +104,70 @@ export const GenerateReporteAnalisis = () => {
                                 "require": "and",
                                 "group": 1
                             }
+                        },
+                        "limit": {
+                            "inicio": "4444",
+                            "fin": "4444"
                         }
                     },
                 }
                 const formatoSensorial = await Api.post("formatos/buscar/not", filterFormatoSensorial);
-                console.log(formatoSensorial, " formaaaaaaaaaaaaaaaaaaa")
-
+                console.log(formatoSensorial, "formatooooooooooooooooooooo")
                 if (formatoSensorial.data.status == true) {
 
-                    setFormatoSensorial(formatoSensorial.data.data[0])
-                    const resultado = await Api.post("resultado/buscar/" + formatoSensorial.data.data[0].id + "");
+                    setFormatoSensorial(formatoSensorial.data.data)
+                    const filterResultado = {
+                        "filter": {
+                            "where": {
+                                "an.id": {
+                                    "value": id,
+                                    "require": "and",
+                                }
+                            }
+                        }
+                    }
+                    const resultado = await Api.post("resultado/buscar/not", filterResultado);
 
                     if (resultado.data.status == true) {
-                        console.log(formatoSensorial.data.data[0]["fragrancia_aroma"], "hahahaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", formatoSensorial.data.data[0])
+                        const promedio = {};
+                        const variablesPromedio = ["fragancia_aroma", "sabor", "sabor_residual", "acidez", "cuerpo", "uniformidad", "balance", "taza_limpia", "dulzor", "puntaje_catador"]
+                        for (let x = 0; x < resultado.data.data.length; x++) {
+                            for (let r = 0; r < variablesPromedio.length; r++) {
+                                const variable = resultado.data.data[x][variablesPromedio[r]]
+                                if (variable) {
+
+                                    if (!promedio[variablesPromedio[r]]) {
+                                        promedio[variablesPromedio[r]] = 0
+                                    }
+                                    console.log(variable, "vaaaaaaar-----------", promedio[variablesPromedio[r]], variablesPromedio[r])
+                                    promedio[variablesPromedio[r]] = promedio[variablesPromedio[r]] + variable
+                                }
+                            }
+                        }
+                        console.log(promedio, "prommmmmmmmmmmmmmmmmmmmmm", resultado.data.data)
+                        for (let x = 0; x < variablesPromedio.length; x++) {
+                            if (promedio[variablesPromedio[x]]) {
+                                const value = promedio[variablesPromedio[x]] / resultado.data.data.length;
+                                if (value - Math.floor(value) > 0) {
+                                    promedio[variablesPromedio[x]] = value.toFixed(2).toString().replace("0", "")
+                                } else {
+                                    promedio[variablesPromedio[x]] = value
+                                }
+                            }
+                        }
+                        setResultadoSensorialPromedio(promedio)
+
                         setDataAtributos([
-                            { name: "Fragancia Aroma", x: resultado.data.data[0]["fragancia_aroma"] ? resultado.data.data[0]["fragancia_aroma"] : 0 },
-                            { name: "Sabor", x: resultado.data.data[0]["sabor"] ? resultado.data.data[0]["sabor"] : 0 },
-                            { name: "Retrogusto", x: resultado.data.data[0]["sabor_residual"] ? resultado.data.data[0]["sabor_residual"] : 0 },
-                            { name: "Acidez", x: resultado.data.data[0]["acidez"] ? resultado.data.data[0]["acidez"] : 0 },
-                            { name: "Cuerpo", x: resultado.data.data[0]["cuerpo"] ? resultado.data.data[0]["cuerpo"] : 0 },
-                            { name: "Uniformidad", x: resultado.data.data[0]["uniformidad"] ? resultado.data.data[0]["uniformidad"] : 0 },
-                            { name: "Balance", x: resultado.data.data[0]["balance"] ? resultado.data.data[0]["balance"] : 0 },
-                            { name: "Taza limpia", x: resultado.data.data[0]["taza_limpia"] ? resultado.data.data[0]["taza_limpia"] : 0 },
-                            { name: "Dulzor", x: resultado.data.data[0]["dulzor"] ? resultado.data.data[0]["dulzor"] : 0 },
-                            { name: "Puntaje General", x: resultado.data.data[0]["puntaje_catador"] ? resultado.data.data[0]["puntaje_catador"] : 0 },
+                            { name: "Fragancia Aroma", x: promedio["fragancia_aroma"] ? promedio["fragancia_aroma"] : 0 },
+                            { name: "Sabor", x: promedio["sabor"] ? promedio["sabor"] : 0 },
+                            { name: "Retrogusto", x: promedio["sabor_residual"] ? promedio["sabor_residual"] : 0 },
+                            { name: "Acidez", x: promedio["acidez"] ? promedio["acidez"] : 0 },
+                            { name: "Cuerpo", x: promedio["cuerpo"] ? promedio["cuerpo"] : 0 },
+                            { name: "Uniformidad", x: promedio["uniformidad"] ? promedio["uniformidad"] : 0 },
+                            { name: "Balance", x: promedio["balance"] ? promedio["balance"] : 0 },
+                            { name: "Taza limpia", x: promedio["taza_limpia"] ? promedio["taza_limpia"] : 0 },
+                            { name: "Dulzor", x: promedio["dulzor"] ? promedio["dulzor"] : 0 },
+                            { name: "Puntaje General", x: promedio["puntaje_catador"] ? promedio["puntaje_catador"] : 0 },
                         ]);
                         setResultadoSensorial(resultado.data.data[0])
                     } else {
@@ -133,7 +177,7 @@ export const GenerateReporteAnalisis = () => {
                 } else {
 
                 }
-                console.log("ahahsah")
+
                 setanalisis(response.data.data[0])
 
             } else if (response.data.find_error) {
@@ -159,7 +203,7 @@ export const GenerateReporteAnalisis = () => {
 
 
     const capturarDivComoImagen = async () => {
-        console.log(divRef.current, "divvvvvvv")
+
 
         if (divRef.current !== null) {
 
@@ -227,6 +271,9 @@ export const GenerateReporteAnalisis = () => {
 
     }, [])
     const estyle = StyleSheet.create({
+        sectionFive: {
+            marginTop: "130px"
+        },
         sectionFour: {
             marginTop: "160px"
         },
@@ -236,27 +283,39 @@ export const GenerateReporteAnalisis = () => {
         contentFirma: {
             height: "40px"
         },
+        divMainContentFirmas: {
+            display: "flex",
+            gap: "30px"
+        },
+        contenFirmas: {
+            flexDirection: "row",
+            display: "flex",
+            gap: "10px",
+        },
         divTextFirma: {
             border: "1px solid black",
-            width: "100%",
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
-            borderLeftWidth: 0
-        },
-        divTextFirmaFirst: {
-            border: "1px solid black",
+            flexDirection: "column",
             width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
         },
+        /*    divTextFirmaFirst: {
+               border: "1px solid black",
+               width: "100%",
+               justifyContent: "center",
+               alignItems: "center",
+               textAlign: "center",
+           }, */
         viweFirmas: {
-            flexDirection: "row",
+            /*  flexDirection: "row", */
             width: "100%",
-            justifyContent: "center",
+            /*    justifyContent: "center", */
             alignItems: "center",
             textAlign: "center",
+            display: "flex",
+            gap: "20px",
+            /* flexWrap: "wrap" */
         },
         textFirma: {
             justifyContent: "center",
@@ -283,7 +342,7 @@ export const GenerateReporteAnalisis = () => {
         },
         notasFormatoSensorial: {
             textAlign: "justify",
-            padding: "7px"
+            padding: "0px 7px"
         },
         textBold: {
             fontFamily: "CalibriBold",
@@ -589,7 +648,7 @@ export const GenerateReporteAnalisis = () => {
                                 fill={parseFloat(analisis.calidad) / 10 <= 7 ? "red" : parseFloat(analisis.calidad) / 10 <= 8 ? "orange" : parseFloat(analisis.calidad) / 10 <= 9 ? "yellow" : parseFloat(analisis.calidad) / 10 <= 10 ? "green" : ""} fillOpacity={0.5} />
                         </RadarChart>
                     </div>
-                    {console.log(imageDataURL)}
+
                     {imageDataURL != "" ?
                         <PDFViewer style={{ width: "100%", height: "100%", position: "fixed" }}>
                             <Document onRender={document.getElementById("loadPdf") ? document.getElementById("loadPdf").remove() : ""}>
@@ -1266,7 +1325,7 @@ export const GenerateReporteAnalisis = () => {
                                                             </View>
                                                             <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                 <Text style={[estyle.tableCellStyle]}>
-                                                                    {resultadoSensorial["fragancia_aroma"] ? resultadoSensorial["fragancia_aroma"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                    {resultadoSensorialPromedio["fragancia_aroma"] ? resultadoSensorialPromedio["fragancia_aroma"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                 </Text>
                                                             </View>
                                                         </View>
@@ -1278,7 +1337,7 @@ export const GenerateReporteAnalisis = () => {
                                                             </View>
                                                             <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                 <Text style={[estyle.tableCellStyle]}>
-                                                                    {resultadoSensorial["sabor"] ? resultadoSensorial["sabor"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                    {resultadoSensorialPromedio["sabor"] ? resultadoSensorialPromedio["sabor"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                 </Text>
                                                             </View>
                                                         </View>
@@ -1290,7 +1349,7 @@ export const GenerateReporteAnalisis = () => {
                                                             </View>
                                                             <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                 <Text style={[estyle.tableCellStyle]}>
-                                                                    {resultadoSensorial["sabor_residual"] ? resultadoSensorial["sabor_residual"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                    {resultadoSensorialPromedio["sabor_residual"] ? resultadoSensorialPromedio["sabor_residual"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                 </Text>
                                                             </View>
                                                         </View>
@@ -1302,7 +1361,7 @@ export const GenerateReporteAnalisis = () => {
                                                             </View>
                                                             <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                 <Text style={[estyle.tableCellStyle]}>
-                                                                    {resultadoSensorial["acidez"] ? resultadoSensorial["acidez"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                    {resultadoSensorialPromedio["acidez"] ? resultadoSensorialPromedio["acidez"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                 </Text>
                                                             </View>
                                                         </View>
@@ -1314,7 +1373,7 @@ export const GenerateReporteAnalisis = () => {
                                                             </View>
                                                             <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                 <Text style={[estyle.tableCellStyle]}>
-                                                                    {resultadoSensorial["cuerpo"] ? resultadoSensorial["cuerpo"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                    {resultadoSensorialPromedio["cuerpo"] ? resultadoSensorialPromedio["cuerpo"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                 </Text>
                                                             </View>
                                                         </View>
@@ -1326,7 +1385,7 @@ export const GenerateReporteAnalisis = () => {
                                                             </View>
                                                             <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                 <Text style={[estyle.tableCellStyle]}>
-                                                                    {resultadoSensorial["uniformidad"] ? resultadoSensorial["uniformidad"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                    {resultadoSensorialPromedio["uniformidad"] ? resultadoSensorialPromedio["uniformidad"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                 </Text>
                                                             </View>
                                                         </View>
@@ -1338,7 +1397,7 @@ export const GenerateReporteAnalisis = () => {
                                                             </View>
                                                             <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                 <Text style={[estyle.tableCellStyle]}>
-                                                                    {resultadoSensorial["balance"] ? resultadoSensorial["balance"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                    {resultadoSensorialPromedio["balance"] ? resultadoSensorialPromedio["balance"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                 </Text>
                                                             </View>
                                                         </View>
@@ -1350,7 +1409,7 @@ export const GenerateReporteAnalisis = () => {
                                                             </View>
                                                             <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                 <Text style={[estyle.tableCellStyle]}>
-                                                                    {resultadoSensorial["taza_limpia"] ? resultadoSensorial["taza_limpia"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                    {resultadoSensorialPromedio["taza_limpia"] ? resultadoSensorialPromedio["taza_limpia"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                 </Text>
                                                             </View>
                                                         </View>
@@ -1362,7 +1421,7 @@ export const GenerateReporteAnalisis = () => {
                                                             </View>
                                                             <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                 <Text style={[estyle.tableCellStyle]}>
-                                                                    {resultadoSensorial["dulzor"] ? resultadoSensorial["dulzor"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                    {resultadoSensorialPromedio["dulzor"] ? resultadoSensorialPromedio["dulzor"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                 </Text>
                                                             </View>
                                                         </View>
@@ -1374,7 +1433,7 @@ export const GenerateReporteAnalisis = () => {
                                                             </View>
                                                             <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                 <Text style={[estyle.tableCellStyle]}>
-                                                                    {resultadoSensorial["puntaje_catador"] ? resultadoSensorial["puntaje_catador"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                    {resultadoSensorialPromedio["puntaje_catador"] ? resultadoSensorialPromedio["puntaje_catador"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                 </Text>
                                                             </View>
                                                         </View>
@@ -1402,9 +1461,25 @@ export const GenerateReporteAnalisis = () => {
                                                         </View>
                                                         <View style={[estyle.bodytableColStyleHeightAll, estyle.tableRowStyle, estyle.tableBody]}>
                                                             <View style={[estyle.tableColStyleHeightAll, estyle.tableColStyle, estyle.colTable]}>
-                                                                <Text style={[estyle.tableCellStyle, estyle.notasFormatoSensorial]}>
-                                                                    {resultadoSensorial["notas"] ? resultadoSensorial["notas"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
-                                                                </Text>
+
+                                                                {console.log(formatoSensorial, "formatooooooooooooo")}
+                                                                {
+                                                                    formatoSensorial ? formatoSensorial.length > 0 ? (
+                                                                        (() => {
+                                                                            let count = 0;
+                                                                            return formatoSensorial.map((value, index) => {
+                                                                                if (value["notas"]) {
+                                                                                    count = count + 1
+                                                                                    return <Text style={[estyle.tableCellStyle, estyle.notasFormatoSensorial]} key={index}>{count}) {value["notas"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</Text>;
+                                                                                }
+                                                                            });
+                                                                        })()
+                                                                    ) : "No registra" : "No registra"
+                                                                }
+
+
+                                                                {/* {formatoSensorial["notas"] ? formatoSensorial["notas"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"} */}
+
                                                             </View>
                                                         </View>
                                                     </View>
@@ -1437,48 +1512,150 @@ export const GenerateReporteAnalisis = () => {
                                             </Text>
                                         </View>
                                     </View>
-                                    <View style={[estyle.sectionTwo, estyle.viweFirmas]}>
-                                        <View style={[estyle.divTextFirmaFirst]}>
-                                            <View style={[estyle.contentFirma]}>
+                                    <View style={[estyle.sectionFive, estyle.divMainContentFirmas]}>
+                                        <View>
+                                            <View style={estyle.tittleItem}>  <Text>Catadores Formato Físico</Text></View>
 
-                                            </View>
-                                            <View style={[estyle.textFirma]}>
-                                                <Text style={estyle.textBold}>
-                                                    {formatoFisico.nombre_catador ? formatoFisico.nombre_catador.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No Registra"}
-                                                </Text>
-                                                <Text style={[estyle.textFirma]}>
-                                                    Instructor Análisis Físico - ENCC
-                                                    Pitalito
-                                                </Text>
+                                            <View style={[estyle.sectionTwo, estyle.contenFirmas]}>
+
+                                                {
+                                                    formatoFisico ? formatoFisico.length > 0 ? (
+                                                        (() => {
+                                                            const grupos = {
+                                                                1: [],
+                                                                2: [],
+                                                                3: []
+                                                            }
+                                                            const catadoresFormatoFisico = []
+                                                            let countInsert = 1
+                                                            for (let x = 0; x < formatoFisico.length; x++) {
+                                                                if (grupos[countInsert]) {
+                                                                    if (!catadoresFormatoFisico.includes(formatoFisico[x].catador_id)) {
+                                                                        catadoresFormatoFisico.push(formatoFisico[x].catador_id)
+                                                                        grupos[countInsert].push({
+                                                                            "index": x,
+                                                                            "content": true
+                                                                        })
+                                                                        countInsert = countInsert + 1
+                                                                    }
+                                                                    if (countInsert == 4) {
+                                                                        countInsert = 1
+                                                                    }
+                                                                }
+                                                            }
+                                                            const keysGroups = Object.keys(grupos)
+                                                            let count = 0;
+
+                                                            return keysGroups.map((value, index) => {
+
+                                                                return <View style={[estyle.viweFirmas]}>
+                                                                    {
+                                                                        grupos[value].map((valueArray, indexArray) => {
+                                                                            if (formatoFisico[valueArray["index"]]) {
+                                                                                count = count + 1
+
+                                                                                return <View key={indexArray} style={[estyle.divTextFirma]}>
+                                                                                    {valueArray["content"] == true ?
+                                                                                        <View>
+                                                                                            <View style={[estyle.contentFirma]}>
+
+                                                                                            </View>
+                                                                                            <View style={[estyle.textFirma]}>
+                                                                                                <Text style={estyle.textBold}>
+                                                                                                    {/* {formatoSensorial.nombre_catador ? formatoSensorial.nombre_catador.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No Registra"} */}
+                                                                                                    {formatoFisico[valueArray["index"]].nombre_catador ? formatoFisico[valueArray["index"]].nombre_catador.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No Registra"}
+
+                                                                                                </Text>
+                                                                                                <Text style={[estyle.textFirma]}>
+                                                                                                    Instructor(a) Análisis Físico - ENCC
+                                                                                                    Pitalito
+                                                                                                </Text>
+                                                                                            </View>
+                                                                                        </View>
+                                                                                        : ""}
+                                                                                </View>;
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                </View>
+                                                            });
+                                                        })()
+                                                    ) : "No registra" : "No registra"
+                                                }
                                             </View>
                                         </View>
-                                        <View style={[estyle.divTextFirma]}>
-                                            <View style={[estyle.contentFirma]}>
+                                        <View>
+                                            <View style={estyle.tittleItem}>  <Text>Catadores Formato Sensorial</Text></View>
+                                            <View style={[estyle.sectionTwo, estyle.contenFirmas]}>
 
-                                            </View>
-                                            <View style={[estyle.textFirma]}>
-                                                <Text style={estyle.textBold}>
-                                                    {formatoSensorial.nombre_catador ? formatoSensorial.nombre_catador.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No Registra"}
+                                                {
+                                                    formatoSensorial ? formatoSensorial.length > 0 ? (
+                                                        (() => {
+                                                            const grupos = {
+                                                                1: [],
+                                                                2: [],
+                                                                3: []
+                                                            }
+                                                            const catadoresFormatoSensorial = []
+                                                            let countInsert = 1
+                                                            console.log(formatoSensorial, formatoSensorial.length)
+                                                            for (let x = 0; x < formatoSensorial.length; x++) {
+                                                                console.log(countInsert, "inserrrt")
+                                                                if (grupos[countInsert]) {
+                                                                    console.log(catadoresFormatoSensorial, "sensoriallllllllll", formatoSensorial[x], formatoSensorial[x].catador_id)
+                                                                    if (!catadoresFormatoSensorial.includes(formatoSensorial[x].catador_id)) {
+                                                                        catadoresFormatoSensorial.push(formatoSensorial[x].catador_id)
+                                                                        grupos[countInsert].push({
+                                                                            "index": x,
+                                                                            "content": true
+                                                                        })
+                                                                        countInsert = countInsert + 1
+                                                                    }
+                                                                    if (countInsert == 4) {
+                                                                        countInsert = 1
+                                                                    }
+                                                                }
+                                                            }
+                                                            const keysGroups = Object.keys(grupos)
+                                                            let count = 0;
 
-                                                </Text>
-                                                <Text style={[estyle.textFirma]}>
-                                                    Instructor Análisis Sensorial - ENCC
-                                                    Pitalito
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <View style={[estyle.divTextFirma]}>
-                                            <View style={[estyle.contentFirma]}>
+                                                            return keysGroups.map((value, index) => {
 
-                                            </View>
-                                            <View style={[estyle.textFirma]}>
-                                                <Text style={estyle.textBold}>
-                                                    Álvaro Murcia
-                                                </Text>
-                                                <Text style={[estyle.textFirma]}>
-                                                    Instructor Análisis Sensorial - ENCC
-                                                    Pitalito
-                                                </Text>
+                                                                return <View style={[estyle.viweFirmas]}>
+                                                                    {
+                                                                        grupos[value].map((valueArray, indexArray) => {
+                                                                            if (formatoSensorial[valueArray["index"]]) {
+                                                                                count = count + 1
+
+                                                                                return <View key={indexArray} style={[estyle.divTextFirma]}>
+                                                                                    {valueArray["content"] == true ?
+                                                                                        <View>
+                                                                                            <View style={[estyle.contentFirma]}>
+
+                                                                                            </View>
+                                                                                            <View style={[estyle.textFirma]}>
+                                                                                                <Text style={estyle.textBold}>
+                                                                                                    {/* {formatoSensorial.nombre_catador ? formatoSensorial.nombre_catador.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No Registra"} */}
+                                                                                                    {formatoSensorial[valueArray["index"]].nombre_catador ? formatoSensorial[valueArray["index"]].nombre_catador.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No Registra"}
+
+                                                                                                </Text>
+                                                                                                <Text style={[estyle.textFirma]}>
+                                                                                                    Instructor(a) Análisis Sensorial - ENCC
+                                                                                                    Pitalito
+                                                                                                </Text>
+                                                                                            </View>
+                                                                                        </View>
+                                                                                        : ""}
+                                                                                </View>;
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                </View>
+                                                            });
+                                                        })()
+                                                    ) : "No registra" : "No registra"
+                                                }
+                                                {/*   </View> */}
                                             </View>
                                         </View>
                                     </View>
@@ -1486,7 +1663,6 @@ export const GenerateReporteAnalisis = () => {
                             </Document>
                         </PDFViewer>
                         : ""}
-                    {console.log(formatoFisico, formatoSensorial)}
                 </div>
 
                 : ""}

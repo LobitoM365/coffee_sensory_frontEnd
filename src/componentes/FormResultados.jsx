@@ -688,6 +688,7 @@ export const FormResultados = forwardRef((data, ref) => {
                 }
             }
             const response = await Api.post("/variables/listar", dataVariables)
+            console.log(response,"ressssssssssssssssssssssss")
             if (response.data.status == true) {
                 setVariablesFormatoFisico(response.data.data)
             } else if (response.data.find_error) {

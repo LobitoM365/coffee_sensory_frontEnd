@@ -415,9 +415,10 @@ export const Fincas = (userInfo) => {
 
     }
     async function setFinca(data) {
+        const axios = await Api.post("finca/registrar/", data);
+        console.log(axios, "ahhh-----------------")
+
         try {
-            const axios = await Api.post("finca/registrar/", data);
-            console.log(axios, "ahhh")
             if (axios.data.status == true) {
                 getFincas();
                 setErrors({})

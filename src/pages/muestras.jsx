@@ -68,7 +68,7 @@ export const Muestras = () => {
         {
             cantidad: {
                 type: "number",
-                referencia: "Cantidad",
+                referencia: "Cantidad (g)",
                 upper_case: true,
             },
             cafes_id: {

@@ -269,6 +269,12 @@ export const Menu = (data) => {
     }
 
     useEffect(() => {
+        if (queryMenu) {
+            stateMenu()
+            hamburguerMode = 0
+        }
+    }, [queryMenu])
+    useEffect(() => {
         let ulContentLi = document.getElementById("ulContentLi")
         setTimeout(() => {
             resizeMenuToOverFlowUl()
@@ -306,6 +312,7 @@ export const Menu = (data) => {
             if (document.body.scrollWidth <= 610) {
                 if (!queryMenu) {
                     setQueryMenu(true)
+
                 }
 
             } else {

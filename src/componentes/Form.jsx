@@ -351,7 +351,7 @@ export const Form = forwardRef((data, ref) => {
                                                                         }} className='select-option'>Seleccione una opción...</h4>
 
                                                                         {
-                                                                            dataInputs[key]["opciones"] ? dataInputs[key]["opciones"].map((select, indexSelect) => {
+                                                                            dataInputs[key]["opciones"] ? (Array.isArray(dataInputs[key]["opciones"])) ? dataInputs[key]["opciones"].map((select, indexSelect) => {
                                                                                 let value = ""
                                                                                 if (dataInputs[key]["values"]) {
                                                                                     dataInputs[key]["values"].map((nameSelect, nameIndexSelect) => {
@@ -386,7 +386,7 @@ export const Form = forwardRef((data, ref) => {
                                                                                 }} className={`select-option select-option-${key} ${dataSelect[key] == dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] ? 'option-focus' : ''}`} value="">
                                                                                     {value}
                                                                                 </h4>
-                                                                            }) : ""
+                                                                            }) : "" : ""
                                                                         }
 
                                                                     </div>

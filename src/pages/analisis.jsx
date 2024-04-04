@@ -1764,16 +1764,18 @@ export const Analisis = (userInfo) => {
             } else if (response.data.errors) {
                 const keysErrors = Object.keys(response.data.errors)
                 for (let x = 0; x < keysErrors.length; x++) {
-                    const element = document.getElementById(keysErrors[x])
-                    if (element) {
-                        element.style.background = "#ff00001f"
-                        let trError = document.createElement("tr")
-                        trError.classList.add("tr-error-table-asignar")
-                        let tdError = document.createElement("td")
-                        tdError.innerHTML = "<h4>" + response.data.errors[keysErrors[x]] + " </h4>"
-                        tdError.setAttribute("colspan", "9999")
-                        trError.appendChild(tdError)
-                        element.parentNode.insertBefore(trError, element.nextSibling)
+                    if (keysErrors[x] != "muestras_id") {
+                        const element = document.getElementById(keysErrors[x])
+                        if (element) {
+                            element.style.background = "#ff00001f"
+                            let trError = document.createElement("tr")
+                            trError.classList.add("tr-error-table-asignar")
+                            let tdError = document.createElement("td")
+                            tdError.innerHTML = "<h4>" + response.data.errors[keysErrors[x]] + " </h4>"
+                            tdError.setAttribute("colspan", "9999")
+                            trError.appendChild(tdError)
+                            element.parentNode.insertBefore(trError, element.nextSibling)
+                        }
                     }
                 }
                 setErrorsAsignar(response.data.errors)

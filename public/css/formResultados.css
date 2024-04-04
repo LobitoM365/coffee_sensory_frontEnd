@@ -159,14 +159,16 @@
     width: 100%;
 }
 
-#mainFormResultados .div-table-formato-fisico-template{
+#mainFormResultados .div-table-formato-fisico-template {
     display: flex;
     flex-direction: column;
     gap: 30px;
 }
+
 #mainFormResultados .h4-notas-formato-fisico {
     font-size: 1.4em;
 }
+
 #mainFormResultados .input-select:focus {
     outline: none;
 }
@@ -451,8 +453,13 @@
     border-radius: 2px;
 }
 
+
 #mainFormResultados .div-text-errror-formato>h4 {
-    font-size: 1.4em;
+    font-size: 1em;
+}
+
+#mainFormResultados .div-content-errros-formato h4 {
+    font-size: 0.8em;
 }
 
 #mainFormResultados .div-content-errros-formato {

@@ -1349,7 +1349,22 @@ export const FormResultados = forwardRef((data, ref) => {
                                         ) : (
                                             <div className="div-content-formato-sca">
                                                 <iframe id="iframeFormUpdate" className="iframe-formato-sca" src="/src/formatoSca/formatoSca.html" frameBorder="0"></iframe>
-                                                {data.errorsFormato ? ""
+                                                {data.errorsFormato ? Object.keys(data.errorsFormato).length > 0 ?
+
+                                                    <div className="div-text-errror-formato">
+                                                        <h4>Soluciona los siguietes problemas para poder continuar:</h4>
+                                                        <div className="div-content-errros-formato">
+                                                            {
+                                                                Object.keys(data.errorsFormato).map((value, index) => {
+                                                                    return <div key={index} >
+                                                                        <h3>{index + 1})</h3>
+                                                                        <h4>{data.errorsFormato[value]}</h4>
+                                                                    </div>
+                                                                })
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    : ""
                                                     :
                                                     ""}
                                                 <div className="div-footer-content-formato">
@@ -1519,7 +1534,6 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 ["notas"]: {
                                                                                     type: "area",
                                                                                     referencia: "Notas",
-                                                                                    upper_case: true,
                                                                                 },
                                                                             }}
                                                                         />

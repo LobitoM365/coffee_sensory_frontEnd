@@ -58,6 +58,13 @@ function getPuntajeTotal() {
 }
 
 defectosLigero.addEventListener("click", function () {
+    if (!defectosValue) {
+        if (parseFloat(defectos.innerHTML) == 4 || parseFloat(defectos.innerHTML) == 2) {
+            defectosValue = parseFloat(defectos.innerHTML)
+        } else {
+            defectosValue = 0
+        }
+    }
     defectosRechazo.classList.remove("defectos-focus")
     if (defectosValue == 2) {
         defectosLigero.classList.remove("defectos-focus")
@@ -73,6 +80,13 @@ defectosLigero.addEventListener("click", function () {
     getPuntajeFinal()
 })
 defectosRechazo.addEventListener("click", function () {
+    if (!defectosValue) {
+        if (parseFloat(defectos.innerHTML) == 4 || parseFloat(defectos.innerHTML) == 2) {
+            defectosValue = parseFloat(defectos.innerHTML)
+        } else {
+            defectosValue = 0
+        }
+    }
     defectosLigero.classList.remove("defectos-focus")
     if (defectosValue == 4) {
         defectosRechazo.classList.remove("defectos-focus")

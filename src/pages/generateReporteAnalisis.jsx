@@ -80,12 +80,68 @@ export const GenerateReporteAnalisis = () => {
                     },
                 }
                 const formatoFisico = await Api.post("formatos/buscar/not", filterFormatoFisico);
-                if (formatoFisico.data.status == true) {
-                    setFormatoFisico(formatoFisico.data.data)
-                    const resultado = await Api.post("resultado/buscar/" + formatoFisico.data.data[0].id + "");
 
+                if (formatoFisico.data.status == true) {
+                    const filterResultado = {
+                        "filter": {
+                            "where": {
+                                "an.id": {
+                                    "value": id,
+                                    "require": "and",
+                                },
+                                "forma.estado": {
+                                    "value": "5",
+                                    "operador": "=",
+                                    "required": "and",
+                                    "group": 4
+                                },
+                                "estado1": {
+                                    "value": "4",
+                                    "require": "or",
+                                    "operador": "=",
+                                    "no-key": "forma.estado",
+                                    "group": 4
+                                },
+                                "forma.tipos_analisis_id": {
+                                    "value": 1,
+                                    "require": "and",
+                                    "group": 1
+                                }
+                            },
+                            "limit": {
+                                "inicio": "4444",
+                                "fin": "4444"
+                            }
+                        }
+                    }
+                    setFormatoFisico(formatoFisico.data.data)
+                    const resultado = await Api.post("resultado/buscar/not", filterResultado);
                     if (resultado.data.status == true) {
-                        setResultadoFisico(resultado.data.data[0])
+                        const promedioResultadoFisico = {}
+                        const keys = ["peso_cps", "humedad", "peso_cisco", "merma_trilla", "peso_total_almendra", "porcentaje_almendra_sana", "peso_defectos_totales", "factor_rendimiento", "peso_almendra_sana", "porcentaje_defectos_totales", "negro_total", "cardenillo", "vinagre", "cristalizado", "veteado", "ambar", "sobresecado", "mordido", "picado_insectos", "averanado", "inmaduro", "aplastado", "flojo", "decolorado", "malla18", "malla15", "malla17", "malla14", "malla16", "mallas_menores"];
+
+                        for (let x = 0; x < keys.length; x++) {
+                            for (let d = 0; d < resultado.data.data.length; d++) {
+                                if (resultado.data.data[d]) {
+                                    if (resultado.data.data[d][keys[x]]) {
+                                        if (!promedioResultadoFisico[keys[x]]) {
+                                            promedioResultadoFisico[keys[x]] = 0
+                                        }
+                                        promedioResultadoFisico[keys[x]] = parseFloat(promedioResultadoFisico[keys[x]]) + parseFloat(resultado.data.data[d][keys[x]])
+                                    }
+                                }
+                            }
+                            if (promedioResultadoFisico[keys[x]]) {
+                                const value = promedioResultadoFisico[keys[x]] / resultado.data.data.length;
+                                if (value - Math.floor(value) > 0) {
+                                    promedioResultadoFisico[keys[x]] = value.toFixed(2).toString().replace("0", "")
+                                } else {
+                                    promedioResultadoFisico[keys[x]] = value
+                                }
+                                /* promedioResultadoFisico[keys[x]] = promedioResultadoFisico[keys[x]] / parseFloat(resultado.data.data.length) */
+                            }
+                        }
+                        setResultadoFisico(promedioResultadoFisico)
                     } else {
 
                     }
@@ -112,7 +168,7 @@ export const GenerateReporteAnalisis = () => {
                     },
                 }
                 const formatoSensorial = await Api.post("formatos/buscar/not", filterFormatoSensorial);
-                console.log(formatoSensorial, "formatooooooooooooooooooooo")
+
                 if (formatoSensorial.data.status == true) {
 
                     setFormatoSensorial(formatoSensorial.data.data)
@@ -122,29 +178,49 @@ export const GenerateReporteAnalisis = () => {
                                 "an.id": {
                                     "value": id,
                                     "require": "and",
+                                },
+                                "forma.estado": {
+                                    "value": "5",
+                                    "operador": "=",
+                                    "required": "and",
+                                    "group": 4
+                                },
+                                "estado1": {
+                                    "value": "4",
+                                    "require": "or",
+                                    "operador": "=",
+                                    "no-key": "forma.estado",
+                                    "group": 4
+                                },
+                                "forma.tipos_analisis_id": {
+                                    "value": 2,
+                                    "require": "and",
+                                    "group": 1
                                 }
+                            },
+                            "limit": {
+                                "inicio": "4444",
+                                "fin": "4444"
                             }
                         }
                     }
                     const resultado = await Api.post("resultado/buscar/not", filterResultado);
-
+                    console.log(resultado, "formaaaaaaaaaaaaaaa")
                     if (resultado.data.status == true) {
+
                         const promedio = {};
                         const variablesPromedio = ["fragancia_aroma", "sabor", "sabor_residual", "acidez", "cuerpo", "uniformidad", "balance", "taza_limpia", "dulzor", "puntaje_catador"]
                         for (let x = 0; x < resultado.data.data.length; x++) {
                             for (let r = 0; r < variablesPromedio.length; r++) {
                                 const variable = resultado.data.data[x][variablesPromedio[r]]
                                 if (variable) {
-
                                     if (!promedio[variablesPromedio[r]]) {
                                         promedio[variablesPromedio[r]] = 0
                                     }
-                                    console.log(variable, "vaaaaaaar-----------", promedio[variablesPromedio[r]], variablesPromedio[r])
                                     promedio[variablesPromedio[r]] = promedio[variablesPromedio[r]] + variable
                                 }
                             }
                         }
-                        console.log(promedio, "prommmmmmmmmmmmmmmmmmmmmm", resultado.data.data)
                         for (let x = 0; x < variablesPromedio.length; x++) {
                             if (promedio[variablesPromedio[x]]) {
                                 const value = promedio[variablesPromedio[x]] / resultado.data.data.length;
@@ -1462,7 +1538,6 @@ export const GenerateReporteAnalisis = () => {
                                                         <View style={[estyle.bodytableColStyleHeightAll, estyle.tableRowStyle, estyle.tableBody]}>
                                                             <View style={[estyle.tableColStyleHeightAll, estyle.tableColStyle, estyle.colTable]}>
 
-                                                                {console.log(formatoSensorial, "formatooooooooooooo")}
                                                                 {
                                                                     formatoSensorial ? formatoSensorial.length > 0 ? (
                                                                         (() => {
@@ -1470,16 +1545,12 @@ export const GenerateReporteAnalisis = () => {
                                                                             return formatoSensorial.map((value, index) => {
                                                                                 if (value["notas"]) {
                                                                                     count = count + 1
-                                                                                    return <Text style={[estyle.tableCellStyle, estyle.notasFormatoSensorial]} key={index}>{count}) {value["notas"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</Text>;
+                                                                                    return <Text style={[estyle.tableCellStyle, estyle.notasFormatoSensorial]} key={index}>{count}) {value["notas"]}</Text>;
                                                                                 }
                                                                             });
                                                                         })()
                                                                     ) : "No registra" : "No registra"
                                                                 }
-
-
-                                                                {/* {formatoSensorial["notas"] ? formatoSensorial["notas"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"} */}
-
                                                             </View>
                                                         </View>
                                                     </View>
@@ -1506,13 +1577,74 @@ export const GenerateReporteAnalisis = () => {
 
                                         <View style={estyle.itemBody}>
                                             <View style={estyle.tittleItem}> <Text>8.</Text> <Text>Conclusión y recomendaciones</Text></View>
-                                            <Text>Se recomienda hacer un análisis de suelo, para que pueda hacer una regulación de pH y así realizar una
+                                            {/* <Text>Se recomienda hacer un análisis de suelo, para que pueda hacer una regulación de pH y así realizar una
                                                 correcta fertilización del café, además se recomienda hacer una buena recolección seleccionando solo
                                                 frutos maduros evitando granos inmaduros y sobre maduros.
-                                            </Text>
+                                            </Text> */}
+                                            {
+                                                formatoFisico ? formatoFisico.length > 0 ? (
+                                                    (() => {
+                                                        let count = 0;
+                                                        return formatoFisico.map((value, index) => {
+                                                            if (value["notas"]) {
+                                                                count = count + 1
+                                                                return <Text key={index}>- {value["notas"]}</Text>;
+                                                            }
+                                                        });
+                                                    })()
+                                                ) : "No registra" : "No registra"
+                                            }
                                         </View>
                                     </View>
-                                    <View style={[estyle.sectionFive, estyle.divMainContentFirmas]}>
+                                </Page>
+                                <Page
+                                    style={estyle.page}
+                                    size="Letter"
+                                >
+                                    <View style={[estyle.container, estyle.encabezado]} fixed>
+                                        <View style={estyle.divHader} >
+                                            <View style={estyle.header}>
+                                                <View style={[estyle.itemHeader, estyle.divheader]}>
+                                                    <View style={[estyle.contentHeader, estyle.borderLeftItemHeader]}>
+                                                        <Image style={estyle.img} src={"/public/img/logoSena.png"} />
+                                                    </View>
+                                                    <View style={estyle.contentHeader}>
+                                                        <Image style={estyle.img} src={"/public/img/logoCompletoENCC.png"} />
+                                                    </View>
+                                                </View >
+
+                                                <View style={[estyle.itemHeaderCenter, estyle.divheader]}>
+                                                    <View style={[estyle.contentHeader, estyle.borderCenterTopHeader]}>
+                                                        <Text style={[estyle.text]}>Centro de Gestión y Desarrollo Sostenible  {'\n'}
+                                                            Surcolombiano  {'\n'}
+                                                            Escuela Nacional de la Calidad del Café
+                                                        </Text>
+                                                    </View>
+                                                    <View style={[estyle.contentHeader, estyle.borderCenterBottomHeader]}>
+                                                        <Text style={estyle.text}>INFORME SERVICIO ANALISIS FISICO SENSORIAL</Text>
+                                                    </View>
+                                                </View>
+
+                                                <View style={[estyle.itemHeaderRight, estyle.divheader]}>
+                                                    <View style={[estyle.contentHeader, estyle.borderRightItemHeader]}>
+                                                        <Image style={estyle.imgSennova} src={"/public/img/sennovaLogo.png"} />
+                                                    </View>
+                                                    <View style={estyle.contentHeader}>
+                                                        <View style={[estyle.contentItemHeaderRight, estyle.contentItemHeaderRightTop]}>
+                                                            <Text style={[estyle.text, estyle.textItemHeaderRight]}>Fecha: {fechaActual.getFullYear() + "-" + ((fechaActual.getMonth() + 1) < 10 ? ("0" + (fechaActual.getMonth() + 1)) : (fechaActual.getMonth() + 1)) + "-" + ((fechaActual.getDate() + 1) < 10 ? ("0" + (fechaActual.getDate())) : (fechaActual.getDate()))}</Text>
+                                                        </View>
+                                                        <View style={estyle.contentItemHeaderRight}>
+                                                            <Text style={[estyle.text, estyle.textItemHeaderRight]}>Página: </Text>
+                                                            <Text style={estyle.numberPagina} render={({ pageNumber, totalPages }) => (
+                                                                `${pageNumber} de ${totalPages}`
+                                                            )}></Text>
+                                                        </View>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    <View style={[estyle.divMainContentFirmas]}>
                                         <View>
                                             <View style={estyle.tittleItem}>  <Text>Catadores Formato Físico</Text></View>
 
@@ -1598,11 +1730,8 @@ export const GenerateReporteAnalisis = () => {
                                                             }
                                                             const catadoresFormatoSensorial = []
                                                             let countInsert = 1
-                                                            console.log(formatoSensorial, formatoSensorial.length)
                                                             for (let x = 0; x < formatoSensorial.length; x++) {
-                                                                console.log(countInsert, "inserrrt")
                                                                 if (grupos[countInsert]) {
-                                                                    console.log(catadoresFormatoSensorial, "sensoriallllllllll", formatoSensorial[x], formatoSensorial[x].catador_id)
                                                                     if (!catadoresFormatoSensorial.includes(formatoSensorial[x].catador_id)) {
                                                                         catadoresFormatoSensorial.push(formatoSensorial[x].catador_id)
                                                                         grupos[countInsert].push({

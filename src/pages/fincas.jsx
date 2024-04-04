@@ -320,6 +320,11 @@ export const Fincas = (userInfo) => {
     }
     async function getFincas() {
         try {
+            dataFilterTable.filter.where["us.id"] = {
+                "value": "0",
+                "operador": "!=",
+                "require": "or"
+            }
             const response = await Api.post("finca/listar", dataFilterTable);
             if (response.data.status == true) {
                 setFincas(response.data.data)
@@ -756,7 +761,10 @@ export const Fincas = (userInfo) => {
             let filterReport = {
                 "filter": {
                     "where": {
+                        "fin.estad123123o": {
+                            "value": "0",
 
+                        }
                     },
                     "date": {
                         "fin.fecha_creacion": {

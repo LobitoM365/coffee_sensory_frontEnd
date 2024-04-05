@@ -126,20 +126,20 @@ export const Analisis = (userInfo) => {
 
     useEffect(() => {
         const cloneInputsForm = { ...inputsForm };
-
-        if (updateStatus == true) {
-            cloneInputsForm["proceso"]["visibility"] = true;
-        } else {
-            cloneInputsForm["proceso"]["visibility"] = false;
+        if (cloneInputsForm["proceso"]) {
+            if (updateStatus == true) {
+                cloneInputsForm["proceso"]["visibility"] = true;
+            } else {
+                cloneInputsForm["proceso"]["visibility"] = false;
+            }
         }
-
         setInputsForm(cloneInputsForm)
     }, [updateStatus])
     let idAnalisis = 0;
 
     let [inputsForm, setInputsForm] = useState(
         {
-            proceso: {
+            /* proceso: {
                 type: "select",
                 referencia: "Tipo de Proceso",
                 values: ["nombre"],
@@ -147,7 +147,7 @@ export const Analisis = (userInfo) => {
                 upper_case: true,
                 key: "nombre",
                 visibility: false
-            }, muestras_id: {
+            }, */ muestras_id: {
                 type: "select",
                 referencia: "Muestra",
                 values: ["numero_documento", "nombre_completo", "finca", "lote", "mu_id"],
@@ -476,7 +476,8 @@ export const Analisis = (userInfo) => {
                 }
             },
             "class": "div-reporte-pdf",
-            "upper_case": true
+            "upper_case": true,
+            "rol": ["administrador"]
         },
         "estado_analisis": {
             "referencia": "Estado",
@@ -811,11 +812,11 @@ export const Analisis = (userInfo) => {
         }
     }
     const filterEstado = {
-        "Activo": {
-            "value": 1
+        "Pendiente": {
+            "value": 2
         },
-        "Inactivo": {
-            "value": 0
+        "Finalizado": {
+            "value": 4
         }
     }
     useEffect(() => {
@@ -2049,7 +2050,11 @@ export const Analisis = (userInfo) => {
                                                                                                                             <h4 className='h4-estado-formato-asing h4-estado-formato-asing-asignado'>
                                                                                                                                 Asignado
                                                                                                                             </h4>
-                                                                                                                            : ""}
+                                                                                                                            : value.estado == 5 ?
+                                                                                                                                <h4 className='h4-estado-formato-asing h4-estado-formato-asing-registrado'>
+                                                                                                                                    Registrado
+                                                                                                                                </h4>
+                                                                                                                                : ""}
                                                                                                                     <button onClick={() => { cambiarFormato(value.id, valueGlobalInput["catador_fisico_" + value.catador_id + "" + index], "catador_fisico_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
                                                                                                                     <button
                                                                                                                         onClick={() => { eliminarFormato(value.id) }}

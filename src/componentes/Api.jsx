@@ -6,6 +6,7 @@ export default axios.create({
     baseURL: "http://" + host + ":3000/api",
     /*  baseURL : "http://localhost:3000/api", */
     withCredentials: true
+    
 })
 
 /* export const host = 'localhost'; */

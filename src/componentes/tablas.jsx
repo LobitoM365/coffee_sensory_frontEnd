@@ -1094,7 +1094,14 @@ export const Tablas = (array) => {
                                         <thead>
                                             <tr className='thead-table'>
                                                 {keysPrint.map((keys, index) => {
+                                                    if (array.userInfo && print[keys]["rol"]) {
+                                                        if (array.userInfo != undefined) {
 
+                                                            if (!print[keys]["rol"].includes(array.userInfo.rol)) {
+                                                                return
+                                                            }
+                                                        }
+                                                    }
                                                     return <th className='th-table-print' key={index}>
                                                         <div className="items-header-table">
                                                             <h4 className='tittle-item-header-table'>   {print[keys]["referencia"] ? print[keys]["referencia"] : keys} </h4>
@@ -1123,6 +1130,15 @@ export const Tablas = (array) => {
 
                                                         {
                                                             keysPrint.map((keys, index) => {
+
+                                                                if (array.userInfo && print[keys]["rol"]) {
+                                                                    if (array.userInfo != undefined) {
+
+                                                                        if (!print[keys]["rol"].includes(array.userInfo.rol)) {
+                                                                            return
+                                                                        }
+                                                                    }
+                                                                }
                                                                 if (keys == "actualizar") {
                                                                     return <td key={index} className='td-update' style={{ display: array.hidden && array.hidden.includes('update') ? 'none' : '' }}>
                                                                         <div className="center-update">

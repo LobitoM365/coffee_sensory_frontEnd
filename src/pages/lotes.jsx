@@ -132,6 +132,7 @@ export const Lotes = () => {
 
     async function getLotes() {
         try {
+            
             const response = await Api.post("lotes/listar", dataFilterTable);
             if (response.data.status == true) {
                 setLotes(response.data.data)

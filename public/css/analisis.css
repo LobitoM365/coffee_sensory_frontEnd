@@ -440,6 +440,10 @@
     background-color: gray;
 }
 
+#mainAnalisis .h4-estado-formato-asing-registrado {
+    background-color: rgb(64, 192, 231);
+}
+
 #mainAnalisis .button-users-formatos-cambiar {
     background-color: rgb(41 153 136);
 }
@@ -448,7 +452,9 @@
     background-color: red;
 }
 
+
 #mainAnalisis .catador-no-options-asignar {
+    width: calc(100% - 20px);
     padding: 10px;
     color: black;
     border-radius: 4px;

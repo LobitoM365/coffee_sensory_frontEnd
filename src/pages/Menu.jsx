@@ -1826,7 +1826,7 @@ export const Menu = (data) => {
                     : ""
             }
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
-            {<Mensajeria socket={data.socket} user={user} />}
+            {/* {<Mensajeria socket={data.socket} user={user} />} */}
         </div >
     )
 }

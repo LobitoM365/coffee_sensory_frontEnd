@@ -126,8 +126,9 @@ export const Mensajeria = (data) => {
                                 if (message.send == "you" && message.emisor == data.user.id) {
                                     procedureMessage = false
                                 }
+                                /* console.log(message.emisor == data.user.id, "emisorrrrrrrrr") */
                                 if (message.emisor == data.user.id) {
-                                    messageEstado = 2
+                                    messageEstado = 0
                                 }
                                 if (procedureMessage == true) {
                                     const cloneMessage = { ...message }
@@ -381,7 +382,7 @@ export const Mensajeria = (data) => {
                                 setPositionChats(clonePositionChats)
                             }
                             setMessagesChat(positionChats[response.data.data.id]["message"])
-                            
+
                             const actualizarMessage = await Api.post("/comunicaciones/actualizar/estado/mensajes", { "comunicaciones_id": response.data.data.id })
                             alert("xd")
                             console.log(actualizarMessage, "mesaaaaaa")

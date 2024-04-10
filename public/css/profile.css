@@ -71,7 +71,8 @@
 #mainProfile .input-update-profile {
     padding: 8px 12px;
     width: calc(100% - 24px);
-    border: 1px solid rgb(218, 219, 222);
+    /* border: 1px solid rgb(218, 219, 222); */
+    border: unset;
     border-radius: 4px;
     background-color: white;
     color: black;
@@ -161,6 +162,8 @@
 
 #mainProfile .img-icono {
     height: 100%;
+    /* position: absolute;
+    left: -40px; */
 }
 
 #mainProfile .div-imgs-iconos {
@@ -306,4 +309,40 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+#mainProfile .div-eyes .eyes-container .svg-eyes-two{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+}
+#mainProfile .div-eyes  input{
+    /* width: 100%;
+    height: 100%; */
+}
+#mainProfile .div-eyes .eyes-container {
+    width: calc(100% - 20px);
+    height: calc(100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 10px;
+    cursor: pointer;
+}
+#mainProfile .div-eyes{
+    display: grid;
+    grid-template-columns: 1fr 60px;
+    grid-template-rows: 1fr;
+}
+#mainProfile .div-input-password input{
+    height: calc(100% - 16px);
+}
+#mainProfile .eyes-closed{
+    margin-top: 10px;
+}
+#mainProfile .div-input-password{
+    height: 40px;
+    background-color: white;
+    border: 1px solid rgb(218, 219, 222);
+    border-radius: 4px;
+    overflow: hidden;
 }

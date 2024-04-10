@@ -190,7 +190,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
 
     return (
         <div id="mainGlobalInput">
-            <div ref={inputRef} style={{ display: Object.keys(inputs).length == 1 ? "unset" : "" }} className={(data.class ? data.class : "") + " form-register"}>
+            <div ref={inputRef} /* style={{ display: Object.keys(inputs).length == 1 ? "unset" : "" }} */ className={(data.class ? data.class : "") + " form-register"}>
                 {
                     inputs.map((key, index) => {
                         if (data.userInfo && dataInputs[key]["rol"]) {
@@ -272,8 +272,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
 
                                                     value={value != "" ? value : data.value[key]} className="input-form text-area-form" type="text" />
                                                 :
-                                                <input id={key} name={key} autoComplete="false" onChange={(e) => {
-                                                    console.log(functionExecute, "functionnnnnnnnn")
+                                                <input placeholder={dataInputs[key]["placeholder"] ? dataInputs[key]["placeholder"] : ""} id={key} name={key} autoComplete="false" onChange={(e) => {
                                                     if (typeof functionExecute == "function") {
                                                         functionExecute(execute == "key" ? dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] : execute == "all" ? dataInputs[key]["opciones"][indexSelect] : "", dataInputs[key]["index"] ? indexSelect : "");
                                                     }
@@ -284,7 +283,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
 
                                     </div>
 
-                                    {data.errors ? <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4> : ""}
+                                    {data.errors ? data.errors[key] ? <h4 className="label-error-submit-form" htmlFor="">{data.errors[key]}</h4> : "" : ""}
 
                                 </div>
                             );
@@ -426,7 +425,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
 
                                                 </div>
                                             </div>
-                                            {data.errors ? <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4> : ""}
+                                            {data.errors ? data.errors[key] ? <h4 className="label-error-submit-form" htmlFor="">{data.errors[key]}</h4> : "" : ""}
                                         </div>
                                     </div>
 

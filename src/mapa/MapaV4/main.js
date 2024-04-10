@@ -25,7 +25,7 @@ let less = 0
 let lessPorcent = 1;
 let lassClientX = 0;
 let lassClienty = 0;
-let clikeableStatus = true
+let clickeableStatus = true
 const departamentosName = [];
 const municipiosName = {};
 ///Configuracion inicial para el contenedor del mapa
@@ -235,7 +235,7 @@ const nameElements = [
     "Tame",
     "Baranoa",
     "Barranquilla",
-    
+
     "Candelaria",
     "Galapa",
     "Juan de Acosta",
@@ -1366,7 +1366,7 @@ function getGeolocalizacion(latitud, longitud, classAdd, element, data) {
     divPunto.classList.add("punto");
     divPunto.classList.add("svg-ubicacion-cafe");
     let classAddPoint = data.calidad > 9 ? "punto-calidad-extraordinario" : data.calidad > 8 ? "punto-calidad-excelente" : data.calidad > 7 ? "punto-calidad-muy-byuena" : "punto-calidad-buena";
-    divPunto.innerHTML = (element ? (element) : ('<svg data-point="'+data["analisis_id"]+'" class="svg-point ' + classAddPoint + '" style="width:' + widthPoint + 'px" class="' + (classAdd ? (classAdd + " ") : "") + '" xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 176.000000 248.000000" preserveAspectRatio="xMidYMidmeet"style="&#10;  &#10;    height: max-content;&#10;"> <g transform = "translate(0.000000,248.000000) scale(0.100000,-0.100000)" fill "#000000" stroke = "none"><path d="M800 2449 c-247 -21 -477 -156 -621 -365 -45 -65 -104 -197 -125 -279 -29 -112 -25 -294 9 -421 40 -152 83 -266 149 -398 132 -263 291 -473 548 -723 l114 -111 26 18 c14 10 81 73 149 141 339 339 546 684 653 1089 29 111 31 300 4 405 -21 82 -80 214 -125 279 -176 255 -467 391 -781 365z m193 -84 c267 -29 527 -247 615 -516 56 -169 52 -318 -14 -537 -92 -309 -298 -634 -591 -932 l-122 -125 -101 100 c-372 366 -616 799 -662 1171 -43 356 180 698 532 813 72 23 195 41 250 35 19 -1 61 -6 93 -9z" /><path d="M925 2208 c85 -67 155 -215 155 -327 -1 -122 -30 -189 -141 -326 -115 -142 -134 -181 -133 -280 0 -72 4 -87 38 -155 20 -41 50 -90 65 -108 l27 -34 87 21 c126 30 198 70 298 166 135 129 206 333 180 518 -21 152 -76 261 -184 369 -101 101 -270 178 -390 178 l-30 0 28 -22z" /> <path d="M648 2186 c-194 -80 -341 -254 -379 -449 -13 -70 -13 -199 1 -267 30 -145 145 -307 275 -389 59 -37 193 -91 227 -91 10 0 2 24 -25 79 -54 108 -68 206 -44 299 22 82 55 138 158 267 93 116 114 171 107 270 -6 73 -34 131 -95 196 -50 54 -128 109 -152 109 -9 0 -41 -11 -73 -24z" /> <path d="M553 80 c-136 -8 -193 -17 -193 -29 0 -16 45 -21 277 -33 179 -9 289 -9 475 0 239 11 288 17 288 32 0 14 -44 20 -212 30 -181 11 -448 11 -635 0z" /> </g ></svg>'))
+    divPunto.innerHTML = (element ? (element) : ('<svg data-point="' + data["analisis_id"] + '" class="svg-point ' + classAddPoint + '" style="width:' + widthPoint + 'px" class="' + (classAdd ? (classAdd + " ") : "") + '" xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 176.000000 248.000000" preserveAspectRatio="xMidYMidmeet"style="&#10;  &#10;    height: max-content;&#10;"> <g transform = "translate(0.000000,248.000000) scale(0.100000,-0.100000)" fill "#000000" stroke = "none"><path d="M800 2449 c-247 -21 -477 -156 -621 -365 -45 -65 -104 -197 -125 -279 -29 -112 -25 -294 9 -421 40 -152 83 -266 149 -398 132 -263 291 -473 548 -723 l114 -111 26 18 c14 10 81 73 149 141 339 339 546 684 653 1089 29 111 31 300 4 405 -21 82 -80 214 -125 279 -176 255 -467 391 -781 365z m193 -84 c267 -29 527 -247 615 -516 56 -169 52 -318 -14 -537 -92 -309 -298 -634 -591 -932 l-122 -125 -101 100 c-372 366 -616 799 -662 1171 -43 356 180 698 532 813 72 23 195 41 250 35 19 -1 61 -6 93 -9z" /><path d="M925 2208 c85 -67 155 -215 155 -327 -1 -122 -30 -189 -141 -326 -115 -142 -134 -181 -133 -280 0 -72 4 -87 38 -155 20 -41 50 -90 65 -108 l27 -34 87 21 c126 30 198 70 298 166 135 129 206 333 180 518 -21 152 -76 261 -184 369 -101 101 -270 178 -390 178 l-30 0 28 -22z" /> <path d="M648 2186 c-194 -80 -341 -254 -379 -449 -13 -70 -13 -199 1 -267 30 -145 145 -307 275 -389 59 -37 193 -91 227 -91 10 0 2 24 -25 79 -54 108 -68 206 -44 299 22 82 55 138 158 267 93 116 114 171 107 270 -6 73 -34 131 -95 196 -50 54 -128 109 -152 109 -9 0 -41 -11 -73 -24z" /> <path d="M553 80 c-136 -8 -193 -17 -193 -29 0 -16 45 -21 277 -33 179 -9 289 -9 475 0 239 11 288 17 288 32 0 14 -44 20 -212 30 -181 11 -448 11 -635 0z" /> </g ></svg>'))
     let topP = 12.44090539183309842
     let bottom = -4.03552330887985
     let left = -66.8698311193493
@@ -1393,16 +1393,16 @@ function getGeolocalizacion(latitud, longitud, classAdd, element, data) {
     // svgPotint[0].addEventListener("click", function(){
 
     // })
-    svgPotint[0].addEventListener("mouseover", function(){
+    svgPotint[0].addEventListener("mouseover", function () {
         titlePunto.style.display = "block"
     })
-    svgPotint[0].addEventListener("mouseout", function(){
+    svgPotint[0].addEventListener("mouseout", function () {
         titlePunto.style.display = "none"
     })
-    titlePunto.addEventListener("mouseover", function(){
+    titlePunto.addEventListener("mouseover", function () {
         titlePunto.style.display = "block"
     })
-    titlePunto.addEventListener("mouseout", function(){
+    titlePunto.addEventListener("mouseout", function () {
         titlePunto.style.display = "none"
     })
 }
@@ -1424,8 +1424,8 @@ for (let x = 0; x < departamentos.length; x++) {
     }
 
     departamentos[x].addEventListener("click", function () {
-        if (clikeableStatus) {
 
+        if (clickeableStatus) {
 
             tittleElement.style.display = "none"
             if (departamentos[x] != lastFocusMunicipio || document.body.scrollHeight != lastHeight || document.body.scrollWidth != lastWidth) {
@@ -1542,26 +1542,45 @@ document.addEventListener('mousemove', function (event) {
 })
 
 function moveMap(event) {
-    clikeableStatus = false
+    /* clickeableStatus = false */
+    clickeableStatus = false
+    const bbox = divMapa.getBoundingClientRect()
+    console.log(lassClientX, event.clientX, lastScale)
     let setPositionX = lassClientX - event.clientX
     let setPositionY = lassClienty - event.clientY
     let expresion = /calc\((-?[\d.]+)%/;
-    let division = (parseFloat(mainDivMapa.style.zoom.replace("%", ""))) / 100;
+    let division = (parseFloat(mainDivMapa.style.zoom.replace("%", ""))) / 50;
+    /* let division = (lastScale * 1.5) */
 
     let resultadoY = expresion.exec(divMapa.style.top);
     let resultadoX = expresion.exec(divMapa.style.left);
+
+
+    if (!resultadoY) {
+        divMapa.style.top = "1%"
+        resultadoY = 1
+    } else {
+        resultadoY = resultadoY[1]
+    }
+    if (!resultadoX) {
+        divMapa.style.left = "1%"
+        resultadoX = 1
+    } else {
+        resultadoX = resultadoX[1]
+    }
+    console.log((divMapa.clientWidth), bbox.left)
     if (lastScale != 0) {
         if (resultadoY) {
-            if (resultadoY[1]) {
-                divMapa.style.top = "calc(" + resultadoY[1] + "% + " + (((setPositionY / division) / 10) * -1) + "%)"
+            if (resultadoY) {
+                divMapa.style.top = "calc(" + resultadoY + "% + " + (((setPositionY / division) / 10) * -1) + "%)"
             } else {
             }
         } /* else {
             divMapa.style.top = "calc(" + (((setPositionY) / 10) * -1) + "%)"
         } */
         if (resultadoX) {
-            if (resultadoX[1]) {
-                divMapa.style.left = "calc(" + resultadoX[1] + "% + " + (((setPositionX / division) / 10) * -1) + "%)"
+            if (resultadoX) {
+                divMapa.style.left = "calc(" + resultadoX + "% + " + (((setPositionX / division) / 10) * -1) + "%)"
             }
         } /* else {
             divMapa.style.top = "calc(" + (((setPositionX) / 10) * -1) + "%)"
@@ -1580,6 +1599,7 @@ function moveMap(event) {
 
     lassClientX = event.clientX
     lassClienty = event.clientY
+
 }
 document.addEventListener('mousedown', function (event) {
     if (!event.target.classList.contains("preinfo-punto-ubicacion") && !event.target.parentNode.classList.contains("preinfo-punto-ubicacion") && !event.target.parentNode.parentNode.classList.contains("preinfo-punto-ubicacion")) {
@@ -1588,22 +1608,25 @@ document.addEventListener('mousedown', function (event) {
         divMapa.style.transition = "unset"
         lassClientX = event.clientX
         lassClienty = event.clientY
-        if (clikeableStatus == false) {
+
+        if (clickeableStatus == true) {
             setTimeout(() => {
                 document.addEventListener('mousemove', moveMap)
-            }, [150])
+            }, 50)
         } else {
-            document.addEventListener('mousemove', moveMap)
+            document.removeEventListener('mousemove', moveMap)
         }
     }
 });
 
 document.addEventListener('mouseup', function (event) {
-    divMapa.style.transition = "all 0.6s"
-    document.removeEventListener('mousemove', moveMap)
     setTimeout(() => {
-        clikeableStatus = true
-    }, 250)
+        clickeableStatus = true
+    }, 50)
+    divMapa.style.transition = "all 0.6s"
+    setTimeout(() => {
+        document.removeEventListener('mousemove', moveMap)
+    }, 50)
 });
 function setMovementMap(bboxElement, lessScale, element) {
     let puntos = document.querySelectorAll(".svg-ubicacion-cafe")
@@ -1702,12 +1725,10 @@ for (let m = 0; m < municipios.length; m++) {
         "department": municipios[m].classList[1]
     }
     municipios[m].addEventListener("click", function () {
-        if (clikeableStatus) {
 
-
-            /* tittleElement.innerHTML = ""
-            tittleElement.style.display = "none" */
-
+        /* tittleElement.innerHTML = ""
+        tittleElement.style.display = "none" */
+        if (clickeableStatus) {
             for (let mf = 0; mf < municipios.length; mf++) {
 
                 if (!municipios[mf].classList.contains(municipiosName[mf]["name"])) {
@@ -1744,6 +1765,7 @@ for (let m = 0; m < municipios.length; m++) {
                 municipios[m].style.visibility = "";
             }
         }
+
     })
     municipios[m].addEventListener("mouseover", function () {
         focusElementDepartment = municipios[m];
@@ -1764,6 +1786,7 @@ for (let m = 0; m < municipios.length; m++) {
             focusElementDepartment = "";
         }
     })
+
 }
 
 
@@ -1796,6 +1819,9 @@ window.addEventListener("scroll", function () {
     console.log("xdd")
 }) */
 
+Mousetrap.bind('ctrl+m', function () {
+    /* clickeableStatus = !clickeableStatus */
+})
 Mousetrap.bind('ctrl+g', function () {
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(

@@ -688,7 +688,7 @@ export const FormResultados = forwardRef((data, ref) => {
                 }
             }
             const response = await Api.post("/variables/listar", dataVariables)
-            console.log(response,"ressssssssssssssssssssssss")
+            console.log(response, "ressssssssssssssssssssssss")
             if (response.data.status == true) {
                 setVariablesFormatoFisico(response.data.data)
             } else if (response.data.find_error) {
@@ -917,7 +917,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                 </div>
                                                                 <div>
                                                                     <h4>Fecha de Registro:</h4>
-                                                                    <p>{key.fecha_creacion ? key.proceso : "No registra"}</p>
+                                                                    <p>{key.fecha_creacion ? formatDate(key.fecha_creacion) : "No registra"}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1036,11 +1036,11 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                 </div>
                                                                 <div>
                                                                     <h4>Fecha de Análisis</h4>
-                                                                    <p>{key.fecha_analisis ? key.fecha_analisis : "No registra"}</p>
+                                                                    <p>{key.fecha_analisis ? formatDate(key.fecha_analisis) : "No registra"}</p>
                                                                 </div>
                                                                 <div>
                                                                     <h4>Fecha de actualización</h4>
-                                                                    <p>{key.fecha_analisis ? key.fecha_analisis : "No registra"}</p>
+                                                                    <p>{key.fecha_analisis ? formatDate(key.fecha_analisis) : "No registra"}</p>
                                                                 </div>
                                                                 <div>
                                                                     <h4>Tipo de análisis</h4>
@@ -1074,93 +1074,333 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                     <tbody>
                                                                         <tr>
                                                                             <td>Peso C.P.S (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_cps"] ? data.dataModalResultadoAnalisis[0]["peso_cps"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_cps"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["peso_cps"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Humedad (%)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["humedad"] ? data.dataModalResultadoAnalisis[0]["humedad"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["humedad"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["humedad"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Peso Cisco (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_cisco"] ? data.dataModalResultadoAnalisis[0]["peso_cisco"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_cisco"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["peso_cisco"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td> Merma por trilla (%) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["merma_trilla"] ? data.dataModalResultadoAnalisis[0]["merma_trilla"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["merma_trilla"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["merma_trilla"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Peso total de la almendra (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_total_almendra"] ? data.dataModalResultadoAnalisis[0]["peso_total_almendra"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_total_almendra"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["peso_total_almendra"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Porcentaje de almendra sana (%)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["porcentaje_almendra_sana"] ? data.dataModalResultadoAnalisis[0]["porcentaje_almendra_sana"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["porcentaje_almendra_sana"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["porcentaje_almendra_sana"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Peso defectos totales (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_defectos_totales"] ? data.dataModalResultadoAnalisis[0]["peso_defectos_totales"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_defectos_totales"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["peso_defectos_totales"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Factor de rendimiento (Kg C.P.S) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["factor_rendimiento"] ? data.dataModalResultadoAnalisis[0]["factor_rendimiento"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["factor_rendimiento"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["factor_rendimiento"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Peso de almendra sana (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_almendra_sana"] ? data.dataModalResultadoAnalisis[0]["peso_almendra_sana"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_almendra_sana"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["peso_almendra_sana"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Porcentaje de defectos totales (%) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["porcentaje_defectos_totales"] ? data.dataModalResultadoAnalisis[0]["porcentaje_defectos_totales"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["porcentaje_defectos_totales"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["porcentaje_defectos_totales"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Negro total o parcial (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["negro_total"] ? data.dataModalResultadoAnalisis[0]["negro_total"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["negro_total"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["negro_total"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Cardenillo (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["cardenillo"] ? data.dataModalResultadoAnalisis[0]["cardenillo"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["cardenillo"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["cardenillo"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Vinagre (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["vinagre"] ? data.dataModalResultadoAnalisis[0]["vinagre"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["vinagre"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["vinagre"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Cristalizado (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["cristalizado"] ? data.dataModalResultadoAnalisis[0]["cristalizado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["cristalizado"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["cristalizado"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Veteado (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["veteado"] ? data.dataModalResultadoAnalisis[0]["veteado"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["veteado"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["veteado"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Ámbar o mantequillo (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["ambar"] ? data.dataModalResultadoAnalisis[0]["ambar"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["ambar"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["ambar"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Sobresecado (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["sobresecado"] ? data.dataModalResultadoAnalisis[0]["sobresecado"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["sobresecado"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["sobresecado"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Mordido o cortado (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["mordido"] ? data.dataModalResultadoAnalisis[0]["mordido"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["mordido"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["mordido"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Picado por insectos (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["picado_insectos"] ? data.dataModalResultadoAnalisis[0]["picado_insectos"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["picado_insectos"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["picado_insectos"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Averanado o arrugado (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["averanado"] ? data.dataModalResultadoAnalisis[0]["averanado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["averanado"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["averanado"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Inmaduro o paloteado(g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["inmaduro"] ? data.dataModalResultadoAnalisis[0]["inmaduro"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["inmaduro"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["inmaduro"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Aplastado (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["aplastado"] ? data.dataModalResultadoAnalisis[0]["aplastado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["aplastado"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["aplastado"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Flojo (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["flojo"] ? data.dataModalResultadoAnalisis[0]["flojo"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["flojo"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["flojo"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Decolorado o reposado (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["decolorado"] ? data.dataModalResultadoAnalisis[0]["decolorado"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["decolorado"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["decolorado"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Malla 18 (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla18"] ? data.dataModalResultadoAnalisis[0]["malla18"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla18"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["malla18"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Malla 15 (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla15"] ? data.dataModalResultadoAnalisis[0]["malla15"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla15"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["malla15"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Malla 17 (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla17"] ? data.dataModalResultadoAnalisis[0]["malla17"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla17"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["malla17"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Malla 14 (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla14"] ? data.dataModalResultadoAnalisis[0]["malla14"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla14"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["malla14"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Malla 16 (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla16"] ? data.dataModalResultadoAnalisis[0]["malla16"] : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla16"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["malla16"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td> Mallas menores (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["mallas_menores"] ? data.dataModalResultadoAnalisis[0]["mallas_menores"] : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["mallas_menores"] ? (() => {
+                                                                                let value = data.dataModalResultadoAnalisis[0]["mallas_menores"]
+                                                                                if (value - Math.floor(value) > 0) {
+                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                } else {
+                                                                                    value = value
+                                                                                }
+                                                                                return value
+                                                                            })() : <div> {/*10.4*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -1298,7 +1538,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                         <iframe id="iframeFormatoSca" className="iframe-vacio-formato-sca iframe-formato-sca" src="/src/formatoSca/formatoScaTemplate.html" frameBorder="0"></iframe>
                                                     }
 
-                                                    {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].permission_formato == "true" ? data.dataModalResultado[0].estado != 4 ? <div>
+                                                    {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].permission_formato == "true" ? data.dataModalResultado[0].estado != 4 ? <div className="footer-content-info-analisis-formato">
                                                         <button onClick={() => { setStatusInput(true); setInputValor({}); setStatusInputDefault(false); setIdFormato(data.dataModalResultado[0].id), setModeFormato(data.dataModalResultado[0].tipos_analisis_id); setTipoRegistro(1), data.setModalFormNormal(true) }} type="button" className="button-submit-form">Analizar</button>
                                                     </div> : "" : "" : ""}
                                                 </div>
@@ -1461,7 +1701,14 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                     if (data.dataModalResultadoAnalisis) {
                                                                                         if (data.dataModalResultadoAnalisis[0]) {
                                                                                             if (data.dataModalResultadoAnalisis[0][key.nombre]) {
-                                                                                                valueGlobalInput[key.nombre] = data.dataModalResultadoAnalisis[0][key.nombre]
+                                                                                                let value = data.dataModalResultadoAnalisis[0][key.nombre]
+                                                                                                if (value - Math.floor(value) > 0) {
+                                                                                                    value = value.toFixed(2).toString().replace("0", "")
+                                                                                                } else {
+                                                                                                    value = value
+                                                                                                }
+                                                                                                valueGlobalInput[key.nombre] = value
+
                                                                                             } else {
                                                                                                 valueGlobalInput[key.nombre] = 0
                                                                                             }

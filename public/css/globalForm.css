@@ -2,8 +2,9 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    padding: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
     z-index: 99999;
     display: flex;
     justify-content: center;
@@ -14,7 +15,7 @@
     background-color: rgba(0, 0, 0, 0.321);
 }
 
-#modalForm .div-form {
+#mainGlobalForm .div-form {
     background-color: white;
     display: flex;
     grid-template-columns: 1fr;
@@ -30,7 +31,7 @@
 
 }
 
-#modalForm .div-content-form {
+#mainGlobalForm .div-content-form {
     z-index: 99999;
     background-color: white;
     border-radius: 4px;
@@ -44,7 +45,7 @@
     position: relative;
 }
 
-#modalForm .div-body-form {
+#mainGlobalForm .div-body-form {
     width: max-content;
     max-width: 100%;
     display: flex;
@@ -52,7 +53,7 @@
     position: relative;
 }
 
-#modalForm .icon-quit-svg-form {
+#mainGlobalForm .icon-quit-svg-form {
     width: 20px;
     cursor: pointer;
     padding: 8px;
@@ -66,11 +67,11 @@
     right: 0;
 }
 
-#modalForm .icon-quit-svg-form:hover {
+#mainGlobalForm .icon-quit-svg-form:hover {
     background-color: rgba(150, 149, 149, 0.358);
 }
 
-#modalForm .input-register {
+#mainGlobalForm .input-register {
     padding: 8px 15px;
     font-size: 1em;
     border-radius: 4px;
@@ -81,4 +82,11 @@
     word-wrap: break-word;
     color: white;
     cursor: pointer;
+}
+
+@media screen and (max-width : 900px) {
+    #mainGlobalForm .div-content-form {
+        max-width: calc(100% - 60px);
+        padding: 20px;
+    }
 }

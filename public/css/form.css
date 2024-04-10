@@ -11,6 +11,10 @@
     overflow-x: hidden;
     overflow-y: auto;
     background-color: rgba(0, 0, 0, 0.519);
+    flex-direction: row;
+    padding: 10px;
+    max-width: calc(100% - 20px);
+    max-height: calc(100% - 20px);
 }
 
 #mainModalForm .div-fondo-modal-form {
@@ -48,7 +52,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: max-content;
-    gap: 15px 20px;
+    gap: 10px 20px;
     width: 100%;
 }
 
@@ -70,6 +74,7 @@
     display: flex;
     flex-direction: column;
     height: max-content;
+    /* gap: 30px; */
 }
 
 #mainModalForm .input-email {
@@ -92,7 +97,8 @@
     font-size: 1.1em;
     font-weight: bolder;
     cursor: pointer;
-    ;
+    max-width: 100%;
+    word-wrap: break-word;
 }
 
 #mainModalForm .div-div-input-submit-form {
@@ -187,8 +193,8 @@
     /* display: grid;
      grid-template-columns: 1fr;
      grid-template-rows: auto 1fr; */
-    padding: 30px;
-    max-width: calc(100% - 100px);
+    padding: 20px;
+    max-width: calc(100% - 40px);
     height: max-content;
 }
 
@@ -216,6 +222,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    gap: 20px;
 }
 
 @media screen and (max-width : 670px) {
@@ -277,4 +284,10 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+@media screen and (max-width: 250px) {
+    .tittle-form-register {
+        display: none;
+    }
 }

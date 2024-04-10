@@ -31,6 +31,7 @@ import { GeneratePdfTable } from './pages/generatePdfTable.jsx';
 import { RecoveryPassword } from './pages/recoveryPassword.jsx';
 import { GenerateReporteAnalisis } from './pages/generateReporteAnalisis.jsx';
 import { Formatos } from './pages/formatos.jsx';
+import { contains } from 'jquery';
 export default function App(data) {
   const [statusAlert, setStatusAlert] = useState(false);
   const [dataAlert, setdataAlert] = useState({});
@@ -117,6 +118,55 @@ export default function App(data) {
   useEffect(() => {
     validateViewsxd();
   }, [locationPath.pathname])
+  useEffect(() => {
+    // setTimeout(() => {
+    //   const imgLoad = document.querySelectorAll("img")
+
+
+    //   for (let x = 0; x < imgLoad.length; x++) {
+    //     if (imgLoad[x]) {
+    //       if (imgLoad[x].parentNode) {
+    //         const divsImgLoad = imgLoad[x].parentNode.querySelectorAll(".div-load-img")
+    //         if (divsImgLoad.length == 0) {
+    //           const bboxImg = imgLoad[x].getBoundingClientRect()
+    //           const styles = window.getComputedStyle(imgLoad[x])
+    //           const div = document.createElement("div")
+    //           /*   for (var i = 0; i < styles.length; i++) {
+    //               var estilo = styles[i]; 
+    //               div.style.setProperty(estilo, styles.getPropertyValue(estilo));  
+    //             } */
+    //           let zIndex = styles.getPropertyValue("z-index")
+    //           zIndex = (!isNaN(parseFloat(zIndex)) ? parseFloat(zIndex) : 0)
+    //           const widthImg = styles.getPropertyValue("width");
+    //           const heihtImg = styles.getPropertyValue("height");
+    //           div.style.zIndex = (zIndex < 0 ? zIndex * -1 : zIndex)
+    //           div.classList.add("div-load-img")
+    //           div.style.position = "absolute"
+    //           div.style.width = imgLoad[x].parentNode.scrollWidth + "px"
+    //           div.style.height = imgLoad[x].parentNode.scrollHeight + "px"
+    //           div.style.top = styles.getPropertyValue("width") + "px"
+    //           div.style.left = styles.getPropertyValue("left") + "px"
+    //           div.style.right = styles.getPropertyValue("right") + "px"
+    //           div.style.bottom = styles.getPropertyValue("bottom") + "px"
+    //           div.style.background = "black"
+    //           console.log(imgLoad[x], "loaddd")
+
+    //           imgLoad[x].parentNode.appendChild(div)
+
+    //           window.addEventListener("resize", function () {
+    //             const bboxImg = imgLoad[x].getBoundingClientRect()
+    //             div.style.width = imgLoad[x].scrollWidth + "px"
+    //             div.style.height = imgLoad[x].scrollHeight + "px"
+    //             div.style.top = bboxImg.top + "px"
+    //             div.style.left = bboxImg.left + "px"
+    //           })
+    //         }
+    //       }
+    //     }
+    //   }
+    // }, [100])
+
+  }, [<Route></Route>])
   return (
     <>
       <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
@@ -125,7 +175,7 @@ export default function App(data) {
           <Route path='*' element={<NotFound />} />
           <Route path='pruebaPdf' element={<PruebaPdf />} />
           <Route path='/dashboard/generatePdfTable/' element={<GeneratePdfTable />} />
-          <Route path='/dashboard/generateReporteAnalisis/:id' element={<GenerateReporteAnalisis />} />
+          <Route path='/dashboard/generateReporteAnalisis/:id' element={<GenerateReporteAnalisis userInfo={userInfo} />} />
           <Route path='/recover' element={<RecoveryPassword />} />
           <Route path='/' /* element={<Loader valueDarkMode={valueDarkMode} />} */>
             {/* <Route path='/modalfinca' element={<ModalFinca />}></Route> */}

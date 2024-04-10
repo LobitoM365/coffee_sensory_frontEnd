@@ -62,13 +62,13 @@
     align-items: center;
 }
 
-#mainTablas .estado-0,
-.estado-1,
-.estado-2,
-.estado-3,
-.estado-4,
-.estado-5 {
-    width: 70px;
+#mainTablas .td-table-print .estado-0,
+#mainTablas .td-table-print .estado-1,
+#mainTablas .td-table-print .estado-2,
+#mainTablas .td-table-print .estado-3,
+#mainTablas .td-table-print .estado-4,
+#mainTablas .td-table-print .estado-5 {
+    width: 70px !important;
     max-width: 100px;
     padding: 10px;
     border-radius: 4px;
@@ -162,7 +162,7 @@
     border-radius: 8px;
     /*  display: grid;
      grid-template-columns: 1fr auto; */
-    align-items: center;
+    /* align-items: center; */
     height: max-content;
 }
 
@@ -216,7 +216,7 @@
     padding: 5px;
 }
 
-#mainTablas .filter-estado {
+#mainTablas .filter-estado-table {
     height: 100%;
     border: 1px solid rgba(122, 122, 122, 0.368);
     border-radius: 4px;
@@ -529,7 +529,9 @@
     padding: 20px;
     border: 1px solid rgb(219, 219, 219);
     border-radius: 8px;
-    width: 500px;
+    width: 500px !important;
+    height: max-content !important;
+    overflow: hidden;
 }
 
 #mainTablas .div-input-documento form {
@@ -562,6 +564,10 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 25px;
+    /* width: max-content !important; */
+    height: max-content !important;
+    width: 100% !important;
+    /* overflow:hidden; */
 }
 
 #mainTablas .button-get-reporte {
@@ -589,7 +595,7 @@
     justify-content: end;
 }
 
-#mainTablas .input-date {
+/* #mainTablas .input-date {
     width: calc(100% - 30px);
     padding: 10px 15px;
     border-radius: 4px;
@@ -600,7 +606,7 @@
 #mainTablas .input-date:focus {
     outline: none;
 }
-
+ */
 #mainTablas
 /* .td-table-print {
      word-break: break-all;
@@ -663,6 +669,8 @@
     width: max-content;
     width: 100%;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
 #mainTablas .button-table-normal {
@@ -680,7 +688,7 @@
 }
 
 @media screen and (max-width:240px) {
-    #mainTablas .filter-estado .input-select-estado {
+    #mainTablas .filter-estado-table .input-select-estado {
         width: calc(100% - 10%) !important;
         font-size: 0.7em;
     }
@@ -738,11 +746,11 @@
         width: calc(100% - 10px);
     }
 
-    #mainTablas .filter-estado {
+    #mainTablas .filter-estado-table {
         width: calc(100%) !important;
     }
 
-    #mainTablas .filter-estado .input-select-estado {
+    #mainTablas .filter-estado-table .input-select-estado {
         width: calc(100% - 56px);
     }
 
@@ -922,4 +930,22 @@
 #mainTablas .table-fixed thead,
 #mainTablas .table-fixed #inputSearch {
     background-color: white !important;
+}
+
+@media screen and (max-width : 930px) {
+    #mainTablas .div-input-documento {
+        position: unset;
+        border: unset;
+        max-width: calc(100% - 40px);
+    }
+}
+
+@media screen and (max-width : 600px) {
+    #mainTablas .div-input-documento .content-div-inputs-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+#mainTablas .estado-no-pointer{
+    cursor: unset !important;
 }

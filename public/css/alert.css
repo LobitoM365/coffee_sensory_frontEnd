@@ -102,6 +102,7 @@
      display: flex;
      justify-content: center;
      gap: 40px;
+     flex-wrap: wrap
  }
 
  #mainAlert .tittle-warning-alert {

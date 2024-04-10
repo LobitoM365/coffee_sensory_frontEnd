@@ -303,6 +303,10 @@ export const Formatos = (userInfo) => {
         "an_id": {
             "referencia": "Analisis",
         },
+        "proceso": {
+            "referencia": "Tipo de proceso",
+            "upper_case": true
+        },
         "muestra_codigo": {
             "referencia": "Muestra",
             "upper_case": true
@@ -544,6 +548,7 @@ export const Formatos = (userInfo) => {
 
     async function setInfoFormato(id) {
         try {
+
             setModalFormNormal(false)
             setDataModalResultadoAnalisis([])
             setIdAnalisisResult(id)
@@ -611,11 +616,10 @@ export const Formatos = (userInfo) => {
     useEffect(() => {
         setTimeout(() => {
             async function openAsing() {
-                if (localStorage.getItem("analisis_id") && localStorage.getItem("tipos_analisis_id")) {
-                    await setInfoFormato(localStorage.getItem("analisis_id"), localStorage.getItem("tipos_analisis_id"))
-                    localStorage.removeItem("analisis_id")
+                if (localStorage.getItem("formatos_id") && localStorage.getItem("tipos_analisis_id")) {
+                    await setInfoFormato(localStorage.getItem("formatos_id"), localStorage.getItem("tipos_analisis_id"))
+                    localStorage.removeItem("formatos_id")
                     localStorage.removeItem("tipos_analisis_id")
-                    console.log(dataModalAnalisis, "annnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
                 }
             }
             openAsing()

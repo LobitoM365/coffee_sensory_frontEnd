@@ -31,6 +31,7 @@ export const Profile = (data) => {
     const [modalImg, setModaImgs] = useState(false)
     const [modalImgChange, setModalImgChange] = useState(false)
     const [focusImgChange, setFocusImgChange] = useState({})
+    const [eyes, setEyes] = useState({ "new_password": false, "confirm_password": false })
 
     async function fetchUser() {
 
@@ -282,6 +283,9 @@ export const Profile = (data) => {
             <div>
                 <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
                 <div className="header-profile">
+                    <div>
+
+                    </div>
                     <img className='img-head-profile' src={!data.valueDarkMode ? "/public/img/imgLightModeProfile.jpg" : "/public/img/imgDarkProfile.jpg"} alt="" />
 
 
@@ -310,28 +314,36 @@ export const Profile = (data) => {
                                             <div className='form-update-profile'>
                                                 <div className='element-form'>
                                                     <label htmlFor="nombre">Nombre</label>
-                                                    <input id="nombre" ref={nombre} className='input-update-profile' type="text" name="" />
+                                                    <div className='div-input-password'>
+                                                        <input id="nombre" ref={nombre} className='input-update-profile' type="text" name="" />
+                                                    </div>
                                                     <div className='div-input-error'>
                                                         <h5 className='input-error'>{errors.nombre ? errors.nombre : ""}</h5>
                                                     </div>
                                                 </div>
                                                 <div className='element-form'>
                                                     <label htmlFor="apellido">Apellido</label>
-                                                    <input ref={apellido} className='input-update-profile' type="text" name="" id="apellido" />
+                                                    <div className='div-input-password'>
+                                                        <input ref={apellido} className='input-update-profile' type="text" name="" id="apellido" />
+                                                    </div>
                                                     <div className='div-input-error'>
                                                         <h5 className='input-error'>{errors.apellido ? errors.apellido : ""}</h5>
                                                     </div>
                                                 </div>
                                                 <div className='element-form'>
                                                     <label htmlFor="telefono">Telefono</label>
-                                                    <input ref={telefono} className='input-update-profile' type="text" name="" id="telefono" />
+                                                    <div className='div-input-password'>
+                                                        <input ref={telefono} className='input-update-profile' type="text" name="" id="telefono" />
+                                                    </div>
                                                     <div className='div-input-error'>
                                                         <h5 className='input-error'>{errors.telefono ? errors.telefono : ""}</h5>
                                                     </div>
                                                 </div>
                                                 <div className='element-form'>
                                                     <label htmlFor="correo_electronico">Correo electronico</label>
-                                                    <input ref={correo_electronico} className='input-update-profile' type="text" name="" id="correo_electronico" />
+                                                    <div className='div-input-password'>
+                                                        <input ref={correo_electronico} className='input-update-profile' type="text" name="" id="correo_electronico" />
+                                                    </div>
                                                     <div className='div-input-error'>
                                                         <h5 className='input-error'>{errors.correo_electronico ? errors.correo_electronico : ""}</h5>
                                                     </div>
@@ -340,9 +352,14 @@ export const Profile = (data) => {
                                                     <label htmlFor="numero_de_documento">Numero de documento</label>
                                                     {data.userInfo != null ?
                                                         (data.userInfo.rol === 'administrador' ?
-                                                            <input ref={numero_documento} className='input-update-profile' type="text" name="" id="numero_de_documento" />
+                                                            <div className='div-input-password'>
+                                                                <input ref={numero_documento} className='input-update-profile' type="text" name="" id="numero_de_documento" />
+                                                            </div>
                                                             : <div ref={numero_documento}>{dni}</div>)
-                                                        : <input ref={numero_documento} className='input-update-profile' type="text" name="" id="numero_de_documento" />
+                                                        :
+                                                        <div className='div-input-password'>
+                                                            <input ref={numero_documento} className='input-update-profile' type="text" name="" id="numero_de_documento" />
+                                                        </div>
                                                     }
                                                     <div className='div-input-error'>
                                                         <h5 className='input-error'>{errors.numero_documento ? errors.numero_documento : ""}</h5>
@@ -362,21 +379,102 @@ export const Profile = (data) => {
                                             <div className='form-update-profile'>
                                                 <div className='element-form'>
                                                     <label htmlFor="contrasena_actual">Contraseña actual</label>
-                                                    <input ref={user_password} className='input-update-profile' type="text" name="" id="contrasena_actual" />
+                                                    <div className='div-input-password'>
+                                                        <input ref={user_password} className='input-update-profile' type="text" name="" id="contrasena_actual" />
+                                                    </div>
                                                     <div className='div-input-error'>
                                                         <h5 className='input-error'>{errors.user_password ? errors.user_password : ""}</h5>
                                                     </div>
                                                 </div>
+
                                                 <div className='element-form'>
                                                     <label htmlFor="nueva_contrasena">Nueva contraseña</label>
-                                                    <input ref={new_password} className='input-update-profile' type="text" name="" id="nueva_contrasena" />
+                                                    <div className='div-eyes div-input-password'>
+                                                        <div className="container-input">
+                                                            <input
+                                                                ref={new_password}
+                                                                className='input-update-profile'
+                                                                type={eyes["new_password"] ? 'text' : 'password'}
+                                                                placeholder='Contraseña'
+                                                                name="password"
+                                                                data-place="Contraseña"
+                                                            />
+                                                        </div>
+                                                        <div className="eyes-container" onClick={() => {
+                                                            const cloneEyesStatus = { ...eyes }
+                                                            cloneEyesStatus["new_password"] = !cloneEyesStatus["new_password"]
+                                                            setEyes(cloneEyesStatus)
+                                                        }}>
+                                                            {!eyes["new_password"] ? <div className="svg-eyes-two" ><svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256">
+                                                                <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                                                <g><g><path fill="#292929" d="M128,104.1c-27.4,0-49.6,22.2-49.6,49.6c0,27.4,22.2,49.6,49.6,49.6c27.4,0,49.6-22.2,49.6-49.6C177.6,126.3,155.4,104.1,128,104.1z M128,167.9c-7.8,0-14.1-6.3-14.1-14.2s6.3-14.1,14.1-14.1c7.8,0,14.1,6.3,14.1,14.2C142.1,161.6,135.8,167.9,128,167.9z" /><path fill="#292929" d="M128,93.1c-63.6,0-115.2,59.8-115.2,59.8s51.6,58.6,115.2,58.6c63.6,0,115.2-58.7,115.2-58.7S191.6,93.1,128,93.1z M128,206.9c-59.4,0-107.5-54-107.5-54s48.3-51.5,107.7-51.5c59.4,0,107.2,51.5,107.2,51.5S187.4,206.9,128,206.9z" /><path fill="#292929" d="M215,111.3c1.2-0.2,2.3-0.5,3.4-1c2.1-0.8,4-2,5.6-3.4c3.3-2.9,5.6-6.7,7.2-10.6c-1.9,3.8-4.5,7.3-7.9,9.7c-1.7,1.2-3.5,2.2-5.5,2.7c-1.9,0.6-4,0.8-5.9,0.5v0c-6.1-4.1-12.5-8-19.1-11.5c-0.2-0.1-0.4-0.2-0.5-0.3c1.6-0.7,3.1-1.5,4.5-2.4c2.4-1.6,4.5-3.7,6.1-6c3.3-4.7,4.7-10.3,5-15.8c-0.7,5.4-2.7,10.7-6.2,14.8c-1.7,2-3.8,3.7-6.1,4.9c-2.3,1.3-4.8,2.2-7.2,2.5v0c-8.4-4.1-17.2-7.5-26.3-10c1.4-1.1,2.7-2.4,3.9-3.8c2.5-2.8,4.3-6.1,5.5-9.6c2.4-7,2.2-14.3,1-21.2c0.5,7-0.2,14.2-3.2,20.3c-1.5,3-3.5,5.8-5.9,8c-2.2,2.1-5,3.8-7.6,4.7c-8.5-1.9-17.2-3-25.9-3.2c-0.8-2-1.5-4.3-2-6.5c-0.8-3.2-1.3-6.5-1.5-9.8c-0.5-6.6,0.1-13.4,1.7-20.1c-2.7,6.3-4.4,13.1-5,20c-0.3,3.5-0.3,7,0,10.5c0.2,2,0.4,3.9,0.8,5.8c-7.7,0.3-15.3,1.2-22.8,2.8c-2.6-0.9-5.3-2.6-7.6-4.6c-2.5-2.2-4.5-4.9-6-7.9c-3.1-6.1-3.9-13.2-3.5-20.2c-1.2,6.9-1.2,14.3,1.3,21.2c1.3,3.4,3.2,6.7,5.7,9.5c1.2,1.3,2.4,2.5,3.8,3.5c-8.7,2.3-17.2,5.5-25.4,9.3v0c-2.5-0.1-5.2-0.7-7.6-1.7c-2.5-1-4.8-2.4-6.8-4.3c-4.1-3.6-6.9-8.6-8.5-14c1.1,5.5,3.4,10.9,7.4,15.1c2,2.1,4.3,3.9,6.9,5.3c1.3,0.7,2.7,1.3,4.2,1.8c-0.6,0.3-1.3,0.6-1.9,0.9c-5.5,2.9-10.8,6.1-16,9.4c-1.8,0.2-3.8,0-5.6-0.6c-2-0.6-3.8-1.5-5.5-2.7c-3.3-2.4-5.9-5.9-7.9-9.7c1.6,3.9,3.9,7.7,7.2,10.6c1.6,1.4,3.5,2.6,5.6,3.4c1.1,0.4,2.1,0.7,3.2,0.9C31.5,117.4,20,127.3,10,138.4c8.1-7.7,16.8-14.6,25.9-20.9c9.1-6.3,18.6-12,28.6-16.7c19-9,39.6-14.9,60.5-15.3c0,0.1,0,0.1,0,0.2l0.5-0.2c0.8,0,1.6-0.1,2.4-0.1c21.9,0,43.5,6.1,63.4,15.6c10,4.7,19.5,10.4,28.6,16.7c9.2,6.2,17.9,13.1,26.1,20.7C236.8,128.3,226.3,119.2,215,111.3z" /></g></g>
+                                                            </svg>
+                                                                <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256">
+                                                                    <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                                                    <g><g><path fill="#292929" d="M128,104.1c-27.4,0-49.6,22.2-49.6,49.6c0,27.4,22.2,49.6,49.6,49.6c27.4,0,49.6-22.2,49.6-49.6C177.6,126.3,155.4,104.1,128,104.1z M128,167.9c-7.8,0-14.1-6.3-14.1-14.2s6.3-14.1,14.1-14.1c7.8,0,14.1,6.3,14.1,14.2C142.1,161.6,135.8,167.9,128,167.9z" /><path fill="#292929" d="M128,93.1c-63.6,0-115.2,59.8-115.2,59.8s51.6,58.6,115.2,58.6c63.6,0,115.2-58.7,115.2-58.7S191.6,93.1,128,93.1z M128,206.9c-59.4,0-107.5-54-107.5-54s48.3-51.5,107.7-51.5c59.4,0,107.2,51.5,107.2,51.5S187.4,206.9,128,206.9z" /><path fill="#292929" d="M215,111.3c1.2-0.2,2.3-0.5,3.4-1c2.1-0.8,4-2,5.6-3.4c3.3-2.9,5.6-6.7,7.2-10.6c-1.9,3.8-4.5,7.3-7.9,9.7c-1.7,1.2-3.5,2.2-5.5,2.7c-1.9,0.6-4,0.8-5.9,0.5v0c-6.1-4.1-12.5-8-19.1-11.5c-0.2-0.1-0.4-0.2-0.5-0.3c1.6-0.7,3.1-1.5,4.5-2.4c2.4-1.6,4.5-3.7,6.1-6c3.3-4.7,4.7-10.3,5-15.8c-0.7,5.4-2.7,10.7-6.2,14.8c-1.7,2-3.8,3.7-6.1,4.9c-2.3,1.3-4.8,2.2-7.2,2.5v0c-8.4-4.1-17.2-7.5-26.3-10c1.4-1.1,2.7-2.4,3.9-3.8c2.5-2.8,4.3-6.1,5.5-9.6c2.4-7,2.2-14.3,1-21.2c0.5,7-0.2,14.2-3.2,20.3c-1.5,3-3.5,5.8-5.9,8c-2.2,2.1-5,3.8-7.6,4.7c-8.5-1.9-17.2-3-25.9-3.2c-0.8-2-1.5-4.3-2-6.5c-0.8-3.2-1.3-6.5-1.5-9.8c-0.5-6.6,0.1-13.4,1.7-20.1c-2.7,6.3-4.4,13.1-5,20c-0.3,3.5-0.3,7,0,10.5c0.2,2,0.4,3.9,0.8,5.8c-7.7,0.3-15.3,1.2-22.8,2.8c-2.6-0.9-5.3-2.6-7.6-4.6c-2.5-2.2-4.5-4.9-6-7.9c-3.1-6.1-3.9-13.2-3.5-20.2c-1.2,6.9-1.2,14.3,1.3,21.2c1.3,3.4,3.2,6.7,5.7,9.5c1.2,1.3,2.4,2.5,3.8,3.5c-8.7,2.3-17.2,5.5-25.4,9.3v0c-2.5-0.1-5.2-0.7-7.6-1.7c-2.5-1-4.8-2.4-6.8-4.3c-4.1-3.6-6.9-8.6-8.5-14c1.1,5.5,3.4,10.9,7.4,15.1c2,2.1,4.3,3.9,6.9,5.3c1.3,0.7,2.7,1.3,4.2,1.8c-0.6,0.3-1.3,0.6-1.9,0.9c-5.5,2.9-10.8,6.1-16,9.4c-1.8,0.2-3.8,0-5.6-0.6c-2-0.6-3.8-1.5-5.5-2.7c-3.3-2.4-5.9-5.9-7.9-9.7c1.6,3.9,3.9,7.7,7.2,10.6c1.6,1.4,3.5,2.6,5.6,3.4c1.1,0.4,2.1,0.7,3.2,0.9C31.5,117.4,20,127.3,10,138.4c8.1-7.7,16.8-14.6,25.9-20.9c9.1-6.3,18.6-12,28.6-16.7c19-9,39.6-14.9,60.5-15.3c0,0.1,0,0.1,0,0.2l0.5-0.2c0.8,0,1.6-0.1,2.4-0.1c21.9,0,43.5,6.1,63.4,15.6c10,4.7,19.5,10.4,28.6,16.7c9.2,6.2,17.9,13.1,26.1,20.7C236.8,128.3,226.3,119.2,215,111.3z" /></g></g>
+                                                                </svg>
+                                                            </div> :
+
+
+                                                                <svg onClick={() => {
+                                                                    const cloneEyesStatus = { ...eyes }
+                                                                    cloneEyesStatus["new_password"] = !cloneEyesStatus["new_password"]
+                                                                    setEyes(cloneEyesStatus)
+                                                                }} className="eyes-closed svg-eyes" version="1.0" viewBox="0 0 167.000000 39.000000" preserveAspectRatio="xMidYMid meet">
+                                                                    <g transform="translate(0.000000,39.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                                                                        <path d="M37 352 c-15 -16 -15 -21 -1 -47 14 -27 13 -30 -12 -56 -51 -53 0 -101 59 -56 l33 25 27 -20 c25 -18 27 -24 21 -68 -6 -47 -6 -49 21 -56 28 -7 39 0 70 49 8 13 18 14 45 9 31 -7 35 -11 38 -44 4 -48 24 -65 57 -50 20 9 25 19 25 47 0 36 3 38 52 49 22 5 29 1 47 -29 20 -35 43 -43 71 -25 12 7 12 16 4 50 -11 38 -10 42 14 60 31 25 54 25 77 0 22 -24 38 -25 59 -4 21 21 20 27 -9 62 -22 26 -23 33 -13 60 9 24 9 34 -1 46 -22 27 -44 18 -100 -39 -80 -81 -125 -100 -241 -100 -116 0 -158 17 -247 98 -33 32 -65 57 -70 57 -6 0 -17 -8 -26 -18z" />
+                                                                        <path d="M942 358 c-15 -15 -15 -51 0 -66 9 -9 6 -18 -16 -41 -20 -21 -26 -35 -21 -50 9 -31 43 -37 69 -12 27 25 44 26 74 5 20 -14 22 -21 16 -64 -6 -47 -6 -49 21 -56 28 -7 39 0 70 49 8 13 18 14 45 9 32 -7 35 -11 38 -45 2 -29 9 -41 27 -49 33 -15 55 4 55 48 0 37 2 39 46 48 28 6 33 4 52 -28 37 -62 89 -40 77 32 -6 36 -4 42 25 62 l31 22 29 -27 c28 -27 30 -27 55 -11 32 21 32 33 -2 68 -21 22 -24 31 -15 40 26 26 7 78 -28 78 -9 0 -38 -23 -65 -51 -28 -28 -72 -63 -100 -77 -43 -23 -62 -27 -140 -27 -82 0 -97 3 -156 32 -38 19 -83 51 -107 78 -42 46 -59 54 -80 33z" />
+                                                                    </g>
+                                                                </svg>
+                                                            }
+                                                        </div>
+                                                    </div>
                                                     <div className='div-input-error'>
                                                         <h5 className='input-error'>{errors.new_password ? errors.new_password : errors.confirm_password ? errors.confirm_password : ""}</h5>
                                                     </div>
                                                 </div>
                                                 <div className='element-form'>
                                                     <label htmlFor="confirmar_contrasena">Confirmar Contraseña</label>
-                                                    <input ref={confirm_password} className='input-update-profile' type="text" name="" id="confirmar_contrasena" />
+                                                    <div className='div-eyes div-input-password'>
+                                                        <div className="container-input">
+                                                            <input
+                                                                ref={confirm_password}
+                                                                className='input-update-profile'
+                                                                type={eyes["confirm_password"] ? 'text' : 'password'}
+                                                                placeholder='Contraseña'
+                                                                name="password"
+                                                                data-place="Contraseña"
+                                                            />
+                                                        </div>
+                                                        <div className="eyes-container" onClick={() => {
+                                                            const cloneEyesStatus = { ...eyes }
+                                                            cloneEyesStatus["confirm_password"] = !cloneEyesStatus["confirm_password"]
+                                                            setEyes(cloneEyesStatus)
+                                                        }}>
+                                                            {!eyes["confirm_password"] ? <div className="svg-eyes-two" ><svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256">
+                                                                <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                                                <g><g><path fill="#292929" d="M128,104.1c-27.4,0-49.6,22.2-49.6,49.6c0,27.4,22.2,49.6,49.6,49.6c27.4,0,49.6-22.2,49.6-49.6C177.6,126.3,155.4,104.1,128,104.1z M128,167.9c-7.8,0-14.1-6.3-14.1-14.2s6.3-14.1,14.1-14.1c7.8,0,14.1,6.3,14.1,14.2C142.1,161.6,135.8,167.9,128,167.9z" /><path fill="#292929" d="M128,93.1c-63.6,0-115.2,59.8-115.2,59.8s51.6,58.6,115.2,58.6c63.6,0,115.2-58.7,115.2-58.7S191.6,93.1,128,93.1z M128,206.9c-59.4,0-107.5-54-107.5-54s48.3-51.5,107.7-51.5c59.4,0,107.2,51.5,107.2,51.5S187.4,206.9,128,206.9z" /><path fill="#292929" d="M215,111.3c1.2-0.2,2.3-0.5,3.4-1c2.1-0.8,4-2,5.6-3.4c3.3-2.9,5.6-6.7,7.2-10.6c-1.9,3.8-4.5,7.3-7.9,9.7c-1.7,1.2-3.5,2.2-5.5,2.7c-1.9,0.6-4,0.8-5.9,0.5v0c-6.1-4.1-12.5-8-19.1-11.5c-0.2-0.1-0.4-0.2-0.5-0.3c1.6-0.7,3.1-1.5,4.5-2.4c2.4-1.6,4.5-3.7,6.1-6c3.3-4.7,4.7-10.3,5-15.8c-0.7,5.4-2.7,10.7-6.2,14.8c-1.7,2-3.8,3.7-6.1,4.9c-2.3,1.3-4.8,2.2-7.2,2.5v0c-8.4-4.1-17.2-7.5-26.3-10c1.4-1.1,2.7-2.4,3.9-3.8c2.5-2.8,4.3-6.1,5.5-9.6c2.4-7,2.2-14.3,1-21.2c0.5,7-0.2,14.2-3.2,20.3c-1.5,3-3.5,5.8-5.9,8c-2.2,2.1-5,3.8-7.6,4.7c-8.5-1.9-17.2-3-25.9-3.2c-0.8-2-1.5-4.3-2-6.5c-0.8-3.2-1.3-6.5-1.5-9.8c-0.5-6.6,0.1-13.4,1.7-20.1c-2.7,6.3-4.4,13.1-5,20c-0.3,3.5-0.3,7,0,10.5c0.2,2,0.4,3.9,0.8,5.8c-7.7,0.3-15.3,1.2-22.8,2.8c-2.6-0.9-5.3-2.6-7.6-4.6c-2.5-2.2-4.5-4.9-6-7.9c-3.1-6.1-3.9-13.2-3.5-20.2c-1.2,6.9-1.2,14.3,1.3,21.2c1.3,3.4,3.2,6.7,5.7,9.5c1.2,1.3,2.4,2.5,3.8,3.5c-8.7,2.3-17.2,5.5-25.4,9.3v0c-2.5-0.1-5.2-0.7-7.6-1.7c-2.5-1-4.8-2.4-6.8-4.3c-4.1-3.6-6.9-8.6-8.5-14c1.1,5.5,3.4,10.9,7.4,15.1c2,2.1,4.3,3.9,6.9,5.3c1.3,0.7,2.7,1.3,4.2,1.8c-0.6,0.3-1.3,0.6-1.9,0.9c-5.5,2.9-10.8,6.1-16,9.4c-1.8,0.2-3.8,0-5.6-0.6c-2-0.6-3.8-1.5-5.5-2.7c-3.3-2.4-5.9-5.9-7.9-9.7c1.6,3.9,3.9,7.7,7.2,10.6c1.6,1.4,3.5,2.6,5.6,3.4c1.1,0.4,2.1,0.7,3.2,0.9C31.5,117.4,20,127.3,10,138.4c8.1-7.7,16.8-14.6,25.9-20.9c9.1-6.3,18.6-12,28.6-16.7c19-9,39.6-14.9,60.5-15.3c0,0.1,0,0.1,0,0.2l0.5-0.2c0.8,0,1.6-0.1,2.4-0.1c21.9,0,43.5,6.1,63.4,15.6c10,4.7,19.5,10.4,28.6,16.7c9.2,6.2,17.9,13.1,26.1,20.7C236.8,128.3,226.3,119.2,215,111.3z" /></g></g>
+                                                            </svg>
+                                                                <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256">
+                                                                    <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                                                    <g><g><path fill="#292929" d="M128,104.1c-27.4,0-49.6,22.2-49.6,49.6c0,27.4,22.2,49.6,49.6,49.6c27.4,0,49.6-22.2,49.6-49.6C177.6,126.3,155.4,104.1,128,104.1z M128,167.9c-7.8,0-14.1-6.3-14.1-14.2s6.3-14.1,14.1-14.1c7.8,0,14.1,6.3,14.1,14.2C142.1,161.6,135.8,167.9,128,167.9z" /><path fill="#292929" d="M128,93.1c-63.6,0-115.2,59.8-115.2,59.8s51.6,58.6,115.2,58.6c63.6,0,115.2-58.7,115.2-58.7S191.6,93.1,128,93.1z M128,206.9c-59.4,0-107.5-54-107.5-54s48.3-51.5,107.7-51.5c59.4,0,107.2,51.5,107.2,51.5S187.4,206.9,128,206.9z" /><path fill="#292929" d="M215,111.3c1.2-0.2,2.3-0.5,3.4-1c2.1-0.8,4-2,5.6-3.4c3.3-2.9,5.6-6.7,7.2-10.6c-1.9,3.8-4.5,7.3-7.9,9.7c-1.7,1.2-3.5,2.2-5.5,2.7c-1.9,0.6-4,0.8-5.9,0.5v0c-6.1-4.1-12.5-8-19.1-11.5c-0.2-0.1-0.4-0.2-0.5-0.3c1.6-0.7,3.1-1.5,4.5-2.4c2.4-1.6,4.5-3.7,6.1-6c3.3-4.7,4.7-10.3,5-15.8c-0.7,5.4-2.7,10.7-6.2,14.8c-1.7,2-3.8,3.7-6.1,4.9c-2.3,1.3-4.8,2.2-7.2,2.5v0c-8.4-4.1-17.2-7.5-26.3-10c1.4-1.1,2.7-2.4,3.9-3.8c2.5-2.8,4.3-6.1,5.5-9.6c2.4-7,2.2-14.3,1-21.2c0.5,7-0.2,14.2-3.2,20.3c-1.5,3-3.5,5.8-5.9,8c-2.2,2.1-5,3.8-7.6,4.7c-8.5-1.9-17.2-3-25.9-3.2c-0.8-2-1.5-4.3-2-6.5c-0.8-3.2-1.3-6.5-1.5-9.8c-0.5-6.6,0.1-13.4,1.7-20.1c-2.7,6.3-4.4,13.1-5,20c-0.3,3.5-0.3,7,0,10.5c0.2,2,0.4,3.9,0.8,5.8c-7.7,0.3-15.3,1.2-22.8,2.8c-2.6-0.9-5.3-2.6-7.6-4.6c-2.5-2.2-4.5-4.9-6-7.9c-3.1-6.1-3.9-13.2-3.5-20.2c-1.2,6.9-1.2,14.3,1.3,21.2c1.3,3.4,3.2,6.7,5.7,9.5c1.2,1.3,2.4,2.5,3.8,3.5c-8.7,2.3-17.2,5.5-25.4,9.3v0c-2.5-0.1-5.2-0.7-7.6-1.7c-2.5-1-4.8-2.4-6.8-4.3c-4.1-3.6-6.9-8.6-8.5-14c1.1,5.5,3.4,10.9,7.4,15.1c2,2.1,4.3,3.9,6.9,5.3c1.3,0.7,2.7,1.3,4.2,1.8c-0.6,0.3-1.3,0.6-1.9,0.9c-5.5,2.9-10.8,6.1-16,9.4c-1.8,0.2-3.8,0-5.6-0.6c-2-0.6-3.8-1.5-5.5-2.7c-3.3-2.4-5.9-5.9-7.9-9.7c1.6,3.9,3.9,7.7,7.2,10.6c1.6,1.4,3.5,2.6,5.6,3.4c1.1,0.4,2.1,0.7,3.2,0.9C31.5,117.4,20,127.3,10,138.4c8.1-7.7,16.8-14.6,25.9-20.9c9.1-6.3,18.6-12,28.6-16.7c19-9,39.6-14.9,60.5-15.3c0,0.1,0,0.1,0,0.2l0.5-0.2c0.8,0,1.6-0.1,2.4-0.1c21.9,0,43.5,6.1,63.4,15.6c10,4.7,19.5,10.4,28.6,16.7c9.2,6.2,17.9,13.1,26.1,20.7C236.8,128.3,226.3,119.2,215,111.3z" /></g></g>
+                                                                </svg>
+                                                            </div> :
+
+
+                                                                <svg onClick={() => {
+                                                                    const cloneEyesStatus = { ...eyes }
+                                                                    cloneEyesStatus["confirm_password"] = !cloneEyesStatus["confirm_password"]
+                                                                    setEyes(cloneEyesStatus)
+                                                                }} className="eyes-closed svg-eyes" version="1.0" viewBox="0 0 167.000000 39.000000" preserveAspectRatio="xMidYMid meet">
+                                                                    <g transform="translate(0.000000,39.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                                                                        <path d="M37 352 c-15 -16 -15 -21 -1 -47 14 -27 13 -30 -12 -56 -51 -53 0 -101 59 -56 l33 25 27 -20 c25 -18 27 -24 21 -68 -6 -47 -6 -49 21 -56 28 -7 39 0 70 49 8 13 18 14 45 9 31 -7 35 -11 38 -44 4 -48 24 -65 57 -50 20 9 25 19 25 47 0 36 3 38 52 49 22 5 29 1 47 -29 20 -35 43 -43 71 -25 12 7 12 16 4 50 -11 38 -10 42 14 60 31 25 54 25 77 0 22 -24 38 -25 59 -4 21 21 20 27 -9 62 -22 26 -23 33 -13 60 9 24 9 34 -1 46 -22 27 -44 18 -100 -39 -80 -81 -125 -100 -241 -100 -116 0 -158 17 -247 98 -33 32 -65 57 -70 57 -6 0 -17 -8 -26 -18z" />
+                                                                        <path d="M942 358 c-15 -15 -15 -51 0 -66 9 -9 6 -18 -16 -41 -20 -21 -26 -35 -21 -50 9 -31 43 -37 69 -12 27 25 44 26 74 5 20 -14 22 -21 16 -64 -6 -47 -6 -49 21 -56 28 -7 39 0 70 49 8 13 18 14 45 9 32 -7 35 -11 38 -45 2 -29 9 -41 27 -49 33 -15 55 4 55 48 0 37 2 39 46 48 28 6 33 4 52 -28 37 -62 89 -40 77 32 -6 36 -4 42 25 62 l31 22 29 -27 c28 -27 30 -27 55 -11 32 21 32 33 -2 68 -21 22 -24 31 -15 40 26 26 7 78 -28 78 -9 0 -38 -23 -65 -51 -28 -28 -72 -63 -100 -77 -43 -23 -62 -27 -140 -27 -82 0 -97 3 -156 32 -38 19 -83 51 -107 78 -42 46 -59 54 -80 33z" />
+                                                                    </g>
+                                                                </svg>
+                                                            }
+                                                        </div>
+                                                    </div>
                                                     <div className='div-input-error'>
                                                         <h5 className='input-error'>{errors.confirm_password ? errors.confirm_password : ""}</h5>
                                                     </div>
@@ -443,6 +541,6 @@ export const Profile = (data) => {
 
                 </div>
             </div>
-        </div>
+        </div >
     )
 }

@@ -155,19 +155,11 @@ export const Form = forwardRef((data, ref) => {
     }, [])
 
     useEffect(() => {
-        if (modalRef.current != null) {
-            const modal = modalRef.current
-            let modalForm = modalRef.current;
-            let divContentForm = modalRef.current.querySelector("#divContentForm");
-            let labelErrorSubmitForm = modalRef.current.querySelector(".label-error-submit-form");
+        function resizeForm() {
+            if (modalRef.current != null) {
 
-            setTimeout(() => {
-                resizeForm()
-            }, 100);
-            document.addEventListener('keydown', function (event) {
-                setKeydown(event.key)
-            })
-            function resizeForm() {
+                let labelErrorSubmitForm = modalRef.current.querySelectorAll(".label-error-submit-form");
+
                 if (modalForm && divContentForm) {
                     let displayNone = false;
                     if (modalForm.style.display == "none") {
@@ -177,9 +169,10 @@ export const Form = forwardRef((data, ref) => {
 
                     if (divContentForm.scrollHeight > document.body.clientHeight) {
                         modalForm.style.alignItems = "unset"
-                        modalForm.style.padding = "20px 20px"
-                        modalForm.style.height = "calc(100% - 40px)"
-                        modalForm.style.width = "calc(100% - 40px)"
+                        modalForm.style.padding = "10px 10px"
+                        modalForm.style.height = "calc(100% - 20px)"
+                        modalForm.style.width = "calc(100% - 20px)"
+
                     } else {
                         if (labelErrorSubmitForm) {
                             for (let x = 0; x < labelErrorSubmitForm.length; x++) {
@@ -188,9 +181,9 @@ export const Form = forwardRef((data, ref) => {
                         }
 
                         modalForm.style.alignItems = "center"
-                        modalForm.style.padding = ""
+                       /*  modalForm.style.padding = ""
                         modalForm.style.height = "100%"
-                        modalForm.style.width = "100%"
+                        modalForm.style.width = "100%" */
                     }
                     if (displayNone) {
                         modalForm.style.display = "none"
@@ -205,11 +198,24 @@ export const Form = forwardRef((data, ref) => {
                 }
 
             }
-            resizeForm()
-            window.addEventListener("resize", function () {
+        }
+        if (modalRef.current != null) {
+            const modal = modalRef.current
+            let modalForm = modalRef.current;
+            let divContentForm = modalRef.current.querySelector("#divContentForm");
+
+            setTimeout(() => {
                 resizeForm()
+            }, 100);
+            document.addEventListener('keydown', function (event) {
+                setKeydown(event.key)
             })
 
+            resizeForm()
+            window.addEventListener("resize", resizeForm)
+        }
+        return () => {
+            window.removeEventListener("resize", resizeForm)
         }
     }, [data, modalRef.current])
 
@@ -246,7 +252,6 @@ export const Form = forwardRef((data, ref) => {
             {data.modalForm || data.updateStatus ?
                 <div onClick={(e) => {
                     if (divContentFormRef.current != null) {
-                        console.log(e.target)
                         if (e.target != divContentFormRef.current && !divContentFormRef.current.contains(e.target)) {
                             data.changeModalForm(false); data.editarStatus(false)
                         }
@@ -256,7 +261,9 @@ export const Form = forwardRef((data, ref) => {
                     <div ref={divContentFormRef} id="divContentForm" className="div-content-form">
                         <form onSubmit={chageData} action="" >
                             <div className="header-form">
-                                <h3 className="tittle-form-register">{!data.updateStatus ? "Registrar " + data.tittle + "" : "Actualizar " + data.tittle + ""} </h3>
+                                <div>
+                                    <h3 className="tittle-form-register">{!data.updateStatus ? "Registrar " + data.tittle + "" : "Actualizar " + data.tittle + ""} </h3>
+                                </div>
                                 <div onClick={() => { data.changeModalForm(false); data.editarStatus(false) }} className="icon-quit-svg-form">
                                     <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                         <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
@@ -286,9 +293,9 @@ export const Form = forwardRef((data, ref) => {
                                                     if (data.statusInputDefault && elementEdit) {
 
 
-                                                        inputValor[key] = elementEdit[key] ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function(match) {
-    return match.charAt(0).toUpperCase() + match.slice(1);
-}) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : ""
+                                                        inputValor[key] = elementEdit[key] ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function (match) {
+                                                            return match.charAt(0).toUpperCase() + match.slice(1);
+                                                        }) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : ""
                                                     } else if (data.statusInput) {
                                                         inputValor[key] = ""
 
@@ -298,11 +305,11 @@ export const Form = forwardRef((data, ref) => {
                                                         <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
                                                             <div className="head-input">
                                                                 <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                                                <input id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault && elementEdit ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function(match) {
-    return match.charAt(0).toUpperCase() + match.slice(1);
-}) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} className="input-form" type="text" />
+                                                                <input id={key} name={key} autoComplete="false" onChange={(e) => { handleInputChange(e, key, dataInputs[key]["type"]); data.setStatusInputDefault(false); data.setStatusInput(false) }} value={data.statusInputDefault && elementEdit ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function (match) {
+                                                                    return match.charAt(0).toUpperCase() + match.slice(1);
+                                                                }) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : inputValor[key]} className="input-form" type="text" />
                                                             </div>
-                                                            <h4 className="label-error-submit-form">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
+                                                            {data.errors ? data.errors[key] ? <h4 className="label-error-submit-form" htmlFor="">{data.errors[key]}</h4> : "" : ""}
                                                         </div>
                                                     );
 
@@ -362,9 +369,9 @@ export const Form = forwardRef((data, ref) => {
 
 
                                                                                 if (dataInputs[key]["upper_case"]) {
-                                                                                    value = value.toString().replace(/\b\w{4,}\b/g, function(match) {
-    return match.charAt(0).toUpperCase() + match.slice(1);
-})
+                                                                                    value = value.toString().replace(/\b\w{4,}\b/g, function (match) {
+                                                                                        return match.charAt(0).toUpperCase() + match.slice(1);
+                                                                                    })
                                                                                 } else if (dataInputs[key]["capital_letter"]) {
                                                                                     value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
                                                                                 }
@@ -416,8 +423,7 @@ export const Form = forwardRef((data, ref) => {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <h4 className="label-error-submit-form" htmlFor="">{data.errors ? data.errors[key] ? data.errors[key] : "" : ""}</h4>
-
+                                                            {data.errors ? data.errors[key] ? <h4 className="label-error-submit-form" htmlFor="">{data.errors[key]}</h4> : "" : ""}
                                                         </div>
                                                     );
                                                 } else {

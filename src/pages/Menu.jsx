@@ -9,11 +9,14 @@ import { GlobalModal } from "../componentes/globalModal.jsx"
 import { Alert } from "../componentes/alert.jsx";
 import { GlobalInputs } from "../componentes/globalInputs.jsx";
 import { fn } from "jquery";
+import { Mensajeria } from "../componentes/mensajeria.jsx"
+import { clone } from "chart.js/helpers";
 
 export const Menu = (data) => {
     const [statusAlert, setStatusAlert] = useState(false);
     let divCrearFormula = useRef(null);
     let divEvaluarFormula = useRef(null);
+    let divNotificaciones = useRef(null);
     let divLLenarCamporFormulario = useRef(null);
     let refModalConfiguracionFormatoFisico = useRef(null);
     const [dataAlert, setdataAlert] = useState({});
@@ -26,7 +29,9 @@ export const Menu = (data) => {
     const [keyTipoValor, setKeyTipoValor] = useState(0);
     const [statusVariables, setStatusVariables] = useState(false);
     const [movementImgPerfil, setmMovementImgPerfil] = useState(false);
-
+    let [limitNotificaciones, setLimitNoticaciones] = useState(0);
+    const [cantidadNotificaciones, setCantidadNotificaciones] = useState(0);
+    const [statusLoader, setStatusLoader] = useState({ "div_notificaciones": false })
     useEffect(() => {
 
         if (data.socket) {
@@ -44,20 +49,21 @@ export const Menu = (data) => {
             };
 
             const asignAnalisis = (message) => {
-                const audio = document.createElement("audio")
-                audio.setAttribute("src", "../../public/audio/tonoNotificacion/tonoNotificacion (2).mp3")
-                audio.setAttribute("autoplay", "true")
-                document.body.appendChild(audio)
-                audio.addEventListener('loadedmetadata', function () {
+                if (!document.getElementById("audio_notifi")) {
+                    const audio = document.createElement("audio")
+                    audio.setAttribute("src", "../../public/audio/tonoNotificacion/tonoNotificacion (2).mp3")
+                    audio.setAttribute("autoplay", "true")
+                    audio.setAttribute("id", "audio_notifi")
+                    document.body.appendChild(audio)
+                    audio.addEventListener('loadedmetadata', function () {
 
-
-                    setTimeout(() => {
                         audio.play()
-                        /* audio.remove() */
-                    }, audio.duration * 1000);
-                });
-
-                getAgignaciones();
+                        setTimeout(() => {
+                            audio.remove()
+                        }, audio.duration * 1000);
+                    });
+                }
+                getAsignaciones();
             };
 
             data.socket.on('perfilChange', perfilChange);
@@ -75,6 +81,32 @@ export const Menu = (data) => {
         }
     }, [data.socket]);
 
+    useEffect(() => {
+        if (divNotificaciones.current) {
+            function scrollNotificaciones(e) {
+                if (limitNotificaciones == false) {
+                    if (divNotificaciones.current) {
+                        divNotificaciones.current.removeEventListener("scroll", scrollNotificaciones)
+                    }
+                } else {
+                    if (statusLoader["div_notificaciones"] == false || "disconnect") {
+                        if ((Math.floor(e.target.scrollHeight) - Math.floor(e.target.clientHeight)) - Math.floor(e.target.scrollTop) <= 30) {
+                            getAsignaciones()
+                        }
+                    }
+                }
+            }
+            /* if (limitNotificaciones != false) { */
+            divNotificaciones.current.addEventListener("scroll", scrollNotificaciones)
+            /* } */
+            return () => {
+                if (divNotificaciones.current) {
+                    divNotificaciones.current.removeEventListener("scroll", scrollNotificaciones)
+                }
+            }
+        }
+
+    }, [divNotificaciones.current, limitNotificaciones, statusLoader["div_notificaciones"]])
     // console.log("DATA OC", data.socket);
 
     const [pageLoad, setPageLoad] = useState({});
@@ -100,30 +132,74 @@ export const Menu = (data) => {
         changeSelected(location)
     }
 
-    async function getAgignaciones() {
-
+    async function getAsignaciones() {
         try {
+
+            if (statusLoader["div_notificaciones"] != "disconnect") {
+                setStatusLoader(prevState => {
+                    const clonePrevState = { ...prevState };
+                    clonePrevState["div_notificaciones"] = true
+                    return clonePrevState
+                })
+
+            }
+
+            /*     if (divNotificaciones.current) {
+                    divNotificaciones.current.scrollTop = divNotificaciones.current.scrollHeight + 100
+                } */
+            let newLimit = limitNotificaciones;
+            newLimit = newLimit + 5
             const filterFormato = {
                 "filter": {
                     "where": {
                         "forma.estado": {
-                            "value": 1,
+                            "value": 4,
                             "operador": "!=",
                             "require": "and"
                         }
                     },
+                    "order": {
+                        /* "fecha_creacion": {
+                            "value": "desc"
+                        }, */
+                        "forma_id": {
+                            "value": "desc"
+                        }
+                    },
                     "limit": {
-                        "inicio": 0,
-                        "fin": "4444",
+                        "inicio": limitNotificaciones,
+                        "fin": "5",
                     }
                 }
             }
-            const response = await Api.post("formatos/listarPendientes", filterFormato);
-            if (response.data.status == true) {
-                setAsignaciones(response.data.data)
+            if (Array.isArray(asignaciones)) {
+                const response = await Api.post("formatos/listarPendientes", filterFormato);
+                if (response.data.status == true) {
+                    setLimitNoticaciones(limitNotificaciones + 5)
+                    setStatusLoader(prevState => {
+                        const clonePrevState = { ...prevState };
+                        clonePrevState["div_notificaciones"] = false
+                        return clonePrevState
+                    })
+                    /* limitNotificaciones = limitNotificaciones + 5 */
+                    /* limitNotificaciones = limitNotificaciones + 5 */
+                    setAsignaciones(prevElementos => [...prevElementos, ...response.data.data])
+                    setCantidadNotificaciones(response.data.count)
+                } else {
+                    setLimitNoticaciones(false)
+                    setStatusLoader(prevState => {
+                        const clonePrevState = { ...prevState };
+                        clonePrevState["div_notificaciones"] = false
+                        return clonePrevState
+                    })
+                }
             }
         } catch (e) {
-
+            setStatusLoader(prevState => {
+                const clonePrevState = { ...prevState };
+                clonePrevState["div_notificaciones"] = "disconnect"
+                return clonePrevState
+            })
         }
     }
     function stateMenu() {
@@ -203,7 +279,6 @@ export const Menu = (data) => {
                 }
                 for (let x = 0; x < hamburguerCentered.length; x++) {
                     setTimeout(() => {
-                        console.log(hamburguerCentered)
                         /* hamburguerCentered[x].style.setProperty('display', 'unset', 'important'); */
                         hamburguerCentered[x].style.cssText = "justify-content: unset !important";
 
@@ -275,6 +350,10 @@ export const Menu = (data) => {
         }
     }, [queryMenu])
     useEffect(() => {
+        getAsignaciones();
+
+    }, [])
+    useEffect(() => {
         let ulContentLi = document.getElementById("ulContentLi")
         setTimeout(() => {
             resizeMenuToOverFlowUl()
@@ -288,14 +367,11 @@ export const Menu = (data) => {
                 footerNav.style.width = ""
             }
         }
-        getAgignaciones();
 
         getUser();
 
 
         window.addEventListener("resize", function () {
-
-
             resizeMenuToOverFlowUl()
         })
         /*  stateMenu() */
@@ -304,6 +380,7 @@ export const Menu = (data) => {
         iconHamburguer.addEventListener("click", function () {
             stateMenu();
         })
+
     }, [responseValidate])
     useEffect(() => {
         let iconHamburguer = document.getElementById("iconHamburguer")
@@ -341,7 +418,7 @@ export const Menu = (data) => {
     /*   async function obtenerNotificaciones() {
           try {
               const response = await Api.put("/analisis/cambiarEstado");
-              getAgignaciones()
+              getAsignaciones()
           } catch (e) {
   
           }
@@ -383,11 +460,9 @@ export const Menu = (data) => {
         setStatusVariables(false)
     }, [modalConfiguracionFormatoFisico])
     useEffect(() => {
-        console.log(statusVariables, "statussssssssssssssssssssssssssssssssssssssssssssssss")
         if (!statusVariables && modalConfiguracionFormatoFisico && divCrearFormula != null && refModalConfiguracionFormatoFisico != null) {
             setStatusVariables(true)
 
-            console.log("siuuuuuuuuuuuuuuuuuuuuuu")
             let divIconDelete = document.getElementById("divIconDelete");
             let operadorFocus;
             let operadorFocusAdd;
@@ -491,7 +566,6 @@ export const Menu = (data) => {
                 }
             }
             let operadores = refModalConfiguracionFormatoFisico.current.querySelectorAll(".item-operador-formula")
-            console.log("changeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", refModalConfiguracionFormatoFisico.current)
             refModalConfiguracionFormatoFisico.current.addEventListener("mousedown", function (event) {
                 for (let x = 0; x < operadores.length; x++) {
                     if (event.target == operadores[x]) {
@@ -648,7 +722,6 @@ export const Menu = (data) => {
                                 const cloneSvg = svgs[0].parentNode.cloneNode(true)
                                 div.appendChild(cloneSvg)
                                 cloneSvg.querySelector("svg").classList.add("signo-formula")
-                                console.log(cloneSvg, "vhwwwwwwwwwwwwwwwwww")
                                 divCrearFormula.current.appendChild(div)
                             }
                         }
@@ -685,7 +758,6 @@ export const Menu = (data) => {
                             break
                         }
                     }
-                    console.log(indice, contenidoParseFloat, variablesFormatoFisico)
                     div.innerHTML = '<div class="" style="top: 471.5px; left: 624.5px;"><div class="item-operador-formula"></div><h4 class="h4-variable-formula signo-formula" data-signo="' + contenidoParseFloat + '">V_' + (indice + 1) + '</h4></div>'
                     divCrearFormula.current.appendChild(div)
 
@@ -844,7 +916,6 @@ export const Menu = (data) => {
     }
 
     function getResultadoFormula() {
-        console.log(formulaVariables, dataVariables, "formulaaaaaaaaaa")
         let h4Resultado = document.getElementById("resultadoFormula")
         let h6ErrorFormulaVariable = document.getElementById("h6ErrorFormulaVariable")
         if (h6ErrorFormulaVariable) {
@@ -944,13 +1015,6 @@ export const Menu = (data) => {
                     }
                 )
             }
-
-
-            console.log("--------------", variableFocus, formulaVariables, globalInputsValue["tipo_valor"], "-------------------")
-            console.log(response, "resssssssssssssssssss")
-
-
-
         } catch (e) {
             console.log("Error: " + e)
         }
@@ -1188,7 +1252,6 @@ export const Menu = (data) => {
                             {Object.keys(user).length > 0 ? (
                                 <div className="div-info-usuario">
                                     <div id="divImgPerfilNav" className="div-img-perfil-nav" onClick={(e) => {
-                                        console.log(movementImgPerfil)
                                         const parent = document.getElementById("divImgPerfilFocus")
                                         const divImgPerfilNav = document.getElementById("divImgPerfilNav")
                                         let widthParent = 0;
@@ -1321,9 +1384,9 @@ export const Menu = (data) => {
                                 </div>
                             )
                                 : ""}
-                            {Object.keys(user).length > 0 ? user.rol == "catador" && user.cargo == "instructor" ?
+                            {Object.keys(user).length > 0 ? user.rol == "catador" && (user.cargo == "instructor" || user.cargo == "aprendiz") ?
                                 <div className="notificaciones">
-                                    {asignaciones.length > 0 && asignaciones ? <div className="cantidad-notificaciones"> {asignaciones.length > 9 ? "9+" : asignaciones.length} </div> : ""
+                                    {asignaciones.length > 0 && asignaciones ? <div className="cantidad-notificaciones"> {cantidadNotificaciones > 9 ? "9+" : cantidadNotificaciones} </div> : ""
                                     }
                                     <div className="secccion-notificaciones">
                                         <svg onClick={() => { /* obtenerNotificaciones() */; verNotificaciones() }} className="h-6 w-6 icono-notificaciones" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
@@ -1339,32 +1402,49 @@ export const Menu = (data) => {
                                                     </div>
                                                 </div>
                                                 <div className="contenido-analisis">
-                                                    <div className="asignaciones-notificaciones">
+                                                    <div ref={divNotificaciones} className="asignaciones-notificaciones">
 
                                                         {asignaciones.length > 0 ? (
 
-                                                            asignaciones.map((asignacion) => (
-                                                                <div key={asignacion.id} className="notificacion-analisis">
-                                                                    <div className="informacion-analisis">
-                                                                        <div className="container-data">
-                                                                            <h4>Análisis: {asignacion.tipos_analisis_id == 1 ? 'Fisico' : 'Sensorial'}</h4>
-                                                                            <h4>Asignado: {formatDate(asignacion.fecha_creacion)}</h4>
-                                                                            <h4 className="h4-informacion-notificacion-analisis">
-                                                                                Estado: <span className={`${asignacion.estado == 2 ? "pendiente" : asignacion.estado == 3 ? "asignado" : ""}`}>{asignacion.estado == 2 ? "Pendiente" : asignacion.estado == 3 ? "Asignado" : ""}</span></h4>
-                                                                            <h4>Cd. Muestra: {asignacion.codigo_externo}</h4>
-                                                                        </div>
-                                                                        <div className="img-analisis">
-                                                                            <img className="img-analisis" src="../../img/default_profile.jpg" alt="" />
+                                                            asignaciones.map((asignacion) => {
+                                                                let procedureNormal = true
+                                                                if (asignacion.proceso == "practica" && asignacion.estado == 5) {
+                                                                    procedureNormal = false
+                                                                }
+                                                                if (procedureNormal == true) {
+                                                                    return <div key={asignacion.id} className="notificacion-analisis">
+                                                                        <div className="informacion-analisis">
+                                                                            <div>
+                                                                                <div className="container-data">
+                                                                                    <h4>Formato: {asignacion.id ? asignacion.id : ""}</h4>
+                                                                                    <h4>Análisis: {asignacion.tipos_analisis_id == 1 ? 'Fisico' : 'Sensorial'}</h4>
+                                                                                    <h4>Asignado: {formatDate(asignacion.fecha_creacion)}</h4>
+                                                                                    <h4 className="h4-informacion-notificacion-analisis">
+                                                                                        Estado: <span className={`${asignacion.estado == 2 ? "pendiente" : asignacion.estado == 3 ? "asignado" : asignacion.estado == 5 ? "registrado" : ""}`}>{asignacion.estado == 2 ? "Pendiente" : asignacion.estado == 3 ? "Asignado" : asignacion.estado == 5 ? "Registrado" : ""}</span></h4>
+                                                                                    <h4>Cd. Muestra: {asignacion.codigo_externo}</h4>
+                                                                                </div>
+                                                                                <div className="img-analisis">
+                                                                                    {asignacion.tipos_analisis_id == 2 ?
+                                                                                        <img className="img-analisis" src="../../public/img/iconoAnalisisSeonsorial.png" alt="" />
+                                                                                        :
+                                                                                        <img className="img-analisis" src="../../public/img/iconoAnalisisFisico.png" alt="" />
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+                                                                            <button onClick={() => { localStorage.setItem("formatos_id", asignacion.id); localStorage.setItem("tipos_analisis_id", asignacion.tipos_analisis_id), location.href = "/dashboard/formatos/registros" }} className="input-proceder-analisis">Proceder</button>
                                                                         </div>
                                                                     </div>
-
-                                                                    <button onClick={() => { localStorage.setItem("analisis_id", asignacion.analisis_id); localStorage.setItem("tipos_analisis_id", asignacion.tipos_analisis_id), location.href = "/dashboard/formatos/registros" }} className="input-proceder-analisis">Proceder</button>
-
-
-                                                                </div>
-                                                            ))
+                                                                }
+                                                            })
 
                                                         ) : <h4 className="h4-notificaciones-vacias">No hay análisis pendientes por realizar</h4>}
+                                                        {statusLoader ? statusLoader["div_notificaciones"] ?
+                                                            <div className="notificaicones div-loader-notificaciones">
+                                                                <div className="loader-div">
+                                                                </div>
+                                                            </div>
+                                                            : "" : ""
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -1513,7 +1593,6 @@ export const Menu = (data) => {
                                         <div >
                                             {globalInputsValue["tipo_valor"] ? globalInputsValue["tipo_valor"] === "calculado" ?
                                                 <div>
-                                                    {console.log(globalInputsValue["variable_focus"], "aaaaaaaaaaa------------------------------------", globalInputsValue["tipo_valor"])}
                                                     <div>
                                                         <h3>Elegir operador</h3>
                                                         <div className="div-operadores-opciones-variables-fisico">
@@ -1728,7 +1807,7 @@ export const Menu = (data) => {
                                     <div className="div-content-leyenda">
                                         {variablesFormatoFisico ? variablesFormatoFisico.length > 0 ?
                                             variablesFormatoFisico.map((value, index) => {
-                                                return <div key={index}>
+                                                return <div key={value.id}>
                                                     <span>V_{(index + 1) + ") "}</span><h4>{value["visual_name"].toString().replace(/\b\w{4,}\b/g, function (match) {
                                                         return match.charAt(0).toUpperCase() + match.slice(1);
                                                     })}</h4>
@@ -1747,6 +1826,7 @@ export const Menu = (data) => {
                     : ""
             }
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
+            {/* <Mensajeria socket={data.socket} user={user} /> */}
         </div >
     )
 }

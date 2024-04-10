@@ -1,3 +1,7 @@
+#mainGlobalInput {
+    max-width: 100%;
+}
+
 #mainGlobalInput .modal-form {
     position: fixed;
     top: 0;
@@ -43,12 +47,17 @@
     font-size: 2em;
 }
 
-#mainGlobalInput .form-register {
+/* #mainGlobalInput .form-register {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: max-content;
     gap: 15px 20px;
     width: 100%;
+}
+ */
+#mainGlobalInput .input-form::placeholder {
+    color: rgb(196, 196, 196);
+    font-size: 0.7em;
 }
 
 #mainGlobalInput .input-form {
@@ -142,7 +151,7 @@
 
 #mainGlobalInput .div-select {
     font-size: 0.9em;
-    width: calc(100%);
+    /* width: calc(100% - 4px); */
     height: auto;
     word-break: break-all;
 }
@@ -284,4 +293,21 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+/* #mainGlobalInput .filter-estado {
+    width: calc(100% - 12px) !important;
+    padding: 0px 5px !important;
+} */
+
+#mainGlobalInput .input-date {
+    width: calc(100% - 30px);
+    padding: 10px 15px;
+    border-radius: 4px;
+    border: 1px solid rgba(122, 122, 122, 0.368);
+    cursor: pointer;
+}
+
+#mainGlobalInput .input-date:focus {
+    outline: none;
 }

@@ -18,7 +18,7 @@ export const Lotes = () => {
             "reporte": true,
         }
     });
-    const [lotes, setLotes] = useState([])
+    const [lotes, setLotes] = useState(false)
     const [fincaEdit, setLoteEdit] = useState([])
     const [updateStatus, setUpdateStatus] = useState(false)
     const [municipios, setMunicipios] = useState([])
@@ -72,11 +72,11 @@ export const Lotes = () => {
             },
             longitud: {
                 type: "ubicacion",
-                referencia: "Longitud",
+                referencia: <div><h4>Longitud</h4><h6>(-66.9 a -79.03)</h6></div>,
             },
             latitud: {
                 type: "ubicacion",
-                referencia: "Latitud"
+                referencia:  <div><h4>Latitud</h4><h6>(12.4 a -4.1)</h6></div>
             },
             fincas_id: {
                 type: "select",
@@ -111,10 +111,11 @@ export const Lotes = () => {
             "format": true
         },
         "estado": {
-            "referencia": "Estado"
+            "referencia": "Estado",
+            "filter": false
         },
         "actualizar": {
-            "referencia": "actualizar"
+            "referencia": "Actualizar"
         }
     }
     const filterEstado = {
@@ -132,7 +133,14 @@ export const Lotes = () => {
 
     async function getLotes() {
         try {
-            
+            if (document.getElementById("contentTable").querySelector("tbody")) {
+                document.getElementById("contentTable").style.overflow = "hidden"
+            }
+            if (!document.getElementById("loadTable")) {
+                if (document.getElementById("contentTable")) {
+                    document.getElementById("contentTable").insertAdjacentHTML('beforeend', ("<div id='loadTable' class='load-table'>Cargando</div>"))
+                }
+            }
             const response = await Api.post("lotes/listar", dataFilterTable);
             if (response.data.status == true) {
                 setLotes(response.data.data)

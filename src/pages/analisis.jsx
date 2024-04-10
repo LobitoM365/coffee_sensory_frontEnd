@@ -491,32 +491,32 @@ export const Analisis = (userInfo) => {
                     "2": {
                         "element": {
                             "type": "free",
-                            "element": <h4 className="estado-no-pointer estado-2">Pendiente</h4>,
+                            "element": <h4 className="estado-table estado-no-pointer estado-2">Pendiente</h4>,
                             "class": "xd"
                         }
                     },
                     "4": {
                         "element": {
                             "type": "free",
-                            "element": <h4 className="estado-no-pointer estado-4">Finalizado</h4>,
+                            "element": <h4 className="estado-table estado-no-pointer estado-4">Finalizado</h4>,
                         }
                     },
                     "1": {
                         "element": {
                             "type": "free",
-                            "element": <h4 className="estado-no-pointer estado-1">Activo</h4>,
+                            "element": <h4 className="estado-table estado-no-pointer estado-1">Activo</h4>,
                         }
                     },
                     "0": {
                         "element": {
                             "type": "free",
-                            "element": <h4 className="estado-no-pointer estado-0">Inactivo</h4>,
+                            "element": <h4 className="estado-table estado-no-pointer estado-0">Inactivo</h4>,
                         }
                     },
                     "0": {
                         "element": {
                             "type": "free",
-                            "element": <h4 className="estado-no-pointer estado-0">Inactivo</h4>,
+                            "element": <h4 className="estado-table estado-no-pointer estado-0">Inactivo</h4>,
                         }
                     },
                 },
@@ -538,39 +538,96 @@ export const Analisis = (userInfo) => {
             "referencia": "actualizar"
         },
         "reporte": {
-            "normal": true,
+            "rol" : ["administrador"],
             "referencia": "Reporte",
-            "inputs": {
-                /* "reporte": {
-                    "type": "button",
-                    "referencia": "PDF",
-                    "class": "button-table-pdf",
-                    "function": {
-                        "value": xd,
-                        "execute": {
-                            "type": "table",
-                            "value": "an_id"
-                        }
-                    }
-                }, */
-                "pdf": {
-                    "type": "free",
-                    "element": "icon-pdf",
-                    "redirect-value": {
-                        "type": "new-window",
-                        "value": "/dashboard/generateReporteAnalisis",
-                        "execute": {
-                            "type": "table",
-                            "value": "an_id"
+            "normal": true,
+            "conditions": {
+                "value": {
+                    "type": "table",
+                    "reference": "estado"
+                },
+                "inputs": {
+                    "4": {
+                        "element": {
+                            "type": "free",
+                            "inputs": {
+                                "pdf": {
+                                    "type": "free",
+                                    "element": "icon-pdf",
+                                    "redirect-value": {
+                                        "type": "new-window",
+                                        "value": "/dashboard/generateReporteAnalisis",
+                                        "execute": {
+                                            "type": "table",
+                                            "value": "an_id"
+                                        }
+                                    },
+                                    "class": "div-icon-reporte-pdf",
+                                }
+                            }
                         }
                     },
-                    "class": "div-icon-reporte-pdf",
+                    "2": {
+                        "element": {
+                            "type": "free",
+                            "inputs": {
+                                "pdf": {
+                                    "type": "free",
+                                    "element": "icon-pdf",
+                                    "class": "div-icon-reporte-pdf-none",
+                                }
+                            }
+                        }
+                    }
+                },
+                "default": {
+                    "type": "free",
+                    "referencia": "No disponible",
+                    /* "function": {
+                        "value": xd2,
+                        "execute": {
+                            "type": "table",
+                            "value": "an_id"
+                        }
+                    } */
                 }
             },
-            "class": "div-reporte-pdf",
-            "upper_case": true,
-            "priority": 2
-        }
+            "upper_case": true
+        },
+        // "reporte": {
+        //     "normal": true,
+        //     "referencia": "Reporte",
+        //     "inputs": {
+        //         /* "reporte": {
+        //             "type": "button",
+        //             "referencia": "PDF",
+        //             "class": "button-table-pdf",
+        //             "function": {
+        //                 "value": xd,
+        //                 "execute": {
+        //                     "type": "table",
+        //                     "value": "an_id"
+        //                 }
+        //             }
+        //         }, */
+        //         "pdf": {
+        //             "type": "free",
+        //             "element": "icon-pdf",
+        //             "redirect-value": {
+        //                 "type": "new-window",
+        //                 "value": "/dashboard/generateReporteAnalisis",
+        //                 "execute": {
+        //                     "type": "table",
+        //                     "value": "an_id"
+        //                 }
+        //             },
+        //             "class": "div-icon-reporte-pdf",
+        //         }
+        //     },
+        //     "class": "div-reporte-pdf",
+        //     "upper_case": true,
+        //     "priority": 2
+        // }
     }
 
 
@@ -676,7 +733,7 @@ export const Analisis = (userInfo) => {
                 e.target.classList.add("button-asing-agregado")
                 let tr = document.createElement("tr");
                 tr.setAttribute("id", "fisico_" + data.id)
-                tr.innerHTML = "<td> <div><svg class='svg-icon-quit-table-asing' version='1.0' viewBox='0 0 512.000000 512.000000'><g transform='translate(0.000000,512.000000) scale(0.100000,-0.100000)'  stroke='none'> <path d='M2235 5105 c-471 -62 -895 -241 -1280 -543 -91 -71 -326 -307 -398 -399 -305 -386 -489 -833 -546 -1318 -14 -114 -14 -454 -1 -565 51 -430 185 -795 422 -1150 313 -467 780 -823 1311 -1001 142 -47 240 -72 402 -100 173 -31 541 -38 726 -14 579 72 1085 320 1500 734 420 421 677 954 739 1533 15 144 12 455 -5 598 -73 585 -342 1118 -777 1535 -399 384 -901 621 -1458 691 -141 17 -496 17 -635 -1z m-401 -1547 c35 -10 95 -65 384 -352 l342 -340 343 340 c355 354 368 364 448 364 111 0 219 -108 219 -219 0 -80 -10 -93 -364 -448 l-340 -343 340 -343 c354 -355 364 -368 364 -448 0 -111 -108 -219 -219 -219 -80 0 -93 10 -448 364 l-343 340 -342 -340 c-356 -354 -369 -364 -449 -364 -111 0 -219 108 -219 219 0 80 10 93 364 449 l340 342 -340 343 c-354 355 -364 368 -364 448 0 108 107 217 214 219 16 0 47 -5 70 -12z'/></g></svg></div></td> <td><div> <h4>" + (data.id + ", " + data.numero_documento + ", " + data.nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) + "</h4> <div> </td> <td><div><input value='1' class='input-cantidad-formatos' type='text' /><div> </td> ";
+                tr.innerHTML = "<td> <div><svg class='svg-icon-quit-table-asing' version='1.0' viewBox='0 0 512.000000 512.000000'><g transform='translate(0.000000,512.000000) scale(0.100000,-0.100000)'  stroke='none'> <path d='M2235 5105 c-471 -62 -895 -241 -1280 -543 -91 -71 -326 -307 -398 -399 -305 -386 -489 -833 -546 -1318 -14 -114 -14 -454 -1 -565 51 -430 185 -795 422 -1150 313 -467 780 -823 1311 -1001 142 -47 240 -72 402 -100 173 -31 541 -38 726 -14 579 72 1085 320 1500 734 420 421 677 954 739 1533 15 144 12 455 -5 598 -73 585 -342 1118 -777 1535 -399 384 -901 621 -1458 691 -141 17 -496 17 -635 -1z m-401 -1547 c35 -10 95 -65 384 -352 l342 -340 343 340 c355 354 368 364 448 364 111 0 219 -108 219 -219 0 -80 -10 -93 -364 -448 l-340 -343 340 -343 c354 -355 364 -368 364 -448 0 -111 -108 -219 -219 -219 -80 0 -93 10 -448 364 l-343 340 -342 -340 c-356 -354 -369 -364 -449 -364 -111 0 -219 108 -219 219 0 80 10 93 364 449 l340 342 -340 343 c-354 355 -364 368 -364 448 0 108 107 217 214 219 16 0 47 -5 70 -12z'/></g></svg></div></td> <td><div> <h4>" + (data.id + ", " + data.numero_documento + ", " + data.nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) + "</h4> <div> </td> <td><input value='1' class='input-cantidad-formatos' type='text' /><div> </td> ";
                 asignarFormatoFisico.current.append(tr)
                 tr.querySelector("input").addEventListener("input", function (e) {
                     e.target.value = e.target.value.replace(/\D/g, '')
@@ -733,7 +790,7 @@ export const Analisis = (userInfo) => {
                 e.target.classList.add("button-asing-agregado")
                 let tr = document.createElement("tr");
                 tr.setAttribute("id", "sca_" + data.id)
-                tr.innerHTML = "<td> <div><svg class='svg-icon-quit-table-asing' version='1.0' viewBox='0 0 512.000000 512.000000'><g transform='translate(0.000000,512.000000) scale(0.100000,-0.100000)'  stroke='none'> <path d='M2235 5105 c-471 -62 -895 -241 -1280 -543 -91 -71 -326 -307 -398 -399 -305 -386 -489 -833 -546 -1318 -14 -114 -14 -454 -1 -565 51 -430 185 -795 422 -1150 313 -467 780 -823 1311 -1001 142 -47 240 -72 402 -100 173 -31 541 -38 726 -14 579 72 1085 320 1500 734 420 421 677 954 739 1533 15 144 12 455 -5 598 -73 585 -342 1118 -777 1535 -399 384 -901 621 -1458 691 -141 17 -496 17 -635 -1z m-401 -1547 c35 -10 95 -65 384 -352 l342 -340 343 340 c355 354 368 364 448 364 111 0 219 -108 219 -219 0 -80 -10 -93 -364 -448 l-340 -343 340 -343 c354 -355 364 -368 364 -448 0 -111 -108 -219 -219 -219 -80 0 -93 10 -448 364 l-343 340 -342 -340 c-356 -354 -369 -364 -449 -364 -111 0 -219 108 -219 219 0 80 10 93 364 449 l340 342 -340 343 c-354 355 -364 368 -364 448 0 108 107 217 214 219 16 0 47 -5 70 -12z'/></g></svg></div></td> <td><div> <h4>" + (data.id + ", " + data.numero_documento + ", " + data.nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) + "</h4> <div> </td> <td><div><input value='1' class='input-cantidad-formatos' type='text' /><div> </td> ";
+                tr.innerHTML = "<td> <div><svg class='svg-icon-quit-table-asing' version='1.0' viewBox='0 0 512.000000 512.000000'><g transform='translate(0.000000,512.000000) scale(0.100000,-0.100000)'  stroke='none'> <path d='M2235 5105 c-471 -62 -895 -241 -1280 -543 -91 -71 -326 -307 -398 -399 -305 -386 -489 -833 -546 -1318 -14 -114 -14 -454 -1 -565 51 -430 185 -795 422 -1150 313 -467 780 -823 1311 -1001 142 -47 240 -72 402 -100 173 -31 541 -38 726 -14 579 72 1085 320 1500 734 420 421 677 954 739 1533 15 144 12 455 -5 598 -73 585 -342 1118 -777 1535 -399 384 -901 621 -1458 691 -141 17 -496 17 -635 -1z m-401 -1547 c35 -10 95 -65 384 -352 l342 -340 343 340 c355 354 368 364 448 364 111 0 219 -108 219 -219 0 -80 -10 -93 -364 -448 l-340 -343 340 -343 c354 -355 364 -368 364 -448 0 -111 -108 -219 -219 -219 -80 0 -93 10 -448 364 l-343 340 -342 -340 c-356 -354 -369 -364 -449 -364 -111 0 -219 108 -219 219 0 80 10 93 364 449 l340 342 -340 343 c-354 355 -364 368 -364 448 0 108 107 217 214 219 16 0 47 -5 70 -12z'/></g></svg></div></td> <td><div> <h4>" + (data.id + ", " + data.numero_documento + ", " + data.nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) + "</h4>  </td> <td><input value='1' class='input-cantidad-formatos' type='text' /><div> </td> ";
                 asignarFormatoSca.current.append(tr)
                 tr.querySelector("input").addEventListener("input", function (e) {
                     e.target.value = e.target.value.replace(/\D/g, '')
@@ -1091,6 +1148,21 @@ export const Analisis = (userInfo) => {
         } catch (e) {
 
         }
+    }
+    async function confirmarEliminarFormato(id) {
+        setStatusAlert(true)
+        setdataAlert(
+            {
+                status: "warning",
+                description: "¿Estás seguro(a) de eliminar el formato?, ten en cuenta que al eliminar el formato si este ya tiene su análisis reigstrado también se eliminará.",
+                "tittle": "¡Asegurate de realizar la ación!",
+                continue: {
+                    "function": eliminarFormato,
+                    "execute": id,
+                    location: "/dashboard"
+                }
+            }
+        )
     }
 
     async function desactivarUsuario() {
@@ -1664,14 +1736,14 @@ export const Analisis = (userInfo) => {
             const filterMuestra = {
                 "filter": {
                     "where": {
-                        "us.rol": {
+                        /* "us.rol": {
                             "value": "cafetero",
                             "require": "and"
                         },
                         "us.cargo": {
                             "value": "cliente",
                             "require": "and"
-                        },
+                        }, */
                         "mu.estado": {
                             "value": 1,
                             "require": "and"
@@ -1908,6 +1980,37 @@ export const Analisis = (userInfo) => {
             console.log("Error: " + e)
         }
     }
+    async function confirmarEditarAnalisis(id, muestra) {
+        setStatusAlert(true)
+        setdataAlert(
+            {
+                status: "warning",
+                description: "¿Estás seguro(a) de editar el análisis?.",
+                "tittle": "¡Asegurate de realizar la ación!",
+                continue: {
+                    "function": editarAnalisis,
+                    "execute": [id, muestra],
+                    location: "/dashboard"
+                }
+            }
+        )
+    }
+    async function confirmarCambiarFormato(id, value) {
+        setStatusAlert(true)
+        setdataAlert(
+            {
+                status: "warning",
+                description: "¿Estás seguro(a) de editar el formato?.",
+                "tittle": "¡Asegurate de realizar la ación!",
+                continue: {
+                    "function": cambiarFormato,
+                    "execute": [id, value],
+                    location: "/dashboard"
+                }
+            }
+        )
+    }
+
     return (
         <div>
             <div id='mainAnalisis'>
@@ -1924,16 +2027,40 @@ export const Analisis = (userInfo) => {
                     userInfo.userInfo.rol ?
                         userInfo.userInfo.rol == "administrador" ?
                             statusModalAsignar ? (
-                                <GlobalModal statusModal={setStatusModalAsignar} key={"icons-img"} class="modal-table" content={
+                                <GlobalModal statusModal={setStatusModalAsignar} key={"icons-img"} className="modal-table" content={
                                     <div key={keyAsignarAnalisis} className='div-content-asignar'>
-                                        <div>
+
+                                        <div className={'section-one-div-content-asignar ' + (statusAsignar == false ? " div-content-asignar-info" : "")}>
                                             <div className='head-asignar-analisis'>
                                                 <h2>Encargados del Análisis {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["id"] ? infoAnalisisUpdateAsignar[0]["id"] : "" : ""}</h2>
                                                 {
                                                     statusUpdateAsignar ?
                                                         infoAnalisisUpdateAsignar.length > 0 ?
                                                             infoAnalisisUpdateAsignar[0].permission_update != 'false' ?
-                                                                <div>
+
+                                                                <div className='div-muestra-change'>
+                                                                    <div className='div-estado-muestra-asign'>
+                                                                        <h3>Tipo de proceso: </h3>
+                                                                        <h4 className={"estado-no-pointer estado-"}>
+                                                                            {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["proceso"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : ""}
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div className='div-estado-muestra-asign'>
+                                                                        <h3>Estado de la muestra actual : </h3>
+                                                                        <h4 className={"estado-no-pointer estado-" + (infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] : "")}>
+                                                                            {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] == 0 ? "Inactivo" : infoAnalisisUpdateAsignar[0]["mu_estado"] == 1 ? "Activo" : "" : ""}
+                                                                        </h4>
+                                                                    </div>
+                                                                    {infoAnalisisUpdateAsignar.length > 0 ?? infoAnalisisUpdateAsignar[0]["codigo_muestra"] ??
+                                                                        <div className='div-estado-muestra-asign'>
+                                                                            <h3>Código de la muestra actual : </h3>
+                                                                            {console.log(infoAnalisisUpdateAsignar)}
+                                                                            <h4 className={"estado-no-pointer estado-" + (infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] : "")}>
+                                                                                {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] == 0 ? "Inactivo" : infoAnalisisUpdateAsignar[0]["mu_estado"] == 1 ? "Activo" : "" : ""}
+                                                                            </h4>
+                                                                        </div>
+                                                                    }
+
                                                                     <GlobalInputs
                                                                         input={setMuestraIdAsignar}
                                                                         value={muestraIdAsignar}
@@ -1950,7 +2077,9 @@ export const Analisis = (userInfo) => {
                                                                                 key: "id",
                                                                             },
                                                                         }} />
-                                                                    <button onClick={() => { editarAnalisis(analisisAsignar, muestraIdAsignar["muestras_id"]) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                    <div className='div-change-muestra'>
+                                                                        <button onClick={() => { confirmarEditarAnalisis(analisisAsignar, muestraIdAsignar["muestras_id"]) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                    </div>
                                                                 </div>
                                                                 :
                                                                 <div>
@@ -1959,17 +2088,31 @@ export const Analisis = (userInfo) => {
                                                                             <h4>Muestra:</h4>
                                                                             <h5>{(infoAnalisisUpdateAsignar[0].mu_id + ", " + infoAnalisisUpdateAsignar[0].documento_propietario + ", " + infoAnalisisUpdateAsignar[0].nombre_propietario + ", " + infoAnalisisUpdateAsignar[0].finca + ", " + infoAnalisisUpdateAsignar[0].lote).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h5>
                                                                         </div>
-                                                                        <div>
-                                                                            <h4>Estado: </h4>
-                                                                            {
-                                                                                infoAnalisisUpdateAsignar[0].estado == 4 ? <h4 className='h4-estado-formato-asing h4-estado-formato-asing-finalizado'>
-                                                                                    Finalizado
-                                                                                </h4> :
-                                                                                    <h4 className='h4-estado-formato-asing
+                                                                        <div className='div-informacion-finalizado-asignar-formato'>
+                                                                            <div className='div-estado-muestra-asign'>
+                                                                                <h3>Tipo de proceso: </h3>
+                                                                                <h4 className={"estado-no-pointer estado-"}>
+                                                                                    {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["proceso"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : ""}
+                                                                                </h4>
+                                                                            </div>
+                                                                            <div className='div-estado-muestra-asign'>
+                                                                                <h3>Estado de la muestra actual : </h3>
+                                                                                <h4 className={"estado-no-pointer estado-" + (infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] : "")}>
+                                                                                    {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] == 0 ? "Inactivo" : infoAnalisisUpdateAsignar[0]["mu_estado"] == 1 ? "Activo" : "" : ""}
+                                                                                </h4>
+                                                                            </div>
+                                                                            <div className='div-estado-muestra-asign'>
+                                                                                <h4>Estado del análisis: </h4>
+                                                                                {
+                                                                                    infoAnalisisUpdateAsignar[0].estado == 4 ? <h4 className='h4-estado-formato-asing h4-estado-formato-asing-finalizado'>
+                                                                                        Finalizado
+                                                                                    </h4> :
+                                                                                        <h4 className='h4-estado-formato-asing
                                                              h4-estado-formato-asing-pendiente'>
-                                                                                        Pendiente
-                                                                                    </h4>
-                                                                            }
+                                                                                            Pendiente
+                                                                                        </h4>
+                                                                                }
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div> : ""
@@ -1990,198 +2133,202 @@ export const Analisis = (userInfo) => {
                                                             }} />
                                                 }
                                             </div>
+                                            {
+                                                statusUpdateAsignar ?
+                                                    <div className='body-asignar-analisis'>
+                                                        <h2>Formatos Actuales</h2>
 
+                                                        <div className='div-encargados div-encargados-actuales'>
+                                                            <div>
+                                                                <h3>Formato Físico</h3>
+                                                                <div className='div-table-asignados'>
+                                                                    <table cellSpacing={0} className='table-add-asignar'>
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Id</th>
+                                                                                <th>Instructor</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            {infoFormatoFisicoUpdateAsignar ?
+                                                                                infoFormatoFisicoUpdateAsignar.length > 0 ?
+                                                                                    infoFormatoFisicoUpdateAsignar.map((value, index) => {
+                                                                                        return <tr key={value.id}>
+                                                                                            <td>
+                                                                                                <h4>                                                 {value.id}
+                                                                                                </h4>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                {value.estado != 4 ?
+                                                                                                    <div>
+                                                                                                        < GlobalInputs
+                                                                                                            input={setValueGlobalInput}
+                                                                                                            value={valueGlobalInput}
+                                                                                                            /* class={"input-global"} */
+                                                                                                            errors={errorsInputGlobal}
+                                                                                                            elementEdit={value.catador_id}
+                                                                                                            data={{
+                                                                                                                ["catador_fisico_" + value.catador_id + "" + index]: {
+                                                                                                                    type: "select",
+                                                                                                                    referencia: false,
+                                                                                                                    values: ["id", "numero_documento", "nombre_completo"],
+                                                                                                                    opciones: usuariosAsignar,
+                                                                                                                    upper_case: true,
+                                                                                                                    key: "id",
+                                                                                                                },
+                                                                                                            }} />
 
-                                            <div className='div-asign-elements'>
-                                                <div className='fiv-asignar-analisis'>
-                                                    {
-                                                        statusUpdateAsignar ?
-                                                            <div className='body-asignar-analisis'>
-                                                                <h2>Formatos</h2>
-
-                                                                <div className='div-encargados'>
-                                                                    <div>
-                                                                        <h3>Formato Físico</h3>
-                                                                        <div className='div-table-asignados'>
-                                                                            <table cellSpacing={0} className='table-add-asignar'>
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                        <th>Id</th>
-                                                                                        <th>Instructor</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    {infoFormatoFisicoUpdateAsignar ?
-                                                                                        infoFormatoFisicoUpdateAsignar.length > 0 ?
-                                                                                            infoFormatoFisicoUpdateAsignar.map((value, index) => {
-
-                                                                                                return <tr key={value.id}>
-                                                                                                    <td>
-                                                                                                        <h4>                                                 {value.id}
-                                                                                                        </h4>
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        {value.estado != 4 ?
-                                                                                                            <div>
-                                                                                                                < GlobalInputs
-                                                                                                                    input={setValueGlobalInput}
-                                                                                                                    value={valueGlobalInput}
-                                                                                                                    /* class={"input-global"} */
-                                                                                                                    errors={errorsInputGlobal}
-                                                                                                                    elementEdit={value.catador_id}
-                                                                                                                    data={{
-                                                                                                                        ["catador_fisico_" + value.catador_id + "" + index]: {
-                                                                                                                            type: "select",
-                                                                                                                            referencia: false,
-                                                                                                                            values: ["id", "numero_documento", "nombre_completo"],
-                                                                                                                            opciones: usuariosAsignar,
-                                                                                                                            upper_case: true,
-                                                                                                                            key: "id",
-                                                                                                                        },
-                                                                                                                    }} />
-
-                                                                                                                <div className='div-footer-users-formatos'>
-                                                                                                                    {value.estado == 2 ?
-                                                                                                                        <h4 className='h4-estado-formato-asing
+                                                                                                        <div className='div-footer-users-formatos'>
+                                                                                                            {value.estado == 2 ?
+                                                                                                                <h4 className='h4-estado-formato-asing
                                                                                                     h4-estado-formato-asing-pendiente'>
-                                                                                                                            Pendiente
-                                                                                                                        </h4>
-                                                                                                                        : value.estado == 3 ?
-                                                                                                                            <h4 className='h4-estado-formato-asing h4-estado-formato-asing-asignado'>
-                                                                                                                                Asignado
-                                                                                                                            </h4>
-                                                                                                                            : value.estado == 5 ?
-                                                                                                                                <h4 className='h4-estado-formato-asing h4-estado-formato-asing-registrado'>
-                                                                                                                                    Registrado
-                                                                                                                                </h4>
-                                                                                                                                : ""}
-                                                                                                                    <button onClick={() => { cambiarFormato(value.id, valueGlobalInput["catador_fisico_" + value.catador_id + "" + index], "catador_fisico_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
-                                                                                                                    <button
-                                                                                                                        onClick={() => { eliminarFormato(value.id) }}
-                                                                                                                        className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                            :
-                                                                                                            <div className='div-formato-finalizado'>
-                                                                                                                <h4 className='catador-no-options-asignar'>
-                                                                                                                    {(value.catador_id + ", " + value.catador_documento + ", " + value.catador_nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}
+                                                                                                                    Pendiente
                                                                                                                 </h4>
-
-                                                                                                                <div>
-                                                                                                                    {value.estado == 4 ?
-                                                                                                                        <h4 className='h4-estado-formato-asing
-                                                                                                h4-estado-formato-asing-finalizado'>
-                                                                                                                            Finalizado
+                                                                                                                : value.estado == 3 ?
+                                                                                                                    <h4 className='h4-estado-formato-asing h4-estado-formato-asing-asignado'>
+                                                                                                                        Asignado
+                                                                                                                    </h4>
+                                                                                                                    : value.estado == 5 ?
+                                                                                                                        <h4 className='h4-estado-formato-asing h4-estado-formato-asing-registrado'>
+                                                                                                                            Registrado
                                                                                                                         </h4>
                                                                                                                         : ""}
-                                                                                                                </div>
-
-                                                                                                            </div>}
-
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            })
-                                                                                            : <tr></tr>
-                                                                                        : <tr></tr>}
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div>
-                                                                        <h3>Formato Sca</h3>
-                                                                        <div className='div-table-asignados'>
-                                                                            <table cellSpacing={0} className='table-add-asignar'>
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                        <th>Id</th>
-                                                                                        <th>Instructor</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    {infoFormatoScaUpdateAsignar ?
-                                                                                        infoFormatoScaUpdateAsignar.length > 0 ?
-                                                                                            infoFormatoScaUpdateAsignar.map((value, index) => {
-
-                                                                                                return <tr key={value.id}>
-                                                                                                    <td>
-                                                                                                        <h4>                                                 {value.id}
+                                                                                                            <button onClick={() => { confirmarCambiarFormato(value.id, valueGlobalInput["catador_fisico_" + value.catador_id + "" + index], "catador_fisico_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                                                            <button
+                                                                                                                onClick={() => { confirmarEliminarFormato(value.id) }}
+                                                                                                                className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    :
+                                                                                                    <div className='div-formato-finalizado'>
+                                                                                                        <h4 className='catador-no-options-asignar'>
+                                                                                                            {(value.catador_id + ", " + value.catador_documento + ", " + value.catador_nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}
                                                                                                         </h4>
-                                                                                                    </td>
-                                                                                                    <td>
-                                                                                                        {value.estado != 4 ?
-                                                                                                            <div>
-                                                                                                                < GlobalInputs
-                                                                                                                    input={setValueGlobalInput}
-                                                                                                                    value={valueGlobalInput}
-                                                                                                                    /* class={"input-global"} */
-                                                                                                                    errors={errorsInputGlobal}
-                                                                                                                    elementEdit={value.catador_id}
-                                                                                                                    data={{
-                                                                                                                        ["catador_sca_" + value.catador_id + "" + index]: {
-                                                                                                                            type: "select",
-                                                                                                                            referencia: false,
-                                                                                                                            values: ["id", "numero_documento", "nombre_completo"],
-                                                                                                                            opciones: usuariosAsignar,
-                                                                                                                            upper_case: true,
-                                                                                                                            key: "id",
-                                                                                                                        },
-                                                                                                                    }} />
 
-                                                                                                                <div className='div-footer-users-formatos'>
-                                                                                                                    {value.estado == 2 ?
-                                                                                                                        <h4 className='h4-estado-formato-asing
-                                                                                                h4-estado-formato-asing-pendiente'>
-                                                                                                                            Pendiente
-                                                                                                                        </h4>
-                                                                                                                        : value.estado == 3 ?
-                                                                                                                            <h4 className='h4-estado-formato-asing h4-estado-formato-asing-asignado'>
-                                                                                                                                Asignado
-                                                                                                                            </h4>
-                                                                                                                            : ""}
-                                                                                                                    <button onClick={() => { cambiarFormato(value.id, valueGlobalInput["catador_sca_" + value.catador_id + "" + index], "catador_sca_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
-                                                                                                                    <button
-                                                                                                                        onClick={() => { eliminarFormato(value.id) }}
-                                                                                                                        className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                            :
-                                                                                                            <div className='div-formato-finalizado'>
-                                                                                                                <h4 className='catador-no-options-asignar'>
-                                                                                                                    {(value.catador_id + ", " + value.catador_documento + ", " + value.catador_nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}
+                                                                                                        <div>
+                                                                                                            {value.estado == 4 ?
+                                                                                                                <h4 className='h4-estado-formato-asing
+                                                                                                h4-estado-formato-asing-finalizado'>
+                                                                                                                    Finalizado
                                                                                                                 </h4>
+                                                                                                                : ""}
+                                                                                                        </div>
 
-                                                                                                                <div>
-                                                                                                                    {value.estado == 4 ?
-                                                                                                                        <h4 className='h4-estado-formato-asing
-                                                                                            h4-estado-formato-asing-finalizado'>
-                                                                                                                            Finalizado
+                                                                                                    </div>}
+
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    })
+                                                                                    : <tr></tr>
+                                                                                : <tr></tr>}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <h3>Formato Sca</h3>
+                                                                <div className='div-table-asignados'>
+                                                                    <table cellSpacing={0} className='table-add-asignar'>
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Id</th>
+                                                                                <th>Instructor</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            {infoFormatoScaUpdateAsignar ?
+                                                                                infoFormatoScaUpdateAsignar.length > 0 ?
+                                                                                    infoFormatoScaUpdateAsignar.map((value, index) => {
+
+                                                                                        return <tr key={value.id}>
+                                                                                            <td>
+                                                                                                <h4>                                                 {value.id}
+                                                                                                </h4>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                {value.estado != 4 ?
+                                                                                                    <div>
+                                                                                                        < GlobalInputs
+                                                                                                            input={setValueGlobalInput}
+                                                                                                            value={valueGlobalInput}
+                                                                                                            /* class={"input-global"} */
+                                                                                                            errors={errorsInputGlobal}
+                                                                                                            elementEdit={value.catador_id}
+                                                                                                            data={{
+                                                                                                                ["catador_sca_" + value.catador_id + "" + index]: {
+                                                                                                                    type: "select",
+                                                                                                                    referencia: false,
+                                                                                                                    values: ["id", "numero_documento", "nombre_completo"],
+                                                                                                                    opciones: usuariosAsignar,
+                                                                                                                    upper_case: true,
+                                                                                                                    key: "id",
+                                                                                                                },
+                                                                                                            }} />
+
+                                                                                                        <div className='div-footer-users-formatos'>
+                                                                                                            {value.estado == 2 ?
+                                                                                                                <h4 className='h4-estado-formato-asing
+                                                                                                    h4-estado-formato-asing-pendiente'>
+                                                                                                                    Pendiente
+                                                                                                                </h4>
+                                                                                                                : value.estado == 3 ?
+                                                                                                                    <h4 className='h4-estado-formato-asing h4-estado-formato-asing-asignado'>
+                                                                                                                        Asignado
+                                                                                                                    </h4>
+                                                                                                                    : value.estado == 5 ?
+                                                                                                                        <h4 className='h4-estado-formato-asing h4-estado-formato-asing-registrado'>
+                                                                                                                            Registrado
                                                                                                                         </h4>
                                                                                                                         : ""}
-                                                                                                                </div>
+                                                                                                            <button onClick={() => { confirmarCambiarFormato(value.id, valueGlobalInput["catador_sca_" + value.catador_id + "" + index], "catador_sca_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                                                            <button
+                                                                                                                onClick={() => { confirmarEliminarFormato(value.id) }}
+                                                                                                                className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    :
+                                                                                                    <div className='div-formato-finalizado'>
+                                                                                                        <h4 className='catador-no-options-asignar'>
+                                                                                                            {(value.catador_id + ", " + value.catador_documento + ", " + value.catador_nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}
+                                                                                                        </h4>
 
-                                                                                                            </div>}
+                                                                                                        <div>
+                                                                                                            {value.estado == 4 ?
+                                                                                                                <h4 className='h4-estado-formato-asing
+                                                                                            h4-estado-formato-asing-finalizado'>
+                                                                                                                    Finalizado
+                                                                                                                </h4>
+                                                                                                                : ""}
+                                                                                                        </div>
 
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            })
-                                                                                            : <tr></tr>
-                                                                                        : <tr></tr>}
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
+                                                                                                    </div>}
+
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    })
+                                                                                    : <tr></tr>
+                                                                                : <tr></tr>}
+                                                                        </tbody>
+                                                                    </table>
                                                                 </div>
-                                                            </div> : ""
-                                                    }
-                                                    {statusAsignar ?
+                                                            </div>
+                                                        </div>
+                                                    </div> : ""
+                                            }
+                                        </div>
+                                        <div className='section-two-div-content-asignar '>
+                                            {statusAsignar ?
+
+                                                <div className='div-asign-elements'>
+                                                    <div className='fiv-asignar-analisis'>
                                                         <div>
                                                             <div className='body-asignar-analisis'>
-                                                                <h2>Asignados</h2>
+                                                                <h2>Nuevos Asignados</h2>
 
                                                                 <div className='div-encargados'>
                                                                     <div>
                                                                         <h3>Formato Físico</h3>
-                                                                        <div className='div-table-asignados'>
+                                                                        <div className='div-table-asignados div-table-nuevos-asignados'>
                                                                             <table cellSpacing={0} className='table-add-asignar'>
                                                                                 <thead>
                                                                                     <tr>
@@ -2198,7 +2345,7 @@ export const Analisis = (userInfo) => {
                                                                     </div>
                                                                     <div>
                                                                         <h3>Formato Sca</h3>
-                                                                        <div className='div-table-asignados'>
+                                                                        <div className='div-table-asignados div-table-nuevos-asignados'>
                                                                             <table cellSpacing={0} className='table-add-asignar'>
                                                                                 <thead>
                                                                                     <tr>
@@ -2221,18 +2368,19 @@ export const Analisis = (userInfo) => {
                                                                 <button onClick={() => { setAsignarAnalisis() }} className='button-set-asignar-analisis'>Asignar</button>
                                                             </div>
                                                         </div>
-                                                        : ""}
+
+                                                    </div>
                                                 </div>
-                                            </div>
+                                                : ""}
+                                            {statusAsignar ?
+                                                <div className='div-table-asing'>
+                                                    <h2 className='h2-table-asign-formato'>
+                                                        Usuarios disponibles
+                                                    </h2>
+                                                    <Tablas class="table-asignar" userInfo={userInfo.userInfo} filterSeacth={filterSearchUsuario} limitRegisters={limitRegistersUsuario} count={countRegistersAsignar} data={usuariosAsignar} keys={keysUsuarios} tittle={"Usuarios"} filterEstado={filterEstado} getFilterEstado={getFilterEstadoUsuario} getFiltersOrden={getFiltersOrdenUsuario} />
+                                                </div>
+                                                : ""}
                                         </div>
-                                        {statusAsignar ?
-                                            <div className='div-table-asing'>
-                                                <h2 className='h2-table-asign-formato'>
-                                                    Usuarios disponibles
-                                                </h2>
-                                                <Tablas class="table-asignar" userInfo={userInfo.userInfo} filterSeacth={filterSearchUsuario} limitRegisters={limitRegistersUsuario} count={countRegistersAsignar} data={usuariosAsignar} keys={keysUsuarios} tittle={"Usuarios"} filterEstado={filterEstado} getFilterEstado={getFilterEstadoUsuario} getFiltersOrden={getFiltersOrdenUsuario} />
-                                            </div>
-                                            : ""}
                                     </div >
                                 } />
                             )

@@ -1,4 +1,4 @@
-#mainFormResultados .modal-form {
+/* #mainFormResultados .modal-form {
     position: fixed;
     top: 0;
     left: 0;
@@ -13,7 +13,7 @@
     flex-direction: column;
     background-color: rgba(0, 0, 0, 0.519);
 }
-
+ */
 #mainFormResultados .div-fondo-modal-form {
     background-color: rgba(10, 10, 10, 0.435);
     position: absolute;
@@ -45,14 +45,14 @@
     font-size: 2em;
 }
 
-#mainFormResultados .form-register {
+/* #mainFormResultados .form-register {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: max-content;
     gap: 15px 20px;
     width: 100%;
 }
-
+ */
 #mainFormResultados .input-form {
     padding: 8px 15px;
     font-size: 1.1em;

@@ -666,7 +666,9 @@
     height: 100%;
 }
 
-
+/* #mainAnalisis .div-content-form {
+    width: calc(100% - 60px);
+} */
 
 @media screen and (max-width : 1800px) {
     #mainAnalisis .section-two-div-content-asignar {
@@ -678,12 +680,15 @@
 
     #mainAnalisis .div-content-form,
     #mainAnalisis .div-content-asignar {
-        max-width: 100%;
+        width: 100%;
     }
 
     #mainAnalisis .div-asign-elements {
         width: 100%;
         overflow: hidden;
+    }
+    #mainAnalisis .div-content-form {
+        width: calc(100% - 60px);
     }
 
     #mainAnalisis .fiv-asignar-analisis>div {

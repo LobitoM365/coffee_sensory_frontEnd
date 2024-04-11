@@ -31,6 +31,8 @@ export const Menu = (data) => {
     let [limitNotificaciones, setLimitNoticaciones] = useState(0);
     const [cantidadNotificaciones, setCantidadNotificaciones] = useState(0);
     const [statusLoader, setStatusLoader] = useState({ "div_notificaciones": false })
+    const [asignaciones, setAsignaciones] = useState([]);
+
     useEffect(() => {
 
         if (data.socket) {
@@ -80,7 +82,7 @@ export const Menu = (data) => {
                 data.socket.off('asignAnalisis', asignAnalisis);
             };
         }
-    }, [data.socket]);
+    }, [data.socket, asignaciones]);
 
     useEffect(() => {
         if (divNotificaciones.current) {
@@ -107,7 +109,7 @@ export const Menu = (data) => {
             }
         }
 
-    }, [divNotificaciones.current, limitNotificaciones, statusLoader["div_notificaciones"]])
+    }, [divNotificaciones.current, limitNotificaciones, statusLoader])
     // console.log("DATA OC", data.socket);
 
     const [pageLoad, setPageLoad] = useState({});
@@ -119,7 +121,6 @@ export const Menu = (data) => {
     let hamburguerMode = queryMenu ? 0 : 1;
     const [user, setUser] = useState({});
     const [modalConfiguracion, setModalConfiguracion] = useState(false);
-    const [asignaciones, setAsignaciones] = useState([]);
     const [modalNotificaciones, changeModalNotificaciones] = useState(false);
     const [modalConfiguracionFormatoFisico, setModalConfiguracionFormatoFisico] = useState(false);
     const [modalPerfil, changeModalPerfil] = useState(false);

@@ -124,7 +124,7 @@ export const RegistrosUsuarios = () => {
             "priority": 2,
         },
         "apellido": {
-            "referencia": "Apelido",
+            "referencia": "Apellido",
             "upper_case": true,
             "priority": 3,
         },

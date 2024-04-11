@@ -124,12 +124,20 @@ export const Muestras = () => {
             "referencia": "Propietario",
             "upper_case": true
         },
+        "variedad": {
+            "referencia": "Variedad",
+            "upper_case": true
+        },
         "finca": {
             "referencia": "Finca",
             "upper_case": true
         },
         "lote": {
             "referencia": "lote",
+            "upper_case": true
+        },
+        "cafes_id": {
+            "referencia": "Café",
             "upper_case": true
         },
         "codigo_externo": {

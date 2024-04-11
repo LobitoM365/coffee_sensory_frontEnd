@@ -10,7 +10,6 @@ import { Alert } from "../componentes/alert.jsx";
 import { GlobalInputs } from "../componentes/globalInputs.jsx";
 import { fn } from "jquery";
 import { Mensajeria } from "../componentes/mensajeria.jsx"
-import { clone } from "chart.js/helpers";
 
 export const Menu = (data) => {
     const [statusAlert, setStatusAlert] = useState(false);
@@ -63,7 +62,9 @@ export const Menu = (data) => {
                         }, audio.duration * 1000);
                     });
                 }
-                getAsignaciones();
+                console.log(message, "mesageeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+                setAsignaciones(prevState => [...prevState, message])
+                /* getAsignaciones(); */
             };
 
             data.socket.on('perfilChange', perfilChange);
@@ -134,64 +135,65 @@ export const Menu = (data) => {
 
     async function getAsignaciones() {
         try {
+            if (statusLoader["div_notificaciones"] == false) {
+                if (statusLoader["div_notificaciones"] != "disconnect") {
+                    setStatusLoader(prevState => {
+                        const clonePrevState = { ...prevState };
+                        clonePrevState["div_notificaciones"] = true
+                        return clonePrevState
+                    })
 
-            if (statusLoader["div_notificaciones"] != "disconnect") {
-                setStatusLoader(prevState => {
-                    const clonePrevState = { ...prevState };
-                    clonePrevState["div_notificaciones"] = true
-                    return clonePrevState
-                })
+                }
 
-            }
-
-            /*     if (divNotificaciones.current) {
-                    divNotificaciones.current.scrollTop = divNotificaciones.current.scrollHeight + 100
-                } */
-            let newLimit = limitNotificaciones;
-            newLimit = newLimit + 5
-            const filterFormato = {
-                "filter": {
-                    "where": {
-                        "forma.estado": {
-                            "value": 4,
-                            "operador": "!=",
-                            "require": "and"
+                /*     if (divNotificaciones.current) {
+                        divNotificaciones.current.scrollTop = divNotificaciones.current.scrollHeight + 100
+                    } */
+                let newLimit = limitNotificaciones;
+                newLimit = newLimit + 5
+                const filterFormato = {
+                    "filter": {
+                        "where": {
+                            "forma.estado": {
+                                "value": 4,
+                                "operador": "!=",
+                                "require": "and"
+                            }
+                        },
+                        "order": {
+                            /* "fecha_creacion": {
+                                "value": "desc"
+                            }, */
+                            "forma_id": {
+                                "value": "desc"
+                            }
+                        },
+                        "limit": {
+                            "inicio": limitNotificaciones,
+                            "fin": "5",
                         }
-                    },
-                    "order": {
-                        /* "fecha_creacion": {
-                            "value": "desc"
-                        }, */
-                        "forma_id": {
-                            "value": "desc"
-                        }
-                    },
-                    "limit": {
-                        "inicio": limitNotificaciones,
-                        "fin": "5",
                     }
                 }
-            }
-            if (Array.isArray(asignaciones)) {
-                const response = await Api.post("formatos/listarPendientes", filterFormato);
-                if (response.data.status == true) {
-                    setLimitNoticaciones(limitNotificaciones + 5)
-                    setStatusLoader(prevState => {
-                        const clonePrevState = { ...prevState };
-                        clonePrevState["div_notificaciones"] = false
-                        return clonePrevState
-                    })
-                    /* limitNotificaciones = limitNotificaciones + 5 */
-                    /* limitNotificaciones = limitNotificaciones + 5 */
-                    setAsignaciones(prevElementos => [...prevElementos, ...response.data.data])
-                    setCantidadNotificaciones(response.data.count)
-                } else {
-                    setLimitNoticaciones(false)
-                    setStatusLoader(prevState => {
-                        const clonePrevState = { ...prevState };
-                        clonePrevState["div_notificaciones"] = false
-                        return clonePrevState
-                    })
+                if (Array.isArray(asignaciones)) {
+                    const response = await Api.post("formatos/listarPendientes", filterFormato);
+                    if (response.data.status == true) {
+                        setLimitNoticaciones(limitNotificaciones + 5)
+                        setStatusLoader(prevState => {
+                            const clonePrevState = { ...prevState };
+                            clonePrevState["div_notificaciones"] = false
+                            return clonePrevState
+                        })
+                        /* limitNotificaciones = limitNotificaciones + 5 */
+                        /* limitNotificaciones = limitNotificaciones + 5 */
+                        setAsignaciones(prevElementos => [...prevElementos, ...response.data.data])
+                        setCantidadNotificaciones(response.data.count)
+                    } else {
+                        setLimitNoticaciones(false)
+                        setStatusLoader(prevState => {
+                            const clonePrevState = { ...prevState };
+                            clonePrevState["div_notificaciones"] = false
+                            return clonePrevState
+                        })
+                    }
                 }
             }
         } catch (e) {
@@ -455,14 +457,19 @@ export const Menu = (data) => {
         setGlobalInputsValue({})
         setFormulaVariables("")
         setErrorsInputGlobal("")
-        divCrearFormula = null
-        refModalConfiguracionFormatoFisico = null
-        setStatusVariables(false)
+        /* divCrearFormula = null */
+        /* refModalConfiguracionFormatoFisico = null */
+
     }, [modalConfiguracionFormatoFisico])
     useEffect(() => {
-        if (!statusVariables && modalConfiguracionFormatoFisico && divCrearFormula != null && refModalConfiguracionFormatoFisico != null) {
-            setStatusVariables(true)
+        if (modalConfiguracionFormatoFisico && divCrearFormula != null && refModalConfiguracionFormatoFisico != null && refModalConfiguracionFormatoFisico != null) {
 
+            if (refModalConfiguracionFormatoFisico.current) {
+                refModalConfiguracionFormatoFisico.current.removeEventListener("mousedown", mouseDownFunction);
+                refModalConfiguracionFormatoFisico.current.removeEventListener("mouseup", mouseUpFunction);
+                refModalConfiguracionFormatoFisico.current.removeEventListener("mousemove", moverOperador);
+                refModalConfiguracionFormatoFisico.current.removeEventListener("mousemove", setDivAddMovement);
+            }
             let divIconDelete = document.getElementById("divIconDelete");
             let operadorFocus;
             let operadorFocusAdd;
@@ -471,6 +478,7 @@ export const Menu = (data) => {
             let divAdd;
             let deleteStatus;
             let focusIterador;
+            const divCrearFormulaConst = divCrearFormula.current
             let divMovement;
             function moverOperador(event) {
                 if (operadorFocus) {
@@ -482,8 +490,10 @@ export const Menu = (data) => {
                 }
             }
             function setItemDivFormular(event) {
+                console.log("operadorrrrrrrrrrrrrrrrrrrrrrr")
+
                 let divIconDelete = document.getElementById("divIconDelete");
-                const bbox = divCrearFormula.current.getBoundingClientRect();
+                const bbox = divCrearFormulaConst.getBoundingClientRect();
                 const operadorFocusBbox = operadorFocus.getBoundingClientRect();
                 const bboxDelete = divIconDelete.getBoundingClientRect();
                 const div = document.createElement("div")
@@ -498,11 +508,11 @@ export const Menu = (data) => {
 
 
 
-                if ((event.clientY >= bbox.top && event.clientY <= (bbox.top + divCrearFormula.current.clientHeight)) && (event.clientX >= bbox.left && event.clientX <= (bbox.left + divCrearFormula.current.clientWidth))) {
+                if ((event.clientY >= bbox.top && event.clientY <= (bbox.top + divCrearFormulaConst.clientHeight)) && (event.clientX >= bbox.left && event.clientX <= (bbox.left + divCrearFormulaConst.clientWidth))) {
                     if (!divAdd) {
                         div.classList.add("div-operador-add")
                         div.classList.add("div-operador-add-movement")
-                        divCrearFormula.current.appendChild(div)
+                        divCrearFormulaConst.appendChild(div)
                         divAdd = div
                     } else {
                         let operadores = refModalConfiguracionFormatoFisico.current.querySelectorAll(".div-operador-add")
@@ -511,10 +521,10 @@ export const Menu = (data) => {
                                 const bboxOperador = operadores[x].getBoundingClientRect();
                                 if (((event.clientY >= bboxOperador.top) && (event.clientY <= (bboxOperador.top + operadores[x].clientHeight))) && (event.clientX >= bboxOperador.left && event.clientX <= (bboxOperador.left + (operadores[x].clientWidth / 2)))) {
                                     focusIterador = x
-                                    divCrearFormula.current.insertBefore(divAdd, divCrearFormula.current.children[focusIterador])
+                                    divCrearFormulaConst.insertBefore(divAdd, divCrearFormulaConst.children[focusIterador])
                                 } else if (((event.clientY >= bboxOperador.top) && (event.clientY <= (bboxOperador.top + operadores[x].clientHeight))) && event.clientX >= (bboxOperador.left + (operadores[x].clientWidth / 2)) && event.clientX <= (bboxOperador.left + (operadores[x].clientWidth))) {
                                     focusIterador = x + 1
-                                    divCrearFormula.current.insertBefore(divAdd, divCrearFormula.current.children[focusIterador])
+                                    divCrearFormulaConst.insertBefore(divAdd, divCrearFormulaConst.children[focusIterador])
                                 }
                             }
                         }
@@ -556,40 +566,26 @@ export const Menu = (data) => {
 
                             if (((event.clientY >= bboxOperador.top) && (event.clientY <= (bboxOperador.top + operadores[x].clientHeight))) && (event.clientX >= bboxOperador.left && event.clientX <= (bboxOperador.left + (operadores[x].clientWidth / 2)))) {
                                 focusIterador = x
-                                divCrearFormula.current.insertBefore(divOperadorFocusAdd, divCrearFormula.current.children[focusIterador])
+                                divCrearFormulaConst.insertBefore(divOperadorFocusAdd, divCrearFormulaConst.children[focusIterador])
                             } else if (((event.clientY >= bboxOperador.top) && (event.clientY <= (bboxOperador.top + operadores[x].clientHeight))) && event.clientX >= (bboxOperador.left + (operadores[x].clientWidth / 2)) && event.clientX <= (bboxOperador.left + (operadores[x].clientWidth))) {
                                 focusIterador = x + 1
-                                divCrearFormula.current.insertBefore(divOperadorFocusAdd, divCrearFormula.current.children[focusIterador])
+                                divCrearFormulaConst.insertBefore(divOperadorFocusAdd, divCrearFormulaConst.children[focusIterador])
                             }
                         }
                     }
                 }
             }
             let operadores = refModalConfiguracionFormatoFisico.current.querySelectorAll(".item-operador-formula")
-            refModalConfiguracionFormatoFisico.current.addEventListener("mousedown", function (event) {
-                for (let x = 0; x < operadores.length; x++) {
-                    if (event.target == operadores[x]) {
-                        document.body.style.cursor = "pointer"
-                        const div = document.createElement("div")
-                        div.classList.add("div-movement-focus")
-                        const cloneOperador = operadores[x].parentNode.cloneNode(true);
-                        refModalConfiguracionFormatoFisico.current.appendChild(div)
-                        divMovementFocus = div
-                        divCrearFormula.current.appendChild(cloneOperador)
-                        operadorFocus = cloneOperador
-                        const positionX = event.clientX;
-                        const positionY = event.clientY;
-                        operadorFocus.style.top = positionY + "px"
-                        operadorFocus.style.left = positionX + "px"
-                        operadorFocus.classList.add("operador-focus-movement")
-                        refModalConfiguracionFormatoFisico.current.addEventListener("mousemove", moverOperador)
-                    }
-                }
+            refModalConfiguracionFormatoFisico.current.addEventListener("mousedown", mouseDownFunction)
+            refModalConfiguracionFormatoFisico.current.addEventListener("mouseup", mouseUpFunction)
+            function mouseDownFunction(event) {
+                let statusItemOperador = true
                 let operadoresAdd = refModalConfiguracionFormatoFisico.current.querySelectorAll(".div-operador-add")
                 for (let x = 0; x < operadoresAdd.length; x++) {
                     const itemOperador = operadoresAdd[x].querySelectorAll(".item-operador-formula")
                     if (itemOperador[0]) {
                         if (event.target == itemOperador[0]) {
+                            statusItemOperador = false
                             const div = document.createElement("div")
                             div.classList.add("div-movement-focus")
                             refModalConfiguracionFormatoFisico.current.appendChild(div)
@@ -602,8 +598,35 @@ export const Menu = (data) => {
                         }
                     }
                 }
-            })
-            refModalConfiguracionFormatoFisico.current.addEventListener("mouseup", function () {
+                if (statusItemOperador == true) {
+                    for (let x = 0; x < operadores.length; x++) {
+                        if (event.target == operadores[x]) {
+                            document.body.style.cursor = "pointer"
+                            const div = document.createElement("div")
+                            div.classList.add("div-movement-focus")
+                            div.setAttribute("id", "divMovementFocus")
+                            const cloneOperador = operadores[x].parentNode.cloneNode(true);
+                            refModalConfiguracionFormatoFisico.current.appendChild(div)
+                            divMovementFocus = div
+                            divCrearFormulaConst.appendChild(cloneOperador)
+                            operadorFocus = cloneOperador
+                            const positionX = event.clientX;
+                            const positionY = event.clientY;
+                            operadorFocus.style.top = positionY + "px"
+                            operadorFocus.style.left = positionX + "px"
+                            operadorFocus.classList.add("operador-focus-movement")
+                            refModalConfiguracionFormatoFisico.current.addEventListener("mousemove", moverOperador)
+                        }
+                    }
+                }
+            }
+            function mouseUpFunction() {
+                if (document.getElementById("divMovementFocus")) {
+                    document.getElementById("divMovementFocus").remove()
+                }
+                if (divMovementFocus) {
+                    divMovementFocus.remove()
+                }
                 let divIconDelete = document.getElementById("divIconDelete");
 
                 if (deleteStatus) {
@@ -628,7 +651,7 @@ export const Menu = (data) => {
                     } else {
                         divOperadorFocusAdd.classList.remove("div-input-operar")
                     }
-                    divCrearFormula.current.insertBefore(divOperadorFocusAdd, divCrearFormula.current.children[focusIterador])
+                    divCrearFormulaConst.insertBefore(divOperadorFocusAdd, divCrearFormulaConst.children[focusIterador])
                     operadorFocusAdd.classList.remove("operador-focus-movement")
                     divOperadorFocusAdd.classList.remove("div-operador-add-movement")
                     evaluarFormula()
@@ -655,7 +678,7 @@ export const Menu = (data) => {
                     }
 
                     divAdd.appendChild(operadorFocus)
-                    divCrearFormula.current.insertBefore(divAdd, divCrearFormula.current.children[focusIterador])
+                    divCrearFormulaConst.insertBefore(divAdd, divCrearFormulaConst.children[focusIterador])
                     evaluarFormula()
 
                 } else {
@@ -664,9 +687,7 @@ export const Menu = (data) => {
                     }
                 }
                 document.body.style.cursor = ""
-                if (divMovementFocus) {
-                    divMovementFocus.remove()
-                }
+
                 refModalConfiguracionFormatoFisico.current.removeEventListener("mousemove", moverOperador)
                 refModalConfiguracionFormatoFisico.current.removeEventListener("mousemove", setDivAddMovement)
                 if (divOperadorFocusAdd) {
@@ -682,89 +703,25 @@ export const Menu = (data) => {
                 divAdd = null
                 operadorFocus = null
                 deleteStatus = null;
-            })
+            }
 
-            if (divCrearFormula) {
-                if (divCrearFormula.current) {
-                    if (variableFocus) {
-                        if (typeof variableFocus == "object") {
-                            const keys = Object.keys(variableFocus)
-                            if (keys.length > 0) {
-                                let regexFormula = /(\d*\.?\d+)|([+\-*/%()])|parseFloat\s*\([^)]*\)/g
 
-                                let tokens = [];
-                                let match;
-                                const formula = (variableFocus["formula"] ? variableFocus["formula"] : "").toString();
-                                if (variableFocus["formula"]) {
-                                    while ((match = regexFormula.exec(formula)) !== null) {
-                                        const token = match[0].trim();
-                                        tokens.push(token);
-                                    }
-                                }
-                                for (let x = 0; x < tokens.length; x++) {
-                                    setFormulaVariable(tokens[x])
-                                }
-                                evaluarFormula()
-                            }
-                        }
+            return () => {
+                /* alert("d") */
+                if (refModalConfiguracionFormatoFisico) {
+                    if (refModalConfiguracionFormatoFisico.current) {
+                        refModalConfiguracionFormatoFisico.current.removeEventListener("mousedown", mouseDownFunction)
+                        refModalConfiguracionFormatoFisico.current.removeEventListener("mouseup", mouseUpFunction)
+                        refModalConfiguracionFormatoFisico.current.removeEventListener("mousemove", moverOperador)
+                        refModalConfiguracionFormatoFisico.current.removeEventListener("mousemove", setDivAddMovement)
                     }
                 }
-            }
-            function setFormulaVariable(element) {
-                let div = document.createElement("div")
-                div.classList.add("div-operador-add")
-
-                if (element == "(" || element == ")" || element == "*" || element == "/" || element == "+" || element == "-" || element == "%") {
-                    const svgs = document.querySelectorAll('svg[data-signo="' + element + '"]');
-                    if (svgs[0].parentNode) {
-                        if (divCrearFormula) {
-                            if (divCrearFormula.current) {
-                                const cloneSvg = svgs[0].parentNode.cloneNode(true)
-                                div.appendChild(cloneSvg)
-                                cloneSvg.querySelector("svg").classList.add("signo-formula")
-                                divCrearFormula.current.appendChild(div)
-                            }
-                        }
-                    }
-                } else if (!isNaN(element)) {
-                    div.classList.add("div-input-operar")
-                    const divElement = document.createElement("div")
-                    divElement.innerHTML = '<div class="item-operador-formula"></div>'
-                    let input = document.createElement("input")
-                    input.classList.add("input-operar")
-                    input.classList.add("signo-formula")
-                    input.value = element
-                    input.setAttribute("data-signo", element)
-                    input.addEventListener("input", function (e) {
-                        e.target.value = e.target.value.replace(/[^\d.]/g, '');
-                        input.setAttribute("data-signo", e.target.value)
-                        evaluarFormula()
-                    })
-                    divElement.appendChild(input)
-                    div.appendChild(divElement)
-                    divCrearFormula.current.appendChild(div)
-                } else {
-                    div.classList.add("div-input-operar")
-
-                    let match = element.match(/parseFloat\(\w+\.(\w+)/);
-                    /* let match = element.match(/parseFloat\((.*?)\)/); */
-                    let contenidoParseFloat = match ? match[1] : null;
-                    /* let indice = variablesFormatoFisico.indexOf(contenidoParseFloat); */
-                    let indice = 0;
-
-                    for (let x = 0; x < variablesFormatoFisico.length; x++) {
-                        if (variablesFormatoFisico[x]["nombre"] == contenidoParseFloat) {
-                            indice = x
-                            break
-                        }
-                    }
-                    div.innerHTML = '<div class="" style="top: 471.5px; left: 624.5px;"><div class="item-operador-formula"></div><h4 class="h4-variable-formula signo-formula" data-signo="' + contenidoParseFloat + '">V_' + (indice + 1) + '</h4></div>'
-                    divCrearFormula.current.appendChild(div)
-
+                if (divMovementFocus) {
+                    divMovementFocus.remove()
                 }
             }
         }
-    }, [divCrearFormula.current, refModalConfiguracionFormatoFisico.current])
+    }, [divCrearFormula.current, dataVariables])
 
 
 
@@ -949,7 +906,101 @@ export const Menu = (data) => {
             globalInputsValue["tipo_valor"] = variableFocus["tipo_valor"]
         }, [variableFocus]) */
 
+    useEffect(() => {
+        if (divCrearFormula) {
+            if (divCrearFormula.current) {
+                if (variableFocus) {
+                    if (typeof variableFocus == "object") {
+                        const keys = Object.keys(variableFocus)
+                        if (keys.length > 0) {
+                            let regexFormula = /(\d*\.?\d+)|([+\-*/%()])|parseFloat\s*\([^)]*\)/g
+
+                            let tokens = [];
+                            let match;
+                            console.log(variableFocus, variableFocus["formula"])
+                            const formula = (variableFocus["formula"] ? variableFocus["formula"] : "").toString();
+                            if (variableFocus["formula"]) {
+                                while ((match = regexFormula.exec(formula)) !== null) {
+                                    const token = match[0].trim();
+                                    tokens.push(token);
+                                }
+                            }
+                            for (let x = 0; x < tokens.length; x++) {
+                                setFormulaVariable(tokens[x])
+                            }
+                            evaluarFormula()
+                        }
+                    }
+                }
+            }
+        }
+        function setFormulaVariable(element) {
+
+            let div = document.createElement("div")
+            div.classList.add("div-operador-add")
+
+            if (element == "(" || element == ")" || element == "*" || element == "/" || element == "+" || element == "-" || element == "%") {
+                const svgs = document.querySelectorAll('svg[data-signo="' + element + '"]');
+                if (svgs[0].parentNode) {
+                    if (divCrearFormula) {
+                        if (divCrearFormula.current) {
+                            const cloneSvg = svgs[0].parentNode.cloneNode(true)
+                            div.appendChild(cloneSvg)
+                            cloneSvg.querySelector("svg").classList.add("signo-formula")
+                            divCrearFormula.current.appendChild(div)
+                        }
+                    }
+                }
+            } else if (!isNaN(element)) {
+                div.classList.add("div-input-operar")
+                const divElement = document.createElement("div")
+                divElement.innerHTML = '<div class="item-operador-formula"></div>'
+                let input = document.createElement("input")
+                input.classList.add("input-operar")
+                input.classList.add("signo-formula")
+                input.value = element
+                input.setAttribute("data-signo", element)
+                input.addEventListener("input", function (e) {
+                    e.target.value = e.target.value.replace(/[^\d.]/g, '');
+                    input.setAttribute("data-signo", e.target.value)
+                    /*  evaluarFormula() */
+                })
+                divElement.appendChild(input)
+                div.appendChild(divElement)
+                divCrearFormula.current.appendChild(div)
+            } else {
+                div.classList.add("div-input-operar")
+
+                let match = element.match(/parseFloat\(\w+\.(\w+)/);
+                /* let match = element.match(/parseFloat\((.*?)\)/); */
+                let contenidoParseFloat = match ? match[1] : null;
+                /* let indice = variablesFormatoFisico.indexOf(contenidoParseFloat); */
+                let indice = 0;
+
+                for (let x = 0; x < variablesFormatoFisico.length; x++) {
+                    if (variablesFormatoFisico[x]["nombre"] == contenidoParseFloat) {
+                        indice = x
+                        break
+                    }
+                }
+                div.innerHTML = '<div class="" style="top: 471.5px; left: 624.5px;"><div class="item-operador-formula"></div><h4 class="h4-variable-formula signo-formula" data-signo="' + contenidoParseFloat + '">V_' + (indice + 1) + '</h4></div>'
+                divCrearFormula.current.appendChild(div)
+
+            }
+        }
+        return () => {
+            if (divCrearFormula) {
+                if (divCrearFormula.current) {
+                    divCrearFormula.current.innerHTML = ""
+                }
+            }
+        }
+    }, [variableFocus])
     function getInfoVariable(variable, index) {
+
+
+
+
         setVariableFocus(variable)
         clearFormula()
         globalInputsValue["variables"] = ""
@@ -961,9 +1012,8 @@ export const Menu = (data) => {
         setGlobalInputsValue(clonetGlobalInputsValue)
 
         /*   } */
-        divCrearFormula = null
-        refModalConfiguracionFormatoFisico = null
-        setStatusVariables(false)
+        /* divCrearFormula = null
+        refModalConfiguracionFormatoFisico = null */
         setKeyTipoValor(keyTipoValor + 1)
     }
     function clearFormula() {
@@ -1019,9 +1069,7 @@ export const Menu = (data) => {
             console.log("Error: " + e)
         }
     }
-    function setTipoValor(variable) {
-        setStatusVariables(false)
-    }
+
     return (
 
         <div>
@@ -1389,10 +1437,19 @@ export const Menu = (data) => {
                                     {asignaciones.length > 0 && asignaciones ? <div className="cantidad-notificaciones"> {cantidadNotificaciones > 9 ? "9+" : cantidadNotificaciones} </div> : ""
                                     }
                                     <div className="secccion-notificaciones">
-                                        <svg onClick={() => { /* obtenerNotificaciones() */; verNotificaciones() }} className="h-6 w-6 icono-notificaciones" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
+                                        <svg onClick={(e) => { /* obtenerNotificaciones() */; /* verNotificaciones() */
+                                            const father = e.target.closest(".secccion-notificaciones");
+                                            console.log(father)
+                                            if (father) {
+                                                let divChild = father.querySelector(".child-div-modal")
+                                                if (divChild) {
+                                                    divChild.style.display == "block" ? divChild.style.display = "none" : divChild.style.display = "block"
+                                                }
+                                            }
+                                        }} className="father-div-modal h-6 w-6 icono-notificaciones" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path>
                                         </svg>
-                                        <div style={{ display: !modalNotificaciones ? "none" : "" }}>
+                                        <div style={{ display: "none"}}/* style={{ display: !modalNotificaciones ? "none" : "" }} */ className="child-div-modal">
                                             <div className="esquina-notificaciones"></div>
                                             <div className="contenido-notificaciones">
                                                 <div className="header-notificaciones">
@@ -1570,13 +1627,13 @@ export const Menu = (data) => {
                                                 elementEdit={variableFocus ? variableFocus["tipo_valor"] ? variableFocus["tipo_valor"] : "" : ""}
                                                 data={{
                                                     tipo_valor: {
-                                                        function: {
+                                                        /* function: {
                                                             "value": setTipoValor,
                                                             "execute": {
                                                                 "type": "own",
                                                                 "value": "all"
                                                             }
-                                                        },
+                                                        }, */
                                                         index: true,
                                                         type: "select",
                                                         referencia: "Tipo de valor",

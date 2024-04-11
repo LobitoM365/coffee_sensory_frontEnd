@@ -205,7 +205,7 @@ export const Graficos = ({user,inputData}) => {
           //Pantalla grande 
         }
       }, [windowSize]);
-
+ 
      
 
   //==============================================
@@ -225,7 +225,7 @@ export const Graficos = ({user,inputData}) => {
               <Bar options={options} data={chartData} /> 
           </div>
           : "No hay nada para mostrar" }
-          
+            
       </div>
     );
 };

@@ -402,7 +402,8 @@ export const Form = forwardRef((data, ref) => {
                                                                         <input id={key} type="text" className="input-select" onInput={(e) => {
                                                                             const parentElement = e.target.closest(".div-select");
                                                                             const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                            divOptions[0] ? divOptions[0].style.display == "block" ? divOptions[0].style.display = "none" : divOptions[0].style.display = "block" : ""
+                                                                            /* divOptions[0] ? divOptions[0].style.display == "block" ? divOptions[0].style.display = "none" : divOptions[0].style.display = "block" : "" */
+                                                                            divOptions[0] ? divOptions[0].style.display = "block" : ""
                                                                             selectSearch(e.target.value, key, functionExecute, execute == "key" ? "key" : "");
                                                                         }} onClick={(e) => {
                                                                             const parentElement = e.target.closest(".div-select");

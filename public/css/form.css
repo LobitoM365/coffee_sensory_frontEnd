@@ -291,3 +291,10 @@
         display: none;
     }
 }
+
+#mainModalForm .div-label-input-ubicacion{
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    gap: 10px;
+}

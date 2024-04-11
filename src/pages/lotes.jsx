@@ -72,11 +72,11 @@ export const Lotes = () => {
             },
             longitud: {
                 type: "ubicacion",
-                referencia: <div><h4>Longitud</h4><h6>(-66.9 a -79.03)</h6></div>,
+                referencia: <div className='div-label-input-ubicacion'><h4>Longitud</h4><h6>(-66.9 a -79.03)</h6></div>,
             },
             latitud: {
                 type: "ubicacion",
-                referencia:  <div><h4>Latitud</h4><h6>(12.4 a -4.1)</h6></div>
+                referencia: <div className='div-label-input-ubicacion'><h4>Latitud</h4><h6>(12.4 a -4.1)</h6></div>
             },
             fincas_id: {
                 type: "select",

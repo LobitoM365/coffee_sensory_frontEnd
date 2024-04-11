@@ -671,14 +671,14 @@
 } */
 
 @media screen and (max-width : 1800px) {
-    #mainAnalisis .section-two-div-content-asignar {
+    #mainAnalisis  .section-two-div-content-asignar {
         grid-template-columns: 1fr;
         grid-template-rows: 600px auto;
         overflow: hidden;
         height: max-content;
     }
 
-    #mainAnalisis .div-content-form,
+    #mainAnalisis .div-main-asignar .div-content-form,
     #mainAnalisis .div-content-asignar {
         width: 100%;
     }
@@ -687,7 +687,7 @@
         width: 100%;
         overflow: hidden;
     }
-    #mainAnalisis .div-content-form {
+    #mainAnalisis .div-main-asignar .div-content-form {
         width: calc(100% - 60px);
     }
 

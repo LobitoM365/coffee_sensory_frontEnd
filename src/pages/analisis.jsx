@@ -6,7 +6,6 @@ import { FormResultados } from '../componentes/FormResultados.jsx'
 import { GlobalModal } from '../componentes/globalModal.jsx'
 import { GlobalInputs } from '../componentes/globalInputs.jsx'
 import ReactDOM from "react-dom/client";
-import { cssNumber } from 'jquery'
 import "../../public/css/analisis.css"
 
 export const Analisis = (userInfo) => {
@@ -41,7 +40,7 @@ export const Analisis = (userInfo) => {
 
     const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
         "buttons": {
-            "add": true,
+            /* "add": true, */
             "asignar": {
                 "normal": true,
                 "inputs": {
@@ -535,7 +534,8 @@ export const Analisis = (userInfo) => {
             "upper_case": true
         },
         "actualizar": {
-            "referencia": "actualizar"
+            "referencia": "actualizar",
+            "rol": ["administrador", "catador"]
         },
         "reporte": {
             "rol": ["administrador"],
@@ -1858,14 +1858,15 @@ export const Analisis = (userInfo) => {
             console.log("Error: " + e)
         }
     }
-    async function cambiarFormato(id, usuario, name) {
+    async function cambiarFormato(dataAlert, name) {
+
         setErrorsInputGlobal()
         try {
-
+            console.log(dataAlert, "dataaaaaaaaaaaaaaaaaaaa")
             const data = {
-                "usuarios_id": usuario
+                "usuarios_id": (dataAlert ? dataAlert.usuarios_id ? dataAlert.usuarios_id : "" : "")
             }
-            const response = await Api.put("formatos/actualizar/" + id, data)
+            const response = await Api.put("formatos/actualizar/" + (dataAlert ? dataAlert.id ? dataAlert.id : "" : ""), data)
             if (response.data.status == true) {
                 setStatusAlert(true)
                 setdataAlert(
@@ -1895,12 +1896,13 @@ export const Analisis = (userInfo) => {
             console.log("Error: " + e)
         }
     }
-    async function editarAnalisis(id, muestra) {
+    async function editarAnalisis(dataAlert) {
         try {
+            
             const data = {
-                "muestras_id": muestra
+                "muestras_id": (dataAlert ? dataAlert.muestra ? dataAlert.muestra : "" : "")
             }
-            const response = await Api.put("analisis/actualizar/" + id, data)
+            const response = await Api.put("analisis/actualizar/" + (dataAlert ? dataAlert.id ? dataAlert.id : "" : ""), data)
             console.log(response)
             if (response.data.status == true) {
                 setStatusAlert(true)
@@ -1989,7 +1991,7 @@ export const Analisis = (userInfo) => {
                 "tittle": "¡Asegurate de realizar la ación!",
                 continue: {
                     "function": editarAnalisis,
-                    "execute": [id, muestra],
+                    "execute": { "id": id, "muestras_id": muestra },
                     location: "/dashboard"
                 }
             }
@@ -1997,6 +1999,7 @@ export const Analisis = (userInfo) => {
     }
     async function confirmarCambiarFormato(id, value) {
         setStatusAlert(true)
+        console.log(id, value)
         setdataAlert(
             {
                 status: "warning",
@@ -2004,7 +2007,7 @@ export const Analisis = (userInfo) => {
                 "tittle": "¡Asegurate de realizar la ación!",
                 continue: {
                     "function": cambiarFormato,
-                    "execute": [id, value],
+                    "execute": { "id": id, "usuarios_id": value },
                     location: "/dashboard"
                 }
             }

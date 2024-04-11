@@ -4,7 +4,7 @@ import Api, { host } from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
 
-export const Muestras = () => {
+export const Muestras = (userInfo) => {
     let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
@@ -15,7 +15,7 @@ export const Muestras = () => {
 
     const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
         "buttons": {
-            "add": true,
+            /* "add": true, */
             "reporte": true,
         }
     });
@@ -157,10 +157,12 @@ export const Muestras = () => {
             "format": true
         },
         "estado": {
-            "referencia": "Estado"
+            "referencia": "Estado",
+            "rol": ["administrador", "catador"]
         },
         "actualizar": {
-            "referencia": "actualizar"
+            "referencia": "actualizar",
+            "rol": ["administrador", "catador"]
         }
     }
     const filterEstado = {
@@ -591,7 +593,7 @@ export const Muestras = () => {
 
     return (
         <>
-            <Tablas buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setMuestra} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateMuestra} tittle={"Muestra"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setMuestra} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateMuestra} tittle={"Muestra"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

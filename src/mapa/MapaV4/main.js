@@ -1225,7 +1225,7 @@ function getRealNameElement(element) {
                 return tildes[match];
             });
         }
-        if (quitarTildes(cadena.toLowerCase().replace(" de la ", "_").replace(" del ", "_").replace("ü", "u").replace(" el ", "_").replace(" la ", "_").replace(" y ", "_").replace(" de ", "_").replace(" a ", "_").replace(" ", "_").replace(" ", "_")).toLowerCase() === element) {
+        if (quitarTildes(cadena.toLowerCase().replace(" y la ", "_").replace(" de la ", "_").replace(" del ", "_").replace("ü", "u").replace(" el ", "_").replace(" la ", "_").replace(" y ", "_").replace(" de ", "_").replace(" a ", "_").replace(" ", "_").replace(" ", "_")).toLowerCase() === element) {
             nombreElemento = cadena;
         }
     });

@@ -671,10 +671,10 @@ export const Tablas = (array) => {
                                                         const div = []
                                                         const data = array.buttonsHeaderTable["buttons"];
                                                         if (key == "add") {
-                                                            if (data[key] == true) {
+                                                            /* if (data[key] == true) {
                                                                 div.push(<button key={value} style={{ display: array.hidden && array.hidden.includes('register') ? 'none' : '' }} onClick={() => { array.clearInputs ? array.clearInputs() : ""; setClearClick(); array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>)
                                                             }
-
+ */
                                                         } else if (key == "reporte") {
                                                             if (data[key] == true) {
                                                                 div.push(<div key={value} className='div-generar-documento father-div-modal'>

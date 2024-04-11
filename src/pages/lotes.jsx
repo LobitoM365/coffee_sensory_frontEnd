@@ -4,7 +4,7 @@ import Api, { host } from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
 
-export const Lotes = () => {
+export const Lotes = (userInfo) => {
     let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
@@ -14,7 +14,7 @@ export const Lotes = () => {
     })
     const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
         "buttons": {
-            "add": true,
+            /* "add": true, */
             "reporte": true,
         }
     });
@@ -112,10 +112,13 @@ export const Lotes = () => {
         },
         "estado": {
             "referencia": "Estado",
-            "filter": false
+            "filter": false,
+            "rol": ["administrador", "catador"]
+            
         },
         "actualizar": {
-            "referencia": "Actualizar"
+            "referencia": "Actualizar",
+            "rol": ["administrador", "catador"]
         }
     }
     const filterEstado = {
@@ -549,7 +552,7 @@ export const Lotes = () => {
 
     return (
         <>
-            <Tablas buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/img-form-state.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarLote} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setLote} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={lotes} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateLote} tittle={"Lotes"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/img-form-state.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarLote} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setLote} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={lotes} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateLote} tittle={"Lotes"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

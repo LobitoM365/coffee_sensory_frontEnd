@@ -31,7 +31,7 @@ export const Fincas = (userInfo) => {
 
     const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
         "buttons": {
-            "add": true,
+            /* "add": true, */
             "reporte": true,
         }
     });
@@ -293,10 +293,12 @@ export const Fincas = (userInfo) => {
             "upper_case": true
         },
         "estado": {
-            "referencia": "Estado"
+            "referencia": "Estado",
+            "rol": ["administrador", "catador"]
         },
         "actualizar": {
-            "referencia": "actualizar"
+            "referencia": "actualizar",
+            "rol": ["administrador", "catador"]
         }
     }
     const filterEstado = {

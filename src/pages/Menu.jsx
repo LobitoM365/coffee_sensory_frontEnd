@@ -65,7 +65,13 @@ export const Menu = (data) => {
                     });
                 }
                 console.log(message, "mesageeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-                setAsignaciones(prevState => [...prevState, message])
+                if (message) {
+                    if (Array.isArray(message)) {
+                        setAsignaciones(prevState => [...prevState, message])
+                        console.log(asignaciones, "asignaciiiiiiiiiiiiiiiiion")
+                    }
+                }
+
                 /* getAsignaciones(); */
             };
 
@@ -211,6 +217,7 @@ export const Menu = (data) => {
         let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
         let navHorizontal = document.getElementById("navHorizontal");
         let divHeaderNav = document.getElementById("headerNav");
+        console.log(queryMenu)
         if (queryMenu) {
             let height = document.querySelectorAll(".nav-vertical")
 
@@ -388,28 +395,33 @@ export const Menu = (data) => {
     useEffect(() => {
         let iconHamburguer = document.getElementById("iconHamburguer")
 
-        window.addEventListener("resize", function () {
+        window.addEventListener("resize", resizeMenu)
+        function resizeMenu() {
+            console.log(queryMenu)
+
             if (document.body.scrollWidth <= 610) {
                 if (!queryMenu) {
                     setQueryMenu(true)
-
+                    resizeMenu()
                 }
-
             } else {
                 if (queryMenu) {
                     setQueryMenu(false)
+                    resizeMenu()
                 }
-
             }
 
-        })
+        }
         if (iconHamburguer) {
-            iconHamburguer.addEventListener("click", function () {
-                stateMenu();
-            })
+            iconHamburguer.addEventListener("click", stateMenu)
 
             /*  stateMenu() */
-
+        }
+        return () => {
+            window.removeEventListener("resize", resizeMenu)
+            if (iconHamburguer) {
+                iconHamburguer.removeEventListener("click", stateMenu)
+            }
         }
 
     }, [queryMenu])
@@ -1450,7 +1462,7 @@ export const Menu = (data) => {
                                         }} className="father-div-modal h-6 w-6 icono-notificaciones" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path>
                                         </svg>
-                                        <div style={{ display: "none"}}/* style={{ display: !modalNotificaciones ? "none" : "" }} */ className="child-div-modal">
+                                        <div style={{ display: "none" }}/* style={{ display: !modalNotificaciones ? "none" : "" }} */ className="child-div-modal">
                                             <div className="esquina-notificaciones"></div>
                                             <div className="contenido-notificaciones">
                                                 <div className="header-notificaciones">
@@ -1464,10 +1476,13 @@ export const Menu = (data) => {
 
                                                         {asignaciones.length > 0 ? (
 
-                                                            asignaciones.map((asignacion) => {
+                                                            asignaciones.map((asignacion, value) => {
+                                                                console.log(asignaciones, "aaaaaaaaaaaaaaaaaaaaaaaaaa")
                                                                 let procedureNormal = true
-                                                                if (asignacion.proceso == "practica" && asignacion.estado == 5) {
-                                                                    procedureNormal = false
+                                                                if (asignacion.proceso && asignacion.estado) {
+                                                                    if (asignacion.proceso == "practica" && asignacion.estado == 5) {
+                                                                        procedureNormal = false
+                                                                    }
                                                                 }
                                                                 if (procedureNormal == true) {
                                                                     return <div key={asignacion.id} className="notificacion-analisis">

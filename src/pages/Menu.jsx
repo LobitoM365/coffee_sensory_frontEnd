@@ -12,7 +12,7 @@ import { fn } from "jquery";
 import { Mensajeria } from "../componentes/mensajeria.jsx"
 
 export const Menu = (data) => {
-    const location = useLocation();
+    const locationPath = useLocation();
     const [statusAlert, setStatusAlert] = useState(false);
     let divCrearFormula = useRef(null);
     let divEvaluarFormula = useRef(null);
@@ -63,10 +63,12 @@ export const Menu = (data) => {
                         }, audio.duration * 1000);
                     });
                 }
+                alert("xd")
                 if (message) {
-                    if (Array.isArray(message)) {
-                        setAsignaciones(prevState => [...prevState, message])
-                    }
+                    
+                    getAsignaciones();
+                    setLimitRegisters(0);
+                    setAsignaciones([])
                 }
 
                 /* getAsignaciones(); */
@@ -286,11 +288,9 @@ export const Menu = (data) => {
         // const navigate = useNavigate();
         try {
             const response = await Api.post("/auth/close");
-            location.href = '/Login'
-
+            location.href = '/login'
         } catch (e) {
-            location.href = '/Login'
-
+            location.href = '/login'
         }
 
     };
@@ -627,7 +627,7 @@ export const Menu = (data) => {
             }
         }
     }
-    pageLoad[location.pathname] = false
+    pageLoad[locationPath.pathname] = false
 
     function evaluarFormula() {
         if (divEvaluarFormula.current != null) {
@@ -910,7 +910,7 @@ export const Menu = (data) => {
             console.log("Error: " + e)
         }
     }
-    function resizeMenu() { 
+    function resizeMenu() {
         setHamburguerMode(prevState => {
             let linkMenu = document.querySelectorAll(".change-hamburguer-quit");
             let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
@@ -918,7 +918,7 @@ export const Menu = (data) => {
             let headerNav = document.getElementById("headerNav");
 
             if (navHorizontal) {
-                navHorizontal.style.visibility = "visible"  
+                navHorizontal.style.visibility = "visible"
             }
             if (prevState == 1) {
                 if (document.body.scrollWidth <= 610) {
@@ -1179,6 +1179,15 @@ export const Menu = (data) => {
                                                 <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                                 <g><g><path d="M10,10v177h196.7V10H10z M187,167.3H29.7V29.7H187V167.3z M108.3,108.3h-59v-59h59V108.3z M167.3,108.3H128V88.7h39.3V108.3z M167.3,69H128V49.3h39.3V69z M167.3,147.7h-118V128h118V147.7z M69,206.7v19.7h157.3V69H246v177H49.3v-39.3H69z" /></g></g>
                                             </svg> <h5 className="change-hamburguer-quit ">Municipios</h5>
+                                            </li>
+                                        </Link>
+                                    )}
+                                    {responseValidate && responseValidate.data.user.rol == 'administrador' && (
+                                        <Link title="Municipios" to={"/dashboard/veredas/registros"} onClick={() => { selectedLi("/dashboard/veredas/registros") }} className={`link-memu-horizontal  ${liSelected == "/dashboard/veredas/registros" ? "selected-li" : ""}`}>
+                                            <li className="hamburguer-centered"><svg className="icon-li-nav-horizontal" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
+                                                <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                                <g><g><path d="M10,10v177h196.7V10H10z M187,167.3H29.7V29.7H187V167.3z M108.3,108.3h-59v-59h59V108.3z M167.3,108.3H128V88.7h39.3V108.3z M167.3,69H128V49.3h39.3V69z M167.3,147.7h-118V128h118V147.7z M69,206.7v19.7h157.3V69H246v177H49.3v-39.3H69z" /></g></g>
+                                            </svg> <h5 className="change-hamburguer-quit ">Veredas</h5>
                                             </li>
                                         </Link>
                                     )}

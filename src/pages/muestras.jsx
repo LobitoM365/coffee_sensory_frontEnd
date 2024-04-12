@@ -557,12 +557,13 @@ export const Muestras = (userInfo) => {
         delete cloneTable["permission_formato_sca"]
         delete cloneTable["actualizar"]
         delete cloneTable["reporte"]
-        console.log(cloneTable, "hahsd")
         const data = {
             dataTable,
             filter,
             table: { ...cloneTable }
         };
+        console.log(data, "hahsd")
+
         try {
             const response = await fetch('http://' + host + ':8000/generateReporte.php', {
 

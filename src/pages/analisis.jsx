@@ -1699,11 +1699,15 @@ export const Analisis = (userInfo) => {
         delete cloneTable["permission_formato_sca"]
         delete cloneTable["actualizar"]
         delete cloneTable["reporte"]
+        delete cloneTable["encargados"]
+        delete cloneTable["estado_analisis"]
+        
         const data = {
             dataTable,
             filter,
             table: { ...cloneTable }
         };
+        console.log(data, "dataaaaaaaaaaaaaaaaaaaa")
         try {
             const response = await fetch('http://' + host + ':8000/generateReporte.php', {
                 method: "POST",

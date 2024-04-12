@@ -493,7 +493,6 @@ export const FormResultados = forwardRef((data, ref) => {
                 }
             }
         }
-        console.log(data.modalFormResults, "resultttttttttttttts")
 
     }, [data.dataModalResultadoAnalisis, data.modalFormResults]);
 
@@ -502,7 +501,6 @@ export const FormResultados = forwardRef((data, ref) => {
             const iframe = document.getElementById("iframeFormUpdate");
             if (iframe) {
                 iframe.addEventListener("load", function () {
-                    console.log(iframe, "iframeeeeeeeeee")
                     setElementsTemplateFormatoSca("iframeFormUpdate", data.dataModalResultadoAnalisis);
                 });
             }
@@ -580,8 +578,6 @@ export const FormResultados = forwardRef((data, ref) => {
                                     parentClosest.classList.add("formato-error-area-range")
                                 }
                             }
-
-                            console.log(data.errorsFormato, "formatoooooooooooooooooooooooo-e")
                         }
                     }
 
@@ -624,7 +620,6 @@ export const FormResultados = forwardRef((data, ref) => {
                     }
                 }
             }
-            console.log(dataFormatoSca, "dataaaaaaaaaaaaa")
             if (data.setAnalisisFormato) {
                 data.setAnalisisFormato(dataFormatoSca, idFormato, tipo, modeFormato, id)
             }
@@ -688,7 +683,6 @@ export const FormResultados = forwardRef((data, ref) => {
                 }
             }
             const response = await Api.post("/variables/listar", dataVariables)
-            console.log(response, "ressssssssssssssssssssssss")
             if (response.data.status == true) {
                 setVariablesFormatoFisico(response.data.data)
             } else if (response.data.find_error) {
@@ -1637,11 +1631,9 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                     if (element) {
                                                                                         try {
                                                                                             const resultado = eval(keys[x]["formula"].replace(/dataVariables/g, "valueGlobalInput"))
-                                                                                            console.log(resultado)
                                                                                             if (!isNaN(resultado)) {
                                                                                                 element.innerHTML = resultado
                                                                                                 valueGlobalInput[keys[x]["nombre"]] = resultado
-                                                                                                console.log(valueGlobalInput[keys[x]["nombre"]], "valueeeeeeeee")
                                                                                             } else {
                                                                                                 element.innerHTML = 0
                                                                                                 valueGlobalInput[keys[x]["nombre"]] = 0

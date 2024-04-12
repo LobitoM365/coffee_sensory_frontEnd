@@ -62,7 +62,7 @@
     grid-row-end: 3;
     overflow: hidden;
     position: relative;
-
+    bottom: 0;
 }
 
 /* #mainMenu  #navHorizontal{
@@ -70,16 +70,11 @@
 } */
 #mainMenu .nav-main .hamburguer-centered {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    /* justify-content: center;
+    align-items: center; */
 }
 
-#mainMenu .nav-main .change-hamburguer-quit {
-    display: none !important;
-    opacity: 0;
-    font-size: 10px;
-    transition: all 0.5s;
-}
+
 
 #mainMenu .nav-main a {
     font-weight: 500;
@@ -125,7 +120,9 @@
     justify-content: space-between;
     margin-bottom: 55px;
     align-items: center;
-    /* width: calc(100% - 20px); */
+    /* width: 100%; */
+    padding: 0px 20px;
+    width: calc(100% - 40px);
 }
 
 #mainMenu .nav-horizontal ul {
@@ -256,15 +253,16 @@
     background-color: rgba(0, 135, 81, 0.829);
 }
 
-#mainMenu
+
 /* Estilos para nav Horizontal */
 
-.nav-vertical {
+#mainMenu .nav-vertical {
     left: 100%;
     background-color: rgb(255, 255, 255);
     left: 0;
     display: grid;
-    grid-template-columns: 1fr auto;
+    display: flex;
+    justify-content: end;
     padding: 10px 50px;
     border-bottom: 2px solid rgb(227, 227, 228);
     color: black;
@@ -709,48 +707,7 @@
     fill: white;
 }
 
-@media screen and (max-width:610px) {
-    .paginate {
-        flex-wrap: wrap;
-    }
 
-    #mainMenu .nav-main .header-nav {
-        width: auto;
-    }
-
-    #mainMenu .main-content {
-        grid-template-columns: 1fr;
-    }
-
-    #mainMenu #navHorizontal {
-        position: absolute;
-        z-index: 9;
-        right: 0;
-        transition: transform 0.5s;
-    }
-
-    #mainMenu .nav-vertical {
-        grid-template-columns: 1fr 1fr 1fr;
-        padding: 10px 10px;
-
-    }
-
-    #mainMenu #iconHamburguer {
-        fill: black;
-    }
-
-    #mainMenu #iconHamburguer:hover {
-        background-color: #00000012;
-    }
-
-    #mainMenu .header-nav {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        margin-bottom: 0 !important;
-    }
-}
 
 #mainMenu .div-ver-iconos .img-icono {
     border-radius: 100%;
@@ -794,6 +751,7 @@
     grid-template-columns: auto auto auto auto auto;
     gap: 20px;
     width: max-content;
+    overflow: hidden;
 }
 
 #mainModalConfifuraciones .div-content-configuraciones {
@@ -836,6 +794,7 @@
 
 #mainModalConfifuraciones .item-configuracion-activa {
     cursor: pointer;
+    filter: unset;
 }
 
 #mainModalConfifuraciones .item-configuracion-activa:hover .h4-title-configuracion {
@@ -904,6 +863,12 @@
     background-color: rgb(246, 186, 66);
 }
 
+
+#modalConfiguracionVariablesFisico .div-input-elegir-variable,
+#modalConfiguracionVariablesFisico .div-input-elegir-variable>div {
+    width: 100%;
+}
+
 #modalConfiguracionVariablesFisico {
     display: flex;
     flex-direction: column;
@@ -949,7 +914,7 @@
 #modalConfiguracionVariablesFisico>.div-crear-formula-main {
     display: grid;
     grid-template-columns: auto 1fr;
-    grid-template-rows: auto;
+    grid-template-rows: auto 1fr;
     align-items: center;
     justify-content: center;
     gap: 70px;
@@ -1174,10 +1139,6 @@
     align-items: center;
     font-size: 1.1em;
     word-break: break-all;
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 3;
 }
 
 #modalConfiguracionVariablesFisico .h6-error-formula-variable {
@@ -1263,6 +1224,12 @@
     width: 100%;
 }
 
+#modalConfiguracionVariablesFisico .div-content-ejecutar-formula {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
 #modalConfiguracionVariablesFisico .label-from-register {
     font-weight: 700;
     font-size: 1.1em;
@@ -1278,12 +1245,14 @@
     height: 10px;
     animation: spin 1s linear infinite;
 }
-#mainMenu .div-loader-notificaciones .loader-div{
+
+#mainMenu .div-loader-notificaciones .loader-div {
     height: 60px;
     width: 60px;
     border-width: 6px;
 }
-#mainMenu .div-loader-notificaciones{
+
+#mainMenu .div-loader-notificaciones {
     width: 100%;
     height: auto;
     display: flex;
@@ -1299,4 +1268,365 @@
     100% {
         transform: rotate(360deg);
     }
+}
+
+#mainMenu .nav-main .change-hamburguer-quit {
+    display: none;
+    opacity: 0;
+    font-size: 10px;
+    transition: all 0.5s;
+}
+
+@media screen and (max-width:1260px) {
+    .div-modal-configuracion-variables-fisicas .div-content-form {
+        width: 100% !important;
+    }
+
+    #modalConfiguracionVariablesFisico>.div-crear-formula-main {
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    #modalConfiguracionVariablesFisico .div-main-content-formula {
+        grid-column-start: unset;
+        grid-column-end: unset;
+        grid-row-end: unset;
+        grid-row-start: unset;
+    }
+
+    #modalConfiguracionVariablesFisico .div-main-content-formula {
+        width: 100%;
+    }
+
+    #modalConfiguracionVariablesFisico .div-no-campo-select {
+        grid-column-start: unset;
+        grid-column-end: unset;
+        grid-row-start: unset;
+        grid-row-end: unset;
+        width: 100%;
+        height: 500px;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width:610px) {
+    #mainMenu .nav-vertical {
+        justify-content: space-between;
+    }
+
+    .paginate {
+        flex-wrap: wrap;
+    }
+
+    /*   #mainMenu .nav-main .header-nav {
+        width: auto;
+    } */
+
+    #mainMenu .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    #mainMenu #navHorizontal {
+        position: absolute;
+        z-index: 9;
+        right: 0;
+        transform: translateX(0%);
+        visibility: hidden;
+        transition: transform 0.5s;
+    }
+
+    #mainMenu .nav-vertical {
+        /* grid-template-columns: 1fr 1fr 1fr; */
+        padding: 10px 10px;
+    }
+
+    #mainMenu #iconHamburguer {
+        fill: black;
+    }
+
+    #mainMenu #iconHamburguer:hover {
+        background-color: #00000012;
+    }
+
+    #mainMenu .header-nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        margin-bottom: 0 !important;
+    }
+
+    #modalConfiguracionVariablesFisico .div-operadores-opciones-variables-fisico {
+        flex-wrap: wrap;
+    }
+
+    #modalConfiguracionVariablesFisico .div-content-leyenda {
+        grid-template-columns: 1fr;
+    }
+
+    #modalConfiguracionVariablesFisico .div-content-input-variables>div {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (max-width:444px) {
+    #modalConfiguracionVariablesFisico .div-content-formula {
+        grid-template-columns: 1fr;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #modalConfiguracionVariablesFisico .resultado-formula {
+        width: 100%;
+    }
+
+    #modalConfiguracionVariablesFisico .div-content-input-variables>div {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}
+
+@media screen and (max-width : 250px) {
+    #modalConfiguracionVariablesFisico .div-content-leyenda>div {
+        flex-direction: column;
+        align-items: start;
+    }
+}
+
+@media screen and (max-width : 700px) {
+
+    #mainModalConfifuraciones .div-items-configuraciones>div {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .color-cofiguraciones-1 {
+        grid-row-start: 8;
+    }
+
+    .color-cofiguraciones-2 {
+        grid-row-start: 8;
+    }
+
+    .color-cofiguraciones-3 {
+        grid-row-start: 8;
+    }
+
+    .color-cofiguraciones-4 {
+        grid-row-start: 8;
+    }
+
+    .color-cofiguraciones-5 {
+        display: none;
+    }
+
+    #mainModalConfifuraciones .div-title-color {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+
+@media screen and (max-width : 580px) {
+    #mainModalConfifuraciones .div-items-configuraciones>div {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .div-items-configuraciones .color-cofiguraciones-1 {
+        grid-row-start: 10;
+    }
+
+    .div-items-configuraciones .color-cofiguraciones-2 {
+        grid-row-start: 10;
+    }
+
+    .div-items-configuraciones .color-cofiguraciones-3 {
+        grid-row-start: 10;
+    }
+
+    .div-items-configuraciones .color-cofiguraciones-4 {
+        grid-row-start: 8;
+        display: none;
+    }
+}
+
+@media screen and (max-width : 444px) {
+    #mainModalConfifuraciones .div-items-configuraciones>div {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .div-items-configuraciones .color-cofiguraciones-1 {
+        grid-row-start: 14;
+    }
+
+    .div-items-configuraciones .color-cofiguraciones-2 {
+        grid-row-start: 14;
+    }
+
+    .div-items-configuraciones .color-cofiguraciones-3 {
+        display: none;
+    }
+
+}
+
+@media screen and (max-width : 310px) {
+    #mainModalConfifuraciones .div-items-configuraciones>div {
+        grid-template-columns: 1fr;
+    }
+
+    .div-items-configuraciones .color-cofiguraciones-1 {
+        grid-row-start: 26;
+    }
+
+    .div-items-configuraciones .color-cofiguraciones-2 {
+        display: none;
+    }
+
+    #mainModalConfifuraciones .div-title-color {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+
+    #mainModalConfifuraciones .div-title-configuraciones {
+        width: 100%;
+    }
+
+    #mainModalConfifuraciones .title-configuraciones {
+        display: none;
+    }
+
+    .color-cofiguraciones-4 {
+        display: none;
+    }
+
+    #mainModalConfifuraciones .div-item-cofiguracion {
+        width: calc(100% - 40px);
+    }
+}
+
+@media screen and (max-width : 210px) {
+
+    .hamburguer-centered {
+        display: flex;
+        /* justify-content: center; */
+    }
+
+    #navHorizontal .toogle-footer-nav-horizontal {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width : 140px) {
+    #navHorizontal .icon-li-dark-mode-nav-horizontal{
+        width: 10vw !important;
+    }
+    #navHorizontal .icon-li-nav-horizontal {
+        /* display: none !important; */
+        width: 10vw !important;
+    }
+    #mainMenu .nav-horizontal ul li ul li, .nav-main .footer-nav li{
+        gap: 4vw !important;
+    }
+
+    #mainMenu .nav-vertical {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #navHorizontal #footerNav .change-hamburguer-quit {
+        display: none !important;
+    }
+
+    #navHorizontal .change-hamburguer-quit {
+        font-size: 6.5vw !important;
+    }
+
+    .nav-horizontal {
+        padding: 5vw 0vw;
+    }
+    #navHorizontal .logo-menu{
+        width:  40vw !important;
+    }
+}
+
+@media screen and (max-width : 100px) {
+    #mainMenu .nav-main .footer-nav ul{
+        width: calc(100% - 20vw);
+        border-width: 0.4vw;
+    }
+    #mainMenu .nav-main .line-nav-li {
+        border-width: 0.4vw;
+    }
+
+    #mainMenu .nav-horizontal ul {
+        padding: 5vw;
+        gap: 3vw;
+    }
+
+    #mainMenu .nav-main .title-li,
+    #mainMenu .nav-main .line-nav-li {
+        padding: 4vw;
+    }
+
+    #mainMenu .nav-main .link-memu-horizontal {
+        border-radius: 1vw !important;
+    }
+
+    #mainMenu .nav-horizontal ul li ul li,
+    .nav-main .footer-nav li {
+        padding: 2vw !important;
+        border-radius: 0.1vw !important;
+    }
+
+    #navHorizontal .change-hamburguer-quit {
+        font-size: 5.5vw !important;
+    }
+
+    #mainMenu .nav-main .header-nav {
+        width: calc(100% - 1vw);
+        padding: 1vw;
+    }
+
+    #mainMenu .nav-vertical {
+        padding: 1vw;
+    }
+
+    #headerNav,
+    .section-opciones-usuario {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    #footerNav svg {
+        width: 40vw !important;
+    }
+
+    #navVertical svg {
+        width: 20vw !important;
+        padding: 2vw !important;
+        border-radius: 4vw !important;
+    }
+
+    #mainMenu .nav-horizontal>ul::-webkit-scrollbar {
+        -webkit-appearance: none;
+        appearance: none;
+        background-color: transparent;
+        width: 10vw;
+    }
+
+    #mainMenu .nav-horizontal>ul::-webkit-scrollbar-thumb {
+        background-color: rgb(11, 46, 75);
+        border-radius: 4px;
+
+    }
+}
+
+@media screen and (max-width : 90px) {
+    #navHorizontal .change-hamburguer-quit {
+        font-size: 2 !important;
+    }
+
 }

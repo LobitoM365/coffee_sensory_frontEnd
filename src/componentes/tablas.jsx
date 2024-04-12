@@ -132,7 +132,9 @@ export const Tablas = (array) => {
         changeFilterRotate(filtersClone)
     }
     useEffect(() => {
-        array.getFiltersOrden(filterRotate)
+        if (array.filterRotate) {
+            array.getFiltersOrden(filterRotate)
+        }
 
     }, [filterRotate]);
 
@@ -148,14 +150,14 @@ export const Tablas = (array) => {
         /* formRef.current.clearElementsClick() */
     }
     useEffect(() => {
-        array.limitRegisters({ "inicio": inicio, "fin": limit })
+        if (array.limitRegisters) {
+            array.limitRegisters({ "inicio": inicio, "fin": limit })
+        }
     }, [inicio, limit, posicionPaginate])
 
 
     useEffect(() => {
         setkeyTable(keyTable + 1)
-
-
     }, [array.data])
 
     const [observeElements, setObserveElements] = useState([])
@@ -200,7 +202,6 @@ export const Tablas = (array) => {
         if (!document.getElementById("loadTable")) {
             if (document.getElementById("contentTable")) {
                 document.getElementById("contentTable").insertAdjacentHTML('beforeend', ("<div id='loadTable' class='load-table'>Cargando</div>"))
-                console.log(document.getElementById("loadTable"), tableRef.current)
             }
         }
         if (tableRef != null) {
@@ -255,6 +256,8 @@ export const Tablas = (array) => {
 
 
             function resizeTable() {
+                /* alert("xd") */
+                console.log("aaaaaaaaaaaaaah")
                 if (tableRef.current) {
                     countResize = countResize + 1
 
@@ -668,147 +671,171 @@ export const Tablas = (array) => {
                                             array.buttonsHeaderTable["buttons"] ?
                                                 Object.keys(array.buttonsHeaderTable["buttons"]).length > 0 ?
                                                     Object.keys(array.buttonsHeaderTable["buttons"]).map((key, value) => {
+                                                        const dataButtons = array.buttonsHeaderTable["buttons"];
                                                         const div = []
                                                         const data = array.buttonsHeaderTable["buttons"];
                                                         if (key == "add") {
-                                                            /* if (data[key] == true) {
-                                                                div.push(<button key={value} style={{ display: array.hidden && array.hidden.includes('register') ? 'none' : '' }} onClick={() => { array.clearInputs ? array.clearInputs() : ""; setClearClick(); array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>)
+                                                            if (dataButtons[key].status) {
+                                                                if (dataButtons[key].status == true) {
+                                                                    let procedureNormal = false
+                                                                    if (dataButtons[key].rol) {
+                                                                        if (array.userInfo) {
+                                                                            if (!dataButtons[key]["rol"].includes(array.userInfo.rol)) {
+                                                                                return
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    div.push(<button key={value} style={{ display: array.hidden && array.hidden.includes('register') ? 'none' : '' }} onClick={() => { array.clearInputs ? array.clearInputs() : ""; setClearClick(); array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>)
+                                                                }
                                                             }
- */
                                                         } else if (key == "reporte") {
-                                                            if (data[key] == true) {
-                                                                div.push(<div key={value} className='div-generar-documento father-div-modal'>
-                                                                    <button onClick={(e) => {
-                                                                        closeModalReporte(e)
-                                                                    }} className='button-register-table'>Reporte
-                                                                    </button>
-                                                                    <div style={{ display: "none" }} id='divReporte' className='child-div-modal'>
+                                                            if (dataButtons[key].status) {
+                                                                if (dataButtons[key].status == true) {
 
-                                                                        <GlobalModal statusModal={closeModalReporte} active={{ "width": 930 }} content={
-                                                                            <div className='div-input-documento'>
-                                                                                <form onSubmit={(e) => { chageData(e) }}>
-                                                                                    <div className='div-body-reporte'>
+                                                                    if (dataButtons[key].rol) {
+                                                                        if (array.userInfo) {
+                                                                            if (!dataButtons[key]["rol"].includes(array.userInfo.rol)) {
+                                                                                return
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    div.push(<div key={value} className='div-generar-documento father-div-modal'>
+                                                                        <button onClick={(e) => {
+                                                                            closeModalReporte(e)
+                                                                        }} className='button-register-table'>Reporte
+                                                                        </button>
+                                                                        <div style={{ display: "none" }} id='divReporte' className='child-div-modal'>
+
+                                                                            <GlobalModal statusModal={closeModalReporte} active={{ "width": 930 }} content={
+                                                                                <div className='div-input-documento'>
+                                                                                    <form onSubmit={(e) => { chageData(e) }}>
+                                                                                        <div className='div-body-reporte'>
+                                                                                            {
+                                                                                                array.dataDocumento ?
+                                                                                                    keysInputsDocumento.map((keyInput, index) => {
+                                                                                                        let keysInputs = []
+                                                                                                        let dataInputs = {}
+                                                                                                        if (array.dataDocumento[keyInput]["inputs"]) {
+                                                                                                            keysInputs = Object.keys(array.dataDocumento[keyInput]["inputs"])
+                                                                                                            dataInputs = array.dataDocumento[keyInput]["inputs"]
+                                                                                                        }
+                                                                                                        let titleRefer = array.dataDocumento[keyInput]["referencia"] ? array.dataDocumento[keyInput]["referencia"] : "Campo"
+
+                                                                                                        return <div key={index}>
+                                                                                                            <h4 className='title-reporte-group'>{titleRefer}</h4>
+                                                                                                            <div className='content-div-inputs-group'>
+                                                                                                                {keysInputs.map((key, indexInput) => {
+                                                                                                                    if (dataInputs[key]["type"] == "select") {
+                                                                                                                        return < GlobalInputs
+                                                                                                                            key={indexInput}
+                                                                                                                            input={setValueGlobalInput}
+                                                                                                                            value={valueGlobalInput}
+                                                                                                                            /* class={"input-global"} */
+                                                                                                                            /*  errors={errorsInputGlobal}
+                                                                                                                             elementEdit={value.catador_id} */
+                                                                                                                            data={{
+                                                                                                                                [key]: {
+                                                                                                                                    type: "select",
+                                                                                                                                    referencia: dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : false,
+                                                                                                                                    values: dataInputs[key]["values"] ? dataInputs[key]["values"] : [],
+                                                                                                                                    opciones: dataInputs[key]["opciones"] ? dataInputs[key]["opciones"] : [],
+                                                                                                                                    upper_case: true,
+                                                                                                                                    key: "id",
+                                                                                                                                },
+                                                                                                                            }} />
+                                                                                                                    } else {
+                                                                                                                        return < GlobalInputs
+                                                                                                                            key={indexInput}
+                                                                                                                            input={setValueGlobalInput}
+                                                                                                                            value={valueGlobalInput}
+                                                                                                                            data={{
+                                                                                                                                [key]: {
+                                                                                                                                    type: dataInputs[key]["type"],
+                                                                                                                                    upper_case: true,
+                                                                                                                                },
+                                                                                                                            }} />
+                                                                                                                    }
+                                                                                                                })
+                                                                                                                }
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    })
+                                                                                                    :
+                                                                                                    ""
+                                                                                            }
+                                                                                        </div>
                                                                                         {
-                                                                                            array.dataDocumento ?
-                                                                                                keysInputsDocumento.map((keyInput, index) => {
-                                                                                                    let keysInputs = []
-                                                                                                    let dataInputs = {}
-                                                                                                    if (array.dataDocumento[keyInput]["inputs"]) {
-                                                                                                        keysInputs = Object.keys(array.dataDocumento[keyInput]["inputs"])
-                                                                                                        dataInputs = array.dataDocumento[keyInput]["inputs"]
-                                                                                                    }
-                                                                                                    let titleRefer = array.dataDocumento[keyInput]["referencia"] ? array.dataDocumento[keyInput]["referencia"] : "Campo"
+                                                                                            array.filterPdfLimit ?
+                                                                                                array.filterPdfLimit.status ?
+                                                                                                    <div className='limit-generate-documento'>
+                                                                                                        <h4>Debes elegir un máximo de 100 registros para el documento. Sin especificación, se usarán los primeros 100 registros. Si optas por iniciar en el registro 100, se incluirán del 100 al 199, y así sucesivamente.</h4>
 
-                                                                                                    return <div key={keyInput}>
-                                                                                                        <h4 className='title-reporte-group'>{titleRefer}</h4>
-                                                                                                        <div className='content-div-inputs-group'>
-                                                                                                            {keysInputs.map((key, indexInput) => {
-                                                                                                                console.log(key, dataInputs)
-                                                                                                                if (dataInputs[key]["type"] == "select") {
-                                                                                                                    return < GlobalInputs
-                                                                                                                        input={setValueGlobalInput}
-                                                                                                                        value={valueGlobalInput}
-                                                                                                                        /* class={"input-global"} */
-                                                                                                                        /*  errors={errorsInputGlobal}
-                                                                                                                         elementEdit={value.catador_id} */
-                                                                                                                        data={{
-                                                                                                                            [key]: {
-                                                                                                                                type: "select",
-                                                                                                                                referencia: dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : false,
-                                                                                                                                values: dataInputs[key]["values"] ? dataInputs[key]["values"] : [],
-                                                                                                                                opciones: dataInputs[key]["opciones"] ? dataInputs[key]["opciones"] : [],
-                                                                                                                                upper_case: true,
-                                                                                                                                key: "id",
-                                                                                                                            },
-                                                                                                                        }} />
-                                                                                                                } else {
-                                                                                                                    return < GlobalInputs
-                                                                                                                        input={setValueGlobalInput}
-                                                                                                                        value={valueGlobalInput}
-                                                                                                                        data={{
-                                                                                                                            [key]: {
-                                                                                                                                type: dataInputs[key]["type"],
-                                                                                                                                upper_case: true,
-                                                                                                                            },
-                                                                                                                        }} />
-                                                                                                                }
-                                                                                                            })
-                                                                                                            }
+                                                                                                        <div className="limit-generate-documento-maximo">
+                                                                                                            <label htmlFor="limit" className="label-from-register">Número de registros:</label> <h4>{array.filterPdfLimit.max ? array.filterPdfLimit.max : 100} </h4>
                                                                                                         </div>
-                                                                                                    </div>
-                                                                                                })
-                                                                                                :
-                                                                                                ""
+                                                                                                        <div className='div-input-limit-generate-documento'>
+
+                                                                                                            <div className="head-input">
+                                                                                                                <label htmlFor="limit" className="label-from-register">Desde</label>
+                                                                                                                <input onInput={(e) => {
+                                                                                                                    let limit = 100;
+                                                                                                                    let hastaLimit = document.getElementById("hastaLimit");
+                                                                                                                    let cantidadLimit = document.getElementById("cantidadLimit");
+                                                                                                                    if (array.filterPdfLimit.max) {
+                                                                                                                        limit = array.filterPdfLimit.max
+                                                                                                                    };
+                                                                                                                    if (e.target.value <= 0 && e.target.value != "") {
+                                                                                                                        e.target.value = 1
+                                                                                                                    }
+                                                                                                                    if (e.target.value > limit) {
+                                                                                                                        e.target.value = limit
+                                                                                                                    }
+                                                                                                                    if (e.target.value.toString().length == 1) {
+                                                                                                                        e.target.value = e.target.value.replace(/\D/g, 1)
+                                                                                                                    } else {
+                                                                                                                        e.target.value = e.target.value.replace(/\D/g, "")
+                                                                                                                    }
+                                                                                                                    if (parseFloat(e.target.value) + 99 <= limit) {
+                                                                                                                        hastaLimit.innerHTML = parseFloat(e.target.value) + 99
+                                                                                                                    } else if (parseFloat(e.target.value) + 99 > limit) {
+                                                                                                                        hastaLimit.innerHTML = limit
+                                                                                                                    }
+                                                                                                                    if (e.target.value != "") {
+                                                                                                                        cantidadLimit.innerHTML = parseFloat(hastaLimit.innerHTML) - parseFloat(e.target.value) + 1
+                                                                                                                    } else {
+                                                                                                                        cantidadLimit.innerHTML = 100
+                                                                                                                        hastaLimit.innerHTML = 100
+                                                                                                                    }
+                                                                                                                }} defaultValue={1} id="limit" name="limit" autoComplete="false" className="input-form" type="text" />
+                                                                                                            </div>
+                                                                                                            <div className="head-input div-hasta-limit-generate-documento">
+                                                                                                                <label htmlFor="limit" className="label-from-register">Hasta:</label>
+                                                                                                                <h4 id='hastaLimit'>100</h4>
+                                                                                                            </div>
+                                                                                                            <div className="head-input div-hasta-limit-generate-documento">
+                                                                                                                <label htmlFor="limit" className="label-from-register">Cantidad:</label>
+                                                                                                                <h4 id='cantidadLimit'>100</h4>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div> :
+                                                                                                    "" :
+                                                                                                " "
                                                                                         }
-                                                                                    </div>
-                                                                                    {
-                                                                                        array.filterPdfLimit ?
-                                                                                            array.filterPdfLimit.status ?
-                                                                                                <div className='limit-generate-documento'>
-                                                                                                    <h4>Debes elegir un máximo de 100 registros para el documento. Sin especificación, se usarán los primeros 100 registros. Si optas por iniciar en el registro 100, se incluirán del 100 al 199, y así sucesivamente.</h4>
 
-                                                                                                    <div className="limit-generate-documento-maximo">
-                                                                                                        <label htmlFor="limit" className="label-from-register">Número de registros:</label> <h4>{array.filterPdfLimit.max ? array.filterPdfLimit.max : 100} </h4>
-                                                                                                    </div>
-                                                                                                    <div className='div-input-limit-generate-documento'>
+                                                                                        <div className='footer-get-reporte'>
+                                                                                            <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-pdf'>PDF</button>
+                                                                                            {/* <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-excel'>EXCEL</button> */}
+                                                                                        </div>
 
-                                                                                                        <div className="head-input">
-                                                                                                            <label htmlFor="limit" className="label-from-register">Desde</label>
-                                                                                                            <input onInput={(e) => {
-                                                                                                                let limit = 100;
-                                                                                                                let hastaLimit = document.getElementById("hastaLimit");
-                                                                                                                let cantidadLimit = document.getElementById("cantidadLimit");
-                                                                                                                if (array.filterPdfLimit.max) {
-                                                                                                                    limit = array.filterPdfLimit.max
-                                                                                                                };
-                                                                                                                if (e.target.value <= 0 && e.target.value != "") {
-                                                                                                                    e.target.value = 1
-                                                                                                                }
-                                                                                                                if (e.target.value > limit) {
-                                                                                                                    e.target.value = limit
-                                                                                                                }
-                                                                                                                if (e.target.value.toString().length == 1) {
-                                                                                                                    e.target.value = e.target.value.replace(/\D/g, 1)
-                                                                                                                } else {
-                                                                                                                    e.target.value = e.target.value.replace(/\D/g, "")
-                                                                                                                }
-                                                                                                                if (parseFloat(e.target.value) + 99 <= limit) {
-                                                                                                                    hastaLimit.innerHTML = parseFloat(e.target.value) + 99
-                                                                                                                } else if (parseFloat(e.target.value) + 99 > limit) {
-                                                                                                                    hastaLimit.innerHTML = limit
-                                                                                                                }
-                                                                                                                if (e.target.value != "") {
-                                                                                                                    cantidadLimit.innerHTML = parseFloat(hastaLimit.innerHTML) - parseFloat(e.target.value) + 1
-                                                                                                                } else {
-                                                                                                                    cantidadLimit.innerHTML = 100
-                                                                                                                    hastaLimit.innerHTML = 100
-                                                                                                                }
-                                                                                                            }} defaultValue={1} id="limit" name="limit" autoComplete="false" className="input-form" type="text" />
-                                                                                                        </div>
-                                                                                                        <div className="head-input div-hasta-limit-generate-documento">
-                                                                                                            <label htmlFor="limit" className="label-from-register">Hasta:</label>
-                                                                                                            <h4 id='hastaLimit'>100</h4>
-                                                                                                        </div>
-                                                                                                        <div className="head-input div-hasta-limit-generate-documento">
-                                                                                                            <label htmlFor="limit" className="label-from-register">Cantidad:</label>
-                                                                                                            <h4 id='cantidadLimit'>100</h4>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div> :
-                                                                                                "" :
-                                                                                            " "
-                                                                                    }
-
-                                                                                    <div className='footer-get-reporte'>
-                                                                                        <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-pdf'>PDF</button>
-                                                                                        {/* <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-excel'>EXCEL</button> */}
-                                                                                    </div>
-
-                                                                                </form>
-                                                                            </div>
-                                                                        } />
+                                                                                    </form>
+                                                                                </div>
+                                                                            } />
+                                                                        </div>
                                                                     </div>
-                                                                </div>)
+
+                                                                    )
+                                                                }
                                                             }
                                                         } else if (data[key]["normal"]) {
                                                             let tableData = []
@@ -817,9 +844,16 @@ export const Tablas = (array) => {
                                                                 classProcedure = data[key]["class"];
                                                             }
                                                             if (data[key]["inputs"]) {
-
                                                                 let keysInputs = Object.keys(data[key]["inputs"])
                                                                 let indexInputs = Object.keys(data[key]["inputs"]).length > 5 ? 5 : Object.keys(data[key]["inputs"]).length
+                                                                if (data[key].rol) {
+                                                                    if (array.userInfo) {
+                                                                        if (!data[key]["rol"].includes(array.userInfo.rol)) {
+                                                                            return
+                                                                        }
+                                                                    }
+                                                                }
+
                                                                 for (let x = 0; x < indexInputs; x++) {
                                                                     let referenciaButton = keysInputs[x];
                                                                     let classProcedure = "";
@@ -1051,7 +1085,7 @@ export const Tablas = (array) => {
                                                             }
                                                         }
                                                     }
-                                                    return <th className='th-table-print' key={index}>
+                                                    return <th className='th-table-print' key={keys}>
                                                         <div className="items-header-table">
                                                             <h4 className='tittle-item-header-table'>   {print[keys]["referencia"] ? print[keys]["referencia"] : keys} </h4>
                                                             {keys != "actualizar" && filter == true ? <svg onClick={() => functionChangeFilterRotate(keys)} style={{ rotate: filterRotate[keys] ? filterRotate[keys]["value"] == "desc" ? "0deg" : "180deg" : "0deg", fill: filterRotate[keys] ? "blue" : "" }} className="filter-asc-desc" version="1.0" viewBox="0 0 512.000000 512.000000">
@@ -1075,8 +1109,7 @@ export const Tablas = (array) => {
                                             {data.length > 0 ? (
                                                 data.map((keysD, valuesD) => (
 
-                                                    <tr className='tr-table' key={"fincas" + valuesD}>
-
+                                                    <tr key={keysD["id"] ? keysD["id"] : valuesD} className='tr-table'>
                                                         {
                                                             keysPrint.map((keys, index) => {
 
@@ -1089,7 +1122,7 @@ export const Tablas = (array) => {
                                                                     }
                                                                 }
                                                                 if (keys == "actualizar") {
-                                                                    return <td key={index} className='td-update' style={{ display: array.hidden && array.hidden.includes('update') ? 'none' : '' }}>
+                                                                    return <td key={keys} className='td-update' style={{ display: array.hidden && array.hidden.includes('update') ? 'none' : '' }}>
                                                                         <div className="center-update">
                                                                             <button onClick={() => { setClearClick(); array.setErrors({}); setStatusInput(false); setStatusInputDefault(true); setStatusSelectDefault(true); array.editar(data[valuesD]["id"]); array.editarStatus(!array.updateStatus); }} title='actualizar' {...data[valuesD]["estado"] == 0 ? { disabled: true, title: 'Inactivo - No se puede actualizar' } : ''} className={`item-options option-update ${data[valuesD]['estado'] == 0 ? 'btn-disabled' : ""}`}>
                                                                                 <svg version="1.0" viewBox="0 0 478.000000 522.000000" >
@@ -1605,7 +1638,7 @@ export const Tablas = (array) => {
 
                                                     </tr>
                                                 ))
-                                            ) : data.find_error ? <tr><td colSpan={1000000} className='table-error'>{data.find_error}</td></tr> : data == false ? <tr id='loadTable'><td><div className='load-table'>Cargando</div> </td></tr> : <tr><td colSpan={1000000} className='table-error'>{console.log(data, "dataaaaaaaaaa")}</td></tr>}
+                                            ) : data.find_error ? <tr><td colSpan={1000000} className='table-error'>{data.find_error}</td></tr> : data == false ? <tr id='loadTable'><td><div className='load-table'>Cargando</div> </td></tr> : <tr><td colSpan={1000000} className='table-error'></td></tr>}
                                         </tbody>
 
                                     </table >
@@ -1646,6 +1679,6 @@ export const Tablas = (array) => {
                 </div>
             </div>
             <Form userInfo={array.userInfo} imgForm={array.imgForm} ref={formRef} setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} tittle={array.tittle} />
-        </div>
+        </div >
     )
 }

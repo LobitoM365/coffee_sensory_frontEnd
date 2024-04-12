@@ -102,6 +102,7 @@ export const Inicio = () => {
                     modalForm[m].style.padding = "20px 20px"
                     modalForm[m].style.height = "calc(100% - 40px)"
                     modalForm[m].style.width = "calc(100% - 40px)"
+                    modalForm[m].style.flexDirection = "row"
                     if (divFondomodalForm[m]) {
                         divFondomodalForm[m].style.height = divContentForm[m].clientHeight + 40 + "px"
                         divFondomodalForm[m].style.width = modalForm[m].clientWidth + "px"
@@ -113,6 +114,7 @@ export const Inicio = () => {
                     }
                     modalForm[m].style.alignItems = "center"
                     modalForm[m].style.justifyContent = ""
+                    modalForm[m].style.flexDirection = "row"
                     modalForm[m].style.padding = ""
                     modalForm[m].style.height = "100%"
                     modalForm[m].style.width = "100%"
@@ -806,7 +808,7 @@ export const Inicio = () => {
                             : "" : ""}
                     </div>
                     : "" : "" : ""}
-            
+
             <img className='img-fondo' src="/public/img/fondoMapa2.jpg" alt="" />
 
             <iframe id='iframeMapa' className='iframe' src="src/mapa/MapaV4/index.html" frameBorder={0}></iframe>

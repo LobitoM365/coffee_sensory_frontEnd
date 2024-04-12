@@ -31,8 +31,13 @@ export const Fincas = (userInfo) => {
 
     const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
         "buttons": {
-            /* "add": true, */
-            "reporte": true,
+            "add": {
+                "status": true,
+                "rol": ["administrador","catador"]
+            },
+            "reporte": {
+                "status": true,
+            },
         }
     });
 

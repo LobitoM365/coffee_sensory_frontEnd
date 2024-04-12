@@ -32,6 +32,9 @@ import { RecoveryPassword } from './pages/recoveryPassword.jsx';
 import { GenerateReporteAnalisis } from './pages/generateReporteAnalisis.jsx';
 import { Formatos } from './pages/formatos.jsx';
 import { contains } from 'jquery';
+import { Cell } from 'recharts';
+import "../public/css/internalServerError.css"
+
 export default function App(data) {
   const [statusAlert, setStatusAlert] = useState(false);
   const [dataAlert, setdataAlert] = useState({});
@@ -63,28 +66,30 @@ export default function App(data) {
       }
 
     };
-    if (responseValidateViews.data.permission == false) {
-      setStatusAlert(true);
-      setdataAlert({
-        buttonDefault: "Continuar",
-        backGroundColor: "rgb(4 22 37)",
-        icon: <img className="icon-ban-alert" src="../../public/img/imgBan.png" alt="" />,
-        status: "false",
-        description: responseValidateViews.data.message,
-        continue: {
-          "function": LogoutSesion,
-        },
-        tittle: "No tienes acceso!",
-      });
-    } else if (responseValidateViews.data !== undefined) {
-      setUserInfo(responseValidateViews.data.user);
-    } else {
-      setStatusAlert(true);
-      setdataAlert({
-        status: "false",
-        description: 'Intente acceder de nuevo más tarde.',
-        "tittle": "Error interno del servidor! ",
-      });
+    if (responseValidateViews.data) {
+      if (responseValidateViews.data.permission == false) {
+        setStatusAlert(true);
+        setdataAlert({
+          buttonDefault: "Continuar",
+          backGroundColor: "rgb(4 22 37)",
+          icon: <img className="icon-ban-alert" src="../../public/img/imgBan.png" alt="" />,
+          status: "false",
+          description: responseValidateViews.data.message,
+          continue: {
+            "function": LogoutSesion,
+          },
+          tittle: "No tienes acceso!",
+        });
+      } else if (responseValidateViews.data !== undefined) {
+        setUserInfo(responseValidateViews.data.user);
+      } else {
+        setStatusAlert(true);
+        setdataAlert({
+          status: "false",
+          description: 'Intente acceder de nuevo más tarde.',
+          "tittle": "Error interno del servidor! ",
+        });
+      }
     }
   }, [responseValidateViews]);
 
@@ -169,43 +174,62 @@ export default function App(data) {
   }, [<Route></Route>])
   return (
     <>
-      <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
-      {responseValidateViews ? responseValidateViews.data ? responseValidateViews.data["permission"] == false ? "" :
-        <Routes>
-          <Route path='*' element={<NotFound />} />
-          <Route path='pruebaPdf' element={<PruebaPdf />} />
-          <Route path='/dashboard/generatePdfTable/' element={<GeneratePdfTable />} />
-          <Route path='/dashboard/generateReporteAnalisis/:id' element={<GenerateReporteAnalisis userInfo={userInfo} />} />
-          <Route path='/recover' element={<RecoveryPassword />} />
-          <Route path='/' /* element={<Loader valueDarkMode={valueDarkMode} />} */>
-            {/* <Route path='/modalfinca' element={<ModalFinca />}></Route> */}
-            <Route path='/' element={<MenuInicio userInfo={userInfo} />}>
-              <Route path='/' element={<Inicio />} />
-              <Route path='login' element={<Login socket={data.socket} />} />
-            </Route>
+      {data.serverStatus == false ?
+        <div className='main-div-internal-server-error'>
+          <div className='div-internal-server-error'>
+            <div className='div-internal-server-error-visual'>
+              <h4 className='h4-internal-server-error'>5</h4>
+              <img src="../../public/img/InternalServerError.png" alt="" />
+              <h4 className='h4-internal-server-error'>0</h4>
+            </div>
+            <div>
+              <p>An error ocurred an your request couldt'n be completed.</p>
+              <p className='p-report'>Please report this problem.</p>
+            </div>
+          </div>
+        </div>
+        :
+        <>
+          <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
+          {responseValidateViews ? responseValidateViews.data ? responseValidateViews.data["permission"] == false ? "" :
+            <Routes>
+              <Route path='*' element={<NotFound />} />
+              <Route path='pruebaPdf' element={<PruebaPdf />} />
+              <Route path='/dashboard/generatePdfTable/' element={<GeneratePdfTable />} />
+              <Route path='/dashboard/generateReporteAnalisis/:id' element={<GenerateReporteAnalisis userInfo={userInfo} />} />
+              <Route path='/recover' element={<RecoveryPassword />} />
+              <Route path='/' /* element={<Loader valueDarkMode={valueDarkMode} />} */>
+                {/* <Route path='/modalfinca' element={<ModalFinca />}></Route> */}
+                <Route path='/' element={<MenuInicio userInfo={userInfo} />}>
+                  <Route path='/' element={<Inicio />} />
+                  <Route path='login' element={<Login socket={data.socket} />} />
+                </Route>
 
 
-            <Route path='/dashboard' element={<Menu socket={data.socket} valueDarkMode={valueDarkMode} changeDarkMode={changeDarkMode} />}>
-              <Route path='' element={<Home userInfo={userInfo} />} />
-              <Route path='profile' element={<Profile userInfo={userInfo} valueDarkMode={valueDarkMode} />} />
-              <Route path="usuarios/registros" element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} /> : ""} />
-              <Route path='formulario' element={<FormRegiser userInfo={userInfo}/>} />
-              <Route path='formatoSCA/registros' element={<RegistroFormatoSca userInfo={userInfo}/>} />
-              <Route path='fincas/registros' element={<Fincas userInfo={userInfo} />} />
-              <Route path='analisis/registros' element={<Analisis socket={data.socket} userInfo={userInfo} />} />
-              <Route path='formatos/registros' element={<Formatos socket={data.socket} userInfo={userInfo} />} />
-              <Route path='cafes/registros' element={<Cafes userInfo={userInfo}/>} />
-              <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} /> : ""} />
-              <Route path='municipios/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Municipios} /> : ""} />
-              <Route path='variedades/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Variedades} /> : ""} />
-              <Route path='muestras/registros' element={<Muestras userInfo={userInfo}/>} />
-              <Route path='lotes/registros' element={<Lotes userInfo={userInfo} />} />
-              <Route path='muestras/verRegistros' element={<VerRegistros userInfo={userInfo}/>} />
-            </Route>
-          </Route>
+                <Route path='/dashboard' element={<Menu socket={data.socket} valueDarkMode={valueDarkMode} changeDarkMode={changeDarkMode} />}>
+                  <Route path='' element={<Home userInfo={userInfo} />} />
+                  <Route path='profile' element={<Profile userInfo={userInfo} valueDarkMode={valueDarkMode} />} />
+                  <Route path="usuarios/registros" element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} /> : ""} />
+                  <Route path='formulario' element={<FormRegiser userInfo={userInfo} />} />
+                  <Route path='formatoSCA/registros' element={<RegistroFormatoSca userInfo={userInfo} />} />
+                  <Route path='fincas/registros' element={<Fincas userInfo={userInfo} />} />
+                  <Route path='analisis/registros' element={<Analisis socket={data.socket} userInfo={userInfo} />} />
+                  <Route path='formatos/registros' element={<Formatos socket={data.socket} userInfo={userInfo} />} />
+                  <Route path='cafes/registros' element={<Cafes userInfo={userInfo} />} />
+                  <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} /> : ""} />
+                  <Route path='municipios/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Municipios} /> : ""} />
+                  <Route path='variedades/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Variedades} /> : ""} />
+                  <Route path='muestras/registros' element={<Muestras userInfo={userInfo} />} />
+                  <Route path='lotes/registros' element={<Lotes userInfo={userInfo} />} />
+                  <Route path='muestras/verRegistros' element={<VerRegistros userInfo={userInfo} />} />
+                </Route>
+              </Route>
 
-        </Routes>
-        : "" : ""}
+            </Routes>
+            : "" : ""}
+        </>
+      }
+
 
 
     </>

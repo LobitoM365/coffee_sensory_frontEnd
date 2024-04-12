@@ -801,6 +801,9 @@
     }
 }
 
+#mainAnalisis .icon-ver-encargados-no-disponible{
+    background-color: gray;
+}
 #mainAnalisis .div-icon-reporte-pdf-none{
     filter:grayscale(10);
 }

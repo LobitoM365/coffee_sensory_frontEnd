@@ -13,7 +13,6 @@ export const Analisis = (userInfo) => {
         const socket = userInfo.socket;
 
         socket.on("message", (io) => {
-            console.log(io)
         })
         socket.on("asignAnalisis", (io) => {
             getAnalisis()
@@ -40,7 +39,10 @@ export const Analisis = (userInfo) => {
 
     const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
         "buttons": {
-            /* "add": true, */
+            "add": {
+                "status": true,
+                "rol": ["catador"]
+            },
             "asignar": {
                 "normal": true,
                 "inputs": {
@@ -54,9 +56,12 @@ export const Analisis = (userInfo) => {
                     }
                 },
                 "class": "div-reporte-pdf",
-                "upper_case": true
+                "upper_case": true,
+                "rol": ["administrador"]
             },
-            "reporte": true,
+            "reporte": {
+                "status": true
+            }
         }
 
     });
@@ -87,40 +92,7 @@ export const Analisis = (userInfo) => {
     const [tipoAnalisis, setTipoAnalisis] = useState(null);
     const [idAnalisisResult, setIdAnalisisResult] = useState(null);
 
-    useEffect(() => {
-        if (userInfo.userInfo) {
-            if (userInfo.userInfo.rol) {
-                const cloneButtonsHeaderTable = { ...buttonsHeaderTable }
-                if (userInfo.userInfo.rol == "administrador") {
-                    delete cloneButtonsHeaderTable["buttons"]["add"]
-                    cloneButtonsHeaderTable["buttons"]["asignar"] = {
-                        "normal": true,
-                        "inputs": {
-                            "ver": {
-                                "type": "button",
-                                "referencia": "Asignar",
-                                "function": {
-                                    "value": getAsignarAnalisis,
-                                    "execute": {
-                                        "type": "table",
-                                        "value": "an_id"
-                                    }
-                                },
-                                "class": "button-asignar-analisis"
-                            }
-                        },
-                        "class": "div-reporte-pdf",
-                        "upper_case": true
-                    }
-                } else {
-                    delete cloneButtonsHeaderTable["buttons"]["asignar"]
-                    cloneButtonsHeaderTable["buttons"]["add"] = true
-                }
-                setButtonsHeaderTable(cloneButtonsHeaderTable)
 
-            }
-        }
-    }, [userInfo])
 
 
     useEffect(() => {
@@ -460,23 +432,56 @@ export const Analisis = (userInfo) => {
         "encargados": {
             "referencia": "Encargados",
             "normal": true,
-            "inputs": {
-                "ver": {
-                    "type": "button",
-                    "referencia": "Ver",
-                    "function": {
-                        "value": getEncargadosAnalisisUpdate,
-                        "execute": {
-                            "type": "table",
-                            "value": "an_id"
+            "conditions": {
+                "value": {
+                    "type": "table",
+                    "reference": "proceso"
+                },
+                "inputs": {
+                    "certificar": {
+                        "element": {
+                            "type": "button",
+                            "referencia": "Ver",
+                            "function": {
+                                "value": getEncargadosAnalisisUpdate,
+                                "execute": {
+                                    "type": "table",
+                                    "value": "an_id"
+                                }
+                            },
+                            "class": "icon-ver-encargados",
                         }
                     },
-                    "class": "icon-ver-encargados",
+                    "practica": {
+                        "element": {
+                            "type": "free",
+                            "referencia": "No disponible"
+                        }
+                    }
+                },
+                "default": {
+                    "type": "free",
+                    "referencia": "No disponible",
                 }
             },
-            "class": "div-reporte-pdf",
+            /*  "inputs": {
+                 "ver": {
+                     "type": "button",
+                     "referencia": "Ver",
+                     "function": {
+                         "value": getEncargadosAnalisisUpdate,
+                         "execute": {
+                             "type": "table",
+                             "value": "an_id"
+                         }
+                     },
+                     "class": "icon-ver-encargados",
+                 }
+             },
+             "class": "div-reporte-pdf", */
             "upper_case": true,
-            "rol": ["administrador"]
+            "rol": ["administrador"],
+            "filter": false
         },
         "estado_analisis": {
             "referencia": "Estado",
@@ -883,7 +888,7 @@ export const Analisis = (userInfo) => {
     useEffect(() => {
         getusuarios()
         getMuestras()
-    }, [userInfo])
+    }, [])
 
     async function xd(id) {
         setInfoFormato(id, 2)
@@ -1133,8 +1138,6 @@ export const Analisis = (userInfo) => {
 
     async function getAnalisis() {
         try {
-            console.log(dataFilterTable, "fitleeeeeeeeer--------------------------------")
-            console.log(dataFilterTable, "fitleeeeeeeeer--------------------------------")
             const response = await Api.post("analisis/listar", dataFilterTable);
             if (response.data.status == true) {
                 setUsuarios(response.data.data)
@@ -1788,8 +1791,6 @@ export const Analisis = (userInfo) => {
             setErrorsAsignar({})
 
             const response = await Api.post("analisis/asignar" + route, data)
-            console.log(route, "routeeeeeeeee", response)
-
             if (response.data.status == true) {
                 if (statusUpdateAsignar) {
                     getEncargadosAnalisisUpdate(analisisAsignar)
@@ -1853,7 +1854,6 @@ export const Analisis = (userInfo) => {
                 }
                 setErrorsAsignar(response.data.errors)
             }
-            console.log(response, "resssssssss")
         } catch (e) {
             console.log("Error: " + e)
         }
@@ -1862,7 +1862,6 @@ export const Analisis = (userInfo) => {
 
         setErrorsInputGlobal()
         try {
-            console.log(dataAlert, "dataaaaaaaaaaaaaaaaaaaa")
             const data = {
                 "usuarios_id": (dataAlert ? dataAlert.usuarios_id ? dataAlert.usuarios_id : "" : "")
             }
@@ -1898,12 +1897,11 @@ export const Analisis = (userInfo) => {
     }
     async function editarAnalisis(dataAlert) {
         try {
-            
+
             const data = {
                 "muestras_id": (dataAlert ? dataAlert.muestra ? dataAlert.muestra : "" : "")
             }
             const response = await Api.put("analisis/actualizar/" + (dataAlert ? dataAlert.id ? dataAlert.id : "" : ""), data)
-            console.log(response)
             if (response.data.status == true) {
                 setStatusAlert(true)
                 setdataAlert(
@@ -1977,7 +1975,6 @@ export const Analisis = (userInfo) => {
                     }
                 )
             }
-            console.log(response)
         } catch (e) {
             console.log("Error: " + e)
         }
@@ -1999,11 +1996,10 @@ export const Analisis = (userInfo) => {
     }
     async function confirmarCambiarFormato(id, value) {
         setStatusAlert(true)
-        console.log(id, value)
         setdataAlert(
             {
                 status: "warning",
-                description: "¿Estás seguro(a) de editar el formato?.",
+                description: "¿Estás seguro(a) de editar el formato?. Si el formato ya tiene su análsis registrado pasará a nombre de este nuevo usuario.",
                 "tittle": "¡Asegurate de realizar la ación!",
                 continue: {
                     "function": cambiarFormato,
@@ -2056,7 +2052,6 @@ export const Analisis = (userInfo) => {
                                                                         {infoAnalisisUpdateAsignar.length > 0 ?? infoAnalisisUpdateAsignar[0]["codigo_muestra"] ??
                                                                             <div className='div-estado-muestra-asign'>
                                                                                 <h3>Código de la muestra actual : </h3>
-                                                                                {console.log(infoAnalisisUpdateAsignar)}
                                                                                 <h4 className={"estado-no-pointer estado-" + (infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] : "")}>
                                                                                     {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] == 0 ? "Inactivo" : infoAnalisisUpdateAsignar[0]["mu_estado"] == 1 ? "Activo" : "" : ""}
                                                                                 </h4>

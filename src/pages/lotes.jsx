@@ -14,8 +14,13 @@ export const Lotes = (userInfo) => {
     })
     const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
         "buttons": {
-            /* "add": true, */
-            "reporte": true,
+            "add": {
+                "status": true,
+                "rol": ["administrador", "catador"]
+            },
+            "reporte": {
+                "status": true,
+            },
         }
     });
     const [lotes, setLotes] = useState(false)
@@ -114,7 +119,7 @@ export const Lotes = (userInfo) => {
             "referencia": "Estado",
             "filter": false,
             "rol": ["administrador", "catador"]
-            
+
         },
         "actualizar": {
             "referencia": "Actualizar",

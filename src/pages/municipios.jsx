@@ -4,7 +4,16 @@ import Api from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
 
-export const Municipios = () => {
+export const Municipios = (userInfo) => {
+    const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
+        "buttons": {
+            "reporte": {
+                "status": true,
+                "rol": ["administrador"]
+            },
+        }
+    });
+
     let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
@@ -409,13 +418,13 @@ export const Municipios = () => {
 
                     },
                     "limit": {
-                        fin : 100
+                        fin: 100
                     }
                 }
             }
             console.log(filter)
             if (filter.departamentos_id != "" && filter.departamentos_id != undefined) {
-                console.log(filter.departamentos_id,"hahsdhashdahsd")
+                console.log(filter.departamentos_id, "hahsdhashdahsd")
                 filterReport["filter"]["where"]["mu.departamentos_id"] = {
 
                     "value": filter.departamentos_id ? filter.departamentos_id : "",
@@ -426,7 +435,7 @@ export const Municipios = () => {
             }
 
             const response = await Api.post("municipio/listar", filterReport);
-            console.log(response,"muniiiiiiiiiiiiiiii")
+            console.log(response, "muniiiiiiiiiiiiiiii")
             if (response.data.count <= 100) {
                 let dataPdf = {
                     data: response.data.data,
@@ -458,7 +467,7 @@ export const Municipios = () => {
     }
     return (
         <>
-            <Tablas filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} hidden={['status', 'register', 'update']} tittle={"Municipio"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas  userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable}filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Municipio"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

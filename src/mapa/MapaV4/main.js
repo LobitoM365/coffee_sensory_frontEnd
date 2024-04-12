@@ -12,8 +12,8 @@ let titlePunto = document.getElementById("titlePunto");
 let zoomPunto = 20 / window.screen.availWidth;
 let departamentoFocus;
 let focusDepartamento = "";
-const heightMap = mainDivMapa.scrollHeight;
-const widthMap = mainDivMapa.scrollWidth;
+const heightMap = mainDivMapa.clientHeight;
+const widthMap = mainDivMapa.clientWidth;
 let lastScale = 1;
 let lastFocusMunicipio = 0;
 let lastHeight = 0;
@@ -29,16 +29,16 @@ let clickeableStatus = true
 const departamentosName = [];
 const municipiosName = {};
 ///Configuracion inicial para el contenedor del mapa
-mainDivMapa.style.width = divMapa.scrollWidth + "px";
-mainDivMapa.style.height = divMapa.scrollHeight + "px";
+mainDivMapa.style.width = divMapa.clientWidth + "px";
+mainDivMapa.style.height = divMapa.clientHeight + "px";
 const userAgent = navigator.userAgent;
 const android = /Android/.test(userAgent);
 const heightSizeLess = android ? 10 : 84;
-let zoom = window.screen.availHeight > window.screen.availWidth ? ((window.screen.availWidth) / divMapa.scrollWidth) * 100 : ((window.screen.availHeight - heightSizeLess) / divMapa.scrollHeight) * 100;
+let zoom = window.screen.availHeight > window.screen.availWidth ? ((window.screen.availWidth) / divMapa.clientWidth) * 100 : ((window.screen.availHeight - heightSizeLess) / divMapa.clientHeight) * 100;
 let sizeLess = window.screen.availHeight > window.screen.availWidth ? 100000 : 0;
 mainDivMapa.style.zoom = zoom + "%";
 
-const widthDivMap = divMainDivMapa.scrollWidth;
+const widthDivMap = divMainDivMapa.clientWidth;
 
 function upperText(frase, limit) {
 
@@ -1321,7 +1321,7 @@ let puntos = [
     }
 ]
 
-fetch("http://10.193.129.44:3000/api/muestra/geolocalizar/certificada", {
+fetch("http://localhost:3000/api/muestra/geolocalizar/certificada", {
     method: "POST",
     headers: {
         "Content-Type": "application/json" // La clave debe ser "Content-Type"
@@ -1428,7 +1428,7 @@ for (let x = 0; x < departamentos.length; x++) {
         if (clickeableStatus) {
 
             tittleElement.style.display = "none"
-            if (departamentos[x] != lastFocusMunicipio || document.body.scrollHeight != lastHeight || document.body.scrollWidth != lastWidth) {
+            if (departamentos[x] != lastFocusMunicipio || document.body.clientHeight != lastHeight || document.body.clientWidth != lastWidth) {
                 for (let mf = 0; mf < municipios.length; mf++) {
                     municipios[mf].classList.remove("municipio-focus")
                     if (!municipios[mf].classList.contains(municipiosName[mf]["name"])) {
@@ -1445,11 +1445,11 @@ for (let x = 0; x < departamentos.length; x++) {
                     }
                 }
                 lastFocusMunicipio = departamentos[x]
-                lastHeight = document.body.scrollHeight
-                lastWidth = document.body.scrollWidth
+                lastHeight = document.body.clientHeight
+                lastWidth = document.body.clientWidth
                 focusDepartamento = departamentosName[x];
 
-                /* mainDivMapa.style.zoom = ((window.screen.availHeight - heightSizeLess ) / divMapa.scrollHeight) * 100+ "%"; */
+                /* mainDivMapa.style.zoom = ((window.screen.availHeight - heightSizeLess ) / divMapa.clientHeight) * 100+ "%"; */
                 let bboxDepartamento = departamentos[x].getBBox();
 
                 setMovementMap(bboxDepartamento, 1.8, departamentos[x])
@@ -1670,29 +1670,29 @@ function setMovementMap(bboxElement, lessScale, element) {
     }
 
     /*     sizeLess = window.screen.availHeight > window.screen.availWidth ? 100000 : 0;
-        zoom = window.screen.availHeight > window.screen.availWidth ? ((window.screen.availWidth) / divMapa.scrollWidth) * 100 : ((window.screen.availHeight - heightSizeLess) / divMapa.scrollHeight) * 100; */
+        zoom = window.screen.availHeight > window.screen.availWidth ? ((window.screen.availWidth) / divMapa.clientWidth) * 100 : ((window.screen.availHeight - heightSizeLess) / divMapa.clientHeight) * 100; */
     if (lastScale != 0) {
         mainDivMapa.style.transition = "unset"
         mainDivMapa.style.transform = "scale(" + lastScale + ")"
         mainDivMapa.style.zoom = zoom + "%"
     }
     less = lessScale ? lessScale : 1.8;
-    let topMap = ((bboxElement.y / divMapa.scrollHeight) * 100) + (((bboxElement.height / 2) / divMapa.scrollHeight) * 100);
-    let leftMap = ((bboxElement.x / divMapa.scrollWidth) * 100) + (((bboxElement.width / 2) / divMapa.scrollWidth) * 100);
+    let topMap = ((bboxElement.y / divMapa.clientHeight) * 100) + (((bboxElement.height / 2) / divMapa.clientHeight) * 100);
+    let leftMap = ((bboxElement.x / divMapa.clientWidth) * 100) + (((bboxElement.width / 2) / divMapa.clientWidth) * 100);
     divMapa.style.top = "calc(50% - " + topMap + "%)"
     divMapa.style.left = "calc(50% - " + leftMap + "%)"
     let scale = 0;
     if (bboxElement.width > bboxElement.height) {
-        scale = document.body.scrollWidth / (bboxElement.width)
+        scale = document.body.clientWidth / (bboxElement.width)
     } else {
-        scale = document.body.scrollHeight / (bboxElement.height)
+        scale = document.body.clientHeight / (bboxElement.height)
     }
 
 
-    if (((widthDivMap) * (((bboxElement.width / mainDivMapa.clientWidth) * 100) * (scale * less))) / 100 > (document.body.scrollWidth - sizeLess)) {
-        scale = document.body.scrollWidth / (bboxElement.width)
-    } else if (((window.screen.availHeight - heightSizeLess) * (((bboxElement.height / mainDivMapa.clientHeight) * 100) * (scale * less))) / 100 > (document.body.scrollHeight - sizeLess)) {
-        scale = document.body.scrollHeight / (bboxElement.height + 1)
+    if (((widthDivMap) * (((bboxElement.width / mainDivMapa.clientWidth) * 100) * (scale * less))) / 100 > (document.body.clientWidth - sizeLess)) {
+        scale = document.body.clientWidth / (bboxElement.width)
+    } else if (((window.screen.availHeight - heightSizeLess) * (((bboxElement.height / mainDivMapa.clientHeight) * 100) * (scale * less))) / 100 > (document.body.clientHeight - sizeLess)) {
+        scale = document.body.clientHeight / (bboxElement.height + 1)
 
     }
     for (let x = 0; x < puntos.length; x++) {
@@ -1751,14 +1751,14 @@ for (let m = 0; m < municipios.length; m++) {
             if (municipios[m].classList.contains("municipio-" + focusDepartamento)) {
                 municipios[m].classList.add("municipio-focus")
 
-                if (municipios[m] != lastFocusMunicipio || document.body.scrollHeight != lastHeight || document.body.scrollWidth != lastWidth) {
+                if (municipios[m] != lastFocusMunicipio || document.body.clientHeight != lastHeight || document.body.clientWidth != lastWidth) {
                     tittleElement.style.display = "none"
                     let bboxMunicipio = municipios[m].getBBox();
                     municipios[m].style.visibility = "unset";
                     setMovementMap(bboxMunicipio, 1.7, municipios[m])
                     lastFocusMunicipio = municipios[m]
-                    lastHeight = document.body.scrollHeight
-                    lastWidth = document.body.scrollWidth
+                    lastHeight = document.body.clientHeight
+                    lastWidth = document.body.clientWidth
                 }
 
             } else {
@@ -1802,7 +1802,7 @@ for (let m = 0; m < municipios.length; m++) {
 
 
 /* window.addEventListener("resize", function () {
-    lessPorcent = (((document.body.scrollHeight) / (screen.availHeight - 87)))
+    lessPorcent = (((document.body.clientHeight) / (screen.availHeight - 87)))
     ajustPoints()
 })
 
@@ -1838,9 +1838,9 @@ function mouseScroll(event) {
     let zoomNow = parseFloat(mainDivMapa.style.zoom.replace("%", ""))
 
     if (event.deltaY > 0) {
-        zoomNow = zoomNow - (((((document.body.scrollHeight) / (screen.availHeight - 87))) * lastScale) + 5)
+        zoomNow = zoomNow - (((((document.body.clientHeight) / (screen.availHeight - 87))) * lastScale) + 5)
     } else if (event.deltaY < 0) {
-        zoomNow = zoomNow + (((((document.body.scrollHeight) / (screen.availHeight - 87))) * lastScale) + 5)
+        zoomNow = zoomNow + (((((document.body.clientHeight) / (screen.availHeight - 87))) * lastScale) + 5)
     }
 
 

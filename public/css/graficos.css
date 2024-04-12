@@ -3,18 +3,18 @@
      display: flex;
      justify-content: center;
      align-items: center;
-     flex-direction: column; 
+     flex-direction: column;
  }
- 
+
  #graficos .barra {
      background-color: rgb(237, 155, 47);
      box-shadow: 0px 0px 7px rgb(120, 120, 213);
  }
 
  #graficos .contentGraphic {
-     display: flex; 
- } 
-
+     display: flex;
+ }
+ 
  #graficos .title-graphic {
      color: gray;
      font-weight: bolder;

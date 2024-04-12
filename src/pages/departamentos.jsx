@@ -4,7 +4,16 @@ import Api from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 
 
-export const Departamentos = () => {
+export const Departamentos = (userInfo) => {
+    const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
+        "buttons": {
+            "reporte": {
+                "status": true,
+                "rol": ["administrador"]
+            },
+        }
+    });
+
     let [dataFilterTable, setDataFilterTable] = useState({
         "filter": {
             "where": {
@@ -50,7 +59,7 @@ export const Departamentos = () => {
             "referencia": "Nombre",
             "upper_case": true
         }
-        
+
         // "fecha_creacion": {
         //     "referencia": "Fecha creación"
         // }
@@ -261,11 +270,11 @@ export const Departamentos = () => {
 
     }
     useEffect(() => {
-    
+
     }, [])
     return (
         <>
-            <Tablas imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={data} keys={keys}  updateEntitie={updateFinca} hidden={['status', 'register', 'update']} tittle={"Departamentos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas  userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={data} keys={keys} updateEntitie={updateFinca} tittle={"Departamentos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

@@ -12,9 +12,11 @@ import { fn } from "jquery";
 import { Mensajeria } from "../componentes/mensajeria.jsx"
 
 export const Menu = (data) => {
+    const location = useLocation();
     const [statusAlert, setStatusAlert] = useState(false);
     let divCrearFormula = useRef(null);
     let divEvaluarFormula = useRef(null);
+    let refIconHamburguer = useRef(null);
     let divNotificaciones = useRef(null);
     let divLLenarCamporFormulario = useRef(null);
     let refModalConfiguracionFormatoFisico = useRef(null);
@@ -34,19 +36,16 @@ export const Menu = (data) => {
     const [asignaciones, setAsignaciones] = useState([]);
 
     useEffect(() => {
-
         if (data.socket) {
             const perfilChange = (message) => {
-                console.log("el perfil cambioooo", message)
                 getUser();
             };
             const userBan = (message) => {
-                console.log(message, "mesageeeeeeeeee")
                 location.reload()
             }
 
             const ok = (message) => {
-                console.log("oaskdkasdkas", message)
+
             };
 
             const asignAnalisis = (message) => {
@@ -64,11 +63,9 @@ export const Menu = (data) => {
                         }, audio.duration * 1000);
                     });
                 }
-                console.log(message, "mesageeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
                 if (message) {
                     if (Array.isArray(message)) {
                         setAsignaciones(prevState => [...prevState, message])
-                        console.log(asignaciones, "asignaciiiiiiiiiiiiiiiiion")
                     }
                 }
 
@@ -123,8 +120,7 @@ export const Menu = (data) => {
     let responseValidate = validateViews();
 
 
-
-    let hamburguerMode = queryMenu ? 0 : 1;
+    const [hamburguerMode, setHamburguerMode] = useState(0)
     const [user, setUser] = useState({});
     const [modalConfiguracion, setModalConfiguracion] = useState(false);
     const [modalNotificaciones, changeModalNotificaciones] = useState(false);
@@ -211,112 +207,7 @@ export const Menu = (data) => {
             })
         }
     }
-    function stateMenu() {
-        let linkMenu = document.querySelectorAll(".change-hamburguer-quit");
-        let liHamburguerCentered = document.querySelectorAll(".li-hamburguer-centered");
-        let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
-        let navHorizontal = document.getElementById("navHorizontal");
-        let divHeaderNav = document.getElementById("headerNav");
-        console.log(queryMenu)
-        if (queryMenu) {
-            let height = document.querySelectorAll(".nav-vertical")
 
-            navHorizontal.style.height = "calc(100% - " + height[0].clientHeight + "px - 50px)";
-            navHorizontal.style.bottom = "0";
-            navHorizontal.style.width = "100%";
-
-            for (let x = 0; x < linkMenu.length; x++) {
-                linkMenu[x].style.opacity = "1"
-                linkMenu[x].style.fontSize = ""
-                setTimeout(() => {
-                    linkMenu[x].style.display = "block"
-                }, 100)
-
-            }
-            for (let x = 0; x < hamburguerCentered.length; x++) {
-
-                hamburguerCentered[x].style.display = ""
-                hamburguerCentered[x].style.justifyContent = ""
-            }
-            navHorizontal.style.left = "unset";
-
-        } else {
-            navHorizontal.style.height = "";
-            navHorizontal.style.transform = "";
-        }
-        if (hamburguerMode == 0) {
-            if (queryMenu) {
-                navHorizontal.style.transform = "translateX(0%)";
-
-            } else {
-                for (let x = 0; x < linkMenu.length; x++) {
-                    linkMenu[x].style.transition = "all 0.3s"
-                    linkMenu[x].style.opacity = "0"
-                    linkMenu[x].style.fontSize = "10px"
-                    setTimeout(() => {
-                        linkMenu[x].style.display = "none"
-                    }, 100)
-
-                }
-                for (let x = 0; x < hamburguerCentered.length; x++) {
-                    setTimeout(() => {
-                        hamburguerCentered[x].style.display = "flex"
-                        hamburguerCentered[x].style.justifyContent = "center"
-                        hamburguerCentered[x].style.alignItems = "center"
-                    }, 100)
-
-                }
-                navHorizontal.style.width = "75px";
-                divHeaderNav.style.width = "";
-            }
-
-            hamburguerMode = 1;
-        } else {
-
-            if (queryMenu) {
-                navHorizontal.style.transform = "translateX(-100%)";
-            } else {
-                for (let x = 0; x < linkMenu.length; x++) {
-                    navHorizontal.style.width = "";
-                    linkMenu[x].style.transition = "all  0.3s"
-                    linkMenu[x].style.opacity = "1"
-                    linkMenu[x].style.fontSize = ""
-                    setTimeout(() => {
-                        linkMenu[x].style.setProperty('display', 'block', 'important');
-
-                    }, 100)
-
-                }
-                for (let x = 0; x < hamburguerCentered.length; x++) {
-                    setTimeout(() => {
-                        /* hamburguerCentered[x].style.setProperty('display', 'unset', 'important'); */
-                        hamburguerCentered[x].style.cssText = "justify-content: unset !important";
-
-
-
-                        // hamburguerCentered[x].style.display = ""
-                        // hamburguerCentered[x].style.justifyContent = ""
-                    }, 100)
-                }
-                for (let x = 0; x < liHamburguerCentered.length; x++) {
-                    setTimeout(() => {
-                        liHamburguerCentered[x].style.setProperty('display', 'unset', 'important');
-                        liHamburguerCentered[x].style.setProperty('justifyContent', 'unset', 'important');
-                        liHamburguerCentered[x].style.setProperty('alignItems', 'unset', 'important');
-
-                        // hamburguerCentered[x].style.display = ""
-                        // hamburguerCentered[x].style.justifyContent = ""
-                    }, 100)
-                }
-
-                navHorizontal.style.width = "240px";
-                divHeaderNav.style.width = "calc(100% - 30px)";
-
-            }
-            hamburguerMode = 0;
-
-        }
-    }
     useEffect(() => {
         window.addEventListener("click", function (event) {
             let divSelect = document.querySelectorAll(".div-select")
@@ -353,78 +244,19 @@ export const Menu = (data) => {
         }
     }
 
-    useEffect(() => {
-        if (queryMenu) {
-            stateMenu()
-            hamburguerMode = 0
-        }
-    }, [queryMenu])
+    /*     useEffect(() => {
+            if (queryMenu) {
+                stateMenu()
+                setHamburguerMode(0)
+            }
+        }, [queryMenu, hamburguerMode]) */
     useEffect(() => {
         getAsignaciones();
-
     }, [])
     useEffect(() => {
-        let ulContentLi = document.getElementById("ulContentLi")
-        setTimeout(() => {
-            resizeMenuToOverFlowUl()
-        }, 100);
-        function resizeMenuToOverFlowUl() {
-            if (ulContentLi.scrollHeight > ulContentLi.clientHeight) {
-                divHeaderNav.style.width = "calc(100%)"
-                footerNav.style.width = "calc(100%)"
-            } else {
-                divHeaderNav.style.width = ""
-                footerNav.style.width = ""
-            }
-        }
-
         getUser();
-
-
-        window.addEventListener("resize", function () {
-            resizeMenuToOverFlowUl()
-        })
-        /*  stateMenu() */
-        let iconHamburguer = document.getElementById("iconHamburguer")
-
-        iconHamburguer.addEventListener("click", function () {
-            stateMenu();
-        })
-
     }, [responseValidate])
-    useEffect(() => {
-        let iconHamburguer = document.getElementById("iconHamburguer")
 
-        window.addEventListener("resize", resizeMenu)
-        function resizeMenu() {
-            console.log(queryMenu)
-
-            if (document.body.scrollWidth <= 610) {
-                if (!queryMenu) {
-                    setQueryMenu(true)
-                    resizeMenu()
-                }
-            } else {
-                if (queryMenu) {
-                    setQueryMenu(false)
-                    resizeMenu()
-                }
-            }
-
-        }
-        if (iconHamburguer) {
-            iconHamburguer.addEventListener("click", stateMenu)
-
-            /*  stateMenu() */
-        }
-        return () => {
-            window.removeEventListener("resize", resizeMenu)
-            if (iconHamburguer) {
-                iconHamburguer.removeEventListener("click", stateMenu)
-            }
-        }
-
-    }, [queryMenu])
 
     function darkMode() {
         data.changeDarkMode(!data.valueDarkMode)
@@ -503,15 +335,13 @@ export const Menu = (data) => {
                 }
             }
             function setItemDivFormular(event) {
-                console.log("operadorrrrrrrrrrrrrrrrrrrrrrr")
-
                 let divIconDelete = document.getElementById("divIconDelete");
                 const bbox = divCrearFormulaConst.getBoundingClientRect();
                 const operadorFocusBbox = operadorFocus.getBoundingClientRect();
                 const bboxDelete = divIconDelete.getBoundingClientRect();
                 const div = document.createElement("div")
 
-                if ((((((operadorFocusBbox.top <= bboxDelete.top) && ((operadorFocusBbox.top + operadorFocus.scrollHeight + 4) >= bboxDelete.top))) || ((operadorFocusBbox.top + operadorFocus.scrollHeight + 4) >= (bboxDelete.top + divIconDelete.scrollHeight)) && (operadorFocusBbox.top <= (bboxDelete.top + divIconDelete.scrollHeight)))) && (((operadorFocusBbox.left <= bboxDelete.left) && ((operadorFocusBbox.left + operadorFocus.scrollWidth + 4) >= bboxDelete.left)) || (((operadorFocusBbox.left + operadorFocus.scrollWidth + 4) >= (bboxDelete.left + divIconDelete.scrollWidth)) && (operadorFocusBbox.left <= (bboxDelete.left + divIconDelete.scrollWidth))))) {
+                if ((((((operadorFocusBbox.top <= bboxDelete.top) && ((operadorFocusBbox.top + operadorFocus.scrollHeight + 4) >= bboxDelete.top))) || ((operadorFocusBbox.top + operadorFocus.scrollHeight + 4) >= (bboxDelete.top + divIconDelete.scrollHeight)) && (operadorFocusBbox.top <= (bboxDelete.top + divIconDelete.scrollHeight)))) && (((operadorFocusBbox.left <= bboxDelete.left) && ((operadorFocusBbox.left + operadorFocus.scrollWidth + 4) >= bboxDelete.left)) || (((operadorFocusBbox.left + operadorFocus.scrollWidth + 4) >= (bboxDelete.left + divIconDelete.scrollWidth)) && (operadorFocusBbox.left <= (bboxDelete.left + divIconDelete.scrollWidth)))) || (((operadorFocusBbox.left >= bboxDelete.left) && ((operadorFocusBbox.left + operadorFocus.scrollWidth) <= (bboxDelete.left + divIconDelete.scrollWidth))) && ((operadorFocusBbox.top >= bboxDelete.top) && ((operadorFocusBbox.top + operadorFocus.scrollHeight) <= (bboxDelete.top + divIconDelete.scrollHeight)))) || ((operadorFocusBbox.left >= bboxDelete.left) && ((operadorFocusBbox.left + operadorFocus.scrollWidth) <= (bboxDelete.left + divIconDelete.scrollWidth))) && (((((operadorFocusBbox.top <= bboxDelete.top) && ((operadorFocusBbox.top + operadorFocus.scrollHeight + 4) >= bboxDelete.top))) || ((operadorFocusBbox.top + operadorFocus.scrollHeight + 4) >= (bboxDelete.top + divIconDelete.scrollHeight)) && (operadorFocusBbox.top <= (bboxDelete.top + divIconDelete.scrollHeight))))) {
                     divIconDelete.classList.add("div-icon-delete-focus")
                     deleteStatus = true
                 } else {
@@ -566,7 +396,7 @@ export const Menu = (data) => {
                     const operadorFocusBbox = operadorFocusAdd.getBoundingClientRect();
                     const bboxDelete = divIconDelete.getBoundingClientRect();
 
-                    if ((((((operadorFocusBbox.top <= bboxDelete.top) && ((operadorFocusBbox.top + operadorFocusAdd.scrollHeight + 4) >= bboxDelete.top))) || ((operadorFocusBbox.top + operadorFocusAdd.scrollHeight + 4) >= (bboxDelete.top + divIconDelete.scrollHeight)) && (operadorFocusBbox.top <= (bboxDelete.top + divIconDelete.scrollHeight)))) && (((operadorFocusBbox.left <= bboxDelete.left) && ((operadorFocusBbox.left + operadorFocusAdd.scrollWidth + 4) >= bboxDelete.left)) || (((operadorFocusBbox.left + operadorFocusAdd.scrollWidth + 4) >= (bboxDelete.left + divIconDelete.scrollWidth)) && (operadorFocusBbox.left <= (bboxDelete.left + divIconDelete.scrollWidth))))) {
+                    if ((((((operadorFocusBbox.top <= bboxDelete.top) && ((operadorFocusBbox.top + operadorFocusAdd.scrollHeight + 4) >= bboxDelete.top))) || ((operadorFocusBbox.top + operadorFocusAdd.scrollHeight + 4) >= (bboxDelete.top + divIconDelete.scrollHeight)) && (operadorFocusBbox.top <= (bboxDelete.top + divIconDelete.scrollHeight)))) && (((operadorFocusBbox.left <= bboxDelete.left) && ((operadorFocusBbox.left + operadorFocusAdd.scrollWidth + 4) >= bboxDelete.left)) || (((operadorFocusBbox.left + operadorFocusAdd.scrollWidth + 4) >= (bboxDelete.left + divIconDelete.scrollWidth)) && (operadorFocusBbox.left <= (bboxDelete.left + divIconDelete.scrollWidth)))) || (((operadorFocusBbox.left >= bboxDelete.left) && ((operadorFocusBbox.left + operadorFocusAdd.scrollWidth) <= (bboxDelete.left + divIconDelete.scrollWidth))) && ((operadorFocusBbox.top >= bboxDelete.top) && ((operadorFocusBbox.top + operadorFocusAdd.scrollHeight) <= (bboxDelete.top + divIconDelete.scrollHeight)))) || ((operadorFocusBbox.left >= bboxDelete.left) && ((operadorFocusBbox.left + operadorFocusAdd.scrollWidth) <= (bboxDelete.left + divIconDelete.scrollWidth))) && (((((operadorFocusBbox.top <= bboxDelete.top) && ((operadorFocusBbox.top + operadorFocusAdd.scrollHeight + 4) >= bboxDelete.top))) || ((operadorFocusBbox.top + operadorFocusAdd.scrollHeight + 4) >= (bboxDelete.top + divIconDelete.scrollHeight)) && (operadorFocusBbox.top <= (bboxDelete.top + divIconDelete.scrollHeight))))) {
                         divIconDelete.classList.add("div-icon-delete-focus")
                         deleteStatus = true
                     } else {
@@ -930,7 +760,6 @@ export const Menu = (data) => {
 
                             let tokens = [];
                             let match;
-                            console.log(variableFocus, variableFocus["formula"])
                             const formula = (variableFocus["formula"] ? variableFocus["formula"] : "").toString();
                             if (variableFocus["formula"]) {
                                 while ((match = regexFormula.exec(formula)) !== null) {
@@ -948,7 +777,6 @@ export const Menu = (data) => {
             }
         }
         function setFormulaVariable(element) {
-
             let div = document.createElement("div")
             div.classList.add("div-operador-add")
 
@@ -1008,7 +836,7 @@ export const Menu = (data) => {
                 }
             }
         }
-    }, [variableFocus])
+    }, [globalInputsValue, globalInputsValue["tipo_valor"]])
     function getInfoVariable(variable, index) {
 
 
@@ -1082,7 +910,195 @@ export const Menu = (data) => {
             console.log("Error: " + e)
         }
     }
+    function resizeMenu() { 
+        setHamburguerMode(prevState => {
+            let linkMenu = document.querySelectorAll(".change-hamburguer-quit");
+            let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
+            let navHorizontal = document.getElementById("navHorizontal");
+            let headerNav = document.getElementById("headerNav");
 
+            if (navHorizontal) {
+                navHorizontal.style.visibility = "visible"  
+            }
+            if (prevState == 1) {
+                if (document.body.scrollWidth <= 610) {
+                    if (navHorizontal) {
+                        navHorizontal.style.transform = "translateX(-100%)";
+                    }
+                } else {
+                    if (headerNav) {
+                        headerNav.style.justifyContent = ""
+                        headerNav.style.width = ""
+                    }
+                    for (let x = 0; x < linkMenu.length; x++) {
+                        linkMenu[x].style.transition = "all  0.3s"
+                        linkMenu[x].style.opacity = "0"
+                        linkMenu[x].style.fontSize = "10px"
+                        setTimeout(() => {
+                            linkMenu[x].style.display = "none"
+
+                        }, 100)
+
+                    }
+                    for (let x = 0; x < hamburguerCentered.length; x++) {
+                        setTimeout(() => {
+                            hamburguerCentered[x].style.display = "flex"
+                            hamburguerCentered[x].style.justifyContent = "center"
+                        }, 100)
+                    }
+                    if (navHorizontal) {
+                        navHorizontal.style.width = "75px";
+                    }
+                }
+                return 0
+            } else {
+                if (document.body.scrollWidth <= 610) {
+                    if (navHorizontal) {
+                        navHorizontal.style.transform = "translateX(0%)";
+                    }
+                } else {
+                    for (let x = 0; x < linkMenu.length; x++) {
+                        navHorizontal.style.width = "";
+                        linkMenu[x].style.transition = "all  0.3s"
+                        linkMenu[x].style.opacity = "1"
+                        linkMenu[x].style.fontSize = ""
+                        setTimeout(() => {
+                            linkMenu[x].style.display = "block"
+                        }, 100)
+                    }
+                    for (let x = 0; x < hamburguerCentered.length; x++) {
+                        setTimeout(() => {
+                            hamburguerCentered[x].style.display = ""
+                            hamburguerCentered[x].style.justifyContent = ""
+                        }, 100)
+                    }
+                    if (navHorizontal) {
+                        navHorizontal.style.width = "240px";
+                    }
+                }
+                return 1
+            }
+        })
+    }
+    useEffect(() => {
+        if (queryMenu) {
+            setHamburguerMode(1)
+            resizeMenu()
+        }
+    }, [location.pathname])
+    useEffect(() => {
+        let divHeaderNav = document.getElementById("divHeaderNav")
+        let navVertical = document.getElementById("navVertical");
+        let headerNav = document.getElementById("headerNav");
+        let navHorizontal = document.getElementById("navHorizontal");
+        let linkMenu = document.querySelectorAll(".change-hamburguer-quit");
+        let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
+
+        if (queryMenu == true) {
+            if (navHorizontal) {
+                navHorizontal.style.height = "calc(100% - " + (navVertical.scrollHeight + "px") + " - " + (document.body.scrollWidth <= 140 ? 10 + "vw" : 50 + "px") + ")"
+                navHorizontal.style.width = "100%"
+            }
+            if (navVertical) {
+                /* navVertical.insertBefore(divHeaderNav, navVertical.children[0]) */
+                headerNav.style.width = "max-content"
+                navHorizontal.style.gridTemplateRows = "1fr auto"
+            }
+            for (let x = 0; x < linkMenu.length; x++) {
+                linkMenu[x].style.transition = "all  0.3s"
+                linkMenu[x].style.opacity = "1"
+                linkMenu[x].style.fontSize = ""
+                setTimeout(() => {
+                    linkMenu[x].style.display = "block"
+                }, 100)
+            }
+
+            setHamburguerMode(1)
+            resizeMenu()
+            if (navHorizontal) {
+                setTimeout(() => {
+                    navHorizontal.style.visibility = "visible"
+                }, 500)
+            }
+        } else {
+            for (let x = 0; x < hamburguerCentered.length; x++) {
+                hamburguerCentered[x].style.display = "flex"
+                hamburguerCentered[x].style.justifyContent = "center"
+                hamburguerCentered[x].style.alignItems = "center"
+            }
+        }
+    }, [user])
+    useEffect(() => {
+
+        if (refIconHamburguer.current) {
+            function resizeMenuFunction() {
+                let divHeaderNav = document.getElementById("divHeaderNav")
+                let navVertical = document.getElementById("navVertical");
+                let headerNav = document.getElementById("headerNav");
+                let navHorizontal = document.getElementById("navHorizontal");
+                let linkMenu = document.querySelectorAll(".change-hamburguer-quit");
+                let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
+
+                if (document.body.scrollWidth <= 610) {
+                    if (navHorizontal) {
+                        navHorizontal.style.height = "calc(100% - " + (navVertical.scrollHeight + "px") + " - " + (document.body.scrollWidth <= 140 ? 10 + "vw" : 50 + "px") + ")"
+                    }
+                    if (queryMenu == false) {
+                        if (divHeaderNav && navVertical) {
+                            /* navVertical.insertBefore(divHeaderNav, navVertical.children[0]) */
+                            headerNav.style.width = "max-content"
+                            navHorizontal.style.gridTemplateRows = "1fr auto"
+                            navHorizontal.style.width = "100%"
+                        }
+                        for (let x = 0; x < linkMenu.length; x++) {
+                            linkMenu[x].style.transition = "all  0.3s"
+                            linkMenu[x].style.opacity = "1"
+                            linkMenu[x].style.fontSize = ""
+                            setTimeout(() => {
+                                linkMenu[x].style.display = "block"
+                            }, 100)
+                        }
+                        for (let x = 0; x < hamburguerCentered.length; x++) {
+                            setTimeout(() => {
+                                hamburguerCentered[x].style.display = ""
+                                hamburguerCentered[x].style.justifyContent = ""
+                            }, 100)
+                        }
+                        setHamburguerMode(1)
+                        resizeMenu()
+                        setQueryMenu(true)
+                    }
+                } else {
+                    if (queryMenu == true) {
+
+                        if (navVertical && navHorizontal) {
+                            navHorizontal.style.transform = "translateX(0%)";
+                            headerNav.style.width = ""
+                            if (navHorizontal) {
+                                navHorizontal.style.height = ""
+                            }
+                            navHorizontal.style.gridTemplateRows = ""
+                            navHorizontal.style.width = "100%"
+                        }
+                        setHamburguerMode(1)
+                        resizeMenu()
+                        setQueryMenu(false)
+                    }
+                }
+            }
+            if (refIconHamburguer.current) {
+                refIconHamburguer.current.addEventListener("click", resizeMenu)
+            }
+            window.addEventListener("resize", resizeMenuFunction)
+
+            return () => {
+                if (refIconHamburguer.current) {
+                    refIconHamburguer.current.removeEventListener("click", resizeMenu)
+                }
+                window.removeEventListener("resize", resizeMenuFunction)
+            }
+        }
+    }, [refIconHamburguer.current, hamburguerMode, queryMenu])
     return (
 
         <div>
@@ -1099,23 +1115,24 @@ export const Menu = (data) => {
                             <img className="img-nav" src={!data.valueDarkMode ? "/img/fondoMenuVertical2.webp" : "/public/img/imgDarkMenu.jpg"} alt="" />
 
                         </div>
-                        <div id="divHeaderNav" className="div-header-nav">
-                            {!queryMenu ? <div id="headerNav" className="header-nav ">
-                                <img className="img-logo-nav change-hamburguer-quit" src="../../public/img/logo-coffee-sensory.png" alt="" />
+                        {!queryMenu ?
+                            <div id="divHeaderNav" className="div-header-nav">
 
-                                <h2 className="title-header-nav-horizontal change-hamburguer-quit">Dashboard</h2>
-                                <svg id="iconHamburguer" className="icon-hamburguer-li-nav-horizontal icon-li-nav-horizontal" version="1.0" viewBox="0 0 1024.000000 1024.000000" preserveAspectRatio="xMidYMid meet">
+                                <div id="headerNav" className="header-nav hamburguer-centered">
+                                    <svg ref={refIconHamburguer} id="iconHamburguer" className="icon-hamburguer-li-nav-horizontal icon-li-nav-horizontal" version="1.0" viewBox="0 0 1024.000000 1024.000000" preserveAspectRatio="xMidYMid meet">
 
-                                    <g transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)" stroke="none">
-                                        <path d="M1105 8301 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
-                                        <path d="M1105 5741 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
-                                        <path d="M1105 3181 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
-                                    </g>
-                                </svg>
+                                        <g transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)" stroke="none">
+                                            <path d="M1105 8301 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
+                                            <path d="M1105 5741 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
+                                            <path d="M1105 3181 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
+                                        </g>
+                                    </svg>
+                                    <h2 className="title-header-nav-horizontal change-hamburguer-quit">Dashboard</h2>
+                                    <img className="img-logo-nav change-hamburguer-quit" src="../../public/img/logo-coffee-sensory.png" alt="" />
+                                </div>
                             </div> : ""}
-                        </div>
                         <ul id="ulContentLi">
-                            <li className="li-hamburguer-centered hamburguer-centered line-nav-li">
+                            <li className="li-hamburguer-centered  line-nav-li">
                                 <h4 className="title-li change-hamburguer-quit">Principal</h4>
                                 <ul>
                                     <Link title="Inicio" to={"/dashboard"} onClick={() => { selectedLi("/dashboard") }} className={`link-memu-horizontal  ${liSelected == "/dashboard" ? "selected-li" : ""}`}>
@@ -1132,7 +1149,7 @@ export const Menu = (data) => {
                                     </Link>
                                 </ul>
                             </li>
-                            <li className="li-hamburguer-centered hamburguer-centered">
+                            <li className="li-hamburguer-centered ">
                                 <h4 className="title-li change-hamburguer-quit">Registros</h4>
                                 <ul>
 
@@ -1295,19 +1312,21 @@ export const Menu = (data) => {
                             </ul>
                         </div>
                     </nav >
-                    <nav className="nav-main nav-vertical" >
-                        {queryMenu ? <div className="header-nav hamburguer-centered">
+                    <nav id="navVertical" className="nav-main nav-vertical" >
+                        {queryMenu ?
+                            <div className="divHeaderNav">
+                                <div id="headerNav" className="header-nav hamburguer-centered">
 
-                            <svg id="iconHamburguer" className="icon-hamburguer-li-nav-horizontal icon-li-nav-horizontal" version="1.0" viewBox="0 0 1024.000000 1024.000000" preserveAspectRatio="xMidYMid meet">
+                                    <svg ref={refIconHamburguer} id="iconHamburguer" className="icon-hamburguer-li-nav-horizontal icon-li-nav-horizontal" version="1.0" viewBox="0 0 1024.000000 1024.000000" preserveAspectRatio="xMidYMid meet">
 
-                                <g transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)" stroke="none">
-                                    <path d="M1105 8301 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
-                                    <path d="M1105 5741 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
-                                    <path d="M1105 3181 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
-                                </g>
-                            </svg>
-                        </div> : ""}
-                        <div></div>
+                                        <g transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)" stroke="none">
+                                            <path d="M1105 8301 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
+                                            <path d="M1105 5741 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
+                                            <path d="M1105 3181 c-222 -64 -392 -238 -449 -458 -21 -80 -21 -246 0 -327 43 -167 168 -325 320 -404 153 -79 -244 -72 4144 -72 4388 0 3991 -7 4144 72 109 57 207 155 263 263 55 107 73 181 73 305 0 124 -18 198 -73 305 -56 108 -154 206 -262 262 -156 80 262 73 -4151 72 -3726 0 -3952 -1 -4009 -18z" />
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div> : ""}
                         <div className="seccion-usuario-notificaciones">
 
                             {Object.keys(user).length > 0 ? (
@@ -1452,7 +1471,6 @@ export const Menu = (data) => {
                                     <div className="secccion-notificaciones">
                                         <svg onClick={(e) => { /* obtenerNotificaciones() */; /* verNotificaciones() */
                                             const father = e.target.closest(".secccion-notificaciones");
-                                            console.log(father)
                                             if (father) {
                                                 let divChild = father.querySelector(".child-div-modal")
                                                 if (divChild) {
@@ -1477,7 +1495,6 @@ export const Menu = (data) => {
                                                         {asignaciones.length > 0 ? (
 
                                                             asignaciones.map((asignacion, value) => {
-                                                                console.log(asignaciones, "aaaaaaaaaaaaaaaaaaaaaaaaaa")
                                                                 let procedureNormal = true
                                                                 if (asignacion.proceso && asignacion.estado) {
                                                                     if (asignacion.proceso == "practica" && asignacion.estado == 5) {
@@ -1597,7 +1614,7 @@ export const Menu = (data) => {
 
             {
                 modalConfiguracionFormatoFisico ?
-                    <GlobalModal statusModal={setModalConfiguracionFormatoFisico} content={
+                    <GlobalModal class={"div-modal-configuracion-variables-fisicas"} statusModal={setModalConfiguracionFormatoFisico} content={
                         <div ref={refModalConfiguracionFormatoFisico} id="modalConfiguracionVariablesFisico">
                             <h2>Crear Fórmula</h2>
                             <div className="div-crear-formula-main">
@@ -1783,7 +1800,7 @@ export const Menu = (data) => {
                                                                     <g><g><path d="M83.5,138.5c0,0,0-0.6,0-1.1c0-0.5-0.6-0.6-0.6-0.6s-0.9,0-1.3,0s-0.6,0.6-0.6,0.6v1.1h-0.6c0,0,0,1.8,0,2.2s0.6,0.6,0.6,0.6s2,0,2.4,0c0.5,0,0.6-0.6,0.6-0.6v-2.2H83.5z M82.7,139.6l-0.3,0.3v0.6h-0.3v-0.6l-0.3-0.3v-0.3l0.3-0.3h0.3l0.3,0.3V139.6z M83,138.5h-1.3v-0.8c0,0,0.2-0.3,0.6-0.3h0.3c0.4,0,0.6,0.3,0.6,0.3L83,138.5L83,138.5z" /><path d="M199.1,241.8L128,170.7l-71.1,71.1c-17.7,17.7-60.3-25-42.7-42.7L85.3,128L14.2,56.9c-17.7-17.7,25-60.3,42.6-42.7L128,85.3l71.1-71.1c17.7-17.7,60.3,25,42.7,42.7L170.7,128l71.1,71.1C259.4,216.8,216.8,259.4,199.1,241.8z" /></g></g>
                                                                 </svg>
                                                             </div>
-                                                            <div>
+                                                            <div className="div-input-elegir-variable">
                                                                 <GlobalInputs
                                                                     input={setGlobalInputsValue}
                                                                     value={globalInputsValue}
@@ -1845,14 +1862,16 @@ export const Menu = (data) => {
                                                         </div>
                                                         <h3>Evaluar</h3>
                                                         <div className="div-content-formula">
-                                                            <div ref={divEvaluarFormula} className="div-crear-formula" >
+                                                            <div className="div-content-ejecutar-formula">
+                                                                <div ref={divEvaluarFormula} className="div-crear-formula" >
 
+                                                                </div>
+                                                                <button className="button-ejecutar-formula" onClick={() => { getResultadoFormula() }}>Ejecutar</button>
                                                             </div>
                                                             <div className="resultado-formula">
                                                                 <svg version="1.1" x="0px" y="0px" viewBox="0 0 256 256" enableBackground="new 0 0 256 256"><g><g><g><path d="M31.9,55.9c-10.3,2.3-18.3,10.2-21,20.9c-1.6,6.3-0.9,12.8,2.2,19c2.2,4.5,7.8,10.2,12.1,12.3c6.8,3.4-1.8,3.1,103.3,3.1h94.3l3.7-1.2c14.1-4.8,22.3-19.4,18.7-33.2c-2.4-9.5-9-16.8-18-20.1l-3.5-1.2l-94.5-0.1C51.8,55.3,34.1,55.4,31.9,55.9z"></path><path d="M34.4,145.1c-6.5,0.8-12.3,3.9-17.1,9.1C3.8,169,9.9,192.5,29,199.5l3.3,1.2H128h95.7l3.3-1.2c9.2-3.4,15.7-10.7,18.2-20.2c3.6-13.8-4.7-28.4-18.7-33.2l-3.7-1.2l-92.7,0C79.1,144.8,36.1,144.9,34.4,145.1z"></path></g></g></g></svg>
                                                                 <h4 id="resultadoFormula"></h4>
                                                             </div>
-                                                            <button className="button-ejecutar-formula" onClick={() => { getResultadoFormula() }}>Ejecutar</button>
 
                                                         </div>
                                                         <h3>LLenar</h3>
@@ -1893,7 +1912,6 @@ export const Menu = (data) => {
                             {variableFocus ? Object.keys(variableFocus).length > 0 ? <div className="div-footer">
                                 <button onClick={() => { updateVariable() }} className="input-register">Guardar</button>
                             </div> : "" : ""}
-
                         </div>
                     } />
                     : ""

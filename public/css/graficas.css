@@ -3,6 +3,7 @@
    padding: 0;
  }
 
+  
  #graficos .BoxMain { 
    width: 100%;
    height: 40vh;
@@ -12,7 +13,7 @@
  }  
 
  #graficos h2 {
-   color: white;
+   color: white; 
    /* text-transform: uppercase; */
    text-align: center;
    font-size: bolder;

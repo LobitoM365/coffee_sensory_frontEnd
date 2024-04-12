@@ -25,8 +25,14 @@ export const RegistrosUsuarios = () => {
     let idUsuarioCambiarEstado = 0;
     const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
         "buttons": {
-            "add": true,
-            "reporte": true,
+            "add": {
+                "status": true,
+                "rol": ["administrador"]
+            },
+            "reporte": {
+                "status": true,
+                "rol": ["administrador"]
+            },
         }
     });
     let [inputsForm, setInputsForm] = useState(

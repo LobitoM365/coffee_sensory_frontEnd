@@ -86,7 +86,10 @@
 
 @media screen and (max-width : 900px) {
     #mainGlobalForm .div-content-form {
-        max-width: calc(100% - 60px);
-        padding: 20px;
+        max-width: calc(100% - 30px);
+        padding: 15px;
     }
+
+    
 }
+

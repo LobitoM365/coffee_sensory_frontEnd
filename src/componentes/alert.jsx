@@ -5,7 +5,7 @@ import { type } from "jquery";
 export const Alert = (data) => {
 
     return (
-        <>
+        <> 
             {data.statusAlert ?
                 <div>
 
@@ -89,7 +89,6 @@ export const Alert = (data) => {
                                                         if (typeof functionProcedure == "function") {
                                                             functionProcedure(valueFunctionProcedure)
                                                         } else if (location != "") {
-                                                            console.log(location, "locationnnnn")
                                                             location.href = locationProcedure
                                                         }
                                                     }} style={{ background: color }} className="input-alert">{referencia}</button>

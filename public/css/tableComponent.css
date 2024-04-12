@@ -645,10 +645,18 @@
     flex-direction: unset;
     gap: 30px;
     align-items: center;
+    display: flex;
+}
+
+#mainTablas .div-input-limit-generate-documento input:focus {
+    outline: none;
 }
 
 #mainTablas .div-input-limit-generate-documento input {
     width: unset;
+    padding: 5px;
+    border: 1px solid rgb(202, 202, 202);
+    border-radius: 4px;
 }
 
 #mainTablas .div-hasta-limit-generate-documento h4 {
@@ -661,6 +669,8 @@
     color: white;
     border-radius: 4px;
     font-weight: bolder;
+    width: max-content;
+    padding: 5px 10px;
 }
 
 #mainTablas .div-td-inputs-table {
@@ -947,6 +957,6 @@
 }
 
 
-#mainTablas .estado-no-pointer{
+#mainTablas .estado-no-pointer {
     cursor: unset !important;
 }

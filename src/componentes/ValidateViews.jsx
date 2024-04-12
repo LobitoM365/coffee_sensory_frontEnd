@@ -9,7 +9,6 @@ export const validateViews = () => {
             try {
 
                 const response = await Api.post('auth/protectViews', {});
-                console.log(response, "ressssssssssssssssss")
                 if (response.data.permission == false) {
 
                 } else if (!response.data.authorized) {
@@ -26,7 +25,6 @@ export const validateViews = () => {
                 }
                 setResponse(response);
             } catch (error) {
-                console.log("errooooooooooooo " + error)
                 setResponse(error);
             }
         };

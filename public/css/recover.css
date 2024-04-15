@@ -4,7 +4,7 @@
 }
 
 .main-container {
-    background-image: url('../img/recover/recover-size.jpeg');
+    background-image: url('../img/recover/recover-size.jpeg') !important;
     background-size: cover;
     background-repeat: no-repeat;
 }

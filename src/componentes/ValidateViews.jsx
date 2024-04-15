@@ -9,7 +9,7 @@ export const validateViews = () => {
             try {
 
                 const response = await Api.post('auth/protectViews', {});
-                if (response.data.permission == false) {
+                /* if (response.data.permission == false) {
 
                 } else if (!response.data.authorized) {
                     if (location.pathname.includes('dashboard')) {
@@ -22,7 +22,7 @@ export const validateViews = () => {
                     if (location.pathname === '/login') {
                         window.history.go(-1);
                     }
-                }
+                } */
                 setResponse(response);
             } catch (error) {
                 setResponse(error);

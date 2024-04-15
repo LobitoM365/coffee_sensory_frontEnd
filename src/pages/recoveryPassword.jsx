@@ -2,6 +2,7 @@ import Api from "../componentes/Api"
 import React, { useEffect, useState } from 'react';
 import { Alert } from "../componentes/alert";
 import { useLocation } from 'react-router-dom';
+import "../../public/css/login.css"
 
 export const RecoveryPassword = () => {
     const [email, setEmail] = useState({});
@@ -90,8 +91,8 @@ export const RecoveryPassword = () => {
     }
 
     return (
-        <div className="main-container">
-            <link rel="stylesheet" href="../../public/css/login.css" />
+        <div id="mainLogin" className="main-container">
+            
             <link rel="stylesheet" href="../../public/css/recover.css" />
             <div className="bg-img">
 

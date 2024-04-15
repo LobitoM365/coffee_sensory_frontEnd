@@ -63,7 +63,6 @@ export const Menu = (data) => {
                         }, audio.duration * 1000);
                     });
                 }
-                alert("xd")
                 if (message) {
                     if (Array.isArray(message)) {
                         /* setAsignaciones(prevState => [...prevState, message]) */
@@ -624,15 +623,16 @@ export const Menu = (data) => {
                 div.classList.add("div-input-operar")
                 div.innerHTML = '<div class="" style="top: 471.5px; left: 624.5px;"><div class="item-operador-formula"></div><h4 class="h4-variable-formula signo-formula" data-signo="' + variable["nombre"] + '">V_' + (index + 1) + '</h4></div>';
                 divCrearFormula.current.appendChild(div)
-                evaluarFormula()
-
-
+                console.log(divCrearFormula.current, "cureeeeeeeeeeeeeeeeeeeeeeeeeeent")
+                /* evaluarFormula() */
             }
         }
     }
     pageLoad[locationPath.pathname] = false
 
     function evaluarFormula() {
+        console.log(divCrearFormula.current, "cureeeeeeeeeeeeeeeeeeeeeeeeeeent")
+
         if (divEvaluarFormula.current != null) {
             if (divLLenarCamporFormulario) {
                 if (divLLenarCamporFormulario.current) {
@@ -839,7 +839,7 @@ export const Menu = (data) => {
                 }
             }
         }
-    }, [globalInputsValue, globalInputsValue["tipo_valor"]])
+    }, [variableFocus, globalInputsValue["tipo_valor"]])
     function getInfoVariable(variable, index) {
 
 

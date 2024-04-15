@@ -93,6 +93,24 @@ export const GenerateReporteAnalisis = (data) => {
                             },
                         }
                     )
+                } else if (response.data.data[0].proceso != "certificar") {
+                    setStatusReporte(false)
+                    setdataAlert(
+                        {
+                            "status": "false",
+                            "description": "El análisis debe ser certificado para poder generar el reporte.",
+                            "tittle": "Inténtalo más tarde.",
+                            "buttons": {
+                                "ok": {
+                                    "referencia": "ok",
+                                    /* "color" : "green", */
+                                    "continue": {
+                                        "location": "/dashboard/analisis/registros"
+                                    }
+                                }
+                            },
+                        }
+                    )
                 } else {
                     setStatusReporte(true)
                     const filterMuestra = {

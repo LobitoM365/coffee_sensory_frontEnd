@@ -1500,7 +1500,7 @@
     }
 
     #mainModalConfifuraciones .div-item-cofiguracion {
-        width: calc(100% - 40px);
+        max-width: calc(100% - 40px);
     }
 }
 
@@ -1517,14 +1517,17 @@
 }
 
 @media screen and (max-width : 140px) {
-    #navHorizontal .icon-li-dark-mode-nav-horizontal{
+    #navHorizontal .icon-li-dark-mode-nav-horizontal {
         width: 10vw !important;
     }
+
     #navHorizontal .icon-li-nav-horizontal {
         /* display: none !important; */
         width: 10vw !important;
     }
-    #mainMenu .nav-horizontal ul li ul li, .nav-main .footer-nav li{
+
+    #mainMenu .nav-horizontal ul li ul li,
+    .nav-main .footer-nav li {
         gap: 4vw !important;
     }
 
@@ -1546,16 +1549,18 @@
     .nav-horizontal {
         padding: 5vw 0vw;
     }
-    #navHorizontal .logo-menu{
-        width:  40vw !important;
+
+    #navHorizontal .logo-menu {
+        width: 40vw !important;
     }
 }
 
 @media screen and (max-width : 100px) {
-    #mainMenu .nav-main .footer-nav ul{
+    #mainMenu .nav-main .footer-nav ul {
         width: calc(100% - 20vw);
         border-width: 0.4vw;
     }
+
     #mainMenu .nav-main .line-nav-li {
         border-width: 0.4vw;
     }

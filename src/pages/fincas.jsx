@@ -200,7 +200,7 @@ export const Fincas = (userInfo) => {
             },
             departamentos_id: {
                 type: "select",
-                referencia: "Departamentos",
+                referencia: "Departamento",
                 values: ["nombre"],
                 key: "id",
                 upper_case: true,

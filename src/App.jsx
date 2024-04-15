@@ -34,6 +34,7 @@ import { Formatos } from './pages/formatos.jsx';
 import { contains } from 'jquery';
 import { Cell } from 'recharts';
 import "../public/css/internalServerError.css"
+import { Veredas } from './pages/veredas.jsx';
 
 export default function App(data) {
   const [statusAlert, setStatusAlert] = useState(false);
@@ -219,6 +220,7 @@ export default function App(data) {
                   <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} /> : ""} />
                   <Route path='municipios/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Municipios} /> : ""} />
                   <Route path='variedades/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Variedades} /> : ""} />
+                  <Route path='veredas/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Veredas} /> : ""} />
                   <Route path='muestras/registros' element={<Muestras userInfo={userInfo} />} />
                   <Route path='lotes/registros' element={<Lotes userInfo={userInfo} />} />
                   <Route path='muestras/verRegistros' element={<VerRegistros userInfo={userInfo} />} />

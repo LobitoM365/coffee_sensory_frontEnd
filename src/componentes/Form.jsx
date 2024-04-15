@@ -394,6 +394,7 @@ export const Form = forwardRef((data, ref) => {
                                                                                         selectsValues[key] = value;
                                                                                         dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
                                                                                     }
+                                                                                    
                                                                                 }
                                                                                 return <h4 key={indexSelect} onClick={(e) => {
                                                                                     clearOptionsSelect(key);

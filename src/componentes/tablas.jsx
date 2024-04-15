@@ -7,14 +7,27 @@ import { GlobalInputs } from './globalInputs.jsx';
 import { GlobalModal } from './globalModal.jsx';
 import "../../public/css/tableComponent.css"
 
+
 export const formatDate = (data) => {
 
     let date = new Date(data);
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     let day = date.getDate();
-
-    return `${day < 10 ? '0' + day : day} / ${month < 10 ? '0' + month : month} / ${year} `
+    let hour = date.getHours();
+    let minutes = date.getMinutes();
+    let orientation = "a.m"
+    if (hour >= 12) {
+        hour = hour - 12
+        orientation = "p.m"
+    }
+    if (hour == 0) {
+        hour = 12
+    }
+    if (minutes < 10) {
+        minutes = "0" + minutes
+    }
+    return `${day < 10 ? '0' + day : day} / ${month < 10 ? '0' + month : month} / ${year} , ${hour}:${minutes} ${orientation}`
 }
 
 export const Tablas = (array) => {
@@ -35,7 +48,7 @@ export const Tablas = (array) => {
     const contentTableRef = useRef(null);
     const [statusSelect, setStatusSelect] = useState(true);
     const [statusInputDefault, setStatusInputDefault] = useState(false);
-    const [valueGlobalInput, setValueGlobalInput] = useState(false);
+    const [valueGlobalInput, setValueGlobalInput] = useState({});
     const [statusInput, setStatusInput] = useState(true);
     const [valueSearch, setValueSearch] = useState("")
     const [nameEstadoFocus, changeNameEstadoFocus] = useState("Estado...");
@@ -43,17 +56,17 @@ export const Tablas = (array) => {
     const [modalFilter, changeModalFilter] = useState(false)
     const [nameLimitRegisters, changeNameModalLimitRegisters] = useState(50)
     const [positionElementPaginate, changePositionElementPaginate] = useState(1)
-    const [modalReporte, setStatusModalReporte] = useState(false)
+    const [modalAvanzado, setStatusModalAvanzado] = useState(false)
     const [statusAmpliarTable, setStatusAmpliarTable] = useState(false)
-    const [tipoReporte, setTipoReporte] = useState("")
+    const [tipoAvanzado, setTipoAvanzado] = useState("")
     const formRef = useRef(null);
-    let [limit, setLimit] = useState(50);
-    let [inicio, setInicio] = useState(0);
-    let [fin, setFin] = useState(limit);
-    let [positionFocusPaginate, setPositionFocusPaginate] = useState(1);
+    const [limit, setLimit] = useState(50);
+    const [inicio, setInicio] = useState(0);
+    const [fin, setFin] = useState(limit);
+    const [positionFocusPaginate, setPositionFocusPaginate] = useState(1);
     let paginate = 0;
-    let paginateJson = []
-    let [posicionPaginate, setPosicionPaginate] = useState(0);
+    const paginateJson = []
+    const [posicionPaginate, setPosicionPaginate] = useState(0);
 
     const [pageLoad, setPageLoad] = useState(false);
 
@@ -129,31 +142,37 @@ export const Tablas = (array) => {
             filtersClone[element] = {}
             filtersClone[element]["value"] = value
         }
+        if (filterRotate) {
+            array.getFiltersOrden(filtersClone)
+        }
         changeFilterRotate(filtersClone)
     }
-    useEffect(() => {
-        if (array.filterRotate) {
-            array.getFiltersOrden(filterRotate)
-        }
 
-    }, [filterRotate]);
 
     function changePositionPaginate(data) {
         setPosicionPaginate(posicionPaginate + data)
     }
+
     function functionSetLimit(data) {
 
+        if (array.limitRegisters) {
+            array.limitRegisters({ "inicio": 0, "fin": data })
+        }
+        setLimit(data)
+        changeNameModalLimitRegisters(data);
+        setPositionFocusPaginate(1)
+        setInicio(0);
+    }
+    function functionSetPaginate(data) {
+        if (array.limitRegisters) {
+            array.limitRegisters({ "inicio": limit * (data - 1), "fin": limit })
+        }
         setPositionFocusPaginate(data)
         setInicio(limit * (data - 1));
     }
     function setClearClick() {
         /* formRef.current.clearElementsClick() */
     }
-    useEffect(() => {
-        if (array.limitRegisters) {
-            array.limitRegisters({ "inicio": inicio, "fin": limit })
-        }
-    }, [inicio, limit, posicionPaginate])
 
 
     useEffect(() => {
@@ -199,11 +218,7 @@ export const Tablas = (array) => {
     }
 
     useEffect(() => {
-        if (!document.getElementById("loadTable")) {
-            if (document.getElementById("contentTable")) {
-                document.getElementById("contentTable").insertAdjacentHTML('beforeend', ("<div id='loadTable' class='load-table'>Cargando</div>"))
-            }
-        }
+
         if (tableRef != null) {
 
             let countResize = 0;
@@ -232,6 +247,8 @@ export const Tablas = (array) => {
                     }
                 }
             }
+
+
             const prioritykeysQuit = { ...quitElements };
 
             const resizeObserver = new ResizeObserver(entries => {
@@ -245,22 +262,13 @@ export const Tablas = (array) => {
             let cloneObserveElements = observeElements
             cloneObserveElements.push(contentComponent.current)
             setObserveElements(cloneObserveElements)
-            /* if (observeElements.length > 1) {
-                resizeObserver.unobserve(observeElements[0])
-                let cloneObserveElements = observeElements
-                cloneObserveElements.shift()
-                setObserveElements(cloneObserveElements)
-            } */
-
             resizeTable()
 
-
             function resizeTable() {
-                /* alert("xd") */
-                console.log("aaaaaaaaaaaaaah")
+
+                const loadTable = document.getElementById("loadTable");
                 if (tableRef.current) {
                     countResize = countResize + 1
-
                     let contentTable = contentComponent.current;
                     let table = tableRef.current;
                     let tableTBody = tableRef.current.querySelectorAll("tbody")[0];
@@ -268,16 +276,11 @@ export const Tablas = (array) => {
                     const trBody = tableTBody.querySelectorAll(".tr-table");
                     const trHead = tableTHead.querySelectorAll("tr");
                     const divAdd = tableTBody.querySelectorAll(".new-div-table");
-
-
                     if (divAdd.length == 0 && !data.find_error) {
                         quitSizeOne = true;
                         countQuit = [];
                         quitElements = {}
                     }
-
-
-
                     if (table.scrollWidth > contentTable.clientWidth) {
 
                         const keysQuitElement = Object.keys(prioritykeys);
@@ -394,7 +397,6 @@ export const Tablas = (array) => {
                                             delete prioritykeys[keysQuitElement[keysQuitElement.length - 1]];
                                         }
                                         return resizeTable()
-
                                     }
                                 }
                             }
@@ -481,14 +483,13 @@ export const Tablas = (array) => {
                             firstSize = true
                         }
                     }
-                    if (data != false) {
-                        setTimeout(() => {
-                            if (document.getElementById("loadTable")) {
-                                document.getElementById("loadTable").remove()
-                            }
-                        }, [200])
-                    }
+
                 }
+                setTimeout(() => {
+                    if (document.getElementById("loadTable")) {
+                        document.getElementById("loadTable").remove()
+                    }
+                }, 200);
             }
             return () => {
                 resizeObserver.disconnect();
@@ -602,25 +603,25 @@ export const Tablas = (array) => {
         changeSelectsValuesDocumento(cloneSlectValue)
         setDataSelectsDocumento(cloneDataSelect)
     }
-    const chageData = (event) => {
+    const applyAvanzado = (event) => {
         event.preventDefault();
-        const formData = new FormData(event.target);
-        const json = Object.fromEntries(formData);
+        // const formData = new FormData(event.target);
+        // const json = Object.fromEntries(formData);
 
-        let objectSelect = Object.keys(dataSelectDocumento);
-        objectSelect.map((key, value) => {
-            json[key] = dataSelectDocumento[key]
-        })
-        let keysJson = Object.keys(json);
+        // let objectSelect = Object.keys(dataSelectDocumento);
+        // objectSelect.map((key, value) => {
+        //     json[key] = dataSelectDocumento[key]
+        // })
+        // let keysJson = Object.keys(json);
 
-        keysJson.map((key, value) => {
-            if (json[key]) {
-                json[key] = json[key].toString().trimEnd().toLowerCase()
-            }
-        })
+        // keysJson.map((key, value) => {
+        //     if (json[key]) {
+        //         json[key] = json[key].toString().trimEnd().toLowerCase()
+        //     }
+        // })
 
-        if (array.getReporte) {
-            array.getReporte(tipoReporte, json)
+        if (array.getAvanzado) {
+            array.getAvanzado(tipoAvanzado, valueGlobalInput)
         }
 
     };
@@ -641,18 +642,49 @@ export const Tablas = (array) => {
             }
         }
     }
-    async function closeModalReporte(e) {
+    async function closeModalAvanzado(e) {
+
         if (e) {
-            let divModal = e.target.parentElement.querySelectorAll(".child-div-modal")
-            if (divModal[0]) {
-                divModal[0].style.display = divModal[0].style.display == "none" || divModal[0].style.display == "" ? "block" : "none"
+
+            let divModal;
+
+            if (e.target.closest(".child-div-modal")) {
+                divModal = e.target.closest(".child-div-modal")
+            } else if (e.target.querySelectorAll(".child-div-modal").length > 0) {
+                divModal = e.target.querySelectorAll(".child-div-modal")[0]
+            } else if (e.target.parentNode.querySelectorAll(".child-div-modal").length > 0)
+                divModal = e.target.parentNode.querySelectorAll(".child-div-modal")[0]
+            if (divModal) {
+                divModal.style.display = divModal.style.display == "none" || divModal.style.display == "" ? "block" : "none"
             }
         } else {
-            const divReporte = document.getElementById("divReporte")
-            if (divReporte) {
-                divReporte.style.display = divReporte.style.display == "none" || divReporte.style.display == "" ? "block" : "none"
+            const divAvanzado = document.getElementById("divAvanzado")
+            if (divAvanzado) {
+                divAvanzado.style.display = divAvanzado.style.display == "none" || divAvanzado.style.display == "" ? "block" : "none"
             }
 
+        }
+    }
+
+    async function sendGeneratePdf(e) {
+        let nodeInsert;
+        if (e.target.nodeName == "BUTTON") {
+            nodeInsert = e.target
+        } else if (e.target.closest("button")) {
+            nodeInsert = e.target.closest("button")
+        }
+        if (!nodeInsert.querySelector(".loader-div-button")) {
+            const heightLoader = nodeInsert.offsetHeight - parseInt(window.getComputedStyle(nodeInsert).paddingTop) - parseInt(window.getComputedStyle(nodeInsert).paddingBottom);;
+            console.log(nodeInsert.offsetHeight, heightLoader, "aaaaaaaaaaa")
+            nodeInsert.innerHTML = "<div style='width:" + heightLoader + "px; height: " + heightLoader + "px' class='loader-div-button'> </div>"
+            let colorFondo = valueGlobalInput["color_fondo"]
+            if (valueGlobalInput["color_fondo_rgba"]) {
+                colorFondo = valueGlobalInput["color_fondo_rgba"]
+            }
+            if (array.generatePdf) {
+                console.log(valueGlobalInput["orientacion"])
+                array.generatePdf(e, valueGlobalInput["orientacion"], valueGlobalInput["papel"], valueGlobalInput["alto_pdf"], valueGlobalInput["ancho_pdf"], valueGlobalInput["margen_superior"], valueGlobalInput["margen_derecho"], valueGlobalInput["margen_inferior"], valueGlobalInput["margen_izquierdo"], valueGlobalInput["fuente"], valueGlobalInput["font_size_content_tabla"], valueGlobalInput["font_size_encabezado_tabla"], valueGlobalInput["font_size_encabezado"], colorFondo, valueGlobalInput["espaciado_superior_contenido"], valueGlobalInput["espaciado_derecho_contenido"], valueGlobalInput["espaciado_inferior_contenido"], valueGlobalInput["espaciado_izquierdo_contenido"])
+            }
         }
     }
     return (
@@ -689,7 +721,8 @@ export const Tablas = (array) => {
                                                                     div.push(<button key={value} style={{ display: array.hidden && array.hidden.includes('register') ? 'none' : '' }} onClick={() => { array.clearInputs ? array.clearInputs() : ""; setClearClick(); array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>)
                                                                 }
                                                             }
-                                                        } else if (key == "reporte") {
+                                                        } else if (key == "avanzado") {
+                                                            console.log(key, "avanzadooooooooooo", dataButtons)
                                                             if (dataButtons[key].status) {
                                                                 if (dataButtons[key].status == true) {
 
@@ -702,15 +735,15 @@ export const Tablas = (array) => {
                                                                     }
                                                                     div.push(<div key={value} className='div-generar-documento father-div-modal'>
                                                                         <button onClick={(e) => {
-                                                                            closeModalReporte(e)
-                                                                        }} className='button-register-table'>Reporte
+                                                                            closeModalAvanzado(e)
+                                                                        }} className='button-register-table'>Avanzado
                                                                         </button>
-                                                                        <div style={{ display: "none" }} id='divReporte' className='child-div-modal'>
+                                                                        <div style={{ display: "none" }} id='divAvanzado' className='child-div-modal'>
 
-                                                                            <GlobalModal statusModal={closeModalReporte} active={{ "width": 930 }} content={
+                                                                            <GlobalModal statusModal={closeModalAvanzado} active={{ "width": 930 }} content={
                                                                                 <div className='div-input-documento'>
-                                                                                    <form onSubmit={(e) => { chageData(e) }}>
-                                                                                        <div className='div-body-reporte'>
+                                                                                    <form onSubmit={(e) => { applyAvanzado(e) }}>
+                                                                                        <div className='div-body-avanzado'>
                                                                                             {
                                                                                                 array.dataDocumento ?
                                                                                                     keysInputsDocumento.map((keyInput, index) => {
@@ -723,7 +756,7 @@ export const Tablas = (array) => {
                                                                                                         let titleRefer = array.dataDocumento[keyInput]["referencia"] ? array.dataDocumento[keyInput]["referencia"] : "Campo"
 
                                                                                                         return <div key={index}>
-                                                                                                            <h4 className='title-reporte-group'>{titleRefer}</h4>
+                                                                                                            <h4 className='title-avanzado-group'>{titleRefer}</h4>
                                                                                                             <div className='content-div-inputs-group'>
                                                                                                                 {keysInputs.map((key, indexInput) => {
                                                                                                                     if (dataInputs[key]["type"] == "select") {
@@ -741,7 +774,7 @@ export const Tablas = (array) => {
                                                                                                                                     values: dataInputs[key]["values"] ? dataInputs[key]["values"] : [],
                                                                                                                                     opciones: dataInputs[key]["opciones"] ? dataInputs[key]["opciones"] : [],
                                                                                                                                     upper_case: true,
-                                                                                                                                    key: "id",
+                                                                                                                                    key: dataInputs[key]["key"],
                                                                                                                                 },
                                                                                                                             }} />
                                                                                                                     } else {
@@ -751,6 +784,7 @@ export const Tablas = (array) => {
                                                                                                                             value={valueGlobalInput}
                                                                                                                             data={{
                                                                                                                                 [key]: {
+                                                                                                                                    referencia: dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : false,
                                                                                                                                     type: dataInputs[key]["type"],
                                                                                                                                     upper_case: true,
                                                                                                                                 },
@@ -822,10 +856,8 @@ export const Tablas = (array) => {
                                                                                                     "" :
                                                                                                 " "
                                                                                         }
-
-                                                                                        <div className='footer-get-reporte'>
-                                                                                            <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-pdf'>PDF</button>
-                                                                                            {/* <button type='submit' onClick={() => { setTipoReporte("excel") }} className='button-get-reporte get-repote-excel'>EXCEL</button> */}
+                                                                                        <div className='footer-get-avanzado'>
+                                                                                            <button type='submit' className='button-get-avanzado'>Aplicar</button>
                                                                                         </div>
 
                                                                                     </form>
@@ -978,15 +1010,324 @@ export const Tablas = (array) => {
                                                     : ""
                                                 : ""
                                             : ""}
-
-
-
-
-
-
                                     </div>
 
                                     <div className='content-filters'>
+                                        {array.buttonsHeaderTable ? array.buttonsHeaderTable["buttons"] ? array.buttonsHeaderTable["buttons"]["pdf"] ? array.buttonsHeaderTable["buttons"]["pdf"].status == true ?
+                                            <div className='div-generar-documento father-div-modal'>
+                                                <button onClick={(e) => {
+                                                    closeModalAvanzado(e)
+                                                }} className='button-pdf-table'>Pdf
+                                                </button>
+                                                <div style={{ display: "none" }} className='child-div-modal'>
+
+                                                    <GlobalModal execute={"normal"} statusModal={closeModalAvanzado} active={{ "width": 930 }} content={
+                                                        <div className='div-generate-pdf div-input-documento'>
+                                                            <h4 className='title-avanzado-group'>Selecciona las opciones del pdf</h4>
+
+                                                            <div className='div-body-avanzado'>
+                                                                <h4 className='title-avanzado-group'>Papel</h4>
+                                                                <div className='content-div-inputs-group'>
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "papel": "letter" }}
+                                                                        data={{
+                                                                            ["papel"]: {
+                                                                                type: "select",
+                                                                                referencia: "Tipo de papel",
+                                                                                values: ["tipo"],
+                                                                                opciones: [
+                                                                                    { "tipo": "Personalizado", "value": "personalizado" },
+                                                                                    { "tipo": "Carta", "value": "letter" },
+                                                                                    { "tipo": "Oficio", "value": "legal" },
+                                                                                    { "tipo": "Tabloide (Ledger)", "value": "ledger" },
+                                                                                    { "tipo": "Tabloide", "value": "tabloid" },
+                                                                                    { "tipo": "Ejecutivo", "value": "executive" },
+                                                                                    { "tipo": "Folio", "value": "folio" },
+                                                                                    { "tipo": "Sobre comercial #10", "value": "commercial #10 envelope" },
+                                                                                    { "tipo": "Catálogo de sobre #10 1/2", "value": "catalog #10 1/2 envelope" },
+                                                                                    { "tipo": "8.5x11", "value": "8.5x11" },
+                                                                                    { "tipo": "8.5x14", "value": "8.5x14" },
+                                                                                    { "tipo": "11x17", "value": "11x17" },
+                                                                                    { "tipo": "4A0", "value": "4a0" },
+                                                                                    { "tipo": "2A0", "value": "2a0" },
+                                                                                    { "tipo": "A0", "value": "a0" },
+                                                                                    { "tipo": "A1", "value": "a1" },
+                                                                                    { "tipo": "A2", "value": "a2" },
+                                                                                    { "tipo": "A3", "value": "a3" },
+                                                                                    { "tipo": "A4", "value": "a4" },
+                                                                                    { "tipo": "A5", "value": "a5" },
+                                                                                    { "tipo": "A6", "value": "a6" },
+                                                                                    { "tipo": "A7", "value": "a7" },
+                                                                                    { "tipo": "A8", "value": "a8" },
+                                                                                    { "tipo": "A9", "value": "a9" },
+                                                                                    { "tipo": "A10", "value": "a10" },
+                                                                                    { "tipo": "B0", "value": "b0" },
+                                                                                    { "tipo": "B1", "value": "b1" },
+                                                                                    { "tipo": "B2", "value": "b2" },
+                                                                                    { "tipo": "B3", "value": "b3" },
+                                                                                    { "tipo": "B4", "value": "b4" },
+                                                                                    { "tipo": "B5", "value": "b5" },
+                                                                                    { "tipo": "B6", "value": "b6" },
+                                                                                    { "tipo": "B7", "value": "b7" },
+                                                                                    { "tipo": "B8", "value": "b8" },
+                                                                                    { "tipo": "B9", "value": "b9" },
+                                                                                    { "tipo": "B10", "value": "b10" },
+                                                                                    { "tipo": "C0", "value": "c0" },
+                                                                                    { "tipo": "C1", "value": "c1" },
+                                                                                    { "tipo": "C2", "value": "c2" },
+                                                                                    { "tipo": "C3", "value": "c3" },
+                                                                                    { "tipo": "C4", "value": "c4" },
+                                                                                    { "tipo": "C5", "value": "c5" },
+                                                                                    { "tipo": "C6", "value": "c6" },
+                                                                                    { "tipo": "C7", "value": "c7" },
+                                                                                    { "tipo": "C8", "value": "c8" },
+                                                                                    { "tipo": "C9", "value": "c9" },
+                                                                                    { "tipo": "C10", "value": "c10" },
+                                                                                    { "tipo": "RA0", "value": "ra0" },
+                                                                                    { "tipo": "RA1", "value": "ra1" },
+                                                                                    { "tipo": "RA2", "value": "ra2" },
+                                                                                    { "tipo": "RA3", "value": "ra3" },
+                                                                                    { "tipo": "RA4", "value": "ra4" },
+                                                                                    { "tipo": "SRA0", "value": "sra0" },
+                                                                                    { "tipo": "SRA1", "value": "sra1" },
+                                                                                    { "tipo": "SRA2", "value": "sra2" },
+                                                                                    { "tipo": "SRA3", "value": "sra3" },
+                                                                                    { "tipo": "SRA4", "value": "sra4" },
+                                                                                ],
+                                                                                upper_case: true,
+                                                                                key: "value",
+                                                                            },
+                                                                        }} />
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "orientacion": "portrait" }}
+                                                                        data={{
+                                                                            ["orientacion"]: {
+                                                                                type: "select",
+                                                                                referencia: "Orientación",
+                                                                                values: ["orientacion"],
+                                                                                opciones: [{ "orientacion": "Vertical", "value": "portrait" }, { "orientacion": "Horizontal", "value": "landscape" }],
+                                                                                upper_case: true,
+                                                                                key: "value",
+                                                                            },
+                                                                        }} />
+
+
+                                                                    {valueGlobalInput ? valueGlobalInput["papel"] == "personalizado" ?
+                                                                        < GlobalInputs
+                                                                            input={setValueGlobalInput}
+                                                                            value={valueGlobalInput}
+                                                                            elementEdit={{ "alto_pdf": 612 }}
+                                                                            data={{
+                                                                                ["alto_pdf"]: {
+                                                                                    type: "number",
+                                                                                    min: 0,
+                                                                                    max: 10000,
+                                                                                    referencia: "Alto (mm)",
+                                                                                },
+                                                                            }} />
+                                                                        : "" : ""
+                                                                    }
+                                                                    {valueGlobalInput ? valueGlobalInput["papel"] == "personalizado" ?
+                                                                        < GlobalInputs
+                                                                            input={setValueGlobalInput}
+                                                                            value={valueGlobalInput}
+                                                                            elementEdit={{ "ancho_pdf": 729 }}
+                                                                            data={{
+                                                                                ["ancho_pdf"]: {
+                                                                                    type: "number",
+                                                                                    min: 0,
+                                                                                    max: 10000,
+                                                                                    referencia: "Ancho (mm)",
+                                                                                },
+                                                                            }} />
+                                                                        : "" : ""}
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "color_fondo": "#ffffff" }}
+                                                                        data={{
+                                                                            ["color_fondo"]: {
+                                                                                type: "color",
+                                                                                opacity: true,
+                                                                                referencia: "Color de fondo",
+                                                                            },
+                                                                        }} />
+                                                                </div>
+                                                                <h4 className='title-avanzado-group'>Márgenes</h4>
+                                                                <div className='content-div-inputs-group'>
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "margen_superior": 50 }}
+                                                                        data={{
+                                                                            ["margen_superior"]: {
+                                                                                type: "number",
+                                                                                referencia: "Margen superior (px)",
+                                                                            },
+                                                                        }} />
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "margen_derecho": 50 }}
+                                                                        data={{
+                                                                            ["margen_derecho"]: {
+                                                                                type: "number",
+                                                                                referencia: "Margen derecho (px)",
+                                                                            },
+                                                                        }} />
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "margen_inferior": 50 }}
+                                                                        data={{
+                                                                            ["margen_inferior"]: {
+                                                                                type: "number",
+                                                                                referencia: "Margen inferior (px)",
+                                                                            },
+                                                                        }} />
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "margen_izquierdo": 50 }}
+                                                                        data={{
+                                                                            ["margen_izquierdo"]: {
+                                                                                type: "number",
+                                                                                referencia: "Margen izquierdo (px)",
+                                                                            },
+                                                                        }} />
+                                                                </div>
+                                                                <h4 className='title-avanzado-group'>Letra</h4>
+                                                                <div className='content-div-inputs-group'>
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "font_size_encabezado": 15 }}
+                                                                        data={{
+                                                                            ["font_size_encabezado"]: {
+                                                                                type: "number",
+                                                                                referencia: "Tamaño de letra del encabezado (px)",
+                                                                            },
+                                                                        }} />
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "font_size_encabezado_tabla": 14 }}
+                                                                        data={{
+                                                                            ["font_size_encabezado_tabla"]: {
+                                                                                type: "number",
+                                                                                referencia: "Tamaño de letra del encabezado de la tabla (px)",
+                                                                            },
+                                                                        }} />
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "font_size_content_tabla": 14 }}
+                                                                        data={{
+                                                                            ["font_size_content_tabla"]: {
+                                                                                type: "number",
+                                                                                referencia: "Tamaño de letra del contenido de la tabla (px)",
+                                                                            },
+                                                                        }} />
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "papel": "letter" }}
+                                                                        data={{
+                                                                            ["fuente"]: {
+                                                                                type: "select",
+                                                                                referencia: "Tipo de fuente",
+                                                                                values: ["tipo"],
+                                                                                opciones: [
+                                                                                    { "tipo": "Arial", "value": "arial.ttf" },
+                                                                                    { "tipo": "Arial Bold", "value": "arial_bold.ttf" },
+                                                                                    { "tipo": "Arial Light", "value": "arial_light.ttf" },
+                                                                                    { "tipo": "Arial Narrow", "value": "arial_narrow.ttf" },
+                                                                                    { "tipo": "Impact", "value": "Impact.ttf" },
+                                                                                    { "tipo": "Roboto Black", "value": "roboto_black.ttf" },
+                                                                                    { "tipo": "Roboto Bold", "value": "roboto_bold.ttf" },
+                                                                                    { "tipo": "Roboto Italic", "value": "roboto_italic.ttf" },
+                                                                                    { "tipo": "Roboto Medium", "value": "roboto_medium.ttf" },
+                                                                                    { "tipo": "Roboto Regular", "value": "roboto_regular.ttf" },
+                                                                                    { "tipo": "Tahoma", "value": "tahoma.ttf" },
+                                                                                    { "tipo": "Times Roman", "value": "times_roman.otf" },
+                                                                                    { "tipo": "Times Roman Italic", "value": "times_roman_italic.otf" },
+                                                                                    { "tipo": "Verdana", "value": "verdana.ttf" },
+                                                                                ],
+                                                                                upper_case: true,
+                                                                                key: "value",
+                                                                            },
+                                                                        }} />
+                                                                </div>
+                                                                <h4 className='title-avanzado-group'>Contenido</h4>
+                                                                <div className='content-div-inputs-group'>
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "espaciado_superior_contenido": 160 }}
+                                                                        data={{
+                                                                            ["espaciado_superior_contenido"]: {
+                                                                                type: "number",
+                                                                                referencia: "Espaciado superior (px)",
+                                                                                min: 0,
+                                                                                upper_case: true,
+                                                                            },
+                                                                        }} />
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "espaciado_derecho_contenido": "0" }}
+                                                                        data={{
+                                                                            ["espaciado_derecho_contenido"]: {
+                                                                                type: "number",
+                                                                                referencia: "Espaciado derecho (px)",
+                                                                                min: 0,
+                                                                                upper_case: true,
+                                                                            },
+                                                                        }} />
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "espaciado_inferior_contenido": "0" }}
+                                                                        data={{
+                                                                            ["espaciado_inferior_contenido"]: {
+                                                                                type: "number",
+                                                                                referencia: "Espaciado inferior (px)",
+                                                                                min: 0,
+                                                                                upper_case: true,
+                                                                            },
+                                                                        }} />
+                                                                    < GlobalInputs
+                                                                        input={setValueGlobalInput}
+                                                                        value={valueGlobalInput}
+                                                                        elementEdit={{ "espaciado_izquierdo_contenido": "0" }}
+                                                                        data={{
+                                                                            ["espaciado_izquierdo_contenido"]: {
+                                                                                type: "number",
+                                                                                referencia: "Espaciado izquierdo (px)",
+                                                                                min: 0,
+                                                                                upper_case: true,
+                                                                            },
+                                                                        }} />
+
+                                                                </div>
+                                                                <div>
+                                                                    <h4 className='h4-description-pdf'>Al hacer clic en el botón "Generar", se creará un archivo PDF que contendrá la información actualmente visible en la tabla, incluidos los filtros aplicados, excluyendo  botones, iconos y demás elementos que no sean texto.</h4>
+                                                                </div>
+                                                            </div>
+                                                            <div className='footer-get-avanzado'>
+                                                                <button onClick={(e) => {
+                                                                    sendGeneratePdf(e)
+                                                                }} type='submit' className='button-get-avanzado'>Generar</button>
+                                                            </div>
+                                                        </div>
+                                                    } />
+                                                </div>
+                                            </div>
+                                            : "" : "" : "" : ""}
                                         <div className='limit-registers'>
                                             <h4>Mostrar</h4>
                                             <div className="filter-estado-table limit-filter">
@@ -1008,7 +1349,9 @@ export const Tablas = (array) => {
                                                 </div>
                                                 <div style={{ display: "none" }} className="child-div-modal opciones opciones-limit-filter">
                                                     {filtersLimitRegister.map((key, index) => {
-                                                        return <h4 key={key} onClick={() => { changeNameModalLimitRegisters(key); setLimit(key); setPosicionPaginate(0); functionSetLimit(1) }} className='select-option select-option-limit-filter'>{key}</h4>
+                                                        return <h4 key={key} onClick={() => {
+                                                            functionSetLimit(key);
+                                                        }} className='select-option select-option-limit-filter'>{key}</h4>
 
                                                     })}
 
@@ -1016,7 +1359,7 @@ export const Tablas = (array) => {
                                             </div>
                                             <h4>Registros</h4>
                                         </div>
-                                        <div className="filter-estado-table" style={{ display: array.hidden && array.hidden.includes('status') ? 'none' : '' }}>
+                                        {/*  <div className="filter-estado-table" style={{ display: array.hidden && array.hidden.includes('status') ? 'none' : '' }}>
                                             <div onClick={(e) => {
                                                 let divModal = e.target.closest(".filter-estado-table").querySelectorAll(".child-div-modal")
                                                 if (divModal[0]) {
@@ -1034,16 +1377,16 @@ export const Tablas = (array) => {
                                             </div>
                                             <div key={keyTable} style={{ display: "none" }} className="opciones child-div-modal"  >
 
-                                                <h4 onClick={() => { changeNameEstadoFocus("Estado..."); array.getFilterEstado(false); setPosicionPaginate(0); functionSetLimit(1) }} className='select-option'>Estado...</h4>
+                                                <h4 onClick={() => { changeNameEstadoFocus("Estado..."); array.getFilterEstado(false); setPosicionPaginate(0); functionSetPaginate(1) }} className='select-option'>Estado...</h4>
 
                                                 {filterEstado.map((key, index) => {
-                                                    return <h4 key={key} onClick={() => { setPosicionPaginate(0); functionSetLimit(1), changeNameEstadoFocus(key); array.getFilterEstado(keysFilterEstado[key]["value"]) }} className='select-option'>{key}</h4>
+                                                    return <h4 key={key} onClick={() => {  array.getFilterEstado(keysFilterEstado[key]["value"]) }} className='select-option'>{key}</h4>
                                                 })}
 
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <div className="filters-search">
-                                            <div className="icon-search" onClick={() => { array.filterSeacth(valueSearch); setPosicionPaginate(0); functionSetLimit(1) }}>
+                                            <div className="icon-search" onClick={() => { array.filterSeacth(valueSearch); setPosicionPaginate(0); functionSetPaginate(1) }}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256"     >
                                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                                     <g><g><g><path d="M93,10.1c-0.7,0.1-3.3,0.4-5.6,0.7c-28.3,3.5-54.3,22-67.7,48.1c-6.9,13.4-9.8,25.4-9.8,41c0,15.5,2.9,27.6,9.8,41c13.2,25.8,37,43,66.3,48c6.4,1.1,21.1,1.1,27.5,0c14.9-2.5,28.9-8.4,39.6-16.5l2.8-2.1l4.5,4.5l4.6,4.5l-1.1,1.7c-2.5,3.6-2.8,9.8-0.7,13.8c0.8,1.5,8.8,9.9,24.2,25.5c26,26.4,25.5,26,31.8,25.9c5.5,0,6.9-0.9,16.4-10.4c9.5-9.6,10.4-10.9,10.4-16.4c0.1-6,0.3-5.8-25.7-32.1c-25.1-25.4-25-25.3-30.5-25.6c-3.6-0.2-6.2,0.4-8.6,2.1l-1.8,1.2l-4.6-4.6l-4.5-4.5l2-2.6c8-10.5,13.9-24.7,16.4-39.5c1.1-6.4,1.1-21.1,0-27.5c-3.3-18.9-11.2-34.9-23.8-48.2C151,23.3,133.7,14.3,113.8,11C109.5,10.3,95.8,9.6,93,10.1z M109.7,25.9c16.4,2.1,30.9,9.3,42.8,21.2c25.8,25.8,29.2,66.3,8,96.1c-4,5.6-11.7,13.3-17.4,17.4c-22.7,16.1-52,18.4-76.8,6c-7.5-3.7-13.4-8.1-19.4-14c-11.9-11.9-19.1-26.5-21.2-42.8c-3.1-23.4,4.6-46,21.2-62.6C63.7,30.5,86.3,22.8,109.7,25.9z" /><path d="M52.8,70.1c-5.6,8.6-9,19.6-9,29.5c0,19.7,11.8,38.7,29.4,47.6c9,4.5,15.4,6,25.4,6c7.4,0,11.9-0.7,17.9-2.7c3-1,10.8-4.8,10.8-5.1c0-0.1-2.9-0.1-6.4,0c-18.1,0.7-34.6-5.6-47.6-18.2c-9.7-9.4-15.7-20.4-18.6-33.9c-1-4.9-1.2-19.2-0.3-23.3c0.3-1.4,0.5-2.6,0.4-2.7C54.7,67.3,53.9,68.5,52.8,70.1z" /></g></g></g>
@@ -1067,7 +1410,7 @@ export const Tablas = (array) => {
                                 </div>
                                 <div key={keyTable} id='contentTable' className="content-table">
 
-
+                                    <div id='loadTable' className='load-table'>Cargando</div>
 
                                     <table ref={tableRef} className='table-component' cellSpacing={0}>
                                         <thead>
@@ -1088,7 +1431,10 @@ export const Tablas = (array) => {
                                                     return <th className='th-table-print' key={keys}>
                                                         <div className="items-header-table">
                                                             <h4 className='tittle-item-header-table'>   {print[keys]["referencia"] ? print[keys]["referencia"] : keys} </h4>
-                                                            {keys != "actualizar" && filter == true ? <svg onClick={() => functionChangeFilterRotate(keys)} style={{ rotate: filterRotate[keys] ? filterRotate[keys]["value"] == "desc" ? "0deg" : "180deg" : "0deg", fill: filterRotate[keys] ? "blue" : "" }} className="filter-asc-desc" version="1.0" viewBox="0 0 512.000000 512.000000">
+                                                            {keys != "actualizar" && filter == true ? <svg onClick={() =>
+                                                                functionChangeFilterRotate(keys)
+
+                                                            } style={{ rotate: filterRotate[keys] ? filterRotate[keys]["value"] == "desc" ? "0deg" : "180deg" : "0deg", fill: filterRotate[keys] ? "blue" : "" }} className="filter-asc-desc" version="1.0" viewBox="0 0 512.000000 512.000000">
 
                                                                 <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" stroke="none">
                                                                     <path d="M680 4341 c-66 -23 -140 -97 -158 -158 -39 -131 13 -259 133 -322 l40 -21 1478 0 c1633 0 1508 -5 1587 67 58 51 80 102 80 186 0 109 -42 183 -132 233 l-53 29 -1460 2 c-1411 2 -1462 2 -1515 -16z" />
@@ -1488,7 +1834,7 @@ export const Tablas = (array) => {
                                                                         }
 
                                                                     } else {
-                                                                        tableData.push((<h4 key={x} className='text-table-normal table-attribute-no-registra'>No registra</h4>))
+                                                                        tableData.push((<h4 key={index} className='text-table-normal table-attribute-no-registra'>No registra</h4>))
                                                                     }
                                                                     return <td className={'td-inputs-table ' + classProcedure} key={index}><div className='div-td-inputs-table'>{tableData}</div></td>
                                                                 } else if (keysData.includes(keys)) {
@@ -1638,7 +1984,7 @@ export const Tablas = (array) => {
 
                                                     </tr>
                                                 ))
-                                            ) : data.find_error ? <tr><td colSpan={1000000} className='table-error'>{data.find_error}</td></tr> : data == false ? <tr id='loadTable'><td><div className='load-table'>Cargando</div> </td></tr> : <tr><td colSpan={1000000} className='table-error'></td></tr>}
+                                            ) : data.find_error ? <tr><td colSpan={1000000} className='table-error'>{data.find_error}</td></tr> : data == false ? <tr><td><div className='load-table'>Cargando</div> </td></tr> : <tr><td colSpan={1000000} className='table-error'>Error interno</td></tr>}
                                         </tbody>
 
                                     </table >
@@ -1653,13 +1999,13 @@ export const Tablas = (array) => {
                                             <g><g><path d="M169.3,130.8L61,233.7L73.3,246l109.5-101.6l12.3-12.3L73.2,10L60.8,22.4L169.3,130.8z" /></g></g>
                                         </svg></div> : "  "}
                                         {paginate > 1 ? paginateJson.map((key, index) => (
-                                            paginate == 5 && index <= 5 ? <div onClick={() => { functionSetLimit(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : index <= 4 ? <div onClick={() => { functionSetLimit(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : ""
+                                            paginate == 5 && index <= 5 ? <div onClick={() => { functionSetPaginate(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : index <= 4 ? <div onClick={() => { functionSetPaginate(index + posicionPaginate), changePositionElementPaginate(index + posicionPaginate) }} key={index + posicionPaginate} className={`${positionFocusPaginate == index + posicionPaginate ? "item-paginate-focus" : ""} item-paginate-round`} >{index + posicionPaginate}</div> : ""
 
                                         )) : ""}
                                         {paginate > 5 ?
                                             <div className='items-overflow-paginate'>
                                                 <div className='div-points-paginate'><div className='points-paginate'></div><div className='points-paginate'></div><div className='points-paginate'></div></div>
-                                                <div onClick={() => { functionSetLimit(paginate), changePositionElementPaginate(paginate) }} className={`${positionFocusPaginate == paginate ? "item-paginate-focus" : ""} item-paginate-round`}>{paginate}</div>
+                                                <div onClick={() => { functionSetPaginate(paginate), changePositionElementPaginate(paginate) }} className={`${positionFocusPaginate == paginate ? "item-paginate-focus" : ""} item-paginate-round`}>{paginate}</div>
                                                 <div className='div-chevron-paginate'>
                                                     <svg onClick={() => { posicionPaginate + 5 < paginate ? changePositionPaginate(1) : "" }} style={{ cursor: posicionPaginate + 5 < paginate ? "" : "unset", fill: posicionPaginate + 5 < paginate ? " rgb(0, 97, 227)" : "rgba(152, 152, 152, 0.438)" }} className='chevron-paginate' version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
                                                         <g><g><path d="M169.3,130.8L61,233.7L73.3,246l109.5-101.6l12.3-12.3L73.2,10L60.8,22.4L169.3,130.8z" /></g></g>

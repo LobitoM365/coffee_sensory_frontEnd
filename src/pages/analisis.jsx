@@ -9,15 +9,16 @@ import ReactDOM from "react-dom/client";
 import "../../public/css/analisis.css"
 
 export const Analisis = (userInfo) => {
-    if (userInfo.socket) {
-        const socket = userInfo.socket;
+    useEffect(() => {
+        if (userInfo.socket) {
+            const socket = userInfo.socket;
+            socket.on("asignAnalisis", getAnalisis)
 
-        socket.on("message", (io) => {
-        })
-        socket.on("asignAnalisis", (io) => {
-            getAnalisis()
-        })
-    }
+            return () => {
+                userInfo.socket.off('asignAnalisis', getAnalisis);
+            };
+        }
+    }, [userInfo.socket])
     ///Variables para abrir modal de resultados
     const [modalFormResults, changeModalFormResults] = useState(false);
     const [keyAsignarAnalisis, setKeyAsignarAnalisis] = useState(0);
@@ -36,6 +37,7 @@ export const Analisis = (userInfo) => {
     const [errorsAsignar, setErrorsAsignar] = useState({})
     const [statusUpdateAsignar, setStatusUpdateAsignar] = useState(false)
     const [errorsInputGlobal, setErrorsInputGlobal] = useState({})
+    const [filtersTable, setFiltersTable] = useState({})
 
     const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
         "buttons": {
@@ -59,7 +61,11 @@ export const Analisis = (userInfo) => {
                 "upper_case": true,
                 "rol": ["administrador"]
             },
-            "reporte": {
+            "avanzado": {
+                "status": true,
+                "rol": ["administrador"]
+            },
+            "pdf": {
                 "status": true
             }
         }
@@ -403,7 +409,7 @@ export const Analisis = (userInfo) => {
                         "type": "button",
                         "referencia": "Ver",
                         "function": {
-                            "value": xd2,
+                            "value": infoFormatoFisico,
                             "execute": {
                                 "type": "table",
                                 "value": "an_id"
@@ -528,7 +534,7 @@ export const Analisis = (userInfo) => {
                     "type": "button",
                     "referencia": "Ver",
                     "function": {
-                        "value": xd2,
+                        "value": infoFormatoFisico,
                         "execute": {
                             "type": "table",
                             "value": "an_id"
@@ -589,7 +595,7 @@ export const Analisis = (userInfo) => {
                     "type": "free",
                     "referencia": "No disponible",
                     /* "function": {
-                        "value": xd2,
+                        "value": infoFormatoFisico,
                         "execute": {
                             "type": "table",
                             "value": "an_id"
@@ -599,6 +605,47 @@ export const Analisis = (userInfo) => {
             },
             "upper_case": true
         },
+        "estado_mapa": {
+            "referencia": "Geolocalización",
+            "normal": true,
+            "conditions": {
+                "inputs": {
+                    "1": {
+                        "element": {
+                            "type": "button",
+                            "referencia": "Geolocalizado",
+                            "class": "estado-table estado-geolocalizado",
+                            "function": {
+                                "value": confirmStatusMapaGeolocalizado,
+                                "execute": {
+                                    "type": "table",
+                                    "value": "an_id"
+                                }
+                            }
+                        }
+                    },
+                    "0": {
+                        "element": {
+                            "type": "button",
+                            "referencia": "Oculto",
+                            "class": "estado-table estado-oculto",
+                            "function": {
+                                "value": confirmStatusMapaOculto,
+                                "execute": {
+                                    "type": "table",
+                                    "value": "an_id"
+                                }
+                            }
+                        }
+                    }
+                },
+                "default": {
+                    "type": "button",
+                    "referencia": "Ver"
+                }
+            },
+            "upper_case": true
+        }
         // "reporte": {
         //     "normal": true,
         //     "referencia": "Reporte",
@@ -726,6 +773,78 @@ export const Analisis = (userInfo) => {
     const [usersAsignarFormatoSca, setUsersAsignarFormatoSca] = useState({});
     let [deleteAsignarFormatoSca, setDeleteAsignarFormatoSca] = useState({});
 
+    async function cambiarEstadoMapa(id) {
+        try {
+            const response = await Api.put("analisis/cambiar/geolocalizacion/" + id)
+            if (response.data.status == true) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Excelente",
+                    }
+                )
+                getAnalisis()
+            } else if (response.data.update_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.update_error,
+                        "tittle": "Inténtalo de nuevo."
+                    }
+                )
+            } else if (response.data.modal_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.modal_error,
+                        "tittle": "Inténtalo de nuevo."
+                    }
+                )
+            } else {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.message,
+                        "tittle": "Inténtalo de nuevo."
+                    }
+                )
+            }
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
+    async function confirmStatusMapaGeolocalizado(id) {
+        setStatusAlert(true)
+        setdataAlert(
+            {
+                status: "warning",
+                description: "¿Estás seguro(a) de desactivar la geolocalizacion para el análisis " + id + "?, si desactivas la geolocalización los resultados del análisis no se verán en el mapa.",
+                continue: {
+                    "function": cambiarEstadoMapa,
+                    "execute": id,
+                }
+            }
+        )
+    }
+    async function confirmStatusMapaOculto(id) {
+        setStatusAlert(true)
+        setdataAlert(
+            {
+                status: "warning",
+                description: "¿Estás seguro(a) de activar la geolocalizacion para el análisis " + id + "?, ten en cuenta que para un lote solo una muestra puede geolocalizarse al mismo tiempo, si activas la opcion de geolocalizacion, los análisis asociados al mismo lote se dejarán de ver en el mapa.",
+                continue: {
+                    "function": cambiarEstadoMapa,
+                    "execute": id,
+                }
+            }
+        )
+    }
+
     async function agregarFormatoFisico(data, e) {
         if (!usersAsignarFormatoFisico[data.id]) {
             let cloneUsersAsignarFormatoFisico = { ...usersAsignarFormatoFisico }
@@ -779,7 +898,6 @@ export const Analisis = (userInfo) => {
                 })
             }
         }
-
     }
     async function agregarFormatoSca(data, e) {
         if (!usersAsignarFormatoSca[data.id]) {
@@ -884,16 +1002,15 @@ export const Analisis = (userInfo) => {
     useEffect(() => {
         getAnalisis()
         getusuariosAsignar()
-    }, [])
-    useEffect(() => {
         getusuarios()
         getMuestras()
     }, [])
 
-    async function xd(id) {
+
+    async function infoFormatoSensorial(id) {
         setInfoFormato(id, 2)
     }
-    function xd2(id) {
+    function infoFormatoFisico(id) {
         setInfoFormato(id, 1)
     }
 
@@ -1693,37 +1810,75 @@ export const Analisis = (userInfo) => {
                 console.error('Error:', error);
             }
         } */
-    async function generatePdf(filter, dataTable, table) {
-        let cloneTable = { ...table }
+    async function generatePdf(e, orientacion, papel, alto, ancho, margen_superior, margen_derecho, margen_inferior, margen_izquierdo, fuente, font_size_content_tabla, font_size_encabezado_tabla, font_size_encabezado, color_fondo, espaciado_superior_contenido, espaciado_derecho_contenido, espaciado_inferior_contenido, espaciado_izquierdo_contenido) {
+        let cloneTable = { ...keys }
+        delete cloneTable["actualizar"]
         delete cloneTable["permission_formato_fisico"]
         delete cloneTable["permission_formato_sca"]
         delete cloneTable["actualizar"]
         delete cloneTable["reporte"]
-        const data = {
-            dataTable,
-            filter,
-            table: { ...cloneTable }
+        delete cloneTable["encargados"]
+        delete cloneTable["estado_analisis"]
+
+        console.log(cloneTable, "cloeeeeeeeeeeeeeeeeee")
+
+        const dataGeneratePdf = {
+            "dataTable": usuarios,
+            "filter": dataFilterTable,
+            "table": { ...cloneTable },
+            "papel": papel,
+            "orientacion": orientacion,
+            "margen_superior": margen_superior,
+            "margen_derecho": margen_derecho,
+            "margen_inferior": margen_inferior,
+            "margen_izquierdo": margen_izquierdo,
+            "fuente": fuente,
+            "font_size_content_tabla": font_size_content_tabla,
+            "font_size_encabezado_tabla": font_size_encabezado_tabla,
+            "font_size_encabezado": font_size_encabezado,
+            "color_fondo": color_fondo,
+            "espaciado_superior_contenido": espaciado_superior_contenido,
+            "espaciado_derecho_contenido": espaciado_derecho_contenido,
+            "espaciado_inferior_contenido": espaciado_inferior_contenido,
+            "espaciado_izquierdo_contenido": espaciado_izquierdo_contenido,
         };
+        if (alto && ancho) {
+            data["width"] = alto
+            data["height"] = ancho
+        }
+        let nodeInsert;
+        if (e.target.nodeName == "BUTTON") {
+            nodeInsert = e.target
+        } else if (e.target.closest("button")) {
+            nodeInsert = e.target.closest("button")
+        }
         try {
             const response = await fetch('http://' + host + ':8000/generateReporte.php', {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(dataGeneratePdf)
             });
+
             if (!response.ok) {
+                if (nodeInsert.querySelector(".loader-div-button")) {
+                    nodeInsert.innerHTML = "Intentar de nuevo."
+                }
                 throw new Error('Error al generar el PDF');
             }
-
             const pdfBlob = await response.blob();
-
-            // Crear una URL de objeto a partir del blob
             const blobUrl = URL.createObjectURL(pdfBlob);
-
-            // Abrir el PDF en una nueva pestaña del navegador
             window.open(blobUrl, '_blank');
+            if (nodeInsert.querySelector(".loader-div-button")) {
+                nodeInsert.innerHTML = "Generar"
+            }
+
+
         } catch (error) {
+            if (nodeInsert.querySelector(".loader-div-button")) {
+                nodeInsert.innerHTML = "Intentar de nuevo."
+            }
             setStatusAlert(true)
             setdataAlert(
                 {
@@ -1732,8 +1887,10 @@ export const Analisis = (userInfo) => {
                     "tittle": "Inténtalo de nuevo"
                 }
             )
+
         }
     }
+
     async function getMuestrasAsignar() {
         try {
             const filterMuestra = {
@@ -2009,12 +2166,71 @@ export const Analisis = (userInfo) => {
             }
         )
     }
+    async function getAvanzado(tipo, filter) {
+
+        const cloneDataFilterTable = { ...dataFilterTable }
+        if (!dataFilterTable["filter"]) {
+            cloneDataFilterTable["filter"] = {}
+        }
+        if (!dataFilterTable["filter"]["where"]) {
+            cloneDataFilterTable["filter"]["where"] = {}
+        }
+        if (!dataFilterTable["filter"]["limit"]) {
+            cloneDataFilterTable["filter"]["limit"] = {}
+        }
+        if (!dataFilterTable["filter"]["date"]) {
+            cloneDataFilterTable["filter"]["date"] = {}
+        }
+        if (!dataFilterTable["filter"]["order"]) {
+            cloneDataFilterTable["filter"]["order"] = {}
+        }
+        console.log(cloneDataFilterTable, "cloooooooooooooooooon")
+        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        }
+        if (filter.desde_registro) {
+            console.log("ahhh")
+            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["desde"] = filter.desde_registro
+        } else {
+            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+                delete cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            }
+        }
+        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        }
+        if (filter.hasta_registro) {
+            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["hasta"] = filter.hasta_registro
+        } else {
+            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            }
+        }
+
+        if (filter.estado) {
+            cloneDataFilterTable["filter"]["where"]["us.estado"] = {
+                "value": filter.estado,
+                "operador": "=",
+                "require": "and"
+            }
+        } else {
+            if (cloneDataFilterTable["filter"]["where"]["us.estado"]) {
+                delete cloneDataFilterTable["filter"]["where"]["us.estado"]
+            }
+        }
+        console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
+
+        setDataFilterTable(cloneDataFilterTable)
+        getFincas()
+
+    }
 
     return (
         <div>
             <div id='mainAnalisis'>
 
-                <Tablas buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+
+                <Tablas getAvanzado={getAvanzado} buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
                 {!modalFormResults ?
                     < FormResultados modalFormNormal={modalFormNormal} setModalFormNormal={setModalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />

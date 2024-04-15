@@ -65,7 +65,10 @@ export const Menu = (data) => {
                 }
                 if (message) {
                     if (Array.isArray(message)) {
-                        setAsignaciones(prevState => [...prevState, message])
+                        /* setAsignaciones(prevState => [...prevState, message]) */
+                        setAsignaciones([])
+                        setLimitNoticaciones(0)
+                        getAsignaciones()
                     }
                 }
 
@@ -231,6 +234,7 @@ export const Menu = (data) => {
                 }
             }
         })
+
     }, [])
     async function getUser() {
         try {
@@ -910,7 +914,7 @@ export const Menu = (data) => {
             console.log("Error: " + e)
         }
     }
-    function resizeMenu() { 
+    function resizeMenu() {
         setHamburguerMode(prevState => {
             let linkMenu = document.querySelectorAll(".change-hamburguer-quit");
             let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
@@ -918,7 +922,7 @@ export const Menu = (data) => {
             let headerNav = document.getElementById("headerNav");
 
             if (navHorizontal) {
-                navHorizontal.style.visibility = "visible"  
+                navHorizontal.style.visibility = "visible"
             }
             if (prevState == 1) {
                 if (document.body.scrollWidth <= 610) {

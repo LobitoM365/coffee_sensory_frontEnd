@@ -25,6 +25,20 @@ export const Form = forwardRef((data, ref) => {
                 restoCadena = restoCadena.replace("-", "")
                 e.target.value = primerValor + restoCadena
             }
+            if (dataInputs[key]["min"]) {
+                if (!isNaN(dataInputs[key]["min"])) {
+                    if (e.target.value < 0) {
+                        e.target.value = dataInputs[key]["min"]
+                    }
+                }
+            }
+            if (dataInputs[key]["max"]) {
+                if (!isNaN(dataInputs[key]["max"])) {
+                    if (e.target.value > dataInputs[key]["max"]) {
+                        e.target.value = dataInputs[key]["max"]
+                    }
+                }
+            }
         } else if (type === "ubicacion") {
             if (!/^-?(\d+(?:\.\d*)?)°?(?:\s?(\d+(?:\.\d*)?)'?(?:\s?(\d+(?:\.\d*)?)")?)?([nsNSWEwe](?!\.))?$/i.test(e.target.value)) {
 
@@ -181,9 +195,9 @@ export const Form = forwardRef((data, ref) => {
                         }
 
                         modalForm.style.alignItems = "center"
-                       /*  modalForm.style.padding = ""
-                        modalForm.style.height = "100%"
-                        modalForm.style.width = "100%" */
+                        /*  modalForm.style.padding = ""
+                         modalForm.style.height = "100%"
+                         modalForm.style.width = "100%" */
                     }
                     if (displayNone) {
                         modalForm.style.display = "none"
@@ -397,7 +411,11 @@ export const Form = forwardRef((data, ref) => {
                                                                         }
 
                                                                     </div>
-                                                                    <div className='input-select-estado input-select-search' name="" id="">
+                                                                    <div className='input-select-estado input-select-search' name="" id="" onClick={(e) => {
+                                                                        const parentElement = e.target.closest(".div-select");
+                                                                        const divOptions = parentElement.querySelectorAll(".opciones-input-select")
+                                                                        divOptions[0] ? divOptions[0].style.display == "none" ? divOptions[0].style.display = "block" : divOptions[0].style.display = "none" : ""
+                                                                    }} >
 
                                                                         <input id={key} type="text" className="input-select" onInput={(e) => {
                                                                             const parentElement = e.target.closest(".div-select");
@@ -405,16 +423,8 @@ export const Form = forwardRef((data, ref) => {
                                                                             /* divOptions[0] ? divOptions[0].style.display == "block" ? divOptions[0].style.display = "none" : divOptions[0].style.display = "block" : "" */
                                                                             divOptions[0] ? divOptions[0].style.display = "block" : ""
                                                                             selectSearch(e.target.value, key, functionExecute, execute == "key" ? "key" : "");
-                                                                        }} onClick={(e) => {
-                                                                            const parentElement = e.target.closest(".div-select");
-                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                            divOptions[0] ? divOptions[0].style.display = "block" : ""
                                                                         }} placeholder={"Seleccione una opción..."} value={selectsValues[key] != "Seleccione una opción..." ? selectsValues[key] : ""} />
-                                                                        <div onClick={(e) => {
-                                                                            const parentElement = e.target.closest(".div-select");
-                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                            divOptions[0] ? divOptions[0].style.display == "none" ? divOptions[0].style.display = "block" : divOptions[0].style.display = "none" : ""
-                                                                        }} className="icon-chevron-estado">
+                                                                        <div className="icon-chevron-estado">
                                                                             <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                                                                 <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                                                                 <g><g><path d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>

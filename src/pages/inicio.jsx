@@ -5,10 +5,11 @@ import {
     PolarAngleAxis, PolarRadiusAxis, ReferenceDot
 } from 'recharts';
 import "../../public/css/style.css"
+import { Alert } from '../componentes/alert';
 
 
 import $, { contains, data } from "jquery"
-import Api from '../componentes/Api';
+import Api, { host } from '../componentes/Api';
 
 export const Inicio = () => {
     const [analisis, setanalisis] = useState({});
@@ -17,7 +18,11 @@ export const Inicio = () => {
     const [resultadoFisico, setResultadoFisico] = useState({});
     const [formatoSensorial, setFormatoSensorial] = useState({});
     const [resultadoSensorial, setResultadoSensorial] = useState({});
+    const [resultadoSensorialPromedio, setResultadoSensorialPromedio] = useState({});
     const [keyModal, setKeyModal] = useState(0);
+    const [statusAlert, setStatusAlert] = useState(false);
+    const [dataAlert, setdataAlert] = useState({});
+    const [imgs, setImgs] = useState({});
 
     let divRef = useRef(null);
     const [dataAtributos, setDataAtributos] = useState([
@@ -37,7 +42,7 @@ export const Inicio = () => {
 
     const [modalStatus, setModalStatus] = useState(false);
     const capturarDivComoImagen = async () => {
-
+        console.log(divRef.current, "cureeeeeeeeeeeeeeeeeeeeeeeeeeeetn")
         if (divRef.current !== null) {
 
             if (document.getElementById("divimgAtributos")) {
@@ -77,17 +82,18 @@ export const Inicio = () => {
                     }
                     resizeModal()
                     getResizeFormatoSca();
-                    setElementsTemplateFormatoSca("iframeFormatoSca", resultadoSensorial)
+                    setElementsTemplateFormatoSca("iframeFormatoSca", resultadoSensorialPromedio)
                 });
             }
         }
     };
 
     useEffect(() => {
-        if (resultadoSensorial.length > 0) {
+        console.log(resultadoSensorialPromedio, "resutlllllllllllllllll----------------------------------------------------")
+        if (Object.keys(resultadoSensorialPromedio).length > 0) {
             capturarDivComoImagen()
         }
-    }, [resultadoSensorial])
+    }, [resultadoSensorialPromedio])
 
 
     function resizeModal() {
@@ -150,62 +156,76 @@ export const Inicio = () => {
         if (data) {
             let iframe = document.getElementById(idElement);
             if (iframe) {
-
+                console.log(data, "dataaaaaaaaaaaaaa")
                 let keysRange = ["fragancia_aroma", "sabor", "sabor_residual", "acidez", "cuerpo", "balance", "puntaje_catador"]
                 let keysIntensidad = ["seco", "espuma", "intensidad", "nivel_cuerpo", "tueste"]
                 let keysCuadro = ["uniformidad", "taza_limpia", "dulzor"]
                 let keysNormal = ["tazas"]
 
-                let keysResult = Object.keys(data[0])
+                let keysResult = Object.keys(data)
                 let content = iframe.contentDocument
 
                 let puntajeTotal = content.getElementById("puntajeTotal")
-                let intensiadDefectos = content.getElementById("intensidadDefectos")
+                let defectos = content.getElementById("defectos")
                 let resultadoTazasXIntensidad = content.getElementById("resultadoTazasXIntensidad")
+                let defectosRechazo = content.getElementById("defectosRechazo");
+                let defectosLigero = content.getElementById("defectosLigero");
                 let puntajeFinal = content.getElementById("puntajeFinal")
                 let notas = content.getElementById("div-notas")
                 let textNotas = content.getElementById("notas")
                 if (textNotas) {
-                    textNotas.innerHTML = data[0].notas
+                    textNotas.innerHTML = data.notas
                 }
 
-                let valuePuntajeTotal = ((data[0].fragancia_aroma ? data[0].fragancia_aroma : 0) + (data[0].sabor ? data[0].sabor : 0) + (data[0].sabor_residual ? data[0].sabor_residual : 0) + (data[0].acidez ? data[0].acidez : 0) + (data[0].cuerpo ? data[0].cuerpo : 0) + (data[0].uniformidad ? data[0].uniformidad : 0) + (data[0].taza_limpia ? data[0].taza_limpia : 0) + (data[0].balance ? data[0].balance : 0) + (data[0].dulzor ? data[0].dulzor : 0) + (data[0].puntaje_catador ? data[0].puntaje_catador : 0))
-                let valueTazasXIntensidad = ((data[0].tazas ? data[0].tazas : 0) * (data[0].intensidad ? data[0].intensidad : 0)).toFixed(1);
+                let valuePuntajeTotal = (parseFloat((data.fragancia_aroma ? data.fragancia_aroma : 0)) + parseFloat((data.sabor ? data.sabor : 0)) + parseFloat((data.sabor_residual ? data.sabor_residual : 0)) + parseFloat((data.acidez ? data.acidez : 0)) + parseFloat((data.cuerpo ? data.cuerpo : 0)) + parseFloat((data.uniformidad ? data.uniformidad : 0)) + parseFloat((data.taza_limpia ? data.taza_limpia : 0)) + parseFloat((data.balance ? data.balance : 0)) + parseFloat((data.dulzor ? data.dulzor : 0)) + parseFloat((data.puntaje_catador ? data.puntaje_catador : 0)))
+                let valueTazasXIntensidad = (parseFloat((data.tazas ? data.tazas : 0)) * parseFloat((data.defectos ? data.defectos : 0)));
                 if (puntajeTotal) {
                     puntajeTotal.innerHTML = valuePuntajeTotal;
                 }
-                if (intensiadDefectos) {
-                    intensiadDefectos.innerHTML = (data[0].intensidad ? data[0].intensidad : 0) < 10 ? (data[0].intensidad ? data[0].intensidad : 0).toFixed(1) : (data[0].intensidad ? data[0].intensidad : 0);
+                if (defectos) {
+                    /* intensiadDefectos.innerHTML = (data.intensidad ? data.intensidad : 0) < 10 ? (data.intensidad ? data.intensidad : 0).toFixed(1) : (data.intensidad ? data.intensidad : 0); */
+                    defectos.innerHTML = (data.defectos ? data.defectos : 0)
+                }
+
+                if (data.defectos == 2) {
+                    if (defectosLigero) {
+                        defectosLigero.classList.add("defectos-focus")
+                    }
+                } else if (data.defectos == 4) {
+                    if (defectosRechazo) {
+                        defectosRechazo.classList.add("defectos-focus")
+                    }
                 }
                 if (resultadoTazasXIntensidad) {
                     resultadoTazasXIntensidad.innerHTML = valueTazasXIntensidad;
                 }
+
                 if (puntajeFinal) {
                     puntajeFinal.innerHTML = valuePuntajeTotal - valueTazasXIntensidad;
                 }
                 if (notas) {
-                    notas.innerHTML = (data[0].notas ? data[0].notas : "No registra");
+                    notas.innerHTML = (data.notas ? data.notas : "No registra");
                 }
                 for (let r = 0; r < keysRange.length; r++) {
                     if (keysResult.includes(keysRange[r])) {
                         let divElement = content.getElementById("div-" + keysRange[r])
                         let divElementInput = content.getElementById(keysRange[r])
                         if (divElementInput) {
-                            divElementInput.value = data[0][keysRange[r]]
+                            divElementInput.value = data[keysRange[r]]
                         }
                         if (divElement) {
                             let range = divElement.querySelectorAll(".value-range-item")
                             let puntaje = divElement.querySelectorAll(".puntaje-range ")
-                            if (data[0][keysRange[r]]) {
+                            if (data[keysRange[r]]) {
 
                                 if (range.length > 0) {
-                                    range[0].style.width = "calc(" + ((data[0][keysRange[r]] - 6) / 4) * 100 + "% - 2px )";
+                                    range[0].style.width = "calc(" + ((data[keysRange[r]] - 6) / 4) * 100 + "% - 2px )";
                                     range[0].style.height = "100%"
 
 
                                 }
                                 if (puntaje.length > 0) {
-                                    puntaje[0].innerHTML = data[0][keysRange[r]]
+                                    puntaje[0].innerHTML = data[keysRange[r]]
                                 }
                             }
                         }
@@ -215,15 +235,25 @@ export const Inicio = () => {
                 for (let i = 0; i < keysIntensidad.length; i++) {
                     if (keysResult.includes(keysIntensidad[i])) {
                         let divElement = content.getElementById("div-" + keysIntensidad[i])
+                        let divValue = content.getElementById("value_" + keysIntensidad[i])
                         let divElementInput = content.getElementById(keysIntensidad[i])
+                        if (divValue) {
+                            const value = data[keysIntensidad[i]]
+                            if (value - Math.floor(value) > 0) {
+                                divValue.innerHTML = value.toFixed(2).toString().replace("0", "")
+                            } else {
+                                divValue.innerHTML = value
+                            }
+
+                        }
                         if (divElementInput) {
-                            divElementInput.value = data[0][keysIntensidad[i]]
+                            divElementInput.value = data[keysIntensidad[i]]
                         }
                         if (divElement) {
                             let range = divElement.querySelectorAll(".range-color-intensidad")
                             if (range.length > 0) {
-                                if (data[0][keysIntensidad[i]]) {
-                                    range[0].style.height = "calc(" + ((data[0][keysIntensidad[i]] / (keysIntensidad[i] != "tueste" ? 5 : 4)) * 100) + "%)"
+                                if (data[keysIntensidad[i]]) {
+                                    range[0].style.height = "calc(" + ((data[keysIntensidad[i]] / (keysIntensidad[i] != "tueste" ? 5 : 4)) * 100) + "%)"
                                 }
                             }
                         }
@@ -236,18 +266,18 @@ export const Inicio = () => {
                         if (divElement) {
                             let cuadro = divElement.querySelectorAll(".cuadro-select")
                             let puntaje = divElement.querySelectorAll(".puntaje-select")
-                            if (data[0][keysCuadro[c]] != undefined) {
+                            if (data[keysCuadro[c]] != undefined) {
 
                                 if (cuadro.length > 0) {
 
-                                    for (let cs = 0; cs < (5 - (data[0][keysCuadro[c]] / 2)); cs++) {
+                                    for (let cs = 0; cs < (5 - (data[keysCuadro[c]] / 2)); cs++) {
                                         cuadro[cs].classList.add("focus-cuadro-select")
 
                                     }
 
                                 }
                                 if (puntaje.length > 0) {
-                                    puntaje[0].innerHTML = data[0][keysCuadro[c]]
+                                    puntaje[0].innerHTML = data[keysCuadro[c]]
                                 }
                             }
 
@@ -259,21 +289,23 @@ export const Inicio = () => {
                         let divElement = content.getElementById("div-" + keysNormal[n])
                         let divElementInput = content.getElementById(keysNormal[n])
                         if (divElementInput) {
-                            divElementInput.value = data[0][keysNormal[n]]
+                            divElementInput.value = data[keysNormal[n]]
                         }
-                        if (data[0][keysNormal[n]]) {
+                        if (data[keysNormal[n]]) {
                             if (divElement) {
-                                divElement.innerHTML = data[0][keysNormal[n]];
+                                divElement.innerHTML = data[keysNormal[n]];
                             }
                         }
                     }
                 }
+                resizeFormatoSca()
             }
         }
 
     }
     function resizeFormatoSca() {
         const iframeFormatoSca = document.getElementById("iframeFormatoSca");
+
         if (iframeFormatoSca) {
             const iframeFormatoScaContentDocument = iframeFormatoSca.contentDocument;
             const formatoSca = iframeFormatoScaContentDocument.getElementById("formatoSca");
@@ -339,104 +371,261 @@ export const Inicio = () => {
 
         iframe.addEventListener('load', function () {
             $(iframe.contentDocument).on("click", ".svg-point", async function () {
-                const response = await Api.post("analisis/buscar/" + $(this).attr("data-point"));
-                console.log(response)
+                let id = $(this).attr("data-point")
+                let statusResultadoFisico = false;
+                let statusResultadoSensorial = false;
+                const response = await Api.post("analisis/buscar/" + id + "");
                 if (response.data.status == true) {
-                    const filterMuestra = {
-                        "filter": {
-                            "where": {
-                                "an.id": {
-                                    "require": "and",
-                                    "value": response.data.data[0].id
-                                }
-                            }
-                        }
+                    console.log(response.data, "daaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    if (response.data.data[0].fincas_id) {
+                        listarIconos(response.data.data[0].fincas_id)
                     }
-                    const muestra = await Api.post("muestra/buscar/" + response.data.data[0]["muestras_id"] + "", filterMuestra);
-                    setmuestra(muestra.data.data[0])
+                    if (response.data.data[0].estado != 4) {
 
-                    const filterFormatoFisico = {
-                        "filter": {
-                            "where": {
-                                "forma.analisis_id": {
-                                    "value": $(this).attr("data-point"),
-                                    "require": "and",
-                                    "group": 2
+                        setdataAlert(
+                            {
+                                "status": "false",
+                                "description": "El análisis debe estar finalizado para poder generar el reporte.",
+                                "tittle": "Inténtalo más tarde.",
+                                "buttons": {
+                                    "ok": {
+                                        "referencia": "ok",
+                                        /* "color" : "green", */
+                                        "continue": {
+                                            "location": "/dashboard/analisis/registros"
+                                        }
+                                    }
                                 },
-                                "forma.tipos_analisis_id": {
-                                    "value": 1,
-                                    "require": "and",
-                                    "group": 2
-                                }
                             }
-                        },
-                    }
-                    const formatoFisico = await Api.post("formatos/buscar/not", filterFormatoFisico);
-                    if (formatoFisico.data.status == true) {
-                        setFormatoFisico(formatoFisico.data.data[0])
-                        const resultado = await Api.post("resultado/buscar/" + formatoFisico.data.data[0].id + "");
-
-                        if (resultado.data.status == true) {
-                            setResultadoFisico(resultado.data.data[0])
-                        } else {
-
-                        }
-
-                    }
-                    const filterFormatoSensorial = {
-                        "filter": {
-                            "where": {
-                                "forma.analisis_id": {
-                                    "value": $(this).attr("data-point"),
-                                    "require": "and",
-                                    "group": 2
-                                },
-                                "forma.tipos_analisis_id": {
-                                    "value": 2,
-                                    "require": "and",
-                                    "group": 1
-                                }
-                            }
-                        },
-                    }
-                    const formatoSensorial = await Api.post("formatos/buscar/not", filterFormatoSensorial);
-                    if (formatoSensorial.data.status == true) {
-
-                        setFormatoSensorial(formatoSensorial.data.data[0])
-                        const resultado = await Api.post("resultado/buscar/" + formatoSensorial.data.data[0].id + "");
-
-                        if (resultado.data.status == true) {
-                            setDataAtributos([
-                                { name: "Fragancia Aroma", x: resultado.data.data[0]["fragancia_aroma"] ? resultado.data.data[0]["fragancia_aroma"] : 0 },
-                                { name: "Sabor", x: resultado.data.data[0]["sabor"] ? resultado.data.data[0]["sabor"] : 0 },
-                                { name: "Retrogusto", x: resultado.data.data[0]["sabor_residual"] ? resultado.data.data[0]["sabor_residual"] : 0 },
-                                { name: "Acidez", x: resultado.data.data[0]["acidez"] ? resultado.data.data[0]["acidez"] : 0 },
-                                { name: "Cuerpo", x: resultado.data.data[0]["cuerpo"] ? resultado.data.data[0]["cuerpo"] : 0 },
-                                { name: "Uniformidad", x: resultado.data.data[0]["uniformidad"] ? resultado.data.data[0]["uniformidad"] : 0 },
-                                { name: "Balance", x: resultado.data.data[0]["balance"] ? resultado.data.data[0]["balance"] : 0 },
-                                { name: "Taza limpia", x: resultado.data.data[0]["taza_limpia"] ? resultado.data.data[0]["taza_limpia"] : 0 },
-                                { name: "Dulzor", x: resultado.data.data[0]["dulzor"] ? resultado.data.data[0]["dulzor"] : 0 },
-                                { name: "Puntaje General", x: resultado.data.data[0]["puntaje_catador"] ? resultado.data.data[0]["puntaje_catador"] : 0 },
-                            ]);
-                            setResultadoSensorial(resultado.data.data)
-
-                            if (formatoFisico.data.status == true && formatoFisico.data.status == true) {
-                                setanalisis(response.data.data)
-                                setModalStatus(true)
-                                window.addEventListener("resize", function () {
-                                    resizeModal()
-                                })
-                                resizeModal()
-
-                            }
-                        } else {
-
-                        }
-
+                        )
                     } else {
+                        const filterMuestra = {
+                            "filter": {
+                                "where": {
+                                    "an.id": {
+                                        "require": "and",
+                                        "value": response.data.data[0].id
+                                    }
+                                }
+                            }
+                        }
+                        const muestra = await Api.post("muestra/buscar/" + response.data.data[0]["muestras_id"] + "", filterMuestra);
+                        setmuestra(muestra.data.data[0])
+
+                        const filterFormatoFisico = {
+                            "filter": {
+                                "where": {
+                                    "forma.analisis_id": {
+                                        "value": id,
+                                        "require": "and",
+                                        "group": 2
+                                    },
+                                    "forma.tipos_analisis_id": {
+                                        "value": 1,
+                                        "require": "and",
+                                        "group": 2
+                                    }
+                                },
+                                "limit": {
+                                    "inicio": "4444",
+                                    "fin": "4444"
+                                }
+                            },
+                        }
+                        const formatoFisico = await Api.post("formatos/buscar/not", filterFormatoFisico);
+
+                        if (formatoFisico.data.status == true) {
+                            const filterResultado = {
+                                "filter": {
+                                    "where": {
+                                        "an.id": {
+                                            "value": id,
+                                            "require": "and",
+                                        },
+                                        "forma.estado": {
+                                            "value": "5",
+                                            "operador": "=",
+                                            "required": "and",
+                                            "group": 4
+                                        },
+                                        "estado1": {
+                                            "value": "4",
+                                            "require": "or",
+                                            "operador": "=",
+                                            "no-key": "forma.estado",
+                                            "group": 4
+                                        },
+                                        "forma.tipos_analisis_id": {
+                                            "value": 1,
+                                            "require": "and",
+                                            "group": 1
+                                        }
+                                    },
+                                    "limit": {
+                                        "inicio": "4444",
+                                        "fin": "4444"
+                                    }
+                                }
+                            }
+                            setFormatoFisico(formatoFisico.data.data)
+                            const resultado = await Api.post("resultado/buscar/not", filterResultado);
+                            if (resultado.data.status == true) {
+                                statusResultadoFisico = true;
+                                const promedioResultadoFisico = {};
+                                const keys = ["peso_cps", "humedad", "peso_cisco", "merma_trilla", "peso_total_almendra", "porcentaje_almendra_sana", "peso_defectos_totales", "factor_rendimiento", "peso_almendra_sana", "porcentaje_defectos_totales", "negro_total", "cardenillo", "vinagre", "cristalizado", "veteado", "ambar", "sobresecado", "mordido", "picado_insectos", "averanado", "inmaduro", "aplastado", "flojo", "decolorado", "malla18", "malla15", "malla17", "malla14", "malla16", "mallas_menores"];
+
+                                for (let x = 0; x < keys.length; x++) {
+                                    for (let d = 0; d < resultado.data.data.length; d++) {
+                                        if (resultado.data.data[d]) {
+                                            if (resultado.data.data[d][keys[x]]) {
+                                                if (!promedioResultadoFisico[keys[x]]) {
+                                                    promedioResultadoFisico[keys[x]] = 0
+                                                }
+                                                promedioResultadoFisico[keys[x]] = parseFloat(promedioResultadoFisico[keys[x]]) + parseFloat(resultado.data.data[d][keys[x]])
+                                            }
+                                        }
+                                    }
+                                    if (promedioResultadoFisico[keys[x]]) {
+                                        const value = promedioResultadoFisico[keys[x]] / resultado.data.data.length;
+                                        if (value - Math.floor(value) > 0) {
+                                            promedioResultadoFisico[keys[x]] = value.toFixed(2).toString().replace("0", "")
+                                        } else {
+                                            promedioResultadoFisico[keys[x]] = value
+                                        }
+                                        /* promedioResultadoFisico[keys[x]] = promedioResultadoFisico[keys[x]] / parseFloat(resultado.data.data.length) */
+                                    }
+                                }
+                                setResultadoFisico(promedioResultadoFisico)
+                            } else {
+
+                            }
+
+                        }
+                        const filterFormatoSensorial = {
+                            "filter": {
+                                "where": {
+                                    "forma.analisis_id": {
+                                        "value": id,
+                                        "require": "and",
+                                        "group": 2
+                                    },
+                                    "forma.tipos_analisis_id": {
+                                        "value": 2,
+                                        "require": "and",
+                                        "group": 1
+                                    }
+                                },
+                                "limit": {
+                                    "inicio": "4444",
+                                    "fin": "4444"
+                                }
+                            },
+                        }
+                        const formatoSensorial = await Api.post("formatos/buscar/not", filterFormatoSensorial);
+
+                        if (formatoSensorial.data.status == true) {
+
+                            setFormatoSensorial(formatoSensorial.data.data)
+                            const filterResultado = {
+                                "filter": {
+                                    "where": {
+                                        "an.id": {
+                                            "value": id,
+                                            "require": "and",
+                                        },
+                                        "forma.estado": {
+                                            "value": "5",
+                                            "operador": "=",
+                                            "required": "and",
+                                            "group": 4
+                                        },
+                                        "estado1": {
+                                            "value": "4",
+                                            "require": "or",
+                                            "operador": "=",
+                                            "no-key": "forma.estado",
+                                            "group": 4
+                                        },
+                                        "forma.tipos_analisis_id": {
+                                            "value": 2,
+                                            "require": "and",
+                                            "group": 1
+                                        }
+                                    },
+                                    "limit": {
+                                        "inicio": "4444",
+                                        "fin": "4444"
+                                    }
+                                }
+                            }
+                            const resultado = await Api.post("resultado/buscar/not", filterResultado);
+
+                            if (resultado.data.status == true) {
+
+
+                                statusResultadoSensorial = true
+                                const promedio = {};
+                                const variablesPromedio = ["fragancia_aroma", "sabor", "sabor_residual", "acidez", "cuerpo", "uniformidad", "balance", "taza_limpia", "dulzor", "puntaje_catador", "tazas", "defectos"]
+                                for (let x = 0; x < resultado.data.data.length; x++) {
+                                    for (let r = 0; r < variablesPromedio.length; r++) {
+                                        const variable = resultado.data.data[x][variablesPromedio[r]]
+                                        console.log(variable, "vaaaaaaaaaaaaaaaar")
+                                        if (variable) {
+                                            if (!promedio[variablesPromedio[r]]) {
+                                                promedio[variablesPromedio[r]] = 0
+                                            }
+                                            promedio[variablesPromedio[r]] = promedio[variablesPromedio[r]] + variable
+                                        } else {
+                                            if (!promedio[variablesPromedio[r]]) {
+                                                promedio[variablesPromedio[r]] = 0
+                                            }
+                                            promedio[variablesPromedio[r]] = promedio[variablesPromedio[r]] + 0
+                                        }
+                                    }
+                                }
+                                console.log(promedio, "prooooooooooooo")
+                                for (let x = 0; x < variablesPromedio.length; x++) {
+                                    if (promedio[variablesPromedio[x]]) {
+                                        const value = promedio[variablesPromedio[x]] / resultado.data.data.length;
+                                        if (value - Math.floor(value) > 0) {
+                                            promedio[variablesPromedio[x]] = value.toFixed(2).toString().replace("0", "")
+                                        } else {
+                                            promedio[variablesPromedio[x]] = value
+                                        }
+                                    }
+                                }
+                                setResultadoSensorialPromedio(promedio)
+
+                                setDataAtributos([
+                                    { name: "Fragancia Aroma", x: promedio["fragancia_aroma"] ? promedio["fragancia_aroma"] : 0 },
+                                    { name: "Sabor", x: promedio["sabor"] ? promedio["sabor"] : 0 },
+                                    { name: "Retrogusto", x: promedio["sabor_residual"] ? promedio["sabor_residual"] : 0 },
+                                    { name: "Acidez", x: promedio["acidez"] ? promedio["acidez"] : 0 },
+                                    { name: "Cuerpo", x: promedio["cuerpo"] ? promedio["cuerpo"] : 0 },
+                                    { name: "Uniformidad", x: promedio["uniformidad"] ? promedio["uniformidad"] : 0 },
+                                    { name: "Balance", x: promedio["balance"] ? promedio["balance"] : 0 },
+                                    { name: "Taza limpia", x: promedio["taza_limpia"] ? promedio["taza_limpia"] : 0 },
+                                    { name: "Dulzor", x: promedio["dulzor"] ? promedio["dulzor"] : 0 },
+                                    { name: "Puntaje General", x: promedio["puntaje_catador"] ? promedio["puntaje_catador"] : 0 },
+                                ]);
+                                setResultadoSensorial(resultado.data.data[0])
+                            } else {
+
+                            }
+                        } else {
+
+                        }
+                        if (statusResultadoSensorial == true && statusResultadoFisico == true) {
+                            setanalisis(response.data.data[0])
+                            setModalStatus(true)
+                            window.addEventListener("resize", function () {
+                                resizeModal()
+                            })
+                            resizeModal()
+
+                        }
 
                     }
-
 
                 } else if (response.data.find_error) {
                     setStatusAlert(true)
@@ -472,7 +661,7 @@ export const Inicio = () => {
         setFormatoFisico({})
         setResultadoFisico({})
         setFormatoSensorial({})
-        setResultadoSensorial({})
+        setResultadoSensorialPromedio({})
     }
 
     useEffect(() => {
@@ -489,11 +678,27 @@ export const Inicio = () => {
             }
         })
     }, [])
+
+
+    async function listarIconos(id) {
+        try {
+
+            const response = await Api.post("/img/finca/listar/" + id);
+            if (response.data.status == true) {
+                setImgs(response.data.data)
+            } else {
+                setImgs([])
+            }
+
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
     return (
         <div id='mainInicio'>
             {modalStatus ?
 
-                analisis ? analisis.length > 0 ?
+                analisis ? Object.keys(analisis).length > 0 ?
                     <div style={{ position: "relative" }}>
 
                         <div id="contentForm" className="div-modal-form modal-form">
@@ -515,7 +720,13 @@ export const Inicio = () => {
                                             <h1 className="title-info">Información sobre la Finca Sublime</h1>
 
                                             <div className="div-img-info-general">
-                                                <img src="img/imgPredeterminada.webp" alt="" />
+                                                {imgs ? imgs.length > 0 ?
+                                                    <img src={"http://" + host + ":3000/img/usuarios/" + imgs[0].usuarios_id + "/fincas/" + imgs[0].fincas_id + "/" + imgs[0].nombre} alt="" />
+                                                    :
+                                                    <img src="img/imgPredeterminada.png" alt="" /> :
+                                                    <img src="img/imgPredeterminada.png" alt="" />
+                                                }
+
                                             </div>
                                         </div>
                                         <div className="div-info-caficultor">
@@ -529,25 +740,25 @@ export const Inicio = () => {
                                                     <div>
                                                         <h4>Nombre(s)</h4>
                                                         <h4>
-                                                            {analisis[0]["nombre"] ? analisis[0]["nombre"] : "No Registra"}
+                                                            {analisis["nombre"] ? analisis["nombre"] : "No Registra"}
                                                         </h4>
                                                     </div>
                                                     <div>
                                                         <h4>Apellidos(s)</h4>
                                                         <h4>
-                                                            {analisis[0]["apellido"] ? analisis[0]["apellido"] : "No Registra"}
+                                                            {analisis["apellido"] ? analisis["apellido"] : "No Registra"}
                                                         </h4>
                                                     </div>
                                                     <div>
                                                         <h4>Teléfono</h4>
                                                         <h4>
-                                                            {analisis[0]["telefono"] ? analisis[0]["telefono"] : "No Registra"}
+                                                            {analisis["telefono"] ? analisis["telefono"] : "No Registra"}
                                                         </h4>
                                                     </div>
                                                     <div>
                                                         <h4>Correo Electrónico</h4>
                                                         <h4>
-                                                            {analisis[0]["correo_electronico"] ? analisis[0]["correo_electronico"] : "No Registra"}
+                                                            {analisis["correo_electronico"] ? analisis["correo_electronico"] : "No Registra"}
                                                         </h4>
                                                     </div>
                                                 </div>
@@ -570,10 +781,10 @@ export const Inicio = () => {
                                                             {muestra["variedad"] ? muestra["variedad"] : "No Registra"}
                                                         </h4>
                                                     </div>
-                                                    <div>
+                                                    {/*     <div>
                                                         <h4>Muestra</h4>
                                                         <h4>N-1</h4>
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             </div>
                                         </div>
@@ -583,8 +794,8 @@ export const Inicio = () => {
                                             <div className="tittle-puntaje">
                                                 Puntaje
                                             </div>
-                                            <div className={"body-puntaje " + (analisis[0]["calidad"] > 9 ? "body-puntaje-extraordinario" : analisis[0]["calidad"] > 8 ? "body-puntaje-excelente" : analisis[0]["calidad"] > 7 ? "body-puntaje-muy-bueno" : "body-puntaje-bueno")}>
-                                                {analisis[0]["calidad"] ? analisis[0]["calidad"] : 6}
+                                            <div className={"body-puntaje " + (analisis["calidad"] > 9 ? "body-puntaje-extraordinario" : analisis["calidad"] > 8 ? "body-puntaje-excelente" : analisis["calidad"] > 7 ? "body-puntaje-muy-bueno" : "body-puntaje-bueno")}>
+                                                {analisis["calidad"] ? analisis["calidad"] : 0}
                                             </div>
                                         </div>
                                         <div className="leyenda-puntaje">
@@ -613,19 +824,19 @@ export const Inicio = () => {
                                             <div>
                                                 <h4 className="tittle-ubicacion">Departamento</h4>
                                                 <h4 className="value-ubicacion">
-                                                    {analisis[0]["departamento"] ? analisis[0]["departamento"] : "No Registra"}
+                                                    {analisis["departamento"] ? analisis["departamento"] : "No Registra"}
                                                 </h4>
                                             </div>
                                             <div>
                                                 <h4 className="tittle-ubicacion">Municipio</h4>
                                                 <h4 className="value-ubicacion">
-                                                    {analisis[0]["municipio"] ? analisis[0]["municipio"] : "No Registra"}
+                                                    {analisis["municipio"] ? analisis["municipio"] : "No Registra"}
                                                 </h4>
                                             </div>
                                             <div>
                                                 <h4 className="title-ubicacion">Vereda</h4>
                                                 <h4 className="value-ubicacion">
-                                                    {analisis[0]["vereda"] ? analisis[0]["vereda"] : "No Registra"}
+                                                    {analisis["vereda"] ? analisis["vereda"] : "No Registra"}
                                                 </h4>
                                             </div>
                                             <div className="div-coordenadas">
@@ -638,12 +849,12 @@ export const Inicio = () => {
                                                 <div className="div-ubicacion-valor">
                                                     <div>
                                                         <h4>
-                                                            {analisis[0]["longitud_lote"] ? analisis[0]["longitud_lote"] : "No Registra"}
+                                                            {analisis["longitud_lote"] ? analisis["longitud_lote"] : "No Registra"}
                                                         </h4>
                                                     </div>
                                                     <div>
                                                         <h4>
-                                                            {analisis[0]["latitud_lote"] ? analisis[0]["latitud_lote"] : "No Registra"}
+                                                            {analisis["latitud_lote"] ? analisis["latitud_lote"] : "No Registra"}
                                                         </h4>
                                                     </div>
                                                 </div>
@@ -653,13 +864,13 @@ export const Inicio = () => {
                                             <div>
                                                 <h4 className="tittle-ubicacion">Finca</h4>
                                                 <h4 className="value-ubicacion">
-                                                    {analisis[0]["finca"] ? analisis[0]["finca"] : "No Registra"}
+                                                    {analisis["finca"] ? analisis["finca"] : "No Registra"}
                                                 </h4>
                                             </div>
                                             <div>
                                                 <h4 className="tittle-ubicacion">Lote</h4>
                                                 <h4 className="value-ubicacion">
-                                                    {analisis[0]["lote"] ? analisis[0]["lote"] : "No Registra"}
+                                                    {analisis["lote"] ? analisis["lote"] : "No Registra"}
                                                 </h4>
                                             </div>
 
@@ -794,15 +1005,16 @@ export const Inicio = () => {
 
 
 
-                        {resultadoSensorial ? resultadoSensorial.length > 0 ?
+                        {resultadoSensorialPromedio ? Object.keys(resultadoSensorialPromedio).length > 0 ?
                             <div style={{ top: "-9999%", right: "-9999%", zIndex: -9999, position: "absolute", height: "max-content", overflow: "auto", width: "max-content" }} id='divimgAtributos' ref={divRef}>
+                                {console.log(resultadoSensorialPromedio, analisis, "promeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")}
                                 <RadarChart radarBackground={{ fill: 'black' }} height={1000} width={1000}
                                     outerRadius="60%" data={dataAtributos}   >
                                     <PolarGrid stroke='black' />
                                     <PolarAngleAxis dataKey="name" angle={0} textAnchor="middle" tick={{ fill: 'black', fontSize: "40px" }} />
                                     <PolarRadiusAxis angle={90} tickCount={6} domain={[0, 10]} tick={{ fill: 'black', fontSize: "40px" }} />
                                     <Radar isAnimationActive={false} dataKey="x" stroke="green"
-                                        fill={parseFloat(resultadoSensorial[0].calidad) / 10 <= 7 ? "red" : parseFloat(resultadoSensorial[0].calidad) / 10 <= 8 ? "orange" : parseFloat(resultadoSensorial[0].calidad) / 10 <= 9 ? "yellow" : parseFloat(resultadoSensorial[0].calidad) / 10 <= 10 ? "green" : ""} fillOpacity={0.5} />
+                                        fill={parseFloat(analisis.calidad) / 10 <= 7 ? "red" : parseFloat(analisis.calidad) / 10 <= 8 ? "orange" : parseFloat(analisis.calidad) / 10 <= 9 ? "yellow" : parseFloat(analisis.calidad) / 10 <= 10 ? "green" : ""} fillOpacity={0.5} />
                                 </RadarChart>
                             </div>
                             : "" : ""}
@@ -812,6 +1024,8 @@ export const Inicio = () => {
             <img className='img-fondo' src="/public/img/fondoMapa2.jpg" alt="" />
 
             <iframe id='iframeMapa' className='iframe' src="src/mapa/MapaV4/index.html" frameBorder={0}></iframe>
+            <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
+
         </div>
     )
 }

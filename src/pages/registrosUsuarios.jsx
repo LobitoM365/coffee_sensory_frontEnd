@@ -9,6 +9,15 @@ export const RegistrosUsuarios = () => {
         "filter": {
             "where": {
 
+            },
+            "order": {
+
+            },
+            "limit": {
+
+            },
+            "date": {
+
             }
         }
     })
@@ -29,10 +38,13 @@ export const RegistrosUsuarios = () => {
                 "status": true,
                 "rol": ["administrador"]
             },
-            "reporte": {
+            "avanzado": {
                 "status": true,
                 "rol": ["administrador"]
             },
+            "pdf": {
+                "status": true
+            }
         }
     });
     let [inputsForm, setInputsForm] = useState(
@@ -115,6 +127,19 @@ export const RegistrosUsuarios = () => {
                     },
                 },
                 referencia: "Filtrar por estado"
+            },
+            "rol": {
+                inputs: {
+                    rol: {
+                        type: "select",
+                        referencia: "Rol",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "administrador", value: "administrador" }, { nombre: "catador", value: "catador" }, { nombre: "cafetero", value: "cafetero" }],
+                        upper_case: true,
+                        key: "value"
+                    },
+                },
+                referencia: "Filtrar por rol o cargo"
             }
         }
     )
@@ -149,7 +174,7 @@ export const RegistrosUsuarios = () => {
         },
         "tipo_documento": {
             "referencia": "Tipo de documento",
-            "upper_case": true,
+            "capital_letter": true,
             "priority": 7,
         },
         "rol": {
@@ -161,6 +186,16 @@ export const RegistrosUsuarios = () => {
             "referencia": "Cargo",
             "upper_case": true,
             "priority": 9,
+        },
+        "fecha_actualizacion": {
+            "referencia": "Fecha de Actualización",
+            "priority": 10,
+            "format": true
+        },
+        "fecha_creacion": {
+            "referencia": "Fecha de Creación",
+            "priority": 10,
+            "format": true
         },
         "estado": {
             "referencia": "Estado",
@@ -466,7 +501,79 @@ export const RegistrosUsuarios = () => {
         cloneDataFilterTable.filter["search"] = search
         setDataFilterTable(cloneDataFilterTable)
         getusuarios(dataFilterTable)
+    }
 
+    async function generatePdf(e, orientacion, papel, alto, ancho, margen_superior, margen_derecho, margen_inferior, margen_izquierdo, fuente, font_size_content_tabla, font_size_encabezado_tabla, font_size_encabezado, color_fondo, espaciado_superior_contenido, espaciado_derecho_contenido, espaciado_inferior_contenido, espaciado_izquierdo_contenido) {
+        let cloneTable = { ...keys }
+        delete cloneTable["actualizar"]
+
+        const data = {
+            "dataTable": usuarios,
+            "filter": dataFilterTable,
+            "table": { ...cloneTable },
+            "papel": papel,
+            "orientacion": orientacion,
+            "margen_superior": margen_superior,
+            "margen_derecho": margen_derecho,
+            "margen_inferior": margen_inferior,
+            "margen_izquierdo": margen_izquierdo,
+            "fuente": fuente,
+            "font_size_content_tabla": font_size_content_tabla,
+            "font_size_encabezado_tabla": font_size_encabezado_tabla,
+            "font_size_encabezado": font_size_encabezado,
+            "color_fondo": color_fondo,
+            "espaciado_superior_contenido": espaciado_superior_contenido,
+            "espaciado_derecho_contenido": espaciado_derecho_contenido,
+            "espaciado_inferior_contenido": espaciado_inferior_contenido,
+            "espaciado_izquierdo_contenido": espaciado_izquierdo_contenido,
+        };
+        if (alto && ancho) {
+            data["width"] = alto
+            data["height"] = ancho
+        }
+        let nodeInsert;
+        if (e.target.nodeName == "BUTTON") {
+            nodeInsert = e.target
+        } else if (e.target.closest("button")) {
+            nodeInsert = e.target.closest("button")
+        }
+        try {
+            const response = await fetch('http://' + host + ':8000/generateReporte.php', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                if (nodeInsert.querySelector(".loader-div-button")) {
+                    nodeInsert.innerHTML = "Intentar de nuevo."
+                }
+                throw new Error('Error al generar el PDF');
+            }
+            const pdfBlob = await response.blob();
+            const blobUrl = URL.createObjectURL(pdfBlob);
+            window.open(blobUrl, '_blank');
+            if (nodeInsert.querySelector(".loader-div-button")) {
+                nodeInsert.innerHTML = "Generar"
+            }
+
+
+        } catch (error) {
+            if (nodeInsert.querySelector(".loader-div-button")) {
+                nodeInsert.innerHTML = "Intentar de nuevo."
+            }
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "false",
+                    description: "Error interno del servidor: " + error,
+                    "tittle": "Inténtalo de nuevo"
+                }
+            )
+
+        }
     }
     function getDataPdf(data) {
         let dataPdf = {
@@ -477,112 +584,98 @@ export const RegistrosUsuarios = () => {
         window.open('/dashboard/generatePdfTable', '_blank')
     }
 
-    async function getReporte(tipo, filter) {
+    async function getAvanzado(tipo, filter) {
         try {
-
-            let filterReport = {
-                "filter": {
-                    "where": {
-
-                    },
-                    "date": {
-                        "us.fecha_creacion": {
-                            "desde": filter.desde_registro ? filter.desde_registro : "",
-                            "hasta": filter.hasta_registro ? filter.hasta_registro : ""
-                        }
-                    },
-                    "limit": {
-                        inicio: 0,
-                        fin: 100
-                    }
+            const cloneDataFilterTable = { ...dataFilterTable }
+            if (!dataFilterTable["filter"]) {
+                dataFilterTable["filter"] = {}
+                if (!dataFilterTable["filter"]["where"]) {
+                    cloneDataFilterTable["filter"]["where"] = {}
+                }
+                if (!dataFilterTable["filter"]["limit"]) {
+                    cloneDataFilterTable["filter"]["limit"] = {}
+                }
+                if (!dataFilterTable["filter"]["date"]) {
+                    cloneDataFilterTable["filter"]["date"] = {}
+                }
+                if (!dataFilterTable["filter"]["order"]) {
+                    cloneDataFilterTable["filter"]["order"] = {}
                 }
             }
-            if (filter.estado != "" && filter.estado) {
-                filterReport["filter"]["where"]["us.estado"] = {
-                    "value": filter.estado ? filter.estado : "",
+
+            
+            if (filter.desde_registro) {
+                console.log("ahhh")
+                if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+                    cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+                }
+                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["desde"] = filter.desde_registro
+            } else {
+                if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+                    delete cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+                }
+            }
+            if (filter.hasta_registro) {
+                if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+                    cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+                }
+                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["hasta"] = filter.hasta_registro
+            } else {
+                if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+                    cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+                }
+            }
+
+            if (filter.estado) {
+                cloneDataFilterTable["filter"]["where"]["us.estado"] = {
+                    "value": filter.estado,
                     "operador": "=",
                     "require": "and"
                 }
-            }
-            const response = await Api.post("usuarios/listar", filterReport);
-            console.log(response)
-            if (response.data.status == true) {
-                if (tipo == "pdf") {
-                    if (response.data.count > 100) {
-                        setFilterPdflimit({ status: true, max: response.data.count })
-                    }
-                    let dataPdf = {
-                        data: response.data.data,
-                        table: keys
-                    }
-                    localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
-                    window.open('/dashboard/generatePdfTable', '_blank')
-                } else {
-                    generatePdf(filterReport, response.data.data, keys)
+            } else {
+                if (cloneDataFilterTable["filter"]["where"]["us.estado"]) {
+                    delete cloneDataFilterTable["filter"]["where"]["us.estado"]
                 }
-            } else if (response.data.find_error) {
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.find_error,
-                        "tittle": "No se encontró!"
-                    }
-                )
             }
+
+            setDataFilterTable(cloneDataFilterTable)
+            getusuarios()
+            // const response = await Api.post("usuarios/listar", filterReport);
+            // console.log(response)
+            // if (response.data.status == true) {
+            //     if (tipo == "pdf") {
+            //         if (response.data.count > 100) {
+            //             setFilterPdflimit({ status: true, max: response.data.count })
+            //         }
+            //         let dataPdf = {
+            //             data: response.data.data,
+            //             table: keys
+            //         }
+            //         localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
+            //         window.open('/dashboard/generatePdfTable', '_blank')
+            //     } else {
+            //         generatePdf(filterReport, response.data.data, keys)
+            //     }
+            // } else if (response.data.find_error) {
+            //     setStatusAlert(true)
+            //     setdataAlert(
+            //         {
+            //             status: "false",
+            //             description: response.data.find_error,
+            //             "tittle": "No se encontró!"
+            //         }
+            //     )
+            // }
 
         } catch (e) {
             console.log(e)
         }
     }
 
-    async function generatePdf(filter, dataTable, table) {
-        let cloneTable = { ...table }
-        delete cloneTable["permission_formato_fisico"]
-        delete cloneTable["permission_formato_sca"]
-        delete cloneTable["actualizar"]
-        delete cloneTable["reporte"]
-        console.log(cloneTable, "hahsd")
-        const data = {
-            dataTable,
-            filter,
-            table: { ...cloneTable }
-        };
-        try {
-            const response = await fetch('http://' + host + ':8000/generateReporte.php', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-            if (!response.ok) {
-                throw new Error('Error al generar el PDF');
-            }
-
-            const pdfBlob = await response.blob();
-
-            // Crear una URL de objeto a partir del blob
-            const blobUrl = URL.createObjectURL(pdfBlob);
-
-            // Abrir el PDF en una nueva pestaña del navegador
-            window.open(blobUrl, '_blank');
-        } catch (error) {
-            setStatusAlert(true)
-            setdataAlert(
-                {
-                    status: "false",
-                    description: "Error interno del servidor: " + error,
-                    "tittle": "Inténtalo de nuevo"
-                }
-            )
-            console.error('Error:', error);
-        }
-    }
 
     return (
         <>
-            <Tablas buttonsHeaderTable={buttonsHeaderTable} getDataPdf={getDataPdf} clearInputs={clearInputs} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} getDataPdf={getDataPdf} buttonsHeaderTable={buttonsHeaderTable} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Tablas } from "../componentes/tablas.jsx"
 import Api from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
-
+import { host } from '../componentes/Api.jsx'
 
 export const Variedades = () => {
     let [dataFilterTable, setDataFilterTable] = useState({
@@ -19,10 +19,13 @@ export const Variedades = () => {
                 "status": true,
                 "rol": ["administrador", "catador"]
             },
-            "reporte": {
+            "avanzado": {
                 "status": true,
                 "rol": ["administrador"]
             },
+            "pdf": {
+                "status": true
+            }
         }
     });
 
@@ -338,12 +341,172 @@ export const Variedades = () => {
         cloneDataFilterTable.filter["search"] = search
         setDataFilterTable(cloneDataFilterTable)
         getVariedades(dataFilterTable)
+    }
+    let [inputsDocumento, setinputsDocumento] = useState(
+        {
+            "fecha": {
+                inputs: {
+                    desde_registro: {
+                        type: "date",
+                        referencia: "Desde",
+                        values: ["nombre"],
+                    },
+                    hasta_registro: {
+                        type: "date",
+                        referencia: "Hasta",
+                    }
+                },
+                referencia: "Filtrar por fecha de creación"
+            },
+            "estado": {
+                inputs: {
+                    estado: {
+                        type: "select",
+                        referencia: "Estado",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "activo", value: "1" }, { nombre: "inactivo", value: "0" }],
+                        upper_case: true,
+                        key: "value"
+                    },
+                },
+                referencia: "Filtrar por estado"
+            }
+        }
+    )
+
+    async function getAvanzado(tipo, filter) {
+
+        const cloneDataFilterTable = { ...dataFilterTable }
+        if (!dataFilterTable["filter"]) {
+            cloneDataFilterTable["filter"] = {}
+        }
+        if (!dataFilterTable["filter"]["where"]) {
+            cloneDataFilterTable["filter"]["where"] = {}
+        }
+        if (!dataFilterTable["filter"]["limit"]) {
+            cloneDataFilterTable["filter"]["limit"] = {}
+        }
+        if (!dataFilterTable["filter"]["date"]) {
+            cloneDataFilterTable["filter"]["date"] = {}
+        }
+        if (!dataFilterTable["filter"]["order"]) {
+            cloneDataFilterTable["filter"]["order"] = {}
+        }
+        console.log(cloneDataFilterTable, "cloooooooooooooooooon")
+        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        }
+        if (filter.desde_registro) {
+            console.log("ahhh")
+            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["desde"] = filter.desde_registro
+        } else {
+            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+                delete cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            }
+        }
+        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        }
+        if (filter.hasta_registro) {
+            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["hasta"] = filter.hasta_registro
+        } else {
+            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            }
+        }
+
+        if (filter.estado) {
+            cloneDataFilterTable["filter"]["where"]["us.estado"] = {
+                "value": filter.estado,
+                "operador": "=",
+                "require": "and"
+            }
+        } else {
+            if (cloneDataFilterTable["filter"]["where"]["us.estado"]) {
+                delete cloneDataFilterTable["filter"]["where"]["us.estado"]
+            }
+        }
+        console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
+
+        setDataFilterTable(cloneDataFilterTable)
+        getFincas()
 
     }
+    async function generatePdf(e, orientacion, papel, alto, ancho, margen_superior, margen_derecho, margen_inferior, margen_izquierdo, fuente, font_size_content_tabla, font_size_encabezado_tabla, font_size_encabezado, color_fondo, espaciado_superior_contenido, espaciado_derecho_contenido, espaciado_inferior_contenido, espaciado_izquierdo_contenido) {
+        let cloneTable = { ...keys }
+        delete cloneTable["actualizar"]
 
+        const dataGeneratePdf = {
+            "dataTable": fincas,
+            "filter": dataFilterTable,
+            "table": { ...cloneTable },
+            "papel": papel,
+            "orientacion": orientacion,
+            "margen_superior": margen_superior,
+            "margen_derecho": margen_derecho,
+            "margen_inferior": margen_inferior,
+            "margen_izquierdo": margen_izquierdo,
+            "fuente": fuente,
+            "font_size_content_tabla": font_size_content_tabla,
+            "font_size_encabezado_tabla": font_size_encabezado_tabla,
+            "font_size_encabezado": font_size_encabezado,
+            "color_fondo": color_fondo,
+            "espaciado_superior_contenido": espaciado_superior_contenido,
+            "espaciado_derecho_contenido": espaciado_derecho_contenido,
+            "espaciado_inferior_contenido": espaciado_inferior_contenido,
+            "espaciado_izquierdo_contenido": espaciado_izquierdo_contenido,
+        };
+        if (alto && ancho) {
+            data["width"] = alto
+            data["height"] = ancho
+        }
+        let nodeInsert;
+        if (e.target.nodeName == "BUTTON") {
+            nodeInsert = e.target
+        } else if (e.target.closest("button")) {
+            nodeInsert = e.target.closest("button")
+        }
+        try {
+            const response = await fetch('http://' + host + ':8000/generateReporte.php', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataGeneratePdf)
+            });
+
+            if (!response.ok) {
+                if (nodeInsert.querySelector(".loader-div-button")) {
+                    nodeInsert.innerHTML = "Intentar de nuevo."
+                }
+                throw new Error('Error al generar el PDF');
+            }
+            const pdfBlob = await response.blob();
+            const blobUrl = URL.createObjectURL(pdfBlob);
+            window.open(blobUrl, '_blank');
+            if (nodeInsert.querySelector(".loader-div-button")) {
+                nodeInsert.innerHTML = "Generar"
+            }
+
+
+        } catch (error) {
+            if (nodeInsert.querySelector(".loader-div-button")) {
+                nodeInsert.innerHTML = "Intentar de nuevo."
+            }
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "false",
+                    description: "Error interno del servidor: " + error,
+                    "tittle": "Inténtalo de nuevo"
+                }
+            )
+
+        }
+    }
     return (
         <>
-            <Tablas buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Variedad"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} hidden={'status'} />
+            <Tablas getAvanzado={getAvanzado} generatePdf={generatePdf} dataDocumento={inputsDocumento} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Variedad"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} hidden={'status'} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

@@ -228,7 +228,8 @@
  }
 
  #mainInicio .div-info-caficultor {
-     display: flex;
+     display: grid;
+     grid-template-columns: 1fr 1fr;
      max-width: 100%;
      gap: 70px;
      padding: 20px;
@@ -241,6 +242,10 @@
 
  #mainInicio .div-info-caficultor>div {
      width: 100%;
+     height: 100%;
+     display: grid;
+     grid-template-columns: 1fr;
+     grid-template-rows: auto 1fr;
  }
 
  #mainInicio .div-info-caficultor img {
@@ -263,12 +268,12 @@
 
  #mainInicio .div-info-content-general {
      width: calc(100% - 40px);
-     height: auto;
+     height:  calc(100% - 40px);
      padding: 20px;
-     background-color: white;
      display: grid;
      grid-template-columns: 1fr 1fr;
      gap: 20px;
+     background-color: white;
  }
 
  #mainInicio .head-title-info-caficultor {

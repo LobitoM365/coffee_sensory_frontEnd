@@ -91,11 +91,11 @@ export const Muestras = (userInfo) => {
                 referencia: "Codigo Externo",
                 upper_case: true,
             },
-            consecutivo_informe: {
-                type: "normal",
-                referencia: "Consecutivo Informe",
-                upper_case: true,
-            },
+            // consecutivo_informe: {
+            //     type: "normal",
+            //     referencia: "Consecutivo Informe",
+            //     upper_case: true,
+            // },
             muestreo: {
                 type: "normal",
                 referencia: "Muestreo",

@@ -675,14 +675,12 @@ export const Tablas = (array) => {
         }
         if (!nodeInsert.querySelector(".loader-div-button")) {
             const heightLoader = nodeInsert.offsetHeight - parseInt(window.getComputedStyle(nodeInsert).paddingTop) - parseInt(window.getComputedStyle(nodeInsert).paddingBottom);;
-            console.log(nodeInsert.offsetHeight, heightLoader, "aaaaaaaaaaa")
             nodeInsert.innerHTML = "<div style='width:" + heightLoader + "px; height: " + heightLoader + "px' class='loader-div-button'> </div>"
             let colorFondo = valueGlobalInput["color_fondo"]
             if (valueGlobalInput["color_fondo_rgba"]) {
                 colorFondo = valueGlobalInput["color_fondo_rgba"]
             }
             if (array.generatePdf) {
-                console.log(valueGlobalInput["orientacion"])
                 array.generatePdf(e, valueGlobalInput["orientacion"], valueGlobalInput["papel"], valueGlobalInput["alto_pdf"], valueGlobalInput["ancho_pdf"], valueGlobalInput["margen_superior"], valueGlobalInput["margen_derecho"], valueGlobalInput["margen_inferior"], valueGlobalInput["margen_izquierdo"], valueGlobalInput["fuente"], valueGlobalInput["font_size_content_tabla"], valueGlobalInput["font_size_encabezado_tabla"], valueGlobalInput["font_size_encabezado"], colorFondo, valueGlobalInput["espaciado_superior_contenido"], valueGlobalInput["espaciado_derecho_contenido"], valueGlobalInput["espaciado_inferior_contenido"], valueGlobalInput["espaciado_izquierdo_contenido"])
             }
         }
@@ -717,12 +715,10 @@ export const Tablas = (array) => {
                                                                             }
                                                                         }
                                                                     }
-
                                                                     div.push(<button key={value} style={{ display: array.hidden && array.hidden.includes('register') ? 'none' : '' }} onClick={() => { array.clearInputs ? array.clearInputs() : ""; setClearClick(); array.setErrors({}); setStatusInputDefault(false); setStatusInput(true); setStatusSelect(true), setStatusSelectDefault(false); array.changeModalForm(!array.modalForm); array.editarStatus(false) }} className='button-register-table'>Añadir</button>)
                                                                 }
                                                             }
                                                         } else if (key == "avanzado") {
-                                                            console.log(key, "avanzadooooooooooo", dataButtons)
                                                             if (dataButtons[key].status) {
                                                                 if (dataButtons[key].status == true) {
 
@@ -1456,6 +1452,7 @@ export const Tablas = (array) => {
                                                 data.map((keysD, valuesD) => (
 
                                                     <tr key={keysD["id"] ? keysD["id"] : valuesD} className='tr-table'>
+                                                        
                                                         {
                                                             keysPrint.map((keys, index) => {
 

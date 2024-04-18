@@ -9,7 +9,6 @@ export const Municipios = (userInfo) => {
         "buttons": {
             "avanzado": {
                 "status": true,
-                "rol": ["administrador"]
             },
             "pdf": {
                 "status": true
@@ -487,40 +486,44 @@ export const Municipios = (userInfo) => {
             cloneDataFilterTable["filter"]["order"] = {}
         }
         console.log(cloneDataFilterTable, "cloooooooooooooooooon")
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
             console.log("ahhh")
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["desde"] = filter.desde_registro
+            cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                delete cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]) {
+                delete cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]
             }
         }
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"] = {}
         }
         if (filter.hasta_registro) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["hasta"] = filter.hasta_registro
+            cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]["hasta"] = filter.hasta_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]) {
+                cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]
             }
         }
 
-        if (filter.estado) {
-            cloneDataFilterTable["filter"]["where"]["us.estado"] = {
-                "value": filter.estado,
-                "operador": "=",
-                "require": "and"
-            }
-        } else {
-            if (cloneDataFilterTable["filter"]["where"]["us.estado"]) {
-                delete cloneDataFilterTable["filter"]["where"]["us.estado"]
+        const dataWhere = ["departamentos_id"]
+
+        for (let x = 0; x < dataWhere.length; x++) {
+            if (filter[dataWhere[x]]) {
+                cloneDataFilterTable["filter"]["where"]["mu." + [dataWhere[x]]] = {
+                    "value": filter[[dataWhere[x]]],
+                    "operador": "=",
+                    "require": "and"
+                }
+            } else {
+                if (cloneDataFilterTable["filter"]["where"]["mu." + [dataWhere[x]]]) {
+                    delete cloneDataFilterTable["filter"]["where"]["mu." + [dataWhere[x]]]
+                }
             }
         }
-        console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
+        console.log(cloneDataFilterTable)
 
         setDataFilterTable(cloneDataFilterTable)
         getEntities()

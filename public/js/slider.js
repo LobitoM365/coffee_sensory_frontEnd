@@ -1,5 +1,4 @@
 let imgSlider = document.querySelectorAll(".div-element-slider");
-console.log(imgSlider, "xdxdxdd")
 let chevronRight = document.getElementById("chevronRight");
 let chevronLeft = document.getElementById("chevronLeft");
 
@@ -34,6 +33,7 @@ chevronLeft.addEventListener("click", function () {
 })
 function ir(data) {
     for (let x = 0; x < data.length; x++) {
+
         if (data[x] == (imgSlider.length - 1) * -100) {
             data[x] = 100;
             imgSlider[x].style.transition = "margin 0s";
@@ -44,12 +44,16 @@ function ir(data) {
             imgSlider[x].style.marginLeft = data[x] + "%";
 
         }
+        if (data[x] == 0) {
+            imgSlider[x].style.zIndex = 99
+        } else {
+            imgSlider[x].style.zIndex = "";
+        }
     }
 }
 function volver(data) {
-    
     for (let x = 0; x < data.length; x++) {
-        if (data[x] == (imgSlider.length - 1 ) * 100) {
+        if (data[x] == (imgSlider.length - 1) * 100) {
             console.log(data)
             data[x] = -100;
             imgSlider[x].style.transition = "margin 0s";
@@ -58,7 +62,11 @@ function volver(data) {
         } else {
             imgSlider[x].style.transition = "margin 0.5s";
             imgSlider[x].style.marginLeft = data[x] + "%";
-
+        }
+        if (data[x] == 0) {
+            imgSlider[x].style.zIndex = 99
+        } else {
+            imgSlider[x].style.zIndex = "";
         }
     }
 }

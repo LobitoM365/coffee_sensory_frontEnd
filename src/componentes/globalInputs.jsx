@@ -321,10 +321,11 @@ export const GlobalInputs = forwardRef((data, ref) => {
 
                             if (typeof elementEdit == "object" && statusInputDefault) {
                                 if (typeof data.value == "object") {
-                                    value = elementEdit[key] ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function (match) {
+                                    value = elementEdit[key] != undefined ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function (match) {
                                         return match.charAt(0).toUpperCase() + match.slice(1);
-                                    }) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : ""
-                                    data.value[key] = elementEdit[key] ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function (match) {
+                                    }) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : "";
+
+                                    data.value[key] = elementEdit[key]  != undefined ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function (match) {
                                         return match.charAt(0).toUpperCase() + match.slice(1);
                                     }) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : ""
                                     if (dataInputs[key]["type"] == "color") {
@@ -347,7 +348,10 @@ export const GlobalInputs = forwardRef((data, ref) => {
                             return (
                                 <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
                                     <div className="head-input">
-                                        <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : dataInputs[key]["referencia"] === false ? "" : ""}</label>
+                                        {dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] === false ? "" :
+                                            <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"]}</label>
+                                            : ""}
+
                                         {edit == false ?
 
                                             dataInputs[key]["type"] === "area" ?
@@ -453,7 +457,9 @@ export const GlobalInputs = forwardRef((data, ref) => {
                             return (
                                 <div key={key} className="input-content-form-register">
                                     <div className="head-input">
-                                        {dataInputs[key]["referencia"] ? <label htmlFor={key} className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : dataInputs[key]["referencia"] === false ? "" : ""}</label> : ""}
+                                        {dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] === false ? "" :
+                                            <label htmlFor={key} className="label-from-register" >{dataInputs[key]["referencia"]}</label>
+                                            : ""}
                                         <div>
                                             <div key={key} className="filter-estado div-select">
                                                 <div key={index} style={{ display: "none" }} className="opciones opciones-input-select">
@@ -493,7 +499,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                                             } else if (dataInputs[key]["capital_letter"]) {
                                                                 value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
                                                             }
-                                                            if (elementEdit) {
+                                                            if (elementEdit != undefined) {
                                                                 let editValue = "";
                                                                 if (typeof elementEdit == "object") {
                                                                     editValue = elementEdit[key]

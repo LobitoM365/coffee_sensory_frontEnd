@@ -169,7 +169,7 @@ export const Menu = (data) => {
                             /* "fecha_creacion": {
                                 "value": "desc"
                             }, */
-                            "forma_id": {
+                            "fecha_actualizacion": {
                                 "value": "desc"
                             }
                         },
@@ -1522,7 +1522,7 @@ export const Menu = (data) => {
                                                                                     <h4>Análisis: {asignacion.tipos_analisis_id == 1 ? 'Fisico' : 'Sensorial'}</h4>
                                                                                     <h4>Asignado: {formatDate(asignacion.fecha_creacion)}</h4>
                                                                                     <h4 className="h4-informacion-notificacion-analisis">
-                                                                                        Estado: <span className={`${asignacion.estado == 2 ? "pendiente" : asignacion.estado == 3 ? "asignado" : asignacion.estado == 5 ? "registrado" : ""}`}>{asignacion.estado == 2 ? "Pendiente" : asignacion.estado == 3 ? "Asignado" : asignacion.estado == 5 ? "Registrado" : ""}</span></h4>
+                                                                                        Estado: <span className={`${asignacion.estado == 2 ? "pendiente" : asignacion.estado == 3 ? "asignado" : asignacion.estado == 5 ? "registrado" : asignacion.estado == 6 ? "rechazado" : ""}`}>{asignacion.estado == 2 ? "Pendiente" : asignacion.estado == 3 ? "Asignado" : asignacion.estado == 5 ? "Registrado" : asignacion.estado == 6 ? "Rechazado" : ""}</span></h4>
                                                                                     <h4>Cd. Muestra: {asignacion.codigo_externo}</h4>
                                                                                 </div>
                                                                                 <div className="img-analisis">

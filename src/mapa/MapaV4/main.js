@@ -1332,7 +1332,7 @@ fetch("http://localhost:3000/api/muestra/geolocalizar/certificada", {
         return response.json();
     })
     .then(data => {
-        console.log(data);
+        console.log(data,"daaaaaaaaaaaaaaaaaaaaa");
         if (data.status == true) {
             for (let x = 0; x < data.data.length; x++) {
                 getGeolocalizacion(data.data[x].latitud, data.data[x].longitud, "", "", data.data[x])

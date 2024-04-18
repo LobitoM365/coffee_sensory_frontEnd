@@ -21,7 +21,6 @@ export const Cafes = (userInfo) => {
             },
             "avanzado": {
                 "status": true,
-                "rol": ["administrador"]
             },
             "pdf": {
                 "status": true
@@ -68,6 +67,18 @@ export const Cafes = (userInfo) => {
                     },
                 },
                 referencia: "Filtrar por estado"
+            },
+            "variedades_id": {
+                inputs: {
+                    variedades_id: {
+                        type: "select",
+                        referencia: "Variedad",
+                        values: ["nombre"],
+                        upper_case: true,
+                        key: "id"
+                    },
+                },
+                referencia: "Filtrar por variedad"
             }
         }
     )
@@ -177,6 +188,9 @@ export const Cafes = (userInfo) => {
                 cafes["variedades_id"]["opciones"] = response.data.data
                 // console.log('LISTA VATIEDADES: ', cafes);
                 setInputsForm(cafes)
+                let depPdf = inputsDocumento
+                depPdf.variedades_id.inputs.variedades_id["opciones"] = response.data.data
+                setinputsDocumento(depPdf)
             } else if (response.data.find_error) {
 
             } else {
@@ -581,43 +595,47 @@ export const Cafes = (userInfo) => {
             cloneDataFilterTable["filter"]["order"] = {}
         }
         console.log(cloneDataFilterTable, "cloooooooooooooooooon")
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["ca.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["ca.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
             console.log("ahhh")
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["desde"] = filter.desde_registro
+            cloneDataFilterTable["filter"]["date"]["ca.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                delete cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["ca.fecha_creacion"]) {
+                delete cloneDataFilterTable["filter"]["date"]["ca.fecha_creacion"]
             }
         }
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["ca.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["ca.fecha_creacion"] = {}
         }
         if (filter.hasta_registro) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["hasta"] = filter.hasta_registro
+            cloneDataFilterTable["filter"]["date"]["ca.fecha_creacion"]["hasta"] = filter.hasta_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["ca.fecha_creacion"]) {
+                cloneDataFilterTable["filter"]["date"]["ca.fecha_creacion"]
             }
         }
 
-        if (filter.estado) {
-            cloneDataFilterTable["filter"]["where"]["us.estado"] = {
-                "value": filter.estado,
-                "operador": "=",
-                "require": "and"
-            }
-        } else {
-            if (cloneDataFilterTable["filter"]["where"]["us.estado"]) {
-                delete cloneDataFilterTable["filter"]["where"]["us.estado"]
+        const dataWhere = ["variedades_id", "estado"]
+
+
+        for (let x = 0; x < dataWhere.length; x++) {
+            if (filter[dataWhere[x]]) {
+                cloneDataFilterTable["filter"]["where"]["ca." + [dataWhere[x]]] = {
+                    "value": filter[[dataWhere[x]]],
+                    "operador": "=",
+                    "require": "and"
+                }
+            } else {
+                if (cloneDataFilterTable["filter"]["where"]["ca." + [dataWhere[x]]]) {
+                    delete cloneDataFilterTable["filter"]["where"]["ca." + [dataWhere[x]]]
+                }
             }
         }
-        console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
 
         setDataFilterTable(cloneDataFilterTable)
-        getFincas()
+        getCafes()
 
     }
     async function generatePdf(e, orientacion, papel, alto, ancho, margen_superior, margen_derecho, margen_inferior, margen_izquierdo, fuente, font_size_content_tabla, font_size_encabezado_tabla, font_size_encabezado, color_fondo, espaciado_superior_contenido, espaciado_derecho_contenido, espaciado_inferior_contenido, espaciado_izquierdo_contenido) {

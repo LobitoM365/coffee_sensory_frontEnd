@@ -5,7 +5,7 @@ import { type } from "jquery";
 export const Alert = (data) => {
 
     return (
-        <> 
+        <>
             {data.statusAlert ?
                 <div>
 
@@ -49,8 +49,10 @@ export const Alert = (data) => {
                             <div className="description-alert">
                                 {data.dataAlert["description"] ? data.dataAlert["description"] : "Esta es una alerta"}
                             </div>
+                            <div className="content-alert">
+                                {data.dataAlert["content"] ? data.dataAlert["content"] : ""}
+                            </div>
                             <div className="inputs-alert">
-
                                 {(() => {
                                     let procedureNormal = true
                                     if (data.dataAlert["buttons"]) {
@@ -58,12 +60,15 @@ export const Alert = (data) => {
                                             procedureNormal = false
                                             let keys = Object.keys(data.dataAlert["buttons"])
                                             const buttonsPush = []
+                                            let key = 0;
                                             keys.map((value, index) => {
+                                                key = key + index;
                                                 let referencia = "Button"
                                                 let color = "#1c143c"
                                                 let functionProcedure = ""
                                                 let valueFunctionProcedure = ""
                                                 let locationProcedure = ""
+                                                let closeAlert = false;
                                                 if (data.dataAlert["buttons"][value]["continue"]) {
                                                     if (data.dataAlert["buttons"][value]["continue"]["function"]) {
                                                         let execute = ""
@@ -73,6 +78,8 @@ export const Alert = (data) => {
                                                         functionProcedure = data.dataAlert["buttons"][value]["continue"]["function"]
                                                     } else if (data.dataAlert["buttons"][value]["continue"]["location"]) {
                                                         locationProcedure = data.dataAlert["buttons"][value]["continue"]["location"]
+                                                    } if (data.dataAlert["buttons"][value]["continue"]["close"]) {
+                                                        closeAlert = true;
                                                     }
                                                 }
                                                 if (typeof functionProcedure != "function") {
@@ -85,11 +92,13 @@ export const Alert = (data) => {
                                                     color = data.dataAlert["buttons"][value]["color"]
                                                 }
                                                 buttonsPush.push(
-                                                    <button onClick={() => {
+                                                    <button key={index} onClick={() => {
                                                         if (typeof functionProcedure == "function") {
                                                             functionProcedure(valueFunctionProcedure)
-                                                        } else if (location != "") {
+                                                        } else if (locationProcedure != "") {
                                                             location.href = locationProcedure
+                                                        } else if (closeAlert) {
+                                                            data.setStatusAlert(false)
                                                         }
                                                     }} style={{ background: color }} className="input-alert">{referencia}</button>
                                                 )
@@ -117,8 +126,10 @@ export const Alert = (data) => {
                                                 return <div className="div-content-inpunts-alert">
                                                     <button onClick={() => { data.setStatusAlert(false); }} className="input-alert input-cancelar-alert">Cancelar</button>
                                                     <button onClick={() => {
-                                                        data.setStatusAlert(false);
                                                         if (data.dataAlert["continue"]) {
+                                                            if (data.dataAlert["continue"].close != false) {
+                                                                data.setStatusAlert(false);
+                                                            }
                                                             if (data.dataAlert["continue"]["function"]) {
                                                                 let execute = ""
                                                                 if (data.dataAlert["continue"]["execute"]) {
@@ -126,7 +137,6 @@ export const Alert = (data) => {
                                                                 }
                                                                 data.dataAlert.continue.function(execute)
                                                             }
-
                                                         }
                                                     }} className="input-alert input-warning-alert">Continuar</button>
                                                 </div>

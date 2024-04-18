@@ -136,7 +136,7 @@
 
 #mainFormResultados .div-select {
     font-size: 0.9em;
-    width: calc(100%);
+    width: calc(100% - 4px);
     height: auto;
     word-break: break-all;
 }
@@ -156,7 +156,7 @@
     display: grid;
     grid-template-columns: 1fr auto;
     padding: 0;
-    width: 100%;
+    width: calc(100%);
 }
 
 #mainFormResultados .div-table-formato-fisico-template {
@@ -473,4 +473,11 @@
     gap: 10px;
     align-items: end;
     color: red;
+}
+
+#mainFormResultados .button-cambiar-formato {
+    background-color: orange !important;
+}
+#mainFormResultados .button-deshacer-formato {
+    background-color: rgb(81,112, 107);
 }

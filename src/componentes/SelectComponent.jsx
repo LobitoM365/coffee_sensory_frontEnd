@@ -10,7 +10,6 @@ export const SelectComponent = (props) => {
     const fetchData = async () => {
       try {
         const response = await Api[props.metodos](props.url);
-        console.log(response.data.data, "Aquí van las muestras");
 
         if (response.data.data && response.data.data.length > 0) {
           const valorOption = props.opcion;
@@ -35,7 +34,6 @@ export const SelectComponent = (props) => {
 
   // Seleccciones toma las opciones pasadas como props o las opciones obtenidas de la API
   const Seleccciones = !props.inputValueMuestras ? opciones : props.options;
-  console.log(Seleccciones, "Estas son las opciones");
 
   return (
     <div>

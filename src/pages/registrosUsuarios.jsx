@@ -40,7 +40,6 @@ export const RegistrosUsuarios = () => {
             },
             "avanzado": {
                 "status": true,
-                "rol": ["administrador"]
             },
             "pdf": {
                 "status": true
@@ -138,8 +137,29 @@ export const RegistrosUsuarios = () => {
                         upper_case: true,
                         key: "value"
                     },
+                    cargo: {
+                        type: "select",
+                        referencia: "Cargo",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "administrador", value: "administrador" }, { nombre: "instructor", value: "instructor" }, { nombre: "aprendiz", value: "aprendiz" }, { nombre: "cliente", value: "cliente" }],
+                        upper_case: true,
+                        key: "value"
+                    },
                 },
                 referencia: "Filtrar por rol o cargo"
+            },
+            "tipo_documento": {
+                inputs: {
+                    tipo_documento: {
+                        type: "select",
+                        referencia: "Rol",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "tarjeta de identidad", value: "tarjeta de identidad" }, { nombre: "cedula de ciudadania", value: "cedula de ciudadania" }],
+                        upper_case: true,
+                        key: "value"
+                    },
+                },
+                referencia: "Filtrar por tipo de documento"
             }
         }
     )
@@ -587,6 +607,7 @@ export const RegistrosUsuarios = () => {
     async function getAvanzado(tipo, filter) {
         try {
             const cloneDataFilterTable = { ...dataFilterTable }
+            const dataWhere = ["estado", "rol", "cargo", "tipo_documento"]
             if (!dataFilterTable["filter"]) {
                 dataFilterTable["filter"] = {}
                 if (!dataFilterTable["filter"]["where"]) {
@@ -603,7 +624,7 @@ export const RegistrosUsuarios = () => {
                 }
             }
 
-            
+
             if (filter.desde_registro) {
                 console.log("ahhh")
                 if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
@@ -626,47 +647,23 @@ export const RegistrosUsuarios = () => {
                 }
             }
 
-            if (filter.estado) {
-                cloneDataFilterTable["filter"]["where"]["us.estado"] = {
-                    "value": filter.estado,
-                    "operador": "=",
-                    "require": "and"
-                }
-            } else {
-                if (cloneDataFilterTable["filter"]["where"]["us.estado"]) {
-                    delete cloneDataFilterTable["filter"]["where"]["us.estado"]
+            for (let x = 0; x < dataWhere.length; x++) {
+                if (filter[dataWhere[x]]) {
+                    cloneDataFilterTable["filter"]["where"]["us." + [dataWhere[x]]] = {
+                        "value": filter[[dataWhere[x]]],
+                        "operador": "=",
+                        "require": "and"
+                    }
+                } else {
+                    if (cloneDataFilterTable["filter"]["where"]["us." + [dataWhere[x]]]) {
+                        delete cloneDataFilterTable["filter"]["where"]["us." + [dataWhere[x]]]
+                    }
                 }
             }
 
+
             setDataFilterTable(cloneDataFilterTable)
             getusuarios()
-            // const response = await Api.post("usuarios/listar", filterReport);
-            // console.log(response)
-            // if (response.data.status == true) {
-            //     if (tipo == "pdf") {
-            //         if (response.data.count > 100) {
-            //             setFilterPdflimit({ status: true, max: response.data.count })
-            //         }
-            //         let dataPdf = {
-            //             data: response.data.data,
-            //             table: keys
-            //         }
-            //         localStorage.setItem("dataGeneratePdfTable", JSON.stringify(dataPdf));
-            //         window.open('/dashboard/generatePdfTable', '_blank')
-            //     } else {
-            //         generatePdf(filterReport, response.data.data, keys)
-            //     }
-            // } else if (response.data.find_error) {
-            //     setStatusAlert(true)
-            //     setdataAlert(
-            //         {
-            //             status: "false",
-            //             description: response.data.find_error,
-            //             "tittle": "No se encontró!"
-            //         }
-            //     )
-            // }
-
         } catch (e) {
             console.log(e)
         }

@@ -20,7 +20,6 @@ export const Lotes = (userInfo) => {
             },
             "avanzado": {
                 "status": true,
-                "rol": ["administrador"]
             },
             "pdf": {
                 "status": true
@@ -577,43 +576,48 @@ export const Lotes = (userInfo) => {
             cloneDataFilterTable["filter"]["order"] = {}
         }
         console.log(cloneDataFilterTable, "cloooooooooooooooooon")
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
             console.log("ahhh")
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["desde"] = filter.desde_registro
+            cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                delete cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"]) {
+                delete cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"]
             }
         }
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"] = {}
         }
         if (filter.hasta_registro) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["hasta"] = filter.hasta_registro
+            cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"]["hasta"] = filter.hasta_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"]) {
+                cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"]
             }
         }
 
-        if (filter.estado) {
-            cloneDataFilterTable["filter"]["where"]["us.estado"] = {
-                "value": filter.estado,
-                "operador": "=",
-                "require": "and"
-            }
-        } else {
-            if (cloneDataFilterTable["filter"]["where"]["us.estado"]) {
-                delete cloneDataFilterTable["filter"]["where"]["us.estado"]
+        const dataWhere = ["estado"]
+
+
+        for (let x = 0; x < dataWhere.length; x++) {
+            if (filter[dataWhere[x]]) {
+                cloneDataFilterTable["filter"]["where"]["lo." + [dataWhere[x]]] = {
+                    "value": filter[[dataWhere[x]]],
+                    "operador": "=",
+                    "require": "and"
+                }
+            } else {
+                if (cloneDataFilterTable["filter"]["where"]["lo." + [dataWhere[x]]]) {
+                    delete cloneDataFilterTable["filter"]["where"]["lo." + [dataWhere[x]]]
+                }
             }
         }
         console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
 
         setDataFilterTable(cloneDataFilterTable)
-        getEntities()
+        getLotes()
 
     }
     async function generatePdf(e, orientacion, papel, alto, ancho, margen_superior, margen_derecho, margen_inferior, margen_izquierdo, fuente, font_size_content_tabla, font_size_encabezado_tabla, font_size_encabezado, color_fondo, espaciado_superior_contenido, espaciado_derecho_contenido, espaciado_inferior_contenido, espaciado_izquierdo_contenido) {

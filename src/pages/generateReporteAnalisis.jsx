@@ -75,7 +75,7 @@ export const GenerateReporteAnalisis = (data) => {
 
             const response = await Api.post("analisis/buscar/" + id + "");
             if (response.data.status == true) {
-                if (response.data.data[0].estado != 4) {
+                if (response.data.data[0].estado != 7) {
                     setStatusReporte(false)
                     setdataAlert(
                         {

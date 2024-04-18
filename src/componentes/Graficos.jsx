@@ -24,7 +24,7 @@ export const Graficos = ({user,inputData}) => {
   const updateData = (newData) => {
     // Actualiza el gráfico con los nuevos datos
     // Utiliza la referencia al gráfico o cualquier método que utilices para actualizar el gráfico
-    console.log('Actualizando gráfico con nuevos datos:', newData);
+   
     setNuevoDato(newData);
   };
   
@@ -38,16 +38,13 @@ export const Graficos = ({user,inputData}) => {
   // Utiliza un useEffect adicional para observar cambios en el estado nuevoDato
   useEffect(() => {
     // Acciones que deseas realizar después de que nuevoDato se haya actualizado
-    console.log(nuevoDato, "aquiiiiiiiiiiiiiiii");
     // Puedes realizar otras acciones aquí
   }, [nuevoDato]);
   
   useEffect(() => {
-    console.log(nuevoDato,"desde graficos siii")
     const fetchData = async () => {
       try {
         let VariableIdUser=user;
-        console.log(VariableIdUser,'Hola desde graficos')
        /*  let UserIdSesion = user?.user?.userInfo || 0;
         console.log(UserIdSesion,"Inicio Sesion");
         if (!UserIdSesion) {
@@ -59,15 +56,12 @@ export const Graficos = ({user,inputData}) => {
           anio: nuevoDato.anio
         };
 
-        console.log(dataToSend)
         const response = await Api.post(`analisis/total/${VariableIdUser}`,dataToSend);
         const responseData = response.data;
 
-        console.log(responseData,"respuesta api graficas")
        /*  console.log(dataToSend,'Data Body', UserIdSesion.id , 'User')
         console.log(responseData,'responseData') */
 
-        console.log(responseData,'ResponseData')
         if (responseData.status === true) {
           setData(responseData.data);          
         }else{
@@ -84,7 +78,6 @@ export const Graficos = ({user,inputData}) => {
     fetchData();
     window.addEventListener("resize", function(){
       setKey(key + 1)
-      console.log(key + 1)
     })
   }, [user,nuevoDato ]);
  
@@ -117,7 +110,6 @@ export const Graficos = ({user,inputData}) => {
   };
 
   const color = [];
-  console.log(data,'')
   data.forEach(element=>{
     if (element.promedio>=8 && element.promedio < 11) {
       color.push ("rgb(244, 50, 50)")

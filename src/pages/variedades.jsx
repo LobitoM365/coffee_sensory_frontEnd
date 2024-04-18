@@ -21,7 +21,6 @@ export const Variedades = () => {
             },
             "avanzado": {
                 "status": true,
-                "rol": ["administrador"]
             },
             "pdf": {
                 "status": true
@@ -357,19 +356,6 @@ export const Variedades = () => {
                     }
                 },
                 referencia: "Filtrar por fecha de creación"
-            },
-            "estado": {
-                inputs: {
-                    estado: {
-                        type: "select",
-                        referencia: "Estado",
-                        values: ["nombre"],
-                        opciones: [{ nombre: "activo", value: "1" }, { nombre: "inactivo", value: "0" }],
-                        upper_case: true,
-                        key: "value"
-                    },
-                },
-                referencia: "Filtrar por estado"
             }
         }
     )
@@ -393,43 +379,33 @@ export const Variedades = () => {
             cloneDataFilterTable["filter"]["order"] = {}
         }
         console.log(cloneDataFilterTable, "cloooooooooooooooooon")
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
             console.log("ahhh")
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["desde"] = filter.desde_registro
+            cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                delete cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"]) {
+                delete cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"]
             }
         }
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"] = {}
         }
         if (filter.hasta_registro) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["hasta"] = filter.hasta_registro
+            cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"]["hasta"] = filter.hasta_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"]) {
+                cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"]
             }
         }
 
-        if (filter.estado) {
-            cloneDataFilterTable["filter"]["where"]["us.estado"] = {
-                "value": filter.estado,
-                "operador": "=",
-                "require": "and"
-            }
-        } else {
-            if (cloneDataFilterTable["filter"]["where"]["us.estado"]) {
-                delete cloneDataFilterTable["filter"]["where"]["us.estado"]
-            }
-        }
+        
         console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
 
         setDataFilterTable(cloneDataFilterTable)
-        getFincas()
+        getVariedades()
 
     }
     async function generatePdf(e, orientacion, papel, alto, ancho, margen_superior, margen_derecho, margen_inferior, margen_izquierdo, fuente, font_size_content_tabla, font_size_encabezado_tabla, font_size_encabezado, color_fondo, espaciado_superior_contenido, espaciado_derecho_contenido, espaciado_inferior_contenido, espaciado_izquierdo_contenido) {

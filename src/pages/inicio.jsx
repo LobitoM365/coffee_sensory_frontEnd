@@ -6,8 +6,8 @@ import {
 } from 'recharts';
 import "../../public/css/style.css"
 import { Alert } from '../componentes/alert';
-
-
+import { Slider } from '../componentes/Slider';
+import { GlobalModal } from '../componentes/globalModal';
 import $, { contains, data } from "jquery"
 import Api, { host } from '../componentes/Api';
 
@@ -23,6 +23,8 @@ export const Inicio = () => {
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
     const [imgs, setImgs] = useState({});
+    const [modalSliderImg, setModalSliderImg] = useState(false);
+
 
     let divRef = useRef(null);
     const [dataAtributos, setDataAtributos] = useState([
@@ -42,7 +44,6 @@ export const Inicio = () => {
 
     const [modalStatus, setModalStatus] = useState(false);
     const capturarDivComoImagen = async () => {
-        console.log(divRef.current, "cureeeeeeeeeeeeeeeeeeeeeeeeeeeetn")
         if (divRef.current !== null) {
 
             if (document.getElementById("divimgAtributos")) {
@@ -89,7 +90,6 @@ export const Inicio = () => {
     };
 
     useEffect(() => {
-        console.log(resultadoSensorialPromedio, "resutlllllllllllllllll----------------------------------------------------")
         if (Object.keys(resultadoSensorialPromedio).length > 0) {
             capturarDivComoImagen()
         }
@@ -156,7 +156,6 @@ export const Inicio = () => {
         if (data) {
             let iframe = document.getElementById(idElement);
             if (iframe) {
-                console.log(data, "dataaaaaaaaaaaaaa")
                 let keysRange = ["fragancia_aroma", "sabor", "sabor_residual", "acidez", "cuerpo", "balance", "puntaje_catador"]
                 let keysIntensidad = ["seco", "espuma", "intensidad", "nivel_cuerpo", "tueste"]
                 let keysCuadro = ["uniformidad", "taza_limpia", "dulzor"]
@@ -357,302 +356,305 @@ export const Inicio = () => {
         script.src = '../../public/js/mainMapa.js';
         script.async = true;
         document.body.appendChild(script);
-
-
-
-
-
-
-
-
         let iframe = document.getElementById('iframeMapa');
 
 
 
         iframe.addEventListener('load', function () {
             $(iframe.contentDocument).on("click", ".svg-point", async function () {
-                let id = $(this).attr("data-point")
-                let statusResultadoFisico = false;
-                let statusResultadoSensorial = false;
-                const response = await Api.post("analisis/buscar/" + id + "");
-                if (response.data.status == true) {
-                    console.log(response.data, "daaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-                    if (response.data.data[0].fincas_id) {
-                        listarIconos(response.data.data[0].fincas_id)
+                try {
+                    let id = $(this).attr("data-point")
+                    let statusResultadoFisico = false;
+                    let statusResultadoSensorial = false;
+                    const dataFilter = {
+                        "filter": {
+                            "where": {
+                                "an.id": {
+                                    "value": id,
+                                    "require": "and"
+                                }
+                            }
+                        }
                     }
-                    if (response.data.data[0].estado != 4) {
+                    const response = await Api.post("/geolocalizacion/buscar/analisis", dataFilter);
+                    if (response.data.status == true) {
+                        if (response.data.data[0].fincas_id) {
+                            listarIconos(response.data.data[0].fincas_id)
+                        }
+                        if (response.data.data[0].estado != 7) {
+                            setStatusAlert(true)
+                            setdataAlert(
+                                {
+                                    "status": "false",
+                                    "description": "El análisis debe estar aprobado para poder mostrar su información.",
+                                    "tittle": "Inténtalo más tarde.",
+                                    "buttons": {
+                                        "ok": {
+                                            "referencia": "ok",
+                                            "continue": {
+                                                "close": true,
+                                                /* "location": "/dashboard/analisis/registros" */
+                                            }
+                                        }
+                                    },
+                                }
+                            )
+                        } else {
+                            const filterMuestra = {
+                                "filter": {
+                                    "where": {
+                                        "an.id": {
+                                            "require": "and",
+                                            "value": response.data.data[0].id
+                                        },
+                                        "mu.id": {
+                                            "value": response.data.data[0]["muestras_id"],
+                                            "require": "and"
+                                        }
+                                    }
+                                }
+                            }
+                            const muestra = await Api.post("geolocalizacion/buscar/muestra", filterMuestra);
+                            if (muestra.data.status == true) {
+                                setmuestra(muestra.data.data[0])
 
+                                const filterFormatoFisico = {
+                                    "filter": {
+                                        "where": {
+                                            "forma.analisis_id": {
+                                                "value": id,
+                                                "require": "and",
+                                                "group": 2
+                                            },
+                                            "forma.tipos_analisis_id": {
+                                                "value": 1,
+                                                "require": "and",
+                                                "group": 2
+                                            }
+                                        }
+                                    },
+                                }
+                                const formatoFisico = await Api.post("geolocalizacion/buscar/formato", filterFormatoFisico);
+
+
+                                if (formatoFisico.data.status == true) {
+                                    const filterResultado = {
+                                        "filter": {
+                                            "where": {
+                                                "an.id": {
+                                                    "value": id,
+                                                    "require": "and",
+                                                },
+                                                "forma.tipos_analisis_id": {
+                                                    "value": 1,
+                                                    "require": "and",
+                                                    "group": 1
+                                                }
+                                            },
+                                            "limit": {
+                                                "inicio": "4444",
+                                                "fin": "4444"
+                                            }
+                                        }
+                                    }
+                                    setFormatoFisico(formatoFisico.data.data)
+                                    const resultado = await Api.post("geolocalizacion/buscar/resultado", filterResultado);
+                                    if (resultado.data.status == true) {
+                                        statusResultadoFisico = true;
+                                        const promedioResultadoFisico = {};
+                                        const keys = ["peso_cps", "humedad", "peso_cisco", "merma_trilla", "peso_total_almendra", "porcentaje_almendra_sana", "peso_defectos_totales", "factor_rendimiento", "peso_almendra_sana", "porcentaje_defectos_totales", "negro_total", "cardenillo", "vinagre", "cristalizado", "veteado", "ambar", "sobresecado", "mordido", "picado_insectos", "averanado", "inmaduro", "aplastado", "flojo", "decolorado", "malla18", "malla15", "malla17", "malla14", "malla16", "mallas_menores"];
+
+                                        for (let x = 0; x < keys.length; x++) {
+                                            for (let d = 0; d < resultado.data.data.length; d++) {
+                                                if (resultado.data.data[d]) {
+                                                    if (resultado.data.data[d][keys[x]]) {
+                                                        if (!promedioResultadoFisico[keys[x]]) {
+                                                            promedioResultadoFisico[keys[x]] = 0
+                                                        }
+                                                        promedioResultadoFisico[keys[x]] = parseFloat(promedioResultadoFisico[keys[x]]) + parseFloat(resultado.data.data[d][keys[x]])
+                                                    }
+                                                }
+                                            }
+                                            if (promedioResultadoFisico[keys[x]]) {
+                                                const value = promedioResultadoFisico[keys[x]] / resultado.data.data.length;
+                                                if (value - Math.floor(value) > 0) {
+                                                    promedioResultadoFisico[keys[x]] = value.toFixed(2).toString().replace("0", "")
+                                                } else {
+                                                    promedioResultadoFisico[keys[x]] = value
+                                                }
+                                                /* promedioResultadoFisico[keys[x]] = promedioResultadoFisico[keys[x]] / parseFloat(resultado.data.data.length) */
+                                            }
+                                        }
+                                        setResultadoFisico(promedioResultadoFisico)
+                                    } else {
+
+                                    }
+                                }
+                                const filterFormatoSensorial = {
+                                    "filter": {
+                                        "where": {
+                                            "forma.analisis_id": {
+                                                "value": id,
+                                                "require": "and",
+                                                "group": 2
+                                            },
+                                            "forma.tipos_analisis_id": {
+                                                "value": 2,
+                                                "require": "and",
+                                                "group": 1
+                                            }
+                                        }
+                                    },
+                                }
+                                const formatoSensorial = await Api.post("geolocalizacion/buscar/formato", filterFormatoSensorial);
+
+                                if (formatoSensorial.data.status == true) {
+
+                                    setFormatoSensorial(formatoSensorial.data.data)
+                                    const filterResultado = {
+                                        "filter": {
+                                            "where": {
+                                                "an.id": {
+                                                    "value": id,
+                                                    "require": "and",
+                                                },
+                                                "forma.tipos_analisis_id": {
+                                                    "value": 2,
+                                                    "require": "and",
+                                                    "group": 1
+                                                },
+                                                "limit": {
+                                                    "inicio": "4444",
+                                                    "fin": "4444"
+                                                }
+                                            }
+                                        }
+                                    }
+                                    const resultado = await Api.post("geolocalizacion/buscar/resultado", filterResultado);
+
+                                    if (resultado.data.status == true) {
+
+
+                                        statusResultadoSensorial = true
+                                        const promedio = {};
+                                        const variablesPromedio = ["fragancia_aroma", "sabor", "sabor_residual", "acidez", "cuerpo", "uniformidad", "balance", "taza_limpia", "dulzor", "puntaje_catador", "tazas", "defectos"]
+                                        for (let x = 0; x < resultado.data.data.length; x++) {
+                                            for (let r = 0; r < variablesPromedio.length; r++) {
+                                                const variable = resultado.data.data[x][variablesPromedio[r]]
+                                                if (variable) {
+                                                    if (!promedio[variablesPromedio[r]]) {
+                                                        promedio[variablesPromedio[r]] = 0
+                                                    }
+                                                    promedio[variablesPromedio[r]] = promedio[variablesPromedio[r]] + variable
+                                                } else {
+                                                    if (!promedio[variablesPromedio[r]]) {
+                                                        promedio[variablesPromedio[r]] = 0
+                                                    }
+                                                    promedio[variablesPromedio[r]] = promedio[variablesPromedio[r]] + 0
+                                                }
+                                            }
+                                        }
+                                        for (let x = 0; x < variablesPromedio.length; x++) {
+                                            if (promedio[variablesPromedio[x]]) {
+                                                const value = promedio[variablesPromedio[x]] / resultado.data.data.length;
+                                                if (value - Math.floor(value) > 0) {
+                                                    promedio[variablesPromedio[x]] = value.toFixed(2).toString().replace("0", "")
+                                                } else {
+                                                    promedio[variablesPromedio[x]] = value
+                                                }
+                                            }
+                                        }
+                                        setResultadoSensorialPromedio(promedio)
+
+                                        setDataAtributos([
+                                            { name: "Fragancia Aroma", x: promedio["fragancia_aroma"] ? promedio["fragancia_aroma"] : 0 },
+                                            { name: "Sabor", x: promedio["sabor"] ? promedio["sabor"] : 0 },
+                                            { name: "Retrogusto", x: promedio["sabor_residual"] ? promedio["sabor_residual"] : 0 },
+                                            { name: "Acidez", x: promedio["acidez"] ? promedio["acidez"] : 0 },
+                                            { name: "Cuerpo", x: promedio["cuerpo"] ? promedio["cuerpo"] : 0 },
+                                            { name: "Uniformidad", x: promedio["uniformidad"] ? promedio["uniformidad"] : 0 },
+                                            { name: "Balance", x: promedio["balance"] ? promedio["balance"] : 0 },
+                                            { name: "Taza limpia", x: promedio["taza_limpia"] ? promedio["taza_limpia"] : 0 },
+                                            { name: "Dulzor", x: promedio["dulzor"] ? promedio["dulzor"] : 0 },
+                                            { name: "Puntaje General", x: promedio["puntaje_catador"] ? promedio["puntaje_catador"] : 0 },
+                                        ]);
+                                        setResultadoSensorial(resultado.data.data[0])
+                                    } else {
+
+                                    }
+                                } else {
+
+                                }
+                                if (statusResultadoSensorial == true && statusResultadoFisico == true) {
+                                    setanalisis(response.data.data[0])
+                                    setModalStatus(true)
+                                    window.addEventListener("resize", function () {
+                                        resizeModal()
+                                    })
+                                    resizeModal()
+                                }
+                            } else if (muestra.data.find_error) {
+                                setStatusAlert(true)
+                                setdataAlert(
+                                    {
+                                        status: "false",
+                                        description: response.data.find_error,
+                                        "tittle": "Inténtalo de nuevo.",
+                                    }
+                                )
+                            } else {
+                                setStatusAlert(true)
+                                setdataAlert(
+                                    {
+                                        status: "false",
+                                        description: response.data.find_error,
+                                        "tittle": "Inténtalo de nuevo.",
+                                    }
+                                )
+                            }
+
+                        }
+
+                    } else if (response.data.find_error) {
+                        setStatusAlert(true)
                         setdataAlert(
                             {
-                                "status": "false",
-                                "description": "El análisis debe estar finalizado para poder generar el reporte.",
-                                "tittle": "Inténtalo más tarde.",
-                                "buttons": {
-                                    "ok": {
-                                        "referencia": "ok",
-                                        /* "color" : "green", */
-                                        "continue": {
-                                            "location": "/dashboard/analisis/registros"
-                                        }
-                                    }
-                                },
+                                status: "interrogative",
+                                description: response.data.message,
+                                "tittle": "¿Qué haces aquí?",
+                                continue: {
+
+                                    location: "/dashboard"
+                                }
                             }
                         )
+
                     } else {
-                        const filterMuestra = {
-                            "filter": {
-                                "where": {
-                                    "an.id": {
-                                        "require": "and",
-                                        "value": response.data.data[0].id
-                                    }
-                                }
+                        setStatusAlert(true)
+                        setdataAlert(
+                            {
+                                status: "false",
+                                description: response.data.message,
+                                "tittle": "Inténtalo de nuevo.",
                             }
-                        }
-                        const muestra = await Api.post("muestra/buscar/" + response.data.data[0]["muestras_id"] + "", filterMuestra);
-                        setmuestra(muestra.data.data[0])
-
-                        const filterFormatoFisico = {
-                            "filter": {
-                                "where": {
-                                    "forma.analisis_id": {
-                                        "value": id,
-                                        "require": "and",
-                                        "group": 2
-                                    },
-                                    "forma.tipos_analisis_id": {
-                                        "value": 1,
-                                        "require": "and",
-                                        "group": 2
-                                    }
-                                },
-                                "limit": {
-                                    "inicio": "4444",
-                                    "fin": "4444"
-                                }
-                            },
-                        }
-                        const formatoFisico = await Api.post("formatos/buscar/not", filterFormatoFisico);
-
-                        if (formatoFisico.data.status == true) {
-                            const filterResultado = {
-                                "filter": {
-                                    "where": {
-                                        "an.id": {
-                                            "value": id,
-                                            "require": "and",
-                                        },
-                                        "forma.estado": {
-                                            "value": "5",
-                                            "operador": "=",
-                                            "required": "and",
-                                            "group": 4
-                                        },
-                                        "estado1": {
-                                            "value": "4",
-                                            "require": "or",
-                                            "operador": "=",
-                                            "no-key": "forma.estado",
-                                            "group": 4
-                                        },
-                                        "forma.tipos_analisis_id": {
-                                            "value": 1,
-                                            "require": "and",
-                                            "group": 1
-                                        }
-                                    },
-                                    "limit": {
-                                        "inicio": "4444",
-                                        "fin": "4444"
-                                    }
-                                }
-                            }
-                            setFormatoFisico(formatoFisico.data.data)
-                            const resultado = await Api.post("resultado/buscar/not", filterResultado);
-                            if (resultado.data.status == true) {
-                                statusResultadoFisico = true;
-                                const promedioResultadoFisico = {};
-                                const keys = ["peso_cps", "humedad", "peso_cisco", "merma_trilla", "peso_total_almendra", "porcentaje_almendra_sana", "peso_defectos_totales", "factor_rendimiento", "peso_almendra_sana", "porcentaje_defectos_totales", "negro_total", "cardenillo", "vinagre", "cristalizado", "veteado", "ambar", "sobresecado", "mordido", "picado_insectos", "averanado", "inmaduro", "aplastado", "flojo", "decolorado", "malla18", "malla15", "malla17", "malla14", "malla16", "mallas_menores"];
-
-                                for (let x = 0; x < keys.length; x++) {
-                                    for (let d = 0; d < resultado.data.data.length; d++) {
-                                        if (resultado.data.data[d]) {
-                                            if (resultado.data.data[d][keys[x]]) {
-                                                if (!promedioResultadoFisico[keys[x]]) {
-                                                    promedioResultadoFisico[keys[x]] = 0
-                                                }
-                                                promedioResultadoFisico[keys[x]] = parseFloat(promedioResultadoFisico[keys[x]]) + parseFloat(resultado.data.data[d][keys[x]])
-                                            }
-                                        }
-                                    }
-                                    if (promedioResultadoFisico[keys[x]]) {
-                                        const value = promedioResultadoFisico[keys[x]] / resultado.data.data.length;
-                                        if (value - Math.floor(value) > 0) {
-                                            promedioResultadoFisico[keys[x]] = value.toFixed(2).toString().replace("0", "")
-                                        } else {
-                                            promedioResultadoFisico[keys[x]] = value
-                                        }
-                                        /* promedioResultadoFisico[keys[x]] = promedioResultadoFisico[keys[x]] / parseFloat(resultado.data.data.length) */
-                                    }
-                                }
-                                setResultadoFisico(promedioResultadoFisico)
-                            } else {
-
-                            }
-
-                        }
-                        const filterFormatoSensorial = {
-                            "filter": {
-                                "where": {
-                                    "forma.analisis_id": {
-                                        "value": id,
-                                        "require": "and",
-                                        "group": 2
-                                    },
-                                    "forma.tipos_analisis_id": {
-                                        "value": 2,
-                                        "require": "and",
-                                        "group": 1
-                                    }
-                                },
-                                "limit": {
-                                    "inicio": "4444",
-                                    "fin": "4444"
-                                }
-                            },
-                        }
-                        const formatoSensorial = await Api.post("formatos/buscar/not", filterFormatoSensorial);
-
-                        if (formatoSensorial.data.status == true) {
-
-                            setFormatoSensorial(formatoSensorial.data.data)
-                            const filterResultado = {
-                                "filter": {
-                                    "where": {
-                                        "an.id": {
-                                            "value": id,
-                                            "require": "and",
-                                        },
-                                        "forma.estado": {
-                                            "value": "5",
-                                            "operador": "=",
-                                            "required": "and",
-                                            "group": 4
-                                        },
-                                        "estado1": {
-                                            "value": "4",
-                                            "require": "or",
-                                            "operador": "=",
-                                            "no-key": "forma.estado",
-                                            "group": 4
-                                        },
-                                        "forma.tipos_analisis_id": {
-                                            "value": 2,
-                                            "require": "and",
-                                            "group": 1
-                                        }
-                                    },
-                                    "limit": {
-                                        "inicio": "4444",
-                                        "fin": "4444"
-                                    }
-                                }
-                            }
-                            const resultado = await Api.post("resultado/buscar/not", filterResultado);
-
-                            if (resultado.data.status == true) {
-
-
-                                statusResultadoSensorial = true
-                                const promedio = {};
-                                const variablesPromedio = ["fragancia_aroma", "sabor", "sabor_residual", "acidez", "cuerpo", "uniformidad", "balance", "taza_limpia", "dulzor", "puntaje_catador", "tazas", "defectos"]
-                                for (let x = 0; x < resultado.data.data.length; x++) {
-                                    for (let r = 0; r < variablesPromedio.length; r++) {
-                                        const variable = resultado.data.data[x][variablesPromedio[r]]
-                                        console.log(variable, "vaaaaaaaaaaaaaaaar")
-                                        if (variable) {
-                                            if (!promedio[variablesPromedio[r]]) {
-                                                promedio[variablesPromedio[r]] = 0
-                                            }
-                                            promedio[variablesPromedio[r]] = promedio[variablesPromedio[r]] + variable
-                                        } else {
-                                            if (!promedio[variablesPromedio[r]]) {
-                                                promedio[variablesPromedio[r]] = 0
-                                            }
-                                            promedio[variablesPromedio[r]] = promedio[variablesPromedio[r]] + 0
-                                        }
-                                    }
-                                }
-                                console.log(promedio, "prooooooooooooo")
-                                for (let x = 0; x < variablesPromedio.length; x++) {
-                                    if (promedio[variablesPromedio[x]]) {
-                                        const value = promedio[variablesPromedio[x]] / resultado.data.data.length;
-                                        if (value - Math.floor(value) > 0) {
-                                            promedio[variablesPromedio[x]] = value.toFixed(2).toString().replace("0", "")
-                                        } else {
-                                            promedio[variablesPromedio[x]] = value
-                                        }
-                                    }
-                                }
-                                setResultadoSensorialPromedio(promedio)
-
-                                setDataAtributos([
-                                    { name: "Fragancia Aroma", x: promedio["fragancia_aroma"] ? promedio["fragancia_aroma"] : 0 },
-                                    { name: "Sabor", x: promedio["sabor"] ? promedio["sabor"] : 0 },
-                                    { name: "Retrogusto", x: promedio["sabor_residual"] ? promedio["sabor_residual"] : 0 },
-                                    { name: "Acidez", x: promedio["acidez"] ? promedio["acidez"] : 0 },
-                                    { name: "Cuerpo", x: promedio["cuerpo"] ? promedio["cuerpo"] : 0 },
-                                    { name: "Uniformidad", x: promedio["uniformidad"] ? promedio["uniformidad"] : 0 },
-                                    { name: "Balance", x: promedio["balance"] ? promedio["balance"] : 0 },
-                                    { name: "Taza limpia", x: promedio["taza_limpia"] ? promedio["taza_limpia"] : 0 },
-                                    { name: "Dulzor", x: promedio["dulzor"] ? promedio["dulzor"] : 0 },
-                                    { name: "Puntaje General", x: promedio["puntaje_catador"] ? promedio["puntaje_catador"] : 0 },
-                                ]);
-                                setResultadoSensorial(resultado.data.data[0])
-                            } else {
-
-                            }
-                        } else {
-
-                        }
-                        if (statusResultadoSensorial == true && statusResultadoFisico == true) {
-                            setanalisis(response.data.data[0])
-                            setModalStatus(true)
-                            window.addEventListener("resize", function () {
-                                resizeModal()
-                            })
-                            resizeModal()
-
-                        }
-
+                        )
                     }
 
-                } else if (response.data.find_error) {
-                    setStatusAlert(true)
-                    setdataAlert(
-                        {
-                            status: "interrogative",
-                            description: response.data.find_error,
-                            "tittle": "¿Qué haces aquí?",
-                            continue: {
 
-                                location: "/dashboard"
-                            }
-                        }
-                    )
 
-                } else {
+
+                    /* console.log(document.querySelectorAll(".direction-menu"))
+                    iframe.contentWindow.addEventListener("load", function () {
+                        alert("xd")
+                    }) */
+                } catch (e) {
+                    console.log("Error: " + e)
                 }
-
-
-
-
-                /* console.log(document.querySelectorAll(".direction-menu"))
-                iframe.contentWindow.addEventListener("load", function () {
-                    alert("xd")
-                }) */
             })
         });
+        return () => {
+            script.remove()
+        }
     }, [modalStatus])
 
     function cleanInfo() {
@@ -666,13 +668,15 @@ export const Inicio = () => {
 
     useEffect(() => {
         window.addEventListener("click", function (e) {
-            let contentModal = document.getElementById("contentModal");
-            if (contentModal) {
-                if (e.target !== contentModal && !contentModal.contains(e.target)) {
-                    if (e.target !== document.getElementById("contentModal") && modalStatus == false) {
-                        divRef = null;
-                        setModalStatus(false)
-                        cleanInfo()
+            if (document.body.contains(e.target)) {
+                let contentModal = document.getElementById("contentModal");
+                if (contentModal) {
+                    if (e.target !== contentModal && !contentModal.contains(e.target)) {
+                        if (e.target !== document.getElementById("contentModal") && modalStatus == false) {
+                            divRef = null;
+                            setModalStatus(false)
+                            cleanInfo()
+                        }
                     }
                 }
             }
@@ -682,8 +686,16 @@ export const Inicio = () => {
 
     async function listarIconos(id) {
         try {
-
-            const response = await Api.post("/img/finca/listar/" + id);
+            const dataModel = {
+                "filter": {
+                    "order": {
+                        "img.estado": {
+                            "value": "asc"
+                        }
+                    }
+                }
+            }
+            const response = await Api.post("geolocalizacion/buscar/imagenes/fincas/" + id, dataModel);
             if (response.data.status == true) {
                 setImgs(response.data.data)
             } else {
@@ -696,6 +708,8 @@ export const Inicio = () => {
     }
     return (
         <div id='mainInicio'>
+            <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
+
             {modalStatus ?
 
                 analisis ? Object.keys(analisis).length > 0 ?
@@ -721,11 +735,37 @@ export const Inicio = () => {
 
                                             <div className="div-img-info-general">
                                                 {imgs ? imgs.length > 0 ?
-                                                    <img src={"http://" + host + ":3000/img/usuarios/" + imgs[0].usuarios_id + "/fincas/" + imgs[0].fincas_id + "/" + imgs[0].nombre} alt="" />
+                                                    (() => {
+                                                        let imgInsert = false
+                                                        return imgs.map((value, index) => {
+                                                            if (value.estado == 1) {
+                                                                imgInsert = true
+                                                                return <img onClick={() => { setModalSliderImg(true) }} key={value.id} src={"http://" + host + ":3000/img/usuarios/" + value.usuarios_id + "/fincas/" + value.fincas_id + "/" + value.nombre} alt="" />
+                                                            }
+                                                            if (imgInsert == false) {
+                                                                if (index == (imgs.length - 1)) {
+                                                                    return <img onClick={() => { setModalSliderImg(true) }} key={value.id} src={"http://" + host + ":3000/img/usuarios/" + value.usuarios_id + "/fincas/" + value.fincas_id + "/" + value.nombre} alt="" />
+                                                                }
+                                                            }
+                                                        })
+                                                    })()
                                                     :
                                                     <img src="img/imgPredeterminada.png" alt="" /> :
                                                     <img src="img/imgPredeterminada.png" alt="" />
                                                 }
+
+                                                {imgs && modalSliderImg ? imgs.length > 0 ?
+                                                    <div>
+                                                        {(() => {
+                                                            const imgsSlider = [];
+                                                            imgs.map((value, index) => {
+                                                                return imgsSlider.push(<img className='img-slider-info-finca' key={value.id} src={"http://" + host + ":3000/img/usuarios/" + value.usuarios_id + "/fincas/" + value.fincas_id + "/" + value.nombre} alt="" />)
+                                                            })
+                                                            return <GlobalModal statusModal={setModalSliderImg} class={"modal-carrusel"} content={
+                                                                <Slider data={imgsSlider} />
+                                                            } />
+                                                        })()}
+                                                    </div> : "" : ""}
 
                                             </div>
                                         </div>
@@ -1007,7 +1047,6 @@ export const Inicio = () => {
 
                         {resultadoSensorialPromedio ? Object.keys(resultadoSensorialPromedio).length > 0 ?
                             <div style={{ top: "-9999%", right: "-9999%", zIndex: -9999, position: "absolute", height: "max-content", overflow: "auto", width: "max-content" }} id='divimgAtributos' ref={divRef}>
-                                {console.log(resultadoSensorialPromedio, analisis, "promeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")}
                                 <RadarChart radarBackground={{ fill: 'black' }} height={1000} width={1000}
                                     outerRadius="60%" data={dataAtributos}   >
                                     <PolarGrid stroke='black' />
@@ -1024,8 +1063,6 @@ export const Inicio = () => {
             <img className='img-fondo' src="/public/img/fondoMapa2.jpg" alt="" />
 
             <iframe id='iframeMapa' className='iframe' src="src/mapa/MapaV4/index.html" frameBorder={0}></iframe>
-            <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
-
         </div>
     )
 }

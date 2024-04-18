@@ -26,7 +26,6 @@ export const Formatos = (userInfo) => {
         "buttons": {
             "avanzado": {
                 "status": true,
-                "rol": ["administrador"]
             },
             "pdf": {
                 "status": true
@@ -128,12 +127,33 @@ export const Formatos = (userInfo) => {
                         type: "select",
                         referencia: "Estado",
                         values: ["nombre"],
-                        opciones: [{ nombre: "activo", value: "1" }, { nombre: "inactivo", value: "0" }, { nombre: "pendiente", value: "2" }],
+                        opciones: [{ nombre: "asignado", value: "3" }, { nombre: "pendiente", value: "2" }, { nombre: "finalizado", value: "4" }, { nombre: "rechazado", value: "6" }],
                         upper_case: true,
                         key: "value"
                     },
                 },
                 referencia: "Filtrar por estado"
+            },
+            "proceso": {
+                inputs: {
+                    proceso: {
+                        type: "select",
+                        referencia: "Proceso",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "certificar", value: "certificar" }, { nombre: "practica", value: "practica" }],
+                        upper_case: true,
+                        key: "value"
+                    },
+                    tipos_analisis_id: {
+                        type: "select",
+                        referencia: "Tipo de análisis",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "fisico", value: "1" }, { nombre: "sensorial", value: "2" }],
+                        upper_case: true,
+                        key: "value"
+                    },
+                },
+                referencia: "Filtrar por tipo de proceso o análisis"
             }
         }
     )
@@ -459,12 +479,18 @@ export const Formatos = (userInfo) => {
                             "element": <h4 className="estado-no-pointer estado-3">Asignado</h4>,
                             "class": "xd"
                         }
-                    }
-                    ,
+                    },
                     "5": {
                         "element": {
                             "type": "free",
                             "element": <h4 className="estado-no-pointer estado-5">Registrado</h4>,
+                            "class": "xd"
+                        }
+                    },
+                    "6": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-no-pointer estado-0">Rechazado</h4>,
                             "class": "xd"
                         }
                     },
@@ -478,12 +504,6 @@ export const Formatos = (userInfo) => {
                         "element": {
                             "type": "free",
                             "element": <h4 className="estado-no-pointer estado-1">Activo</h4>,
-                        }
-                    },
-                    "0": {
-                        "element": {
-                            "type": "free",
-                            "element": <h4 className="estado-no-pointer estado-0">Inactivo</h4>,
                         }
                     },
                     "0": {
@@ -667,7 +687,6 @@ export const Formatos = (userInfo) => {
                     asignar["usuarios_id"]["opciones"] = response.data.data ? response.data.data : []
                     setInputsForm(cafes)
                     setSelectAsignar(asignar)
-
                 }
             }
 
@@ -1041,7 +1060,6 @@ export const Formatos = (userInfo) => {
 
         if (tipoRegistro == 1) {
             route = "resultado/registrar/"
-            data["xd"] = "xd";
         } else {
             method = "put"
             route = "resultado/actualizar/" + id
@@ -1051,7 +1069,7 @@ export const Formatos = (userInfo) => {
             getAnalisis()
             setDataModalAnalisis([])
             setDataModalResultado([])
-            setInfoFormato(idAnalisisResult, tipoAnalisis)
+            setInfoFormato(id, tipoAnalisis)
             setStatusAlert(true)
             setdataAlert(
                 {
@@ -1087,7 +1105,7 @@ export const Formatos = (userInfo) => {
             const response = await Api.post("formatos/registrar", data);
             if (response.data.status == true) {
                 getAnalisis()
-                setInfoFormato(idAnalisis, tipoAnalisis)
+                /* setInfoFormato(idAnalisis, tipoAnalisis) */
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -1117,7 +1135,6 @@ export const Formatos = (userInfo) => {
     }
     async function actualizarFormato(idAnalisis, idFormato, tipo, usuario) {
         try {
-            alert("xd")
             const data = {
                 "tipos_analisis_id": tipo,
                 "usuarios_id": usuario
@@ -1127,7 +1144,7 @@ export const Formatos = (userInfo) => {
                 getAnalisis()
                 setDataModalAnalisis([])
                 setDataModalResultado([])
-                setInfoFormato(idAnalisis, tipoAnalisis)
+                setInfoFormato(idFormato, tipoAnalisis)
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -1344,50 +1361,56 @@ export const Formatos = (userInfo) => {
             cloneDataFilterTable["filter"]["order"] = {}
         }
         console.log(cloneDataFilterTable, "cloooooooooooooooooon")
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
             console.log("ahhh")
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["desde"] = filter.desde_registro
+            cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                delete cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"]) {
+                delete cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"]
             }
         }
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"] = {}
         }
         if (filter.hasta_registro) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["hasta"] = filter.hasta_registro
+            cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"]["hasta"] = filter.hasta_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"]) {
+                cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"]
             }
         }
 
-        if (filter.estado) {
-            cloneDataFilterTable["filter"]["where"]["us.estado"] = {
-                "value": filter.estado,
-                "operador": "=",
-                "require": "and"
-            }
-        } else {
-            if (cloneDataFilterTable["filter"]["where"]["us.estado"]) {
-                delete cloneDataFilterTable["filter"]["where"]["us.estado"]
+
+        const dataWhere = ["estado", "proceso", "tipos_analisis_id"]
+
+        for (let x = 0; x < dataWhere.length; x++) {
+            if (filter[dataWhere[x]]) {
+                cloneDataFilterTable["filter"]["where"]["forma." + [dataWhere[x]]] = {
+                    "value": filter[[dataWhere[x]]],
+                    "operador": "=",
+                    "require": "and"
+                }
+            } else {
+                if (cloneDataFilterTable["filter"]["where"]["forma." + [dataWhere[x]]]) {
+                    delete cloneDataFilterTable["filter"]["where"]["forma." + [dataWhere[x]]]
+                }
             }
         }
+
         console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
 
         setDataFilterTable(cloneDataFilterTable)
-        getFincas()
+        getAnalisis()
 
     }
     return (
         <div id='mainFormatos'>
             <Tablas getAvanzado={getAvanzado} buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Formatos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             {modalFormResults ?
-                <FormResultados finalizarFormato={finalizarFormato} setModalFormNormal={setModalFormNormal} modalFormNormal={modalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
+                <FormResultados getAnalisis={getAnalisis} setInfoFormato={setInfoFormato} finalizarFormato={finalizarFormato} setModalFormNormal={setModalFormNormal} modalFormNormal={modalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
                 : ""}
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
 

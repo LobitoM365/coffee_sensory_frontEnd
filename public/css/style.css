@@ -211,10 +211,12 @@
      width: 100%;
      flex-direction: column;
      gap: 30px;
+     overflow: hidden;
  }
 
  #mainInicio .div-img-info-general img {
      border-radius: 4px;
+     cursor: pointer;
  }
 
  #mainInicio .title-info {
@@ -225,6 +227,7 @@
      display: flex;
      flex-direction: column;
      gap: 40px;
+     width: 100%;
  }
 
  #mainInicio .div-info-caficultor {
@@ -268,7 +271,7 @@
 
  #mainInicio .div-info-content-general {
      width: calc(100% - 40px);
-     height:  calc(100% - 40px);
+     height: calc(100% - 40px);
      padding: 20px;
      display: grid;
      grid-template-columns: 1fr 1fr;
@@ -399,4 +402,32 @@
 
  #mainInicio #contentForm {
      background-color: #0000005e;
+ }
+
+ #mainInicio .div-img-info-general {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     height: 550px;
+     width: 100%;
+ }
+
+ #mainInicio .div-img-info-general>img {
+     height: 100%;
+     box-shadow: 0px 0px 10px rgb(200, 200, 200);
+ }
+
+ #mainInicio .img-slider-info-finca {
+     height: 100%;
+ }
+
+ #mainInicio .div-carrusel {
+     height: 35vw;
+     max-height: 600px;
+     max-width: 100%;
+ }
+
+ #mainInicio .modal-carrusel .div-content-form {
+     width: 1200px;
+     /* max-width: 100%; */
  }

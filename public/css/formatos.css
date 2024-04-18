@@ -2,7 +2,7 @@
     padding: 10px;
 }
 
-#mainFormatos >div{
+#mainFormatos>div {
     width: 100%;
 }
 
@@ -37,6 +37,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    gap: 40px;
 }
 
 #mainFormatos .iframe-formato-sca {
@@ -143,6 +144,10 @@
 
 #mainFormatos .contenido-info-resultado {
     max-width: 100%;
+}
+
+#mainFormatos .contenido-info-resultado>div {
+    width: 100%;
 }
 
 #mainFormatos .contenido-info-resultado h3 {
@@ -390,6 +395,7 @@
 #mainFormatos .footer-asignar {
     display: flex;
     justify-content: end;
+    gap: 20px;
 }
 
 #mainFormatos .tr-error-table-asignar td {
@@ -542,4 +548,88 @@
 
 #mainFormatos #mainGlobalInput {
     width: 100%;
+}
+
+#mainFormatos .button-users-formatos-rechazar {
+    background-color: rgb(255, 188, 45);
+}
+
+#mainFormatos .div-info-user-formato {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#mainFormatos .div-info-catador-formato {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+#mainFormatos #mainAlert .head-input {
+    display: flex;
+}
+
+#mainFormatos #mainAlert .text-area-form {
+    width: calc(100% - 30px);
+    min-width: calc(100% - 30px);
+    max-width: calc(100% - 30px);
+    min-height: 200px;
+    max-height: 200px;
+}
+
+#mainFormatos .div-eliminar-formato {
+    width: 100%;
+}
+
+#mainFormatos .div-info-rechazo {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#mainFormatos .numero-razon-rechazo {
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+#mainFormatos .title-razon-rechazo {
+    font-size: 1.3em;
+    color: rgb(234, 75, 45);
+}
+
+#mainFormatos .info-razon-rechazo {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: end;
+    gap: 10px;
+}
+
+#mainFormatos .info-razon-rechazo>p {
+    font-weight: lighter;
+    font-size: 1.1em;
+}
+
+#mainFormatos .info-rechazo-edit {
+    align-items: start;
+}
+
+#mainFormatos .head-input {
+    display: flex !important;
+    max-width: 100%;
+}
+
+/* #mainFormatos #mainGlobalInput {
+    overflow: hidden;
+} */
+
+#mainFormatos #mainGlobalInput .text-area-form {
+    max-height: 200px !important;
+    min-height: 200px !important;
+    height: 200px !important;
+}
+#mainFormatos .div-options-rechzo-formato{
+    display: flex;
+    justify-content: end;
+    gap: 20px;
 }

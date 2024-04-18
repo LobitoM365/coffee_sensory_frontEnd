@@ -13,7 +13,6 @@ export const Departamentos = (userInfo) => {
             },
             "avanzado": {
                 "status": true,
-                "rol": ["administrador"]
             },
             "pdf": {
                 "status": true
@@ -65,6 +64,10 @@ export const Departamentos = (userInfo) => {
         "nombre": {
             "referencia": "Nombre",
             "upper_case": true
+        },
+        "fecha_creacion": {
+            "referencia": "Fecha de creación",
+            "format": true
         }
 
         // "fecha_creacion": {
@@ -94,32 +97,6 @@ export const Departamentos = (userInfo) => {
                     }
                 },
                 referencia: "Filtrar por fecha de creación"
-            },
-            "estado": {
-                inputs: {
-                    estado: {
-                        type: "select",
-                        referencia: "Estado",
-                        values: ["nombre"],
-                        opciones: [{ nombre: "activo", value: "1" }, { nombre: "inactivo", value: "0" }],
-                        upper_case: true,
-                        key: "value"
-                    },
-                },
-                referencia: "Filtrar por estado"
-            },
-            "rol": {
-                inputs: {
-                    rol: {
-                        type: "select",
-                        referencia: "Rol",
-                        values: ["nombre"],
-                        opciones: [{ nombre: "administrador", value: "administrador" }, { nombre: "catador", value: "catador" }, { nombre: "cafetero", value: "cafetero" }],
-                        upper_case: true,
-                        key: "value"
-                    },
-                },
-                referencia: "Filtrar por rol o cargo"
             }
         }
     )
@@ -342,39 +319,44 @@ export const Departamentos = (userInfo) => {
             cloneDataFilterTable["filter"]["order"] = {}
         }
         console.log(cloneDataFilterTable, "cloooooooooooooooooon")
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
             console.log("ahhh")
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["desde"] = filter.desde_registro
+            cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                delete cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"]) {
+                delete cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"]
             }
         }
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"] = {}
         }
         if (filter.hasta_registro) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["hasta"] = filter.hasta_registro
+            cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"]["hasta"] = filter.hasta_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"]) {
+                cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"]
             }
         }
 
-        if (filter.estado) {
-            cloneDataFilterTable["filter"]["where"]["us.estado"] = {
-                "value": filter.estado,
-                "operador": "=",
-                "require": "and"
-            }
-        } else {
-            if (cloneDataFilterTable["filter"]["where"]["us.estado"]) {
-                delete cloneDataFilterTable["filter"]["where"]["us.estado"]
+        const dataWhere = []
+
+        for (let x = 0; x < dataWhere.length; x++) {
+            if (filter[dataWhere[x]]) {
+                cloneDataFilterTable["filter"]["where"]["de." + [dataWhere[x]]] = {
+                    "value": filter[[dataWhere[x]]],
+                    "operador": "=",
+                    "require": "and"
+                }
+            } else {
+                if (cloneDataFilterTable["filter"]["where"]["de." + [dataWhere[x]]]) {
+                    delete cloneDataFilterTable["filter"]["where"]["de." + [dataWhere[x]]]
+                }
             }
         }
+
         console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
 
         setDataFilterTable(cloneDataFilterTable)

@@ -15,7 +15,6 @@ export const GraficoCircular = ({ user , inputData}) => {
   const updateData = (newData) => {
     // Actualiza el gráfico con los nuevos datos
     // Utiliza la referencia al gráfico o cualquier método que utilices para actualizar el gráfico
-    console.log('Actualizando gráfico con nuevos datos:', newData);
     setNuevoDato(newData);
   };
   
@@ -29,7 +28,6 @@ export const GraficoCircular = ({ user , inputData}) => {
   // Utiliza un useEffect adicional para observar cambios en el estado nuevoDato
   useEffect(() => {
     // Acciones que deseas realizar después de que nuevoDato se haya actualizado
-    console.log(nuevoDato, "aquiiiiiiiiiiiiiiii");
     // Puedes realizar otras acciones aquí
   }, [nuevoDato]);
   
@@ -38,7 +36,7 @@ export const GraficoCircular = ({ user , inputData}) => {
     const fetchData = async () => {
       try {
 
-        console.log(nuevoDato,"todos los datos 111111111111111111112222222222")
+  
         const VariableIdUser = user;
         const SetDataInput={
           "muestras_id":inputData.muestras_id,
@@ -49,8 +47,7 @@ export const GraficoCircular = ({ user , inputData}) => {
         
         const response = await Api.post(`analisis/Mes/${VariableIdUser}`, SetDataInput);
         const responseData = response.data;
-        console.log(responseData,"No tiene Porque llegar")
-        console.log(VariableIdUser,'USER')
+
         
         if (responseData.status === true) {
           setData(responseData.data);

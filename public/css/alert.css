@@ -19,6 +19,7 @@
      background-color: white;
      border-radius: 8px;
      max-width: calc(100% - 50px);
+     overflow: hidden;
      /* word-break: break-all; */
  }
 
@@ -41,7 +42,7 @@
      width: 75px;
  }
 
- #mainAlert  .icon-ban-alert {
+ #mainAlert .icon-ban-alert {
      width: 130px;
  }
 
@@ -121,4 +122,9 @@
      #mainAlert .input-alert {
          width: 100%;
      }
+ }
+
+ #mainAlert .content-alert {
+     overflow: hidden;
+     max-width: 100%;
  }

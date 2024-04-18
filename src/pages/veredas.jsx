@@ -19,10 +19,12 @@ export const Veredas = () => {
                 "status": true,
                 "rol": ["administrador", "catador"]
             },
-            "reporte": {
+            "avanzado": {
                 "status": true,
-                "rol": ["administrador"]
             },
+            "pdf": {
+                "status": true
+            }
         }
     });
 
@@ -107,6 +109,7 @@ export const Veredas = () => {
     useEffect(() => {
         getVariedades()
         getDepartamentos()
+        getMunicipiosReporte()
     }, [])
 
 
@@ -148,9 +151,36 @@ export const Veredas = () => {
         } catch (e) {
         }
     }
+    async function getMunicipiosReporte() {
 
+        try {
+            let filterReport = {
+                "filter": {
+                    "where": {
+
+                    },
+                    "limit": {
+                        inicio: 0,
+                        fin: "4444"
+                    }
+                }
+            }
+            const response = await Api.post("municipio/listar", filterReport);
+            console.log(response, filterReport)
+            if (response.data.status == true) {
+                let depPdf = inputsDocumento
+                depPdf.municipios_id.inputs.municipios_id["opciones"] = response.data.data
+                setinputsDocumento(depPdf)
+            } else if (response.data.find_error) {
+
+            } else {
+
+            }
+        } catch (e) {
+        }
+    }
     //Obtener Veredas
-    async function getVeredas(data) {   
+    async function getVeredas(data) {
         try {
             let filterReport = {
                 "filter": {
@@ -224,6 +254,9 @@ export const Veredas = () => {
                 }
                 departamentos["departamentos_id"]["opciones"] = response.data.data
                 setInputsForm(departamentos)
+                let depPdf = inputsDocumento
+                depPdf.municipios_id.inputs.departamentos_id["opciones"] = response.data.data
+                setinputsDocumento(depPdf)
             } else if (response.data.find_error) {
                 if (departamentos["departamentos_id"]) {
                     departamentos["departamentos_id"]["opciones"] = []
@@ -488,10 +521,195 @@ export const Veredas = () => {
         getVariedades(dataFilterTable)
 
     }
+    let [inputsDocumento, setinputsDocumento] = useState(
+        {
+            "fecha": {
+                inputs: {
+                    desde_registro: {
+                        type: "date",
+                        referencia: "Desde",
+                        values: ["nombre"],
+                    },
+                    hasta_registro: {
+                        type: "date",
+                        referencia: "Hasta",
+                    }
+                },
+                referencia: "Filtrar por fecha de creación"
+            },
+            "municipios_id": {
+                inputs: {
+                    departamentos_id: {
+                        type: "select",
+                        referencia: "Departamento",
+                        values: ["nombre"],
+                        upper_case: true,
+                        key: "id"
+                    },
+                    municipios_id: {
+                        type: "select",
+                        referencia: "Municipio",
+                        values: ["nombre"],
+                        upper_case: true,
+                        key: "id"
+                    }
+                },
+                referencia: "Filtrar por departamento o municipio"
+            }
+        }
+    )
+    async function getAvanzado(tipo, filter) {
 
+        const cloneDataFilterTable = { ...dataFilterTable }
+        if (!dataFilterTable["filter"]) {
+            cloneDataFilterTable["filter"] = {}
+        }
+        if (!dataFilterTable["filter"]["where"]) {
+            cloneDataFilterTable["filter"]["where"] = {}
+        }
+        if (!dataFilterTable["filter"]["limit"]) {
+            cloneDataFilterTable["filter"]["limit"] = {}
+        }
+        if (!dataFilterTable["filter"]["date"]) {
+            cloneDataFilterTable["filter"]["date"] = {}
+        }
+        if (!dataFilterTable["filter"]["order"]) {
+            cloneDataFilterTable["filter"]["order"] = {}
+        }
+
+        if (!cloneDataFilterTable["filter"]["date"]["ve.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["ve.fecha_creacion"] = {}
+        }
+        if (filter.desde_registro) {
+            console.log("ahhh")
+            cloneDataFilterTable["filter"]["date"]["ve.fecha_creacion"]["desde"] = filter.desde_registro
+        } else {
+            if (cloneDataFilterTable["filter"]["date"]["ve.fecha_creacion"]) {
+                delete cloneDataFilterTable["filter"]["date"]["ve.fecha_creacion"]
+            }
+        }
+        if (!cloneDataFilterTable["filter"]["date"]["ve.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["ve.fecha_creacion"] = {}
+        }
+        if (filter.hasta_registro) {
+            cloneDataFilterTable["filter"]["date"]["ve.fecha_creacion"]["hasta"] = filter.hasta_registro
+        } else {
+            if (cloneDataFilterTable["filter"]["date"]["ve.fecha_creacion"]) {
+                cloneDataFilterTable["filter"]["date"]["ve.fecha_creacion"]
+            }
+        }
+
+        const dataWhere = ["municipios_id"]
+        const dataWhereDep = ["departamentos_id"]
+
+        for (let x = 0; x < dataWhere.length; x++) {
+            if (filter[dataWhere[x]]) {
+                cloneDataFilterTable["filter"]["where"]["ve." + [dataWhere[x]]] = {
+                    "value": filter[[dataWhere[x]]],
+                    "operador": "=",
+                    "require": "and"
+                }
+            } else {
+                if (cloneDataFilterTable["filter"]["where"]["ve." + [dataWhere[x]]]) {
+                    delete cloneDataFilterTable["filter"]["where"]["ve." + [dataWhere[x]]]
+                }
+            }
+        }
+        for (let x = 0; x < dataWhereDep.length; x++) {
+            if (filter[dataWhereDep[x]]) {
+                cloneDataFilterTable["filter"]["where"]["muni." + [dataWhereDep[x]]] = {
+                    "value": filter[[dataWhereDep[x]]],
+                    "operador": "=",
+                    "require": "and"
+                }
+            } else {
+                if (cloneDataFilterTable["filter"]["where"]["muni." + [dataWhereDep[x]]]) {
+                    delete cloneDataFilterTable["filter"]["where"]["muni." + [dataWhereDep[x]]]
+                }
+            }
+        }
+
+        console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
+
+        setDataFilterTable(cloneDataFilterTable)
+        getVariedades()
+
+    }
+    async function generatePdf(e, orientacion, papel, alto, ancho, margen_superior, margen_derecho, margen_inferior, margen_izquierdo, fuente, font_size_content_tabla, font_size_encabezado_tabla, font_size_encabezado, color_fondo, espaciado_superior_contenido, espaciado_derecho_contenido, espaciado_inferior_contenido, espaciado_izquierdo_contenido) {
+        let cloneTable = { ...keys }
+        delete cloneTable["actualizar"]
+
+        const dataGeneratePdf = {
+            "dataTable": fincas,
+            "filter": dataFilterTable,
+            "table": { ...cloneTable },
+            "papel": papel,
+            "orientacion": orientacion,
+            "margen_superior": margen_superior,
+            "margen_derecho": margen_derecho,
+            "margen_inferior": margen_inferior,
+            "margen_izquierdo": margen_izquierdo,
+            "fuente": fuente,
+            "font_size_content_tabla": font_size_content_tabla,
+            "font_size_encabezado_tabla": font_size_encabezado_tabla,
+            "font_size_encabezado": font_size_encabezado,
+            "color_fondo": color_fondo,
+            "espaciado_superior_contenido": espaciado_superior_contenido,
+            "espaciado_derecho_contenido": espaciado_derecho_contenido,
+            "espaciado_inferior_contenido": espaciado_inferior_contenido,
+            "espaciado_izquierdo_contenido": espaciado_izquierdo_contenido,
+        };
+        if (alto && ancho) {
+            data["width"] = alto
+            data["height"] = ancho
+        }
+        let nodeInsert;
+        if (e.target.nodeName == "BUTTON") {
+            nodeInsert = e.target
+        } else if (e.target.closest("button")) {
+            nodeInsert = e.target.closest("button")
+        }
+        try {
+            const response = await fetch('http://' + host + ':8000/generateReporte.php', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataGeneratePdf)
+            });
+
+            if (!response.ok) {
+                if (nodeInsert.querySelector(".loader-div-button")) {
+                    nodeInsert.innerHTML = "Intentar de nuevo."
+                }
+                throw new Error('Error al generar el PDF');
+            }
+            const pdfBlob = await response.blob();
+            const blobUrl = URL.createObjectURL(pdfBlob);
+            window.open(blobUrl, '_blank');
+            if (nodeInsert.querySelector(".loader-div-button")) {
+                nodeInsert.innerHTML = "Generar"
+            }
+
+
+        } catch (error) {
+            if (nodeInsert.querySelector(".loader-div-button")) {
+                nodeInsert.innerHTML = "Intentar de nuevo."
+            }
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "false",
+                    description: "Error interno del servidor: " + error,
+                    "tittle": "Inténtalo de nuevo"
+                }
+            )
+
+        }
+    }
     return (
         <>
-            <Tablas buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Vereda"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} hidden={'status'} />
+            <Tablas getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Vereda"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} hidden={'status'} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

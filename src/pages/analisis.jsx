@@ -7,6 +7,7 @@ import { GlobalModal } from '../componentes/globalModal.jsx'
 import { GlobalInputs } from '../componentes/globalInputs.jsx'
 import ReactDOM from "react-dom/client";
 import "../../public/css/analisis.css"
+import { fn } from 'jquery'
 
 export const Analisis = (userInfo) => {
     useEffect(() => {
@@ -63,7 +64,6 @@ export const Analisis = (userInfo) => {
             },
             "avanzado": {
                 "status": true,
-                "rol": ["administrador"]
             },
             "pdf": {
                 "status": true
@@ -172,12 +172,25 @@ export const Analisis = (userInfo) => {
                         type: "select",
                         referencia: "Estado",
                         values: ["nombre"],
-                        opciones: [{ nombre: "activo", value: "1" }, { nombre: "inactivo", value: "0" }, { nombre: "pendiente", value: "2" }],
+                        opciones: [{ nombre: "aprobado", value: "7" }, { nombre: "pendiente", value: "2" }, { nombre: "finalizado", value: "4" }],
                         upper_case: true,
                         key: "value"
                     },
                 },
                 referencia: "Filtrar por estado"
+            },
+            "proceso": {
+                inputs: {
+                    proceso: {
+                        type: "select",
+                        referencia: "Proceso",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "certificar", value: "certificar" }, { nombre: "practica", value: "practica" }],
+                        upper_case: true,
+                        key: "value"
+                    },
+                },
+                referencia: "Filtrar por tipo de proceso"
             }
         }
     )
@@ -511,6 +524,12 @@ export const Analisis = (userInfo) => {
                             "element": <h4 className="estado-table estado-no-pointer estado-4">Finalizado</h4>,
                         }
                     },
+                    "7": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-no-pointer estado-7">Aprobado</h4>,
+                        }
+                    },
                     "1": {
                         "element": {
                             "type": "free",
@@ -558,7 +577,7 @@ export const Analisis = (userInfo) => {
                     "reference": "estado"
                 },
                 "inputs": {
-                    "4": {
+                    "7": {
                         "element": {
                             "type": "free",
                             "inputs": {
@@ -579,6 +598,18 @@ export const Analisis = (userInfo) => {
                         }
                     },
                     "2": {
+                        "element": {
+                            "type": "free",
+                            "inputs": {
+                                "pdf": {
+                                    "type": "free",
+                                    "element": "icon-pdf",
+                                    "class": "div-icon-reporte-pdf-none",
+                                }
+                            }
+                        }
+                    },
+                    "4": {
                         "element": {
                             "type": "free",
                             "inputs": {
@@ -836,7 +867,7 @@ export const Analisis = (userInfo) => {
         setdataAlert(
             {
                 status: "warning",
-                description: "¿Estás seguro(a) de activar la geolocalizacion para el análisis " + id + "?, ten en cuenta que para un lote solo una muestra puede geolocalizarse al mismo tiempo, si activas la opcion de geolocalizacion, los análisis asociados al mismo lote se dejarán de ver en el mapa.",
+                description: "¿Estás seguro(a) de activar la geolocalización para el análisis " + id + "?, ten en cuenta que para un lote solo una muestra puede geolocalizarse al mismo tiempo, si activas la opcion de geolocalizacion, los análisis asociados al mismo lote se dejarán de ver en el mapa.",
                 continue: {
                     "function": cambiarEstadoMapa,
                     "execute": id,
@@ -1042,7 +1073,7 @@ export const Analisis = (userInfo) => {
         setStatusUpdateAsignar(true)
         const response = await Api.post("analisis/buscar/" + id + "");
         if (response.data.status == true) {
-            if (response.data.data[0]["estado"] == 4) {
+            if (response.data.data[0]["estado"] == 7) {
                 setStatusAsignar(false)
             } else {
                 setStatusAsignar(true)
@@ -1213,7 +1244,13 @@ export const Analisis = (userInfo) => {
     }
     async function getMuestras() {
         try {
-            let filter = {};
+            let filter = {
+                "filter": {
+                    "where": {
+
+                    }
+                }
+            };
             if (userInfo.userInfo) {
                 if (userInfo.userInfo.rol == "administrador" && userInfo.userInfo.cargo == "administrador") {
                     filter = {
@@ -1231,6 +1268,10 @@ export const Analisis = (userInfo) => {
                         }
                     }
                 }
+            }
+            filter.filter.where["mu.estado"] = {
+                "value": 1,
+                "require": "and"
             }
             const response = await Api.post("muestra/listar", filter);
 
@@ -1819,6 +1860,10 @@ export const Analisis = (userInfo) => {
         delete cloneTable["reporte"]
         delete cloneTable["encargados"]
         delete cloneTable["estado_analisis"]
+        delete cloneTable["estado_mapa"]
+        cloneTable["estado"] = {
+            "referencia": "Estado",
+        }
 
         console.log(cloneTable, "cloeeeeeeeeeeeeeeeeee")
 
@@ -2056,10 +2101,11 @@ export const Analisis = (userInfo) => {
         try {
 
             const data = {
-                "muestras_id": (dataAlert ? dataAlert.muestra ? dataAlert.muestra : "" : "")
+                "muestras_id": (dataAlert ? dataAlert.muestras_id ? dataAlert.muestras_id : "" : "")
             }
             const response = await Api.put("analisis/actualizar/" + (dataAlert ? dataAlert.id ? dataAlert.id : "" : ""), data)
             if (response.data.status == true) {
+                getEncargadosAnalisisUpdate((dataAlert ? dataAlert.id ? dataAlert.id : "" : ""))
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -2137,6 +2183,7 @@ export const Analisis = (userInfo) => {
         }
     }
     async function confirmarEditarAnalisis(id, muestra) {
+        console.log(muestraIdAsignar, muestra, id)
         setStatusAlert(true)
         setdataAlert(
             {
@@ -2185,46 +2232,112 @@ export const Analisis = (userInfo) => {
             cloneDataFilterTable["filter"]["order"] = {}
         }
         console.log(cloneDataFilterTable, "cloooooooooooooooooon")
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
             console.log("ahhh")
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["desde"] = filter.desde_registro
+            cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                delete cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"]) {
+                delete cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"]
             }
         }
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"] = {}
         }
         if (filter.hasta_registro) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["hasta"] = filter.hasta_registro
+            cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"]["hasta"] = filter.hasta_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"]) {
+                cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"]
             }
         }
 
-        if (filter.estado) {
-            cloneDataFilterTable["filter"]["where"]["us.estado"] = {
-                "value": filter.estado,
-                "operador": "=",
-                "require": "and"
-            }
-        } else {
-            if (cloneDataFilterTable["filter"]["where"]["us.estado"]) {
-                delete cloneDataFilterTable["filter"]["where"]["us.estado"]
+        const dataWhere = ["estado", "proceso"]
+
+        for (let x = 0; x < dataWhere.length; x++) {
+            if (filter[dataWhere[x]]) {
+                cloneDataFilterTable["filter"]["where"]["an." + [dataWhere[x]]] = {
+                    "value": filter[[dataWhere[x]]],
+                    "operador": "=",
+                    "require": "and"
+                }
+            } else {
+                if (cloneDataFilterTable["filter"]["where"]["an." + [dataWhere[x]]]) {
+                    delete cloneDataFilterTable["filter"]["where"]["an." + [dataWhere[x]]]
+                }
             }
         }
-        console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
 
         setDataFilterTable(cloneDataFilterTable)
-        getFincas()
+        getAnalisis()
 
     }
 
+    async function confirmarActualizarAnálisis(id) {
+        setStatusAlert(true)
+        setdataAlert(
+            {
+                status: "warning",
+                description: "¿Estás seguro(a) de aprobar el análisis " + id + "?. Ten en cuenta que si apruebas el análisis no se podrá modificar nada en el.",
+                "tittle": "¡Asegurate de realizar la ación!",
+                continue: {
+                    "function": aprobarAnalisis,
+                    "execute": id,
+                    location: "/dashboard"
+                }
+            }
+        )
+    }
+    async function aprobarAnalisis(id) {
+        try {
+            const response = await Api.put("analisis/aprobar/" + id);
+            console.log(response, id)
+            if (response.data.status == true) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Excelente",
+                        continue: {
+                            "function": statusUpdateAsignar ? getNewView : "",
+                        }
+                    }
+                )
+            } else if (response.data.update_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.update_error,
+                        "tittle": "Excelente"
+                    }
+                )
+            } else if (response.data.modal_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.modal_error,
+                        "tittle": "Excelente"
+                    }
+                )
+            } else {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.message,
+                        "tittle": "Excelente"
+                    }
+                )
+            }
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
     return (
         <div>
             <div id='mainAnalisis'>
@@ -2250,85 +2363,88 @@ export const Analisis = (userInfo) => {
                                                     {
                                                         statusUpdateAsignar ?
                                                             infoAnalisisUpdateAsignar.length > 0 ?
-                                                                infoAnalisisUpdateAsignar[0].permission_update != 'false' ?
 
-                                                                    <div className='div-muestra-change'>
-                                                                        <div className='div-estado-muestra-asign'>
-                                                                            <h3>Tipo de proceso: </h3>
-                                                                            <h4 className={"estado-no-pointer estado-"}>
-                                                                                {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["proceso"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : ""}
-                                                                            </h4>
+                                                                <div className='div-muestra-change'>
+                                                                    <div className='div-estado-muestra-asign'>
+                                                                        <h3>Tipo de proceso: </h3>
+                                                                        <h4 className={"estado-no-pointer estado-"}>
+                                                                            {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["proceso"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : ""}
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div className='div-estado-muestra-asign'>
+                                                                        <h3>Estado de la muestra actual : </h3>
+                                                                        <h4 className={"estado-no-pointer estado-" + (infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] : "")}>
+                                                                            {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] == 0 ? "Inactivo" : infoAnalisisUpdateAsignar[0]["mu_estado"] == 1 ? "Activo" : "" : ""}
+                                                                        </h4>
+                                                                    </div>
+                                                                    {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] == 0 ?
+                                                                        <div className='div-anaisis-finalizado-asignar-formato'>
+                                                                            <div>
+                                                                                <h4>Muestra Actual:</h4>
+                                                                                <h5>{(infoAnalisisUpdateAsignar[0].mu_id + ", " + infoAnalisisUpdateAsignar[0].documento_propietario + ", " + infoAnalisisUpdateAsignar[0].nombre_propietario + ", " + infoAnalisisUpdateAsignar[0].finca + ", " + infoAnalisisUpdateAsignar[0].lote).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h5>
+                                                                            </div>
                                                                         </div>
+                                                                        : "" : ""}
+                                                                    <div className='div-estado-muestra-asign'>
+                                                                        <h4>Estado del análisis: </h4>
+                                                                        {
+                                                                            infoAnalisisUpdateAsignar[0].estado == 4 ? <h4 className='h4-estado-formato-asing h4-estado-formato-asing-finalizado'>
+                                                                                Finalizado
+                                                                            </h4>
+                                                                                : infoAnalisisUpdateAsignar[0].estado == 2 ?
+                                                                                    <h4 className='h4-estado-formato-asing h4-estado-formato-asing-pendiente'>
+                                                                                        Pendiente
+                                                                                    </h4>
+                                                                                    : infoAnalisisUpdateAsignar[0].estado == 7 ?
+                                                                                        <h4 className='h4-estado-formato-asing h4-estado-formato-asing-aprobado'>
+                                                                                            Aprobado
+                                                                                        </h4>
+                                                                                        : ""}
+                                                                    </div>
+                                                                    {infoAnalisisUpdateAsignar.length > 0 ?? infoAnalisisUpdateAsignar[0]["codigo_muestra"] ??
                                                                         <div className='div-estado-muestra-asign'>
-                                                                            <h3>Estado de la muestra actual : </h3>
+                                                                            <h3>Código de la muestra actual : </h3>
                                                                             <h4 className={"estado-no-pointer estado-" + (infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] : "")}>
                                                                                 {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] == 0 ? "Inactivo" : infoAnalisisUpdateAsignar[0]["mu_estado"] == 1 ? "Activo" : "" : ""}
                                                                             </h4>
                                                                         </div>
-                                                                        {infoAnalisisUpdateAsignar.length > 0 ?? infoAnalisisUpdateAsignar[0]["codigo_muestra"] ??
-                                                                            <div className='div-estado-muestra-asign'>
-                                                                                <h3>Código de la muestra actual : </h3>
-                                                                                <h4 className={"estado-no-pointer estado-" + (infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] : "")}>
-                                                                                    {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] == 0 ? "Inactivo" : infoAnalisisUpdateAsignar[0]["mu_estado"] == 1 ? "Activo" : "" : ""}
-                                                                                </h4>
-                                                                            </div>
-                                                                        }
+                                                                    }
 
-                                                                        <GlobalInputs
-                                                                            input={setMuestraIdAsignar}
-                                                                            value={muestraIdAsignar}
-                                                                            class={"input-global"}
-                                                                            errors={errorsAsignar}
-                                                                            elementEdit={infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0].mu_id : ""}
-                                                                            data={{
-                                                                                muestras_id: {
-                                                                                    type: "select",
-                                                                                    referencia: "Muestra",
-                                                                                    values: ["id", "numero_documento", "nombre_completo", "finca", "lote"],
-                                                                                    opciones: muestrasAsignar,
-                                                                                    upper_case: true,
-                                                                                    key: "id",
-                                                                                },
-                                                                            }} />
-                                                                        <div className='div-change-muestra'>
-                                                                            <button onClick={() => { confirmarEditarAnalisis(analisisAsignar, muestraIdAsignar["muestras_id"]) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
-                                                                        </div>
-                                                                    </div>
-                                                                    :
-                                                                    <div>
-                                                                        <div className='div-anaisis-finalizado-asignar-formato'>
-                                                                            <div>
-                                                                                <h4>Muestra:</h4>
-                                                                                <h5>{(infoAnalisisUpdateAsignar[0].mu_id + ", " + infoAnalisisUpdateAsignar[0].documento_propietario + ", " + infoAnalisisUpdateAsignar[0].nombre_propietario + ", " + infoAnalisisUpdateAsignar[0].finca + ", " + infoAnalisisUpdateAsignar[0].lote).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h5>
+                                                                    {infoAnalisisUpdateAsignar[0].permission_update != 'false' ?
+                                                                        <div>
+                                                                            <GlobalInputs
+                                                                                input={setMuestraIdAsignar}
+                                                                                value={muestraIdAsignar}
+                                                                                class={"input-global"}
+                                                                                errors={errorsAsignar}
+                                                                                elementEdit={infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0].mu_id : ""}
+                                                                                data={{
+                                                                                    muestras_id: {
+                                                                                        type: "select",
+                                                                                        referencia: "Muestra",
+                                                                                        values: ["id", "numero_documento", "nombre_completo", "finca", "lote"],
+                                                                                        opciones: muestrasAsignar,
+                                                                                        upper_case: true,
+                                                                                        key: "id",
+                                                                                    },
+                                                                                }} />
+                                                                            <div className='div-change-muestra'>
+                                                                                <button onClick={() => { confirmarEditarAnalisis(analisisAsignar, muestraIdAsignar["muestras_id"]) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
                                                                             </div>
-                                                                            <div className='div-informacion-finalizado-asignar-formato'>
-                                                                                <div className='div-estado-muestra-asign'>
-                                                                                    <h3>Tipo de proceso: </h3>
-                                                                                    <h4 className={"estado-no-pointer estado-"}>
-                                                                                        {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["proceso"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : ""}
-                                                                                    </h4>
-                                                                                </div>
-                                                                                <div className='div-estado-muestra-asign'>
-                                                                                    <h3>Estado de la muestra actual : </h3>
-                                                                                    <h4 className={"estado-no-pointer estado-" + (infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] : "")}>
-                                                                                        {infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0]["mu_estado"] == 0 ? "Inactivo" : infoAnalisisUpdateAsignar[0]["mu_estado"] == 1 ? "Activo" : "" : ""}
-                                                                                    </h4>
-                                                                                </div>
-                                                                                <div className='div-estado-muestra-asign'>
-                                                                                    <h4>Estado del análisis: </h4>
-                                                                                    {
-                                                                                        infoAnalisisUpdateAsignar[0].estado == 4 ? <h4 className='h4-estado-formato-asing h4-estado-formato-asing-finalizado'>
-                                                                                            Finalizado
-                                                                                        </h4> :
-                                                                                            <h4 className='h4-estado-formato-asing
-                                                             h4-estado-formato-asing-pendiente'>
-                                                                                                Pendiente
-                                                                                            </h4>
-                                                                                    }
+                                                                        </div>
+                                                                        :
+                                                                        <div>
+                                                                            <div className='div-anaisis-finalizado-asignar-formato'>
+                                                                                <div>
+                                                                                    <h4>Muestra:</h4>
+                                                                                    <h5>{(infoAnalisisUpdateAsignar[0].mu_id + ", " + infoAnalisisUpdateAsignar[0].documento_propietario + ", " + infoAnalisisUpdateAsignar[0].nombre_propietario + ", " + infoAnalisisUpdateAsignar[0].finca + ", " + infoAnalisisUpdateAsignar[0].lote).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h5>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div> : ""
+                                                                    }
+                                                                </div>
+
+                                                                : ""
                                                             : <GlobalInputs
                                                                 input={setMuestraIdAsignar}
                                                                 value={muestraIdAsignar}
@@ -2405,7 +2521,11 @@ export const Analisis = (userInfo) => {
                                                                                                                             <h4 className='h4-estado-formato-asing h4-estado-formato-asing-registrado'>
                                                                                                                                 Registrado
                                                                                                                             </h4>
-                                                                                                                            : ""}
+                                                                                                                            : value.estado == 6 ?
+                                                                                                                                <h4 className='h4-estado-formato-asing h4-estado-formato-asing-rechazado'>
+                                                                                                                                    Rechazado
+                                                                                                                                </h4>
+                                                                                                                                : ""}
                                                                                                                 <button onClick={() => { confirmarCambiarFormato(value.id, valueGlobalInput["catador_fisico_" + value.catador_id + "" + index], "catador_fisico_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
                                                                                                                 <button
                                                                                                                     onClick={() => { confirmarEliminarFormato(value.id) }}
@@ -2420,11 +2540,22 @@ export const Analisis = (userInfo) => {
 
                                                                                                             <div>
                                                                                                                 {value.estado == 4 ?
-                                                                                                                    <h4 className='h4-estado-formato-asing
-                                                                                                h4-estado-formato-asing-finalizado'>
-                                                                                                                        Finalizado
-                                                                                                                    </h4>
+                                                                                                                    <div className='div-footer-users-formatos'>
+                                                                                                                        <h4 className='h4-estado-formato-asing
+                                                                                            h4-estado-formato-asing-finalizado'>
+                                                                                                                            Finalizado
+                                                                                                                        </h4>
+                                                                                                                        <button
+                                                                                                                            onClick={() => { localStorage.setItem("formatos_id", value.id); localStorage.setItem("tipos_analisis_id", value.tipos_analisis_id), location.href = "/dashboard/formatos/registros" }}
+                                                                                                                            className='button-users-formatos button-users-formatos-ver-resultados'>Ver resultado
+                                                                                                                        </button>
+                                                                                                                        <button
+                                                                                                                            onClick={() => { confirmarEliminarFormato(value.id) }}
+                                                                                                                            className='button-users-formatos button-users-formatos-eliminar'>Eliminar
+                                                                                                                        </button>
+                                                                                                                    </div>
                                                                                                                     : ""}
+
                                                                                                             </div>
 
                                                                                                         </div>}
@@ -2492,7 +2623,11 @@ export const Analisis = (userInfo) => {
                                                                                                                             <h4 className='h4-estado-formato-asing h4-estado-formato-asing-registrado'>
                                                                                                                                 Registrado
                                                                                                                             </h4>
-                                                                                                                            : ""}
+                                                                                                                            : value.estado == 6 ?
+                                                                                                                                <h4 className='h4-estado-formato-asing h4-estado-formato-asing-rechazado'>
+                                                                                                                                    Rechazado
+                                                                                                                                </h4>
+                                                                                                                                : ""}
                                                                                                                 <button onClick={() => { confirmarCambiarFormato(value.id, valueGlobalInput["catador_sca_" + value.catador_id + "" + index], "catador_sca_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
                                                                                                                 <button
                                                                                                                     onClick={() => { confirmarEliminarFormato(value.id) }}
@@ -2505,14 +2640,22 @@ export const Analisis = (userInfo) => {
                                                                                                                 {(value.catador_id + ", " + value.catador_documento + ", " + value.catador_nombre_completo).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}
                                                                                                             </h4>
 
-                                                                                                            <div>
-                                                                                                                {value.estado == 4 ?
+                                                                                                            {value.estado == 4 ?
+                                                                                                                <div className='div-footer-users-formatos'>
                                                                                                                     <h4 className='h4-estado-formato-asing
                                                                                             h4-estado-formato-asing-finalizado'>
                                                                                                                         Finalizado
                                                                                                                     </h4>
-                                                                                                                    : ""}
-                                                                                                            </div>
+                                                                                                                    <button
+                                                                                                                        onClick={() => { localStorage.setItem("formatos_id", value.id); localStorage.setItem("tipos_analisis_id", value.tipos_analisis_id), location.href = "/dashboard/formatos/registros" }}
+                                                                                                                        className='button-users-formatos button-users-formatos-ver-resultados'>Ver resultado
+                                                                                                                    </button>
+                                                                                                                    <button
+                                                                                                                        onClick={() => { confirmarEliminarFormato(value.id) }}
+                                                                                                                        className='button-users-formatos button-users-formatos-eliminar'>Eliminar
+                                                                                                                    </button>
+                                                                                                                </div>
+                                                                                                                : ""}
 
                                                                                                         </div>}
 
@@ -2593,6 +2736,11 @@ export const Analisis = (userInfo) => {
                                                         <Tablas class="table-asignar" userInfo={userInfo.userInfo} filterSeacth={filterSearchUsuario} limitRegisters={limitRegistersUsuario} count={countRegistersAsignar} data={usuariosAsignar} keys={keysUsuarios} tittle={"Usuarios"} filterEstado={filterEstado} getFilterEstado={getFilterEstadoUsuario} getFiltersOrden={getFiltersOrdenUsuario} />
                                                     </div>
                                                     : ""}
+                                            </div>
+                                            <div>
+                                                <div className='footer-asignar'>
+                                                    <button onClick={() => { confirmarActualizarAnálisis(analisisAsignar) }} className='button-users-formatos button-set-aprobar-analisis'>Aprobar</button>
+                                                </div>
                                             </div>
                                         </div >
                                     } />

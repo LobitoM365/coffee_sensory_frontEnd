@@ -450,6 +450,7 @@
     border-radius: 4px;
     cursor: pointer;
     font-weight: bolder;
+    font-size: 1em;
 }
 
 #mainAnalisis .h4-estado-formato-asing {
@@ -472,6 +473,14 @@
 
 #mainAnalisis .h4-estado-formato-asing-registrado {
     background-color: rgb(64, 192, 231);
+}
+
+#mainAnalisis .h4-estado-formato-asing-aprobado {
+    background-color: rgb(141, 206, 78);
+}
+
+#mainAnalisis .h4-estado-formato-asing-rechazado {
+    background-color: red;
 }
 
 #mainAnalisis .button-users-formatos-cambiar {
@@ -590,7 +599,9 @@
 .estado-2,
 .estado-3,
 .estado-4,
-.estado-5 {
+.estado-5,
+.estado-6,
+.estado-7 {
     width: max-content;
     /* max-width: max-content; */
     padding: 10px;
@@ -626,6 +637,14 @@
 
 #mainAnalisis .estado-5 {
     background-color: rgb(64, 192, 231);
+}
+
+#mainAnalisis .estado-6 {
+    background-color: red;
+}
+
+#mainAnalisis .estado-7 {
+    background-color: rgb(141, 206, 78);
 }
 
 #mainAnalisis .estado-no-pointer {
@@ -671,7 +690,7 @@
 } */
 
 @media screen and (max-width : 1800px) {
-    #mainAnalisis  .section-two-div-content-asignar {
+    #mainAnalisis .section-two-div-content-asignar {
         grid-template-columns: 1fr;
         grid-template-rows: 600px auto;
         overflow: hidden;
@@ -683,10 +702,15 @@
         width: 100%;
     }
 
+    #mainAnalisis .div-content-asignar-info {
+        width: 100%;
+    }
+
     #mainAnalisis .div-asign-elements {
         width: 100%;
         overflow: hidden;
     }
+
     #mainAnalisis .div-main-asignar .div-content-form {
         width: calc(100% - 60px);
     }
@@ -741,7 +765,7 @@
     }
 }
 
-@media screen and (max-width : 2020px) {
+@media screen and (max-width : 2120px) {
     #mainAnalisis .section-one-div-content-asignar {
         grid-template-columns: 1fr;
     }
@@ -759,7 +783,7 @@
     }
 }
 
-@media screen and (max-width : 1100px) {
+@media screen and (max-width : 1200px) {
     #mainAnalisis .div-encargados {
         display: flex;
         flex-direction: column;
@@ -789,7 +813,7 @@
         align-items: center;
     }
 
-    #mainAnalisis  .input-global .head-input,
+    #mainAnalisis .input-global .head-input,
     #mainAnalisis .div-muestra-change>div {
         flex-wrap: wrap;
         display: flex;
@@ -801,9 +825,18 @@
     }
 }
 
-#mainAnalisis .icon-ver-encargados-no-disponible{
+#mainAnalisis .icon-ver-encargados-no-disponible {
     background-color: gray;
 }
-#mainAnalisis .div-icon-reporte-pdf-none{
-    filter:grayscale(10);
+
+#mainAnalisis .div-icon-reporte-pdf-none {
+    filter: grayscale(10);
+}
+
+#mainAnalisis .button-users-formatos-ver-resultados {
+    background-color: rgb(81, 112, 107);
+}
+
+#mainAnalisis .button-set-aprobar-analisis {
+    background-color: rgb(32, 7, 65);
 }

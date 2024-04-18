@@ -37,7 +37,6 @@ export const Fincas = (userInfo) => {
             },
             "avanzado": {
                 "status": true,
-                "rol": ["administrador"]
             },
             "pdf": {
                 "status": true
@@ -48,8 +47,6 @@ export const Fincas = (userInfo) => {
     async function listarIconos(id) {
         try {
             const response = await Api.post("/img/finca/listar/" + id);
-            console.log(response, "fincaaaaaaaaaaaaaaaaaaaaaaaaaaa---------------iconoooooooooooooooo")
-
 
             if (response.data.status == true) {
                 setImgs(response.data.data)
@@ -169,6 +166,18 @@ export const Fincas = (userInfo) => {
                     },
                 },
                 referencia: "Filtrar por estado"
+            },
+            "municipios_id": {
+                inputs: {
+                    municipios_id: {
+                        type: "select",
+                        referencia: "Municipio",
+                        values: ["nombre"],
+                        upper_case: true,
+                        key: "id"
+                    }
+                },
+                referencia: "Filtrar por municipio"
             }
         }
     )
@@ -321,6 +330,7 @@ export const Fincas = (userInfo) => {
     useEffect(() => {
         getFincas()
         getDepartamentos();
+        getMunicipiosReporte()
     }, [])
     getUsers()
 
@@ -331,11 +341,11 @@ export const Fincas = (userInfo) => {
     }
     async function getFincas() {
         try {
-            dataFilterTable.filter.where["us.id"] = {
+          /*   dataFilterTable.filter.where["fin.id"] = {
                 "value": "0",
                 "operador": "!=",
                 "require": "or"
-            }
+            } */
             const response = await Api.post("finca/listar", dataFilterTable);
             if (response.data.status == true) {
                 setFincas(response.data.data)
@@ -579,6 +589,7 @@ export const Fincas = (userInfo) => {
                 }
             }
             const response = await Api.post("municipio/listar", filterReport);
+            console.log(response)
             let municipios = { ...inputsForm };
 
             if (response.data.status == true) {
@@ -766,17 +777,41 @@ export const Fincas = (userInfo) => {
         getFincas(dataFilterTable)
 
     }
+    async function getMunicipiosReporte() {
 
+        try {
+            let filterReport = {
+                "filter": {
+                    "where": {
+
+                    },
+                    "limit": {
+                        inicio: 0,
+                        fin: "4444"
+                    }
+                }
+            }
+            const response = await Api.post("municipio/listar", filterReport);
+            console.log(response, filterReport)
+            if (response.data.status == true) {
+                let depPdf = inputsDocumento
+                depPdf.municipios_id.inputs.municipios_id["opciones"] = response.data.data
+                setinputsDocumento(depPdf)
+            } else if (response.data.find_error) {
+
+            } else {
+
+            }
+        } catch (e) {
+        }
+    }
     async function getReporte(tipo, filter) {
         try {
 
             let filterReport = {
                 "filter": {
                     "where": {
-                        "fin.estad123123o": {
-                            "value": "0",
 
-                        }
                     },
                     "date": {
                         "fin.fecha_creacion": {
@@ -910,37 +945,56 @@ export const Fincas = (userInfo) => {
             cloneDataFilterTable["filter"]["order"] = {}
         }
         console.log(cloneDataFilterTable, "cloooooooooooooooooon")
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
             console.log("ahhh")
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["desde"] = filter.desde_registro
+            cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                delete cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"]) {
+                delete cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"]
             }
         }
-        if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+        if (!cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"]) {
+            cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"] = {}
         }
         if (filter.hasta_registro) {
-            cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["hasta"] = filter.hasta_registro
+            cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"]["hasta"] = filter.hasta_registro
         } else {
-            if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
+            if (cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"]) {
+                cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"]
             }
         }
 
-        if (filter.estado) {
-            cloneDataFilterTable["filter"]["where"]["us.estado"] = {
-                "value": filter.estado,
-                "operador": "=",
-                "require": "and"
+        const dataWhere = ["estado"]
+        const dataWhereVereda = ["municipios_id"]
+
+
+        for (let x = 0; x < dataWhere.length; x++) {
+            if (filter[dataWhere[x]]) {
+                cloneDataFilterTable["filter"]["where"]["fin." + [dataWhere[x]]] = {
+                    "value": filter[[dataWhere[x]]],
+                    "operador": "=",
+                    "require": "and"
+                }
+            } else {
+                if (cloneDataFilterTable["filter"]["where"]["fin." + [dataWhere[x]]]) {
+                    delete cloneDataFilterTable["filter"]["where"]["fin." + [dataWhere[x]]]
+                }
             }
-        } else {
-            if (cloneDataFilterTable["filter"]["where"]["us.estado"]) {
-                delete cloneDataFilterTable["filter"]["where"]["us.estado"]
+        }
+        for (let x = 0; x < dataWhereVereda.length; x++) {
+            if (filter[dataWhereVereda[x]]) {
+                cloneDataFilterTable["filter"]["where"]["ve." + [dataWhereVereda[x]]] = {
+                    "value": filter[[dataWhereVereda[x]]],
+                    "operador": "=",
+                    "require": "and"
+                }
+            } else {
+                if (cloneDataFilterTable["filter"]["where"]["ve." + [dataWhereVereda[x]]]) {
+                    delete cloneDataFilterTable["filter"]["where"]["ve." + [dataWhereVereda[x]]]
+                }
             }
         }
         console.log(filter, "aaaaaaaaa", cloneDataFilterTable)

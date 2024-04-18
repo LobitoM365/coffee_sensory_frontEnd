@@ -6,6 +6,7 @@ import "../../public/css/formResultados.css"
 import { GlobalModal } from "./globalModal";
 import { GlobalInputs } from '../componentes/globalInputs.jsx'
 import Api from "../componentes/Api.jsx"
+import { Alert } from "./alert.jsx";
 
 export const FormResultados = forwardRef((data, ref) => {
 
@@ -24,16 +25,18 @@ export const FormResultados = forwardRef((data, ref) => {
     const modalRef = useRef(null);
     const [valueGlobalInput, setValueGlobalInput] = useState({});
     const [plugisGlobalInput, setPlugisGlobalInput] = useState({});
-
     const [inputValor, setInputValor] = useState({});
     const [keyDown, setKeydown] = useState();
     const [keyData, setKeyData] = useState(0);
     const [statusSelectDefault, setStatusSelectDefault] = useState(true);
-
     const [modeFormato, setModeFormato] = useState(null);
     const [tipoRegistro, setTipoRegistro] = useState(null);
     const [idFormato, setIdFormato] = useState(null);
     const [idAnalisis, setIdAnalisis] = useState(null);
+    const [globalInputs, setGlobalInputs] = useState({});
+    const [statusAlert, setStatusAlert] = useState(false);
+    const [dataAlert, setdataAlert] = useState({});
+    const [errorsRechazar, setErrorsRechazar] = useState({});
 
     const handleInputChange = (e, key, type) => {
         if (type === "text") {
@@ -695,12 +698,240 @@ export const FormResultados = forwardRef((data, ref) => {
             console.log("Error: " + e)
         }
     }
+    async function eliminarFormato(id) {
+        try {
+            const response = await Api.delete("formatos/eliminar/" + id)
+            if (response.data.status == true) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Excelente",
+                    }
+                )
+                data.getAnalisis()
+                data.changeModalFormResults(false)
+            } else if (response.data.delete_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.delete_error,
+                        "tittle": "Excelente"
+                    }
+                )
+            } else if (response.data.modal_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.modal_error,
+                        "tittle": "Excelente"
+                    }
+                )
+            } else {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.message,
+                        "tittle": "Excelente"
+                    }
+                )
+            }
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
+    async function confirmarEliminarFormato(id) {
+        setStatusAlert(true)
+        setdataAlert(
+            {
+                status: "warning",
+                description: "¿Estás seguro(a) de eliminar el formato " + id + "?, ten en cuenta que al eliminar el formato si este ya tiene su análisis reigstrado también se eliminará.",
+                "tittle": "¡Asegurate de realizar la ación!",
+                continue: {
+                    "function": eliminarFormato,
+                    "execute": id,
+                    location: "/dashboard"
+                }
+            }
+        )
+    }
+    async function confirmarRechazar(id) {
+        setErrorsRechazar(prevState => {
+
+            setStatusAlert(true)
+            setdataAlert(
+                {
+                    status: "warning",
+                    description: "¿Estás seguro(a) de rechazar el formato " + id + "?, ten en cuenta que al rechazar el formato este pasará a una nueva revisión por parte del encargado de su resultado, ¡Dale una razón del rechazo!.",
+                    content:
+                        <GlobalInputs
+                            input={setGlobalInputs}
+                            value={globalInputs}
+                            class={"input-global"}
+                            errors={prevState}
+                            /* elementEdit={infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0].mu_id : ""} */
+                            data={{
+                                descripcion: {
+                                    referencia: false,
+                                    type: "area",
+                                    upper_case: true,
+                                    key: "id",
+                                    class: "area-alert"
+                                },
+                            }} />
+                    ,
+                    "tittle": "¡Asegurate de realizar la ación!",
+                    continue: {
+                        "function": rechazarFormato,
+                        "execute": id,
+                        location: "/dashboard",
+                        "close": false
+                    }
+                }
+            )
+            return {}
+        })
+    }
+    async function rechazarFormato(id) {
+        try {
+            setGlobalInputs(async prevState => {
+                const dataRechazar = {
+                    "formatos_id": id,
+                    "descripcion": prevState["descripcion"]
+                }
+                const response = await Api.post("formatos/rechazar", dataRechazar)
+                console.log(response, "reeeeeeeeeeeeeee")
+                if (response.data.status == true) {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente",
+                        }
+                    )
+                    data.setInfoFormato(id)
+                    data.getAnalisis()
+                } else if (response.data.errors) {
+                    setErrorsRechazar(response.data.errors)
+                    confirmarRechazar(id)
+                } else if (response.data.register_error) {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Inténtalo de nuevo."
+                        }
+                    )
+                } else if (response.data.modal_error) {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.modal_error,
+                            "tittle": "Inténtalo de nuevo."
+                        }
+                    )
+                } else {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.message,
+                            "tittle": "Inténtalo de nuevo."
+                        }
+                    )
+                }
+                return prevState
+            })
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
     useEffect(() => {
         getVariablesFormatoFisico()
     }, [])
+    async function cambiarRechazo(datModel) {
+        try {
+
+            const dataRechazar = {
+                "descripcion": globalInputs["descripcion"]
+            }
+            const response = await Api.put("formatos/rechazo/cambiar/" + datModel.id, dataRechazar)
+            console.log(response, "reeeeeeeeeeeeee")
+            if (response.data.status == true) {
+
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Excelente",
+                    }
+                )
+                data.setInfoFormato(datModel.formatos_id)
+            } else if (response.data.errors) {
+                setErrorsRechazar(response.data.errors)
+                setStatusAlert(false)
+            } else if (response.data.update_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.update_error,
+                        "tittle": "Inténtalo de nuevo."
+                    }
+                )
+            } else if (response.data.modal_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.modal_error,
+                        "tittle": "Inténtalo de nuevo."
+                    }
+                )
+            } else {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.message,
+                        "tittle": "Inténtalo de nuevo."
+                    }
+                )
+            }
+
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
+
+    async function confirmarCambiarRechazo(id, formatos_id) {
+        setStatusAlert(true)
+        setdataAlert(
+            {
+                status: "warning",
+                description: "¿Estás seguro(a) de cambiar la descripción del rechazo para el formato " + formatos_id + "?.",
+                "tittle": "¡Asegurate de realizar la ación!",
+                continue: {
+                    "function": cambiarRechazo,
+                    "execute": { "id": id, "formatos_id": formatos_id },
+                    "close": false
+                }
+            }
+        )
+    }
     return (
 
         <>
+            <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
+
             {
                 data.modalFormResults ? <div id="mainFormResultados">
 
@@ -735,46 +966,47 @@ export const FormResultados = forwardRef((data, ref) => {
                                             </svg></div></h3>
                                             {data.dataModalResultado ?
                                                 (
-                                                    <div>{
-                                                        data.dataModalResultado.length > 0 ?
-                                                            data.dataModalResultado.map((key, index) => {
-                                                                if (index == 0) {
-                                                                    return <div key={key.id + "catador"}>
-                                                                        <div className="div-info-analisis">
-                                                                            <div>
-                                                                                <h4>Nombre:</h4>
-                                                                                <p>{key.nombre_catador ? key.nombre_catador : "No registra"}</p>
-                                                                            </div>
-                                                                            <div>
-                                                                                <h4>Documento:</h4>
-                                                                                <p>{key.catador_documento ? key.catador_documento : "No registra"}</p>
-                                                                            </div>
-                                                                            <div>
-                                                                                <h4>Teléfono:</h4>
-                                                                                <p>{key.catador_telefono ? key.catador_telefono : "No registra"}</p>
-                                                                            </div>
-                                                                            <div>
-                                                                                <h4>Correo:</h4>
-                                                                                <span>{key.catador_correo ? key.catador_correo : "No registra"}</span>
-                                                                            </div>
-                                                                            <div>
-                                                                                <h4>Rol:</h4>
-                                                                                <p>{key.catador_rol ? key.catador_rol : "No registra"}</p>
-                                                                            </div>
-                                                                            <div>
-                                                                                <h4>Cargo:</h4>
-                                                                                <p>{key.catador_cargo ? key.catador_cargo : "No registra"}</p>
-                                                                            </div>
+                                                    <div className="div-info-catador-formato">
+                                                        {
+                                                            data.dataModalResultado.length > 0 ?
+                                                                data.dataModalResultado.map((key, index) => {
+                                                                    if (index == 0) {
+                                                                        return <div key={key.id + "catador"}>
+                                                                            <div className="div-info-analisis">
+                                                                                <div>
+                                                                                    <h4>Nombre:</h4>
+                                                                                    <p>{key.nombre_catador ? key.nombre_catador : "No registra"}</p>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <h4>Documento:</h4>
+                                                                                    <p>{key.catador_documento ? key.catador_documento : "No registra"}</p>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <h4>Teléfono:</h4>
+                                                                                    <p>{key.catador_telefono ? key.catador_telefono : "No registra"}</p>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <h4>Correo:</h4>
+                                                                                    <span>{key.catador_correo ? key.catador_correo : "No registra"}</span>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <h4>Rol:</h4>
+                                                                                    <p>{key.catador_rol ? key.catador_rol : "No registra"}</p>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <h4>Cargo:</h4>
+                                                                                    <p>{key.catador_cargo ? key.catador_cargo : "No registra"}</p>
+                                                                                </div>
 
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                }
+                                                                    }
 
-                                                            })
-                                                            : <div>
-                                                                Aún no se ha asignado nigún usuario para el formato {data.tipoAnalisis == 1 ? "Físico" : "Sensorial"}
-                                                            </div>
-                                                    }
+                                                                })
+                                                                : <div>
+                                                                    Aún no se ha asignado nigún usuario para el formato {data.tipoAnalisis == 1 ? "Físico" : "Sensorial"}
+                                                                </div>
+                                                        }
                                                         {
                                                             inputs.length > 0 && data.userInfo.userInfo.rol == "administrador" ?
                                                                 inputs.map((key, index) => {
@@ -783,102 +1015,41 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                             return;
                                                                         }
                                                                     }
-                                                                    if (dataInputs[key]["type"] === "select" && dataInputs[key]["visibility"] != false) {
-
-                                                                        if (data.statusSelect) {
-                                                                            selectsValues[key] = "Seleccione una opción...";
-                                                                            dataSelect[key] = ""
+                                                                    return <div className="div-info-user-formato" key={key}>
+                                                                        < GlobalInputs
+                                                                            input={setValueGlobalInput}
+                                                                            value={valueGlobalInput}
+                                                                            /* class={"input-global"} */
+                                                                            errors={(data.errorsFormato ? data.errorsFormato : "")}
+                                                                            elementEdit={(data.dataModalResultado ? data.dataModalResultado[0] ? data.dataModalResultado[0] : "" : "")}
+                                                                            data={{
+                                                                                [key]: {
+                                                                                    type: "select",
+                                                                                    referencia: dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : false,
+                                                                                    values: dataInputs[key]["values"] ? dataInputs[key]["values"] : [],
+                                                                                    opciones: dataInputs[key]["opciones"] ? dataInputs[key]["opciones"] : [],
+                                                                                    upper_case: true,
+                                                                                    key: dataInputs[key]["key"],
+                                                                                },
+                                                                            }} />
+                                                                        {
+                                                                            data.dataModalResultado.length > 0 ?
+                                                                                data.dataModalResultado[0]["permission_update"] == "true" ?
+                                                                                    data.dataModalResultado[0]["estado"] != 7 ?
+                                                                                        <div>
+                                                                                            <button onClick={() => { data.actualizarFormato(data.dataModalAnalisis.length > 0 ? data.dataModalAnalisis[0].id ? data.dataModalAnalisis[0].id : "" : "", data.dataModalResultado[0].id, data.tipoAnalisis, valueGlobalInput["usuarios_id"]) }} type="button" className="button-submit-form">Actualizar</button>
+                                                                                            {/*  <button onClick={() => { data.finalizarFormato ? data.finalizarFormato(data.dataModalResultado[0].id) : "" }} type="button" className="button-submit-form">Finalizar</button> */}
+                                                                                        </div>
+                                                                                        : ""
+                                                                                    : ""
+                                                                                :
+                                                                                <button onClick={() => { data.asignarFormato(data.dataModalAnalisis.length > 0 ? data.dataModalAnalisis[0].id ? data.dataModalAnalisis[0].id : "" : "", data.tipoAnalisis, dataSelect["usuarios_id"]) }} type="button" className="button-submit-form">Asignar</button>
                                                                         }
 
-                                                                        return (
-                                                                            <div key={key}>
-                                                                                <div key={key} className="input-content-form-register">
-                                                                                    <div className="head-input">
-                                                                                        <label htmlFor={key} className="label-from-register">{dataInputs[key]["referencia"] ? dataInputs[key]["referencia"] : "Campo"}</label>
-                                                                                        <div key={key} className="filter-estado div-select">
+                                                                    </div>
 
-                                                                                            <div key={index} style={{ display: "none" }} className="opciones opciones-input-select">
 
-                                                                                                <h4 onClick={(e) => {
-                                                                                                    const parentElement = e.target.closest(".div-select");
-                                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                                                    divOptions[0] ? divOptions[0].style.display = "none" : ""
 
-                                                                                                    setStatusSelectDefault(false); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = "Seleccione una opción..."; changeSelectsValues(cloneSelectsValues); dataSelect[key] = "";
-                                                                                                }} className='select-option'>Seleccione una opción...</h4>
-
-                                                                                                {
-                                                                                                    dataInputs[key]["opciones"] ? dataInputs[key]["opciones"].map((select, indexSelect) => {
-                                                                                                        let value = ""
-                                                                                                        if (dataInputs[key]["values"]) {
-                                                                                                            dataInputs[key]["values"].map((nameSelect, nameIndexSelect) => {
-                                                                                                                value += nameIndexSelect == 0 ? dataInputs[key]["opciones"][indexSelect][nameSelect] : ", " + dataInputs[key]["opciones"][indexSelect][nameSelect];
-                                                                                                            })
-                                                                                                        }
-                                                                                                        if (dataInputs[key]["upper_case"]) {
-                                                                                                            value = value.toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())
-                                                                                                        } else if (dataInputs[key]["capital_letter"]) {
-                                                                                                            value = value.toString().replace(/^[a-z]/, match => match.toUpperCase())
-                                                                                                        }
-                                                                                                        if (data.dataModalResultado.length > 0) {
-                                                                                                            if (dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] == data.dataModalResultado[0][key] && statusSelectDefault) {
-                                                                                                                selectsValues[key] = value;
-                                                                                                                dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
-                                                                                                            }
-                                                                                                        }
-                                                                                                        return <h4 key={indexSelect} onClick={(e) => {
-                                                                                                            const parentElement = e.target.closest(".div-select");
-                                                                                                            const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                                                            divOptions[0] ? divOptions[0].style.display = "none" : ""
-                                                                                                            setStatusSelectDefault(false); let cloneSelectsValues = { ...selectsValues }; cloneSelectsValues[key] = value; changeSelectsValues(cloneSelectsValues); dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]];
-                                                                                                        }} className={`select-option select-option-${key} ${selectsValues[key] == value ? 'option-focus' : ''}`} value="">
-                                                                                                            {value}
-                                                                                                        </h4>
-                                                                                                    }) : ""
-                                                                                                }
-
-                                                                                            </div>
-                                                                                            <div className='input-select-estado input-select-search' name="" id="">
-
-                                                                                                <input id={key} type="text" className="input-select" onInput={(e) => {
-                                                                                                    const parentElement = e.target.closest(".div-select");
-                                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                                                    divOptions[0] ? divOptions[0].style.display = "block" : ""
-                                                                                                    selectSearch(e.target.value, key)
-                                                                                                }} placeholder={selectsValues[key] == "Seleccione una opción..." ? "Seleccione una opción..." : ""} value={selectsValues[key] != "Seleccione una opción..." ? selectsValues[key] : ""} />
-                                                                                                <div onClick={(e) => {
-                                                                                                    const parentElement = e.target.closest(".div-select");
-                                                                                                    const divOptions = parentElement.querySelectorAll(".opciones-input-select")
-                                                                                                    divOptions[0] ? divOptions[0].style.display == "none" ? divOptions[0].style.display = "block" : divOptions[0].style.display = "none" : ""
-                                                                                                }} className="icon-chevron-estado">
-                                                                                                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
-                                                                                                        <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                                                                                        <g><g><path d="M240.4,70.6L229,59.2c-4-3.7-8.5-5.6-13.8-5.6c-5.3,0-9.9,1.9-13.6,5.6L128,132.8L54.4,59.2c-3.7-3.7-8.3-5.6-13.6-5.6c-5.2,0-9.8,1.9-13.8,5.6L15.8,70.6C11.9,74.4,10,79,10,84.4c0,5.4,1.9,10,5.8,13.6l98.6,98.6c3.6,3.8,8.2,5.8,13.6,5.8c5.3,0,9.9-1.9,13.8-5.8L240.4,98c3.7-3.7,5.6-8.3,5.6-13.6C246,79.1,244.1,74.5,240.4,70.6z" /></g></g>
-                                                                                                    </svg>
-                                                                                                </div>
-
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <h4 className="label-error-submit-form" htmlFor="">{data.errorsFormato ? data.errorsFormato[key] ? data.errorsFormato[key] : "" : ""}</h4>
-
-                                                                                </div>
-                                                                                {data.dataModalResultado.length > 0 ?
-                                                                                    data.dataModalResultado[0]["permission_update"] == "true" ?
-                                                                                        data.dataModalResultado[0]["estado"] != 4 ?
-                                                                                            <div>
-                                                                                                <button onClick={() => { data.actualizarFormato(data.dataModalAnalisis.length > 0 ? data.dataModalAnalisis[0].id ? data.dataModalAnalisis[0].id : "" : "", data.dataModalResultado[0].id, data.tipoAnalisis, dataSelect["usuarios_id"]) }} type="button" className="button-submit-form">Actualizar</button>
-                                                                                                {/*  <button onClick={() => { data.finalizarFormato ? data.finalizarFormato(data.dataModalResultado[0].id) : "" }} type="button" className="button-submit-form">Finalizar</button> */}
-                                                                                            </div>
-                                                                                            : ""
-                                                                                        : ""
-                                                                                    :
-                                                                                    <button onClick={() => { data.asignarFormato(data.dataModalAnalisis.length > 0 ? data.dataModalAnalisis[0].id ? data.dataModalAnalisis[0].id : "" : "", data.tipoAnalisis, dataSelect["usuarios_id"]) }} type="button" className="button-submit-form">Asignar</button>
-                                                                                }
-
-                                                                            </div>
-                                                                        );
-                                                                    }
                                                                 })
                                                                 : ""
                                                         }
@@ -1012,46 +1183,48 @@ export const FormResultados = forwardRef((data, ref) => {
                                     </div>
                                     <div className="contenido-info-resultado">
 
-                                        <h3>Información Sobre el Formato {data.tipoAnalisis == 1 ? "Físico" : "Sensorial"}</h3>
-                                        {data.dataModalResultado ?
+                                        <div className="div-content-info-analisis-format">
+                                            <h3>Información Sobre el Formato {data.tipoAnalisis == 1 ? "Físico" : "Sensorial"}</h3>
+                                            {data.dataModalResultado ?
 
-                                            data.dataModalResultado.length > 0 ?
-                                                data.dataModalResultado.map((key, index) => {
-                                                    if (index == 0) {
-                                                        return <div className="cotent-info-analisis" key={key.id}>
-                                                            <div className="div-info-analisis div-table-analisis">
-                                                                <div>
-                                                                    <h4>Id del Formato</h4>
-                                                                    <p>{key.id ? key.id : "No registra"}</p>
-                                                                </div>
-                                                                <div>
-                                                                    <h4>Fecha de registro</h4>
-                                                                    <p>{formatDate(key.fecha_creacion ? key.fecha_creacion : 'No registra')}</p>
-                                                                </div>
-                                                                <div>
-                                                                    <h4>Fecha de Análisis</h4>
-                                                                    <p>{key.fecha_analisis ? formatDate(key.fecha_analisis) : "No registra"}</p>
-                                                                </div>
-                                                                <div>
-                                                                    <h4>Fecha de actualización</h4>
-                                                                    <p>{key.fecha_analisis ? formatDate(key.fecha_analisis) : "No registra"}</p>
-                                                                </div>
-                                                                <div>
-                                                                    <h4>Tipo de análisis</h4>
-                                                                    <p>{key.tipos_analisis_id ? key.tipos_analisis_id == 1 ? "Físico" : key.tipos_analisis_id == 2 ? "Sensorial" : "No disponible" : "No registra"}</p>
-                                                                </div>
-                                                                <div>
-                                                                    <h4>Estado</h4>
-                                                                    <p>{key.estado ? key.estado == 1 ? "Registrado" : key.estado == 2 ? "Pendiente" : key.estado == 3 ? "Asignado" : key.estado == 4 ? "Finalizado" : key.estado == 5 ? "Registrado" : "No disponible" : "No registra"}</p>
+                                                data.dataModalResultado.length > 0 ?
+                                                    data.dataModalResultado.map((key, index) => {
+                                                        if (index == 0) {
+                                                            return <div className="cotent-info-analisis" key={key.id}>
+                                                                <div className="div-info-analisis div-table-analisis">
+                                                                    <div>
+                                                                        <h4>Id del Formato</h4>
+                                                                        <p>{key.id ? key.id : "No registra"}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h4>Fecha de registro</h4>
+                                                                        <p>{formatDate(key.fecha_creacion ? key.fecha_creacion : 'No registra')}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h4>Fecha de Análisis</h4>
+                                                                        <p>{key.fecha_analisis ? formatDate(key.fecha_analisis) : "No registra"}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h4>Fecha de actualización</h4>
+                                                                        <p>{key.fecha_analisis ? formatDate(key.fecha_analisis) : "No registra"}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h4>Tipo de análisis</h4>
+                                                                        <p>{key.tipos_analisis_id ? key.tipos_analisis_id == 1 ? "Físico" : key.tipos_analisis_id == 2 ? "Sensorial" : "No disponible" : "No registra"}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <h4>Estado</h4>
+                                                                        <p>{key.estado ? key.estado == 1 ? "Registrado" : key.estado == 2 ? "Pendiente" : key.estado == 3 ? "Asignado" : key.estado == 4 ? "Finalizado" : key.estado == 5 ? "Registrado" : key.estado == 6 ? "Rechazado" : "No disponible" : "No registra"}</p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    }
+                                                        }
 
-                                                })
-                                                : <div> Aún no se ha registrado un formato {data.tipoAnalisis == 1 ? "Físico" : "Sensorial"}</div>
+                                                    })
+                                                    : <div> Aún no se ha registrado un formato {data.tipoAnalisis == 1 ? "Físico" : "Sensorial"}</div>
 
-                                            : "Error interno"}
+                                                : "Error interno"}
+                                        </div>
                                         {data.dataModalResultadoAnalisis.length > 0 ?
                                             (
                                                 <div className="div-content-info-analisis-formato">
@@ -1068,7 +1241,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                     <tbody>
                                                                         <tr>
                                                                             <td>Peso C.P.S (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_cps"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_cps"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["peso_cps"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1078,7 +1251,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Humedad (%)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["humedad"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["humedad"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["humedad"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1090,7 +1263,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Peso Cisco (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_cisco"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_cisco"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["peso_cisco"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1100,7 +1273,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td> Merma por trilla (%) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["merma_trilla"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["merma_trilla"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["merma_trilla"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1112,7 +1285,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Peso total de la almendra (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_total_almendra"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_total_almendra"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["peso_total_almendra"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1122,7 +1295,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Porcentaje de almendra sana (%)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["porcentaje_almendra_sana"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["porcentaje_almendra_sana"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["porcentaje_almendra_sana"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1134,7 +1307,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Peso defectos totales (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_defectos_totales"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_defectos_totales"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["peso_defectos_totales"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1144,7 +1317,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Factor de rendimiento (Kg C.P.S) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["factor_rendimiento"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["factor_rendimiento"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["factor_rendimiento"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1156,7 +1329,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Peso de almendra sana (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_almendra_sana"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["peso_almendra_sana"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["peso_almendra_sana"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1166,7 +1339,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Porcentaje de defectos totales (%) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["porcentaje_defectos_totales"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["porcentaje_defectos_totales"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["porcentaje_defectos_totales"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1178,7 +1351,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Negro total o parcial (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["negro_total"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["negro_total"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["negro_total"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1188,7 +1361,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Cardenillo (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["cardenillo"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["cardenillo"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["cardenillo"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1200,7 +1373,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Vinagre (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["vinagre"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["vinagre"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["vinagre"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1210,7 +1383,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Cristalizado (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["cristalizado"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["cristalizado"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["cristalizado"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1222,7 +1395,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Veteado (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["veteado"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["veteado"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["veteado"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1232,7 +1405,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Ámbar o mantequillo (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["ambar"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["ambar"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["ambar"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1244,7 +1417,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Sobresecado (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["sobresecado"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["sobresecado"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["sobresecado"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1254,7 +1427,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Mordido o cortado (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["mordido"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["mordido"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["mordido"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1266,7 +1439,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Picado por insectos (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["picado_insectos"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["picado_insectos"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["picado_insectos"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1276,7 +1449,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Averanado o arrugado (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["averanado"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["averanado"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["averanado"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1288,7 +1461,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Inmaduro o paloteado(g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["inmaduro"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["inmaduro"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["inmaduro"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1298,7 +1471,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Aplastado (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["aplastado"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["aplastado"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["aplastado"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1310,7 +1483,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Flojo (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["flojo"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["flojo"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["flojo"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1320,7 +1493,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Decolorado o reposado (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["decolorado"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["decolorado"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["decolorado"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1332,7 +1505,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Malla 18 (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla18"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla18"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["malla18"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1342,7 +1515,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Malla 15 (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla15"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla15"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["malla15"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1354,7 +1527,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Malla 17 (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla17"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla17"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["malla17"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1364,7 +1537,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td>Malla 14 (g)</td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla14"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla14"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["malla14"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1376,7 +1549,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Malla 16 (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla16"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["malla16"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["malla16"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1386,7 +1559,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 return value
                                                                             })() : <div> {/*250*/}<span className="no-registra-formato-fisico"><div className="line-no-registra-formato-fisico"> </div><h4>No Registra </h4></span></div>}</td>
                                                                             <td> Mallas menores (g) </td>
-                                                                            <td>{data.dataModalResultadoAnalisis[0]["mallas_menores"] ? (() => {
+                                                                            <td>{data.dataModalResultadoAnalisis[0]["mallas_menores"] != undefined ? (() => {
                                                                                 let value = data.dataModalResultadoAnalisis[0]["mallas_menores"]
                                                                                 if (value - Math.floor(value) > 0) {
                                                                                     value = value.toFixed(2).toString().replace("0", "")
@@ -1407,7 +1580,60 @@ export const FormResultados = forwardRef((data, ref) => {
                                                             </div>
                                                             : <iframe id="iframeFormatoSca" className="iframe-formato-sca" src="/src/formatoSca/formatoScaTemplate.html" frameBorder="0"></iframe>}
                                                     </div>
+                                                    {console.log(data.dataModalResultado)}
+                                                    {data.dataModalResultado ? data.dataModalResultado[0] ? data.dataModalResultado[0].estado == 4 ?
 
+
+
+
+                                                        data.userInfo.userInfo.rol == "administrador" ? data.dataModalResultado ? data.dataModalResultado[0] ?
+
+                                                            data.dataModalResultado[0].estado == 4 ?
+                                                                <div className="footer-asignar">
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => { confirmarRechazar(data.dataModalResultado[0].id) }}
+                                                                        className='button-users-formatos button-users-formatos-rechazar'>Rechazar
+                                                                    </button>
+                                                                </div>
+                                                                : "" : "" : "" : "" : " " : ""
+
+                                                        : ""}
+
+                                                    {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].descripcion_rechazo ? data.dataModalResultadoAnalisis[0].estado == 6 ?
+                                                        <div className="div-info-rechazo">
+                                                            <h4 className="title-razon-rechazo">Razón del rechazo</h4>
+                                                            <div className={"info-razon-rechazo" + (data.userInfo.userInfo.rol == "administrador" ? " info-rechazo-edit" : "")}>
+                                                                <h4 className="numero-razon-rechazo">Rechazo N° {data.dataModalResultado[0].numero_rechazos} :</h4>
+                                                                {data.userInfo.userInfo.rol == "administrador" ?
+                                                                    <GlobalInputs
+                                                                        input={setGlobalInputs}
+                                                                        value={globalInputs}
+                                                                        class={"input-global"}
+                                                                        errors={errorsRechazar}
+                                                                        elementEdit={{ "descripcion": data.dataModalResultado[0].descripcion_rechazo }}
+                                                                        data={{
+                                                                            descripcion: {
+                                                                                referencia: false,
+                                                                                type: "area",
+                                                                                upper_case: true,
+                                                                                key: "id",
+                                                                                class: "area-alert"
+                                                                            },
+                                                                        }} />
+                                                                    :
+                                                                    <p>{data.dataModalResultado[0].descripcion_rechazo}</p>
+                                                                }
+                                                            </div>
+                                                            {data.userInfo.userInfo.rol == "administrador" ?
+                                                                <div className="div-options-rechzo-formato">
+                                                                    <button onClick={() => { confirmarCambiarRechazo(data.dataModalResultado[0].rechazos_id, data.dataModalResultado[0].id) }} type="button" className="button-submit-form button-cambiar-formato">Cambiar</button>
+                                                                    <button onClick={() => { data.finalizarFormato ? data.finalizarFormato(data.dataModalResultado[0].id) : "" }} type="button" className="button-submit-form button-deshacer-formato">deshacer</button>
+                                                                </div>
+                                                                : ""}
+                                                        </div>
+
+                                                        : "" : "" : ""}
 
 
                                                     {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].estado != 4 && data.dataModalResultado[0].permission_formato == "true" ?
@@ -1539,7 +1765,15 @@ export const FormResultados = forwardRef((data, ref) => {
                                             )
 
                                         }
-
+                                        {data.userInfo.userInfo.rol == "administrador" ?
+                                            <div className="div-eliminar-formato">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => { confirmarEliminarFormato(data.dataModalResultado[0].forma_id) }}
+                                                    className='button-users-formatos button-users-formatos-eliminar'>Eliminar Formato
+                                                </button>
+                                            </div>
+                                            : ""}
                                     </div>
                                 </div>
 

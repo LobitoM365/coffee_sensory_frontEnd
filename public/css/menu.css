@@ -469,6 +469,7 @@
 
 #mainMenu .nav-main .asignado,
 #mainMenu .nav-main .registrado,
+#mainMenu .nav-main .rechazado,
 .nav-main .pendiente {
     padding: 2px 4px 2px 4px;
     border-radius: 4px;
@@ -484,6 +485,11 @@
 
 #mainMenu .nav-main .pendiente {
     background-color: gray;
+}
+
+#mainMenu .nav-main .rechazado {
+    background-color: red;
+    color: white;
 }
 
 #mainMenu .nav-main .input-proceder-analisis {

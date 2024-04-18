@@ -1040,7 +1040,7 @@ export const Menu = (data) => {
                 hamburguerCentered[x].style.alignItems = "center"
             }
         }
-    }, [user])
+    }, [queryMenu])
     useEffect(() => {
 
         if (refIconHamburguer.current) {

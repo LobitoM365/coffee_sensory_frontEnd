@@ -446,9 +446,7 @@ export const GenerateReporteAnalisis = (data) => {
             flexDirection: "column",
             width: "100%",
         },
-        marginTopSeparate: {
-            marginTop: '55px'
-        },
+
         /*    divTextFirmaFirst: {
                border: "1px solid black",
                width: "100%",
@@ -774,7 +772,11 @@ export const GenerateReporteAnalisis = (data) => {
             borderWidth: 1,
             borderColor: "black",
             textAlign: "center"
-        }
+        },
+        marginTopSeparate: {
+            paddingTop: '100px',
+            margin: 0
+        },
     });
 
 
@@ -1723,7 +1725,7 @@ export const GenerateReporteAnalisis = (data) => {
                                             <View>
                                                 <View style={estyle.tittleItem}>  <Text>Catadores Formato Físico</Text></View>
 
-                                                <View style={[estyle.sectionTwo, estyle.contenFirmas]}>
+                                                <View key={10000} style={[estyle.sectionTwo, estyle.contenFirmas]}>
 
                                                     {
                                                         formatoFisico ? formatoFisico.length > 0 ? (

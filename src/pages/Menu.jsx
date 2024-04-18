@@ -35,7 +35,14 @@ export const Menu = (data) => {
     const [statusLoader, setStatusLoader] = useState({ "div_notificaciones": false })
     const [asignaciones, setAsignaciones] = useState([]);
 
+    const [configCode, setConfigCode] = useState([]);
+
+    // Inputs
+    const [globalInputEdit, setGlobalInputEdit] = useState({});
+
+
     useEffect(() => {
+        // configCodigosMuestra()
         if (data.socket) {
             const perfilChange = (message) => {
                 getUser();
@@ -130,6 +137,9 @@ export const Menu = (data) => {
     const [modalConfiguracionFormatoFisico, setModalConfiguracionFormatoFisico] = useState(false);
     const [modalPerfil, changeModalPerfil] = useState(false);
     const [liSelected, changeSelected] = useState(location.pathname);
+
+    const [modalConfiguracionCodigos, setModalConfiguracionCodigos] = useState(false);
+
 
     if (!localStorage.getItem("darkMode")) {
         localStorage.setItem("darkMode", false)
@@ -301,7 +311,7 @@ export const Menu = (data) => {
        }, []) */
     useEffect(() => {
 
-        setGlobalInputsValue({})
+        // setGlobalInputsValue({})
         setFormulaVariables("")
         setErrorsInputGlobal("")
         /* divCrearFormula = null */
@@ -1102,6 +1112,59 @@ export const Menu = (data) => {
             }
         }
     }, [refIconHamburguer.current, hamburguerMode, queryMenu])
+
+
+    // Panel de configuración para Codigo Muestra y Codigo Informe
+    const configCodigosMuestra = async () => {
+        console.log('XXXXXXXXXXXXXXXXXXXXXXX');
+        try {
+            const filter = {
+                "filter": {
+                    "where": {
+                        "conf.tipo": {
+                            "value": 'codigo_muestra',
+                            "require": 'and'
+                        },
+                        "tipo2": {
+                            "no-key": 'conf.tipo',
+                            "value": 'codigo_informe',
+                            "require": 'or'
+                        }
+                    }
+                }
+            }
+            const response = await Api.post('/configGeneral', filter)
+            setConfigCode(response.data.data)
+
+            const cloneGlobalInputEdit = { ...globalInputEdit };
+            cloneGlobalInputEdit['codigo_muestra'] = response.data.data[0].valor
+            cloneGlobalInputEdit['codigo_informe'] = response.data.data[1].valor
+            console.log('CONF: ', response.data.data);
+            setGlobalInputEdit(cloneGlobalInputEdit);
+            setModalConfiguracionCodigos(true)
+
+        } catch (error) {
+            console.log('CONFIG ERROR: ', error);
+        }
+    }
+
+    const updateCodigosConf = async () => {
+        try {
+            const cloneConfigData = [...configCode];
+
+            cloneConfigData[0]['valor'] = globalInputsValue.codigo_muestra;
+            cloneConfigData[1]['valor'] = globalInputsValue.codigo_informe;
+
+            console.log(configCode);
+
+            const resp = await Api.put('/configGeneral/update', cloneConfigData)
+            console.log('UPDATE CODES: ', resp);
+        } catch (error) {
+            console.log('UPDATE CODES ERORORROR: ', error);
+
+        }
+    }
+
     return (
 
         <div>
@@ -1585,10 +1648,14 @@ export const Menu = (data) => {
                                 </div>
                                 <div className="div-items-configuraciones">
                                     <div>
-                                        <div onClick={() => { getVariablesFormatoFisico() }} className="item-configuracion-activa div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (15).png" alt="" />
+                                        <div onClick={() => { getVariablesFormatoFisico() }} className="item-configuracion-activa div-item-cofiguracion">
+                                            <img src="../../public/img/iconosConfiguraciones/iconConfiguracion (2).png" alt="" />
                                             <h4 className="h4-title-configuracion">Formato Físico</h4></div>
-                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (1).png" alt="" /></div>
-                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (2).png" alt="" /></div>
+
+                                        <div onClick={() => { configCodigosMuestra() }} className="item-configuracion-activa div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (1).png" alt="" />
+                                            <h4 className="h4-title-configuracion">Codigos</h4></div>
+                                        {/* <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (1).png" alt="" /></div> */}
+                                        <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (15).png" alt="" /></div>
                                         <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (3).png" alt="" /></div>
                                         <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (4).png" alt="" /></div>
                                         <div className="div-item-cofiguracion"><img src="../../public/img/iconosConfiguraciones/iconConfiguracion (5).png" alt="" /></div>
@@ -1886,7 +1953,7 @@ export const Menu = (data) => {
                                                             </div>
 
                                                         </div>
-                                                        <h3>LLenar</h3>
+                                                        <h3>Llenar</h3>
                                                         <div className="div-content-input-variables div-content-formula">
                                                             <div ref={divLLenarCamporFormulario} >
 
@@ -1928,6 +1995,43 @@ export const Menu = (data) => {
                     } />
                     : ""
             }
+
+            {modalConfiguracionCodigos ?
+                <GlobalModal class={"div-modal-configuracion-variables-fisicas"} statusModal={setModalConfiguracionCodigos} content={
+                    <div >
+                        <h2>Codigos para Muestra - Informe</h2>
+
+                        <GlobalInputs
+                            input={setGlobalInputsValue}
+                            value={globalInputsValue}
+                            errors={errorsInputGlobal}
+                            elementEdit={globalInputEdit}
+                            data={{
+                                codigo_muestra: {
+                                    type: "normal",
+                                    referencia: "Codigo de la Muestra"
+                                },
+                            }} />
+                        <GlobalInputs
+                            input={setGlobalInputsValue}
+                            value={globalInputsValue}
+                            errors={errorsInputGlobal}
+                            elementEdit={globalInputEdit}
+                            data={{
+                                codigo_informe: {
+                                    type: "normal",
+                                    referencia: "Codigo de Informe"
+                                },
+                            }} />
+                        <div className="div-footer">
+                            <button onClick={() => { updateCodigosConf() }} className="input-register">Actualizar</button>
+                        </div>
+                    </div>
+
+
+                } />
+                : ""}
+
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
             {/* {<Mensajeria socket={data.socket} user={user} />} */}
         </div >

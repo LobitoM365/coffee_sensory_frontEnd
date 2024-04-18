@@ -446,6 +446,9 @@ export const GenerateReporteAnalisis = (data) => {
             flexDirection: "column",
             width: "100%",
         },
+        marginTopSeparate: {
+            marginTop: '55px'
+        },
         /*    divTextFirmaFirst: {
                border: "1px solid black",
                width: "100%",
@@ -832,7 +835,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={estyle.contentHeader}>
                                                             <View style={[estyle.contentItemHeaderRight, estyle.contentItemHeaderRightTop]}>
-                                                                <Text style={[estyle.text, estyle.textItemHeaderRight]}>Fecha: {fechaActual.getFullYear() + "-" + ((fechaActual.getMonth() + 1) < 10 ? ("0" + (fechaActual.getMonth() + 1)) : (fechaActual.getMonth() + 1)) + "-" + ((fechaActual.getDate() + 1) < 10 ? ("0" + (fechaActual.getDate())) : (fechaActual.getDate()))}</Text>
+                                                                <Text style={[estyle.text, estyle.textItemHeaderRight]}>Fecha: {((fechaActual.getDate() + 1) < 10 ? ("0" + (fechaActual.getDate())) : (fechaActual.getDate()) + '-' + ((fechaActual.getMonth() + 1) < 10 ? ("0" + (fechaActual.getMonth() + 1)) : (fechaActual.getMonth() + 1)) + "-" + fechaActual.getFullYear())}</Text>
                                                             </View>
                                                             <View style={estyle.contentItemHeaderRight}>
                                                                 <Text style={[estyle.text, estyle.textItemHeaderRight]}>Página: </Text>
@@ -848,7 +851,7 @@ export const GenerateReporteAnalisis = (data) => {
                                         <View style={estyle.body}>
                                             <View style={estyle.itemBody}>
                                                 <View style={estyle.tittleItem}> <Text>1.</Text> <Text>Objetivo</Text></View>
-                                                <Text>El objetivo del siguiente informe es presentar los resultados del análisis físico-sensorial obtenidos para la muestra de café AFS-40 descrita a continuación.
+                                                <Text>El objetivo del siguiente informe es presentar los resultados del análisis físico-sensorial obtenidos para la muestra de café {analisis["codigo_muestra"] ? analisis["codigo_muestra"].toString()/* .replace(/(?:^|\s)\S/g, match => match.toUpperCase()) */ : "No registra"} descrita a continuación.
                                                 </Text>
                                             </View>
                                             <View style={estyle.itemBody}>
@@ -916,7 +919,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                             Código Externo:
                                                         </Text>
                                                         <Text style={estyle.tittleLight}>
-                                                            {analisis["codigo_externo"] ? analisis["codigo_externo"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                            {analisis["codigo_externo"] ? analisis["codigo_externo"].toString()/* .replace(/(?:^|\s)\S/g, match => match.toUpperCase()) */ : "No registra"}
                                                         </Text>
                                                     </View>
 
@@ -926,7 +929,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                             Consecutivo Informe:
                                                         </Text>
                                                         <Text style={estyle.tittleLight}>
-                                                            {analisis["consecutivo_informe"] ? analisis["finca"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                            {analisis["consecutivo_informe"] ? analisis["consecutivo_informe"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                         </Text>
                                                     </View>
                                                 </View>
@@ -988,22 +991,22 @@ export const GenerateReporteAnalisis = (data) => {
                                                     <View style={[estyle.tableRowStyle, estyle.tableBody]}>
                                                         <View style={[estyle.firstTableColStyleTop, estyle.firstTableColStyle, estyle.colTable]}>
                                                             <Text style={estyle.tableCellStyle}>
-                                                                Tipo De Molienda
+                                                                Código de la Muestra
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.firstTableColStyleTop, estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {muestra["tipo_molienda"] ? muestra["tipo_molienda"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {muestra["codigo_muestra"] ? muestra["codigo_muestra"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.firstTableColStyleTop, estyle.tableColStyle, estyle.colTable]}>
                                                             <Text style={estyle.tableCellStyle}>
-                                                                Tipo De Tostión
+                                                                Presentación
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.firstTableColStyleTop, estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {muestra["tipo_tostion"] ? muestra["tipo_tostion"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {muestra["presentacion"] ? muestra["presentacion"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1029,28 +1032,28 @@ export const GenerateReporteAnalisis = (data) => {
                                                             </Text>
                                                         </View>
                                                     </View>
-                                                    <View style={[estyle.tableRowStyle, estyle.tableBody]}>
-                                                        <View style={[estyle.firstTableColStyle, estyle.colTable]}>
-                                                            <Text style={estyle.tableCellStyle}>
-                                                                Densidad De Café Verde (g/L)
-                                                            </Text>
-                                                        </View>
-                                                        <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
-                                                            <Text style={[estyle.tableCellStyle]}>
-                                                                {muestra["densidad_cafe_verde"] ? muestra["densidad_cafe_verde"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
-                                                            </Text>
-                                                        </View>
-                                                        <View style={[estyle.tableColStyle, estyle.colTable]}>
-                                                            <Text style={estyle.tableCellStyle}>
-                                                                Actividad De Agua (Aw)
-                                                            </Text>
-                                                        </View>
-                                                        <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
-                                                            <Text style={[estyle.tableCellStyle]}>
-                                                                {muestra["actividad_agua"] ? muestra["actividad_agua"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
+                                                    {/* <View style={[estyle.tableRowStyle, estyle.tableBody]}> */}
+                                                    {/* <View style={[estyle.firstTableColStyle, estyle.colTable]}> */}
+                                                    {/* <Text style={estyle.tableCellStyle}> */}
+                                                    {/* Densidad De Café Verde (g/L) */}
+                                                    {/* </Text> */}
+                                                    {/* </View> */}
+                                                    {/* <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}> */}
+                                                    {/* <Text style={[estyle.tableCellStyle]}> */}
+                                                    {/* {muestra["densidad_cafe_verde"] ? muestra["densidad_cafe_verde"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"} */}
+                                                    {/* </Text> */}
+                                                    {/* </View> */}
+                                                    {/* <View style={[estyle.tableColStyle, estyle.colTable]}> */}
+                                                    {/* <Text style={estyle.tableCellStyle}> */}
+                                                    {/* Actividad De Agua (Aw) */}
+                                                    {/* </Text> */}
+                                                    {/* </View> */}
+                                                    {/* <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}> */}
+                                                    {/* <Text style={[estyle.tableCellStyle]}> */}
+                                                    {/* {muestra["actividad_agua"] ? muestra["actividad_agua"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"} */}
+                                                    {/* </Text> */}
+                                                    {/* </View> */}
+                                                    {/* </View> */}
                                                     <View style={[estyle.tableRowStyle, estyle.tableBody]}>
                                                         <View style={[estyle.firstTableColStyle, estyle.colTable]}>
                                                             <Text style={estyle.tableCellStyle}>
@@ -1073,32 +1076,34 @@ export const GenerateReporteAnalisis = (data) => {
                                                             </Text>
                                                         </View>
                                                     </View>
-                                                    <View style={[estyle.tableRowStyle, estyle.tableBody]}>
-                                                        <View style={[estyle.firstTableColStyle, estyle.colTable]}>
-                                                            <Text style={estyle.tableCellStyle}>
-                                                                Código de la Muestra
-                                                            </Text>
-                                                        </View>
-                                                        <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
-                                                            <Text style={[estyle.tableCellStyle]}>
-                                                                {muestra["codigo_muestra"] ? muestra["codigo_muestra"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
-                                                            </Text>
-                                                        </View>
-                                                        <View style={[estyle.tableColStyle, estyle.colTable]}>
-                                                            <Text style={estyle.tableCellStyle}>
-                                                                Presentación
-                                                            </Text>
-                                                        </View>
-                                                        <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
-                                                            <Text style={[estyle.tableCellStyle]}>
-                                                                {muestra["presentacion"] ? muestra["presentacion"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
+                                                    {/* <View style={[estyle.tableRowStyle, estyle.tableBody]}> */}
+                                                    {/* <View style={[estyle.firstTableColStyle, estyle.colTable]}> */}
+                                                    {/* <Text style={estyle.tableCellStyle}> */}
+                                                    {/* Tipo De Tostión */}
+                                                    {/* </Text> */}
+                                                    {/* </View> */}
+                                                    {/* <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}> */}
+                                                    {/* <Text style={[estyle.tableCellStyle]}> */}
+                                                    {/* {muestra["tipo_tostion"] ? muestra["tipo_tostion"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"} */}
+                                                    {/* </Text> */}
+                                                    {/* </View> */}
+                                                    {/* <View style={[estyle.tableColStyle, estyle.colTable]}> */}
+                                                    {/* <Text style={estyle.tableCellStyle}> */}
+                                                    {/* Tipo De Molienda */}
+
+                                                    {/* </Text> */}
+                                                    {/* </View> */}
+                                                    {/* <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}> */}
+                                                    {/* <Text style={[estyle.tableCellStyle]}> */}
+                                                    {/* {muestra["tipo_molienda"] ? muestra["tipo_molienda"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"} */}
+                                                    {/* </Text> */}
+                                                    {/* </View> */}
+                                                    {/* </View> */}
                                                 </View>
                                             </View>
                                         </View>
-                                        <View style={[estyle.body, estyle.sectionTwo]}>
+
+                                        <View style={[estyle.body, estyle.sectionTwo, estyle.marginTopSeparate]}>
                                             <View style={estyle.itemBody}>
                                                 <View style={estyle.tittleItem}> <Text>5.</Text> <Text>Análisis Físico</Text></View>
                                                 <View style={estyle.divTableBody}>

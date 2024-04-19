@@ -1040,9 +1040,9 @@ export const Menu = (data) => {
                 hamburguerCentered[x].style.alignItems = "center"
             }
         }
-    }, [queryMenu])
-    useEffect(() => {
+    }, [queryMenu, responseValidate])
 
+    useEffect(() => {
         if (refIconHamburguer.current) {
             function resizeMenuFunction() {
                 let divHeaderNav = document.getElementById("divHeaderNav")
@@ -1164,15 +1164,36 @@ export const Menu = (data) => {
 
         }
     }
+    async function closeModalAvanzado(e) {
 
+        if (e) {
+
+            let divModal;
+
+            if (e.target.closest(".child-div-modal")) {
+                divModal = e.target.closest(".child-div-modal")
+            } else if (e.target.querySelectorAll(".child-div-modal").length > 0) {
+                divModal = e.target.querySelectorAll(".child-div-modal")[0]
+            } else if (e.target.parentNode.querySelectorAll(".child-div-modal").length > 0) {
+                divModal = e.target.parentNode.querySelectorAll(".child-div-modal")[0]
+            }
+
+            if (divModal) {
+                divModal.style.display = divModal.style.display == "none" || divModal.style.display == "" ? "block" : "none"
+            }
+        } else {
+            const divAvanzado = document.getElementById("divAvanzado")
+            if (divAvanzado) {
+                divAvanzado.style.display = divAvanzado.style.display == "none" || divAvanzado.style.display == "" ? "block" : "none"
+            }
+
+        }
+    }
     return (
 
         <div>
             <div id="mainMenu">
                 <div style={{ height: "100%", bottom: "0" }} className={"main-content " + (!data.valueDarkMode ? "lightMode" : "darkMode")}>
-
-                    {/*      <link rel="stylesheet" href="/public/css/loader.css" /> */}
-
 
                     <nav id="navHorizontal" className="nav-main nav-horizontal">
                         <div className="div-img-nav">
@@ -1492,47 +1513,49 @@ export const Menu = (data) => {
                                     <div className="div-opciones-usuario">
                                         <div className="section-opciones-usuario">
                                             <svg onClick={(e) => {
-                                                let divModal = e.target.closest(".section-opciones-usuario").querySelectorAll(".child-div-modal")
-                                                if (divModal[0]) {
-                                                    divModal[0].style.display = divModal[0].style.display == "none" ? "block" : "none"
-                                                }
+                                                closeModalAvanzado(e)
                                             }} className="father-div-modal icon-opciones-usuario" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 256 256"  >
                                                 <g><g><path d="M240.2,64.9c-7.8-7.8-20.3-7.8-28.1,0L128,149.1L43.9,64.9c-7.8-7.8-20.3-7.8-28.1,0c-7.7,7.8-7.7,20.3,0,28.1l98.2,98.2c3.9,3.9,9,5.8,14,5.8c5.1,0,10.2-1.9,14-5.8L240.2,93C247.9,85.2,247.9,72.7,240.2,64.9z" /></g></g>
                                             </svg>
                                             <div style={{ display: "none" }} className="child-div-modal">
-                                                <div className="esquina-opciones-usuario"></div>
-                                                <div className="contenido-opciones-usuario">
+                                                <GlobalModal execute={"normal"} statusModal={closeModalAvanzado} active={{ "width": 300 }}
+                                                    content={
+                                                        <div>
+                                                            <div className="esquina-opciones-usuario"></div>
+                                                            <div className="contenido-opciones-usuario">
 
-                                                    <div className="opciones-usuario">
-                                                        <Link to={"/dashboard/profile"} onClick={() => { selectedLi("/dashboard/profile") }} className={`link-memu-horizontal li-opciones-usuario  ${liSelected == "/dashboard/profile" ? "selected-li-perfil" : ""}`}>
-                                                            <li className="li-content-usuarios">
-                                                                <svg className="icon-li-opciones-usuario" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
-                                                                    <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                                                    <g><g><g><path d="M39.6,10.3c-4.7,1.2-9.1,4.7-11.3,9.3l-1.3,2.6v105.8v105.8l1.3,2.6c1.6,3.4,4.8,6.5,8.2,8.2l2.6,1.3H128h88.9l2.6-1.3c3.4-1.6,6.5-4.8,8.2-8.2l1.3-2.6V128.1V22.2l-1.3-2.6c-1.6-3.4-4.8-6.5-8.2-8.2l-2.6-1.3L129.1,10C80.7,10,40.5,10.1,39.6,10.3z M212.4,128.1v101.3H128H43.6V128.1V26.7H128h84.4V128.1z" /><path d="M88.1,44.4c-5.5,1.5-10.5,5.1-13.9,10c-3.7,5.5-5,13.8-3,20.4c2.1,7,8.6,13.6,15.5,15.7c14.5,4.4,28.9-4.4,31.4-19.3c1.5-9.3-3.8-20.1-12.1-24.6C100.7,43.7,93.7,42.9,88.1,44.4z" /><path d="M149.9,61.2c-3.5,1.5-5.5,5.6-4.8,9.6c0.5,2.5,3.1,5.4,5.5,6.1c1.3,0.4,8.4,0.5,20.8,0.4c18-0.2,18.9-0.2,20.3-1.3c2.8-2.1,3.6-3.7,3.6-7.1c0-3.3-0.8-5-3.6-7.1c-1.4-1.1-2.2-1.1-20.8-1.2C155.5,60.6,151.2,60.7,149.9,61.2z" /><path d="M74.2,93.2c-7.1,5.7-12,13.1-15,22.7c-1.5,4.6-1.5,6.2,0,9.1c1.6,3.1,0.9,3.1,35,3.1c34.1,0,33.5,0.1,35-3.1c1.5-2.9,1.5-4.5,0-9.1c-2.7-8.5-6.4-14.6-12.5-20.4c-5.9-5.5-5.6-5.5-8.4-1.6C99,107,89.5,107,80.1,93.9c-1.3-1.8-2.4-3.3-2.5-3.3C77.5,90.6,76,91.7,74.2,93.2z" /><path d="M149.9,95c-3.5,1.5-5.5,5.6-4.8,9.6c0.5,2.5,3.1,5.4,5.5,6.1c1.3,0.4,8.4,0.5,20.8,0.4c18-0.2,18.9-0.2,20.3-1.3c2.8-2.1,3.6-3.7,3.6-7.1c0-3.3-0.8-5-3.6-7.1c-1.4-1.1-2.2-1.1-20.8-1.2C155.5,94.3,151.2,94.4,149.9,95z" /><path d="M65.5,145.7c-3.5,1.5-5.5,5.6-4.8,9.6c0.5,2.5,3.1,5.4,5.5,6.1c1.3,0.4,21.2,0.5,63,0.4c60.7-0.2,61.1-0.2,62.5-1.3c2.8-2.1,3.6-3.7,3.6-7.1c0-3.3-0.8-5-3.6-7.1c-1.4-1.1-1.7-1.1-63-1.2C78.2,145,66.7,145.1,65.5,145.7z" /><path d="M65.5,179.5c-3.5,1.5-5.5,5.6-4.8,9.6c0.5,2.5,3.1,5.4,5.5,6.1c1.3,0.4,21.2,0.5,63,0.4c60.7-0.2,61.1-0.2,62.5-1.3c2.8-2.1,3.6-3.7,3.6-7.1s-0.8-5-3.6-7.1c-1.4-1.1-1.7-1.1-63-1.2C78.2,178.8,66.7,178.9,65.5,179.5z" /></g></g></g>
-                                                                </svg>
-                                                                <h5 className="link-opciones-usuarios">Perfil</h5>
-                                                            </li>
-                                                        </Link>
+                                                                <div className="opciones-usuario">
+                                                                    <Link to={"/dashboard/profile"} onClick={() => { selectedLi("/dashboard/profile") }} className={`link-memu-horizontal li-opciones-usuario  ${liSelected == "/dashboard/profile" ? "selected-li-perfil" : ""}`}>
+                                                                        <li className="li-content-usuarios">
+                                                                            <svg className="icon-li-opciones-usuario" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
+                                                                                <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                                                                <g><g><g><path d="M39.6,10.3c-4.7,1.2-9.1,4.7-11.3,9.3l-1.3,2.6v105.8v105.8l1.3,2.6c1.6,3.4,4.8,6.5,8.2,8.2l2.6,1.3H128h88.9l2.6-1.3c3.4-1.6,6.5-4.8,8.2-8.2l1.3-2.6V128.1V22.2l-1.3-2.6c-1.6-3.4-4.8-6.5-8.2-8.2l-2.6-1.3L129.1,10C80.7,10,40.5,10.1,39.6,10.3z M212.4,128.1v101.3H128H43.6V128.1V26.7H128h84.4V128.1z" /><path d="M88.1,44.4c-5.5,1.5-10.5,5.1-13.9,10c-3.7,5.5-5,13.8-3,20.4c2.1,7,8.6,13.6,15.5,15.7c14.5,4.4,28.9-4.4,31.4-19.3c1.5-9.3-3.8-20.1-12.1-24.6C100.7,43.7,93.7,42.9,88.1,44.4z" /><path d="M149.9,61.2c-3.5,1.5-5.5,5.6-4.8,9.6c0.5,2.5,3.1,5.4,5.5,6.1c1.3,0.4,8.4,0.5,20.8,0.4c18-0.2,18.9-0.2,20.3-1.3c2.8-2.1,3.6-3.7,3.6-7.1c0-3.3-0.8-5-3.6-7.1c-1.4-1.1-2.2-1.1-20.8-1.2C155.5,60.6,151.2,60.7,149.9,61.2z" /><path d="M74.2,93.2c-7.1,5.7-12,13.1-15,22.7c-1.5,4.6-1.5,6.2,0,9.1c1.6,3.1,0.9,3.1,35,3.1c34.1,0,33.5,0.1,35-3.1c1.5-2.9,1.5-4.5,0-9.1c-2.7-8.5-6.4-14.6-12.5-20.4c-5.9-5.5-5.6-5.5-8.4-1.6C99,107,89.5,107,80.1,93.9c-1.3-1.8-2.4-3.3-2.5-3.3C77.5,90.6,76,91.7,74.2,93.2z" /><path d="M149.9,95c-3.5,1.5-5.5,5.6-4.8,9.6c0.5,2.5,3.1,5.4,5.5,6.1c1.3,0.4,8.4,0.5,20.8,0.4c18-0.2,18.9-0.2,20.3-1.3c2.8-2.1,3.6-3.7,3.6-7.1c0-3.3-0.8-5-3.6-7.1c-1.4-1.1-2.2-1.1-20.8-1.2C155.5,94.3,151.2,94.4,149.9,95z" /><path d="M65.5,145.7c-3.5,1.5-5.5,5.6-4.8,9.6c0.5,2.5,3.1,5.4,5.5,6.1c1.3,0.4,21.2,0.5,63,0.4c60.7-0.2,61.1-0.2,62.5-1.3c2.8-2.1,3.6-3.7,3.6-7.1c0-3.3-0.8-5-3.6-7.1c-1.4-1.1-1.7-1.1-63-1.2C78.2,145,66.7,145.1,65.5,145.7z" /><path d="M65.5,179.5c-3.5,1.5-5.5,5.6-4.8,9.6c0.5,2.5,3.1,5.4,5.5,6.1c1.3,0.4,21.2,0.5,63,0.4c60.7-0.2,61.1-0.2,62.5-1.3c2.8-2.1,3.6-3.7,3.6-7.1s-0.8-5-3.6-7.1c-1.4-1.1-1.7-1.1-63-1.2C78.2,178.8,66.7,178.9,65.5,179.5z" /></g></g></g>
+                                                                            </svg>
+                                                                            <h5 className="link-opciones-usuarios">Perfil</h5>
+                                                                        </li>
+                                                                    </Link>
 
-                                                        <li onClick={() => { setModalConfiguracion(true) }} className="li-opciones-usuario">
-                                                            <svg className="icon-li-opciones-usuario" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
-                                                                <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                                                <g><g><path d="M207.1,163.3c5.9-12.6,23.5-6.9,34.7-16.5c5.8-4.9,5.5-25.1,0-30.3c-10.6-10-28.1-6.5-32.8-19.5c-4.7-13.1,11.7-21.5,12.8-36.2c0.6-7.5-13.8-21.7-21.4-21.4c-14.6,0.5-24.5,15.3-37,9.4c-12.6-5.9-7-23.5-16.5-34.6c-4.9-5.8-25.1-5.5-30.2,0c-10,10.6-6.5,28.1-19.5,32.8C84,51.8,75.3,37,60.9,34.3c-7.4-1.4-21.7,13.8-21.4,21.4c0.5,14.6,15.3,24.5,9.4,37c-5.9,12.6-23.5,6.9-34.7,16.5c-5.8,4.9-5.6,25.1,0,30.3c10.6,10,28.1,6.5,32.9,19.5c4.7,13.1-11.7,21.5-12.9,36.1c-0.6,7.6,13.8,21.7,21.4,21.4c14.6-0.5,24.5-15.3,37-9.4c12.6,5.9,6.9,23.5,16.5,34.7c4.9,5.8,25.1,5.5,30.3,0c10-10.7,6.5-28.2,19.5-32.9c13.1-4.7,21.5,11.7,36.1,12.9c7.6,0.6,21.7-13.8,21.4-21.4C216.1,185.7,201.3,175.9,207.1,163.3L207.1,163.3z M128,181.5c-29.6,0-53.5-24-53.5-53.5c0-29.6,24-53.6,53.5-53.6s53.5,24,53.5,53.5C181.5,157.6,157.6,181.5,128,181.5z" /></g></g>
-                                                            </svg>
-                                                            <Link className="link-opciones-usuarios ">Configuracion</Link>
-                                                        </li>
-                                                        <li onClick={() => LogoutSesion()} className="li-opciones-usuario btn-cerrar-sesion">
-                                                            <svg className="icon-li-opciones-usuario" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
-                                                                <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
-                                                                <g><g><path d="M175.3,64V24.2c0-6.4-5.2-11.5-11.5-11.5H21.5c-6.3,0-11.5,5.2-11.5,11.5v163c0,4.2,2.5,8.3,6.1,10.2l87.7,45.4c3.9,1.9,8.5-0.8,8.5-5.2v-44.2h51.5c6.4,0,11.5-5.2,11.5-11.5v-63h-23.1v45.8c0,3.3-2.5,5.8-5.8,5.8h-34V72.4c0-4.2-2.5-8.3-6.2-10.2L54.6,35.7h91.9c3.3,0,5.8,2.5,5.8,5.8v22.7h23.1V64L175.3,64z" /><path d="M204.9,45.1l37.5,37.5c4.8,4.8,4.8,11.9,0,16.7l-37.5,37.5c-4.8,4.8-12.1,5-16.9,0.2c-4.6-4.6-4-12.3,0.4-16.9l16.9-16.7h-65.5c-3.3,0-6.5-1.3-8.6-3.9c-5.4-5.8-4-16,2.9-19.8c1.7-1,3.9-1.5,5.8-1.5h65.5c0,0-16.7-16.7-16.9-16.7c-4.4-4.4-5-12.3-0.4-16.7C192.6,40.1,200.1,40.3,204.9,45.1" /></g></g>
-                                                            </svg>
-                                                            <div className="link-opciones-usuarios">  Cerrar sesión</div>
-                                                        </li>
+                                                                    <li onClick={() => { setModalConfiguracion(true) }} className="li-opciones-usuario">
+                                                                        <svg className="icon-li-opciones-usuario" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
+                                                                            <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                                                            <g><g><path d="M207.1,163.3c5.9-12.6,23.5-6.9,34.7-16.5c5.8-4.9,5.5-25.1,0-30.3c-10.6-10-28.1-6.5-32.8-19.5c-4.7-13.1,11.7-21.5,12.8-36.2c0.6-7.5-13.8-21.7-21.4-21.4c-14.6,0.5-24.5,15.3-37,9.4c-12.6-5.9-7-23.5-16.5-34.6c-4.9-5.8-25.1-5.5-30.2,0c-10,10.6-6.5,28.1-19.5,32.8C84,51.8,75.3,37,60.9,34.3c-7.4-1.4-21.7,13.8-21.4,21.4c0.5,14.6,15.3,24.5,9.4,37c-5.9,12.6-23.5,6.9-34.7,16.5c-5.8,4.9-5.6,25.1,0,30.3c10.6,10,28.1,6.5,32.9,19.5c4.7,13.1-11.7,21.5-12.9,36.1c-0.6,7.6,13.8,21.7,21.4,21.4c14.6-0.5,24.5-15.3,37-9.4c12.6,5.9,6.9,23.5,16.5,34.7c4.9,5.8,25.1,5.5,30.3,0c10-10.7,6.5-28.2,19.5-32.9c13.1-4.7,21.5,11.7,36.1,12.9c7.6,0.6,21.7-13.8,21.4-21.4C216.1,185.7,201.3,175.9,207.1,163.3L207.1,163.3z M128,181.5c-29.6,0-53.5-24-53.5-53.5c0-29.6,24-53.6,53.5-53.6s53.5,24,53.5,53.5C181.5,157.6,157.6,181.5,128,181.5z" /></g></g>
+                                                                        </svg>
+                                                                        <Link className="link-opciones-usuarios ">Configuracion</Link>
+                                                                    </li>
+                                                                    <li onClick={() => LogoutSesion()} className="li-opciones-usuario btn-cerrar-sesion">
+                                                                        <svg className="icon-li-opciones-usuario" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256">
+                                                                            <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
+                                                                            <g><g><path d="M175.3,64V24.2c0-6.4-5.2-11.5-11.5-11.5H21.5c-6.3,0-11.5,5.2-11.5,11.5v163c0,4.2,2.5,8.3,6.1,10.2l87.7,45.4c3.9,1.9,8.5-0.8,8.5-5.2v-44.2h51.5c6.4,0,11.5-5.2,11.5-11.5v-63h-23.1v45.8c0,3.3-2.5,5.8-5.8,5.8h-34V72.4c0-4.2-2.5-8.3-6.2-10.2L54.6,35.7h91.9c3.3,0,5.8,2.5,5.8,5.8v22.7h23.1V64L175.3,64z" /><path d="M204.9,45.1l37.5,37.5c4.8,4.8,4.8,11.9,0,16.7l-37.5,37.5c-4.8,4.8-12.1,5-16.9,0.2c-4.6-4.6-4-12.3,0.4-16.9l16.9-16.7h-65.5c-3.3,0-6.5-1.3-8.6-3.9c-5.4-5.8-4-16,2.9-19.8c1.7-1,3.9-1.5,5.8-1.5h65.5c0,0-16.7-16.7-16.9-16.7c-4.4-4.4-5-12.3-0.4-16.7C192.6,40.1,200.1,40.3,204.9,45.1" /></g></g>
+                                                                        </svg>
+                                                                        <div className="link-opciones-usuarios">  Cerrar sesión</div>
+                                                                    </li>
 
-                                                    </div>
-                                                </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                />
                                             </div>
-
                                         </div>
 
                                     </div>
@@ -1956,7 +1979,6 @@ export const Menu = (data) => {
                                                         <h3>Llenar</h3>
                                                         <div className="div-content-input-variables div-content-formula">
                                                             <div ref={divLLenarCamporFormulario} >
-
                                                             </div>
                                                         </div>
                                                     </div>

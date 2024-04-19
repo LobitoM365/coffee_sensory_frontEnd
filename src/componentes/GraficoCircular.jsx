@@ -1,12 +1,13 @@
-import React, { useState, useEffect ,useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import Api from './Api';
+import "../../public/css/graficos.css"
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export const GraficoCircular = ({ user , inputData}) => {
+export const GraficoCircular = ({ user, inputData }) => {
   const [data, setData] = useState([]);
   const chartRef = useRef(null);
   const [nuevoDato, setNuevoDato] = useState([]);
@@ -17,38 +18,38 @@ export const GraficoCircular = ({ user , inputData}) => {
     // Utiliza la referencia al gráfico o cualquier método que utilices para actualizar el gráfico
     setNuevoDato(newData);
   };
-  
+
   // Actualiza el gráfico cuando los datos cambian
   useEffect(() => {
     if (inputData) {
       updateData(inputData);
     }
   }, [inputData]);
-  
+
   // Utiliza un useEffect adicional para observar cambios en el estado nuevoDato
   useEffect(() => {
     // Acciones que deseas realizar después de que nuevoDato se haya actualizado
     // Puedes realizar otras acciones aquí
   }, [nuevoDato]);
-  
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
 
-  
+
         const VariableIdUser = user;
-        const SetDataInput={
-          "muestras_id":inputData.muestras_id,
-          "fecha":inputData.fecha,
-          "anio":inputData.anio,
-          "limite":inputData.limite
+        const SetDataInput = {
+          "muestras_id": inputData.muestras_id,
+          "fecha": inputData.fecha,
+          "anio": inputData.anio,
+          "limite": inputData.limite
         }
-        
+
         const response = await Api.post(`analisis/Mes/${VariableIdUser}`, SetDataInput);
         const responseData = response.data;
 
-        
+
         if (responseData.status === true) {
           setData(responseData.data);
         } else {
@@ -61,25 +62,25 @@ export const GraficoCircular = ({ user , inputData}) => {
 
     fetchData();
 
-  }, [user,nuevoDato]);
+  }, [user, nuevoDato]);
 
   const color = data.map(element => {
     if (element.promedio >= 8 && element.promedio < 11) {
       return "rgb(244, 50, 50)";
     } else if (element.promedio >= 6 && element.promedio < 8) {
       return "#4ec74e";
-    } else if(element.promedio >= 4 && element.promedio < 6) {
+    } else if (element.promedio >= 4 && element.promedio < 6) {
       return "rgb(39, 11, 174)";
-    }else{
+    } else {
       return "rgb(255, 174, 0)";
     }
   });
-  const ResultLabel=[]
-  data.map(element => ResultLabel.push(element.fecha.substring(0,3)))
+  const ResultLabel = []
+  data.map(element => ResultLabel.push(element.fecha.substring(0, 3)))
 
 
   const chartData = {
-    labels:ResultLabel,
+    labels: ResultLabel,
     datasets: [
       {
         label: 'Calidad',
@@ -90,8 +91,8 @@ export const GraficoCircular = ({ user , inputData}) => {
     ],
   };
 
-  
-  
+
+
 
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,
@@ -124,29 +125,24 @@ export const GraficoCircular = ({ user , inputData}) => {
     } if (windowSize.width >= 768 && windowSize.width <= 920) {
       setStyleCharts({ width: '40vh', height: '20vh',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"0%"});
     } */ if (windowSize.width >= 720 && windowSize.width <= 1280) {
-      setStyleCharts({ width: '50vh', height: '23vh',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"1%"});
+      setStyleCharts({ width: '50vh', height: '23vh', display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", marginTop: "1%" });
     } // Portatil
-    
-    else if ( windowSize.width <= 768) {
-      setStyleCharts({ width: '20vh', height: '20vh' ,display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"1%" });
+
+    else if (windowSize.width <= 768) {
+      setStyleCharts({ width: '20vh', height: '20vh', display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", marginTop: "1%" });
     } // celular
-     else {
-      setStyleCharts({ width: '100vh', height: '20vh ',display:"flex", justifyContent:"center",alignItems:"center",margin:"auto",marginTop:"0%"});
+    else {
+      setStyleCharts({ width: '100vh', height: '20vh ', display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", marginTop: "0%" });
     }//tamaño grande 
   }, [windowSize]);
 
   return (
     <div id='graficos'>
-
-      <link rel="stylesheet" href="../../public/css/graficos.css" />
-      
-        
-  
       {data && data.length > 0 ?
         <div style={styleCharts}>
-        
 
-          <Pie data={chartData}/>
+
+          <Pie data={chartData} />
         </div>
         :
         <div >

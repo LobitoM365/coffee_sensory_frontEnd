@@ -1,4 +1,4 @@
-
+import { host } from "../../componentes/Api";
 let divMapa = document.getElementById("divMapa");
 let sizeMap = document.getElementById("sizeMap");
 let contentMapa = document.getElementById("contentMapa");
@@ -1321,7 +1321,7 @@ let puntos = [
     }
 ]
 
-fetch("http://10.193.129.44:3000/api/muestra/geolocalizar/certificada", {
+fetch("http://" + host + ":3000/api/muestra/geolocalizar/certificada", {
     method: "POST",
     headers: {
         "Content-Type": "application/json" // La clave debe ser "Content-Type"
@@ -1332,7 +1332,7 @@ fetch("http://10.193.129.44:3000/api/muestra/geolocalizar/certificada", {
         return response.json();
     })
     .then(data => {
-        console.log(data,"daaaaaaaaaaaaaaaaaaaaa");
+        console.log(data, "daaaaaaaaaaaaaaaaaaaaa");
         if (data.status == true) {
             for (let x = 0; x < data.data.length; x++) {
                 getGeolocalizacion(data.data[x].latitud, data.data[x].longitud, "", "", data.data[x])

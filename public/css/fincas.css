@@ -6,6 +6,9 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
 }
 
 .load-icono {
@@ -133,19 +136,25 @@
 .div-imgs-iconos-add:hover .div-ver-iconos {
     display: flex;
 }
-
+ 
 .div-imgs-iconos-add,
 .load-icono {
     position: relative;
     border-radius: 100%;
     overflow: hidden;
     width: 200px;
-    height: 200px;
+    height: auto;
+    aspect-ratio: 1/1;
     border: 1px solid black;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.icon-ver-imgs{
+
+.icon-ver-imgs {
     background-color: orange !important;
-}
+}                         
+
+/* .modal-form {
+    width: calc(100% - 20px) !important;
+} */

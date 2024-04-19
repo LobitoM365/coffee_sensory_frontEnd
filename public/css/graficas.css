@@ -3,17 +3,17 @@
    padding: 0;
  }
 
-  
- #graficos .BoxMain { 
+
+ #graficos .BoxMain {
    width: 100%;
    height: 40vh;
    display: flex;
    justify-content: center;
    align-items: center;
- }  
+ }
 
  #graficos h2 {
-   color: white; 
+   color: white;
    /* text-transform: uppercase; */
    text-align: center;
    font-size: bolder;
@@ -31,8 +31,8 @@
  }
 
  #graficos {
-   width: calc(100%);
-   height: calc(100% - 40px);
+   width: calc(100% - 40px);
+   /* height: calc(100% - 40px); */
    background-color: rgb(255, 255, 255);
    border-radius: 7px;
    padding: 20px;
@@ -243,4 +243,21 @@
 
    }
 
+   .css-1be9tkw-control,
+   .css-b62m3t-container {
+     width: 100%;
+     margin: 0 !important;
+     padding: 0;
+   }
+
+   #graficos .input {
+     width: 100%;
+   }
+
+   #graficos .formulario>div {
+     width: 100%;
+     padding: 0;
+     margin: 0;
+     padding-bottom: 20px;
+   }
  }

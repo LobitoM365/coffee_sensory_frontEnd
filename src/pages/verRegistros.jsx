@@ -8,9 +8,7 @@ export const VerRegistros = () => {
 
     return (
         <>
-            <link rel="stylesheet" href="/css/formatoSca.css" />
-            
-
+            {/* <link rel="stylesheet" href="/css/formatoSca.css" /> */}
             <TableFormatoSca/>
         </>
     )

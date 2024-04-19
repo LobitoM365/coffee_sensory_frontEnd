@@ -53,10 +53,12 @@ export const Variedades = () => {
     const keys = {
         "vari_id": {
             "referencia": "Id",
+            "priority" : 2 
         },
         "nombre": {
             "referencia": "Nombre",
-            "upper_case": true
+            "upper_case": true,
+            "priority" : 1
         },
         "fecha_creacion": {
             "referencia": "Fecha creación",

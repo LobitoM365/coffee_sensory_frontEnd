@@ -1266,6 +1266,8 @@
     align-items: center;
 }
 
+
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);
@@ -1373,6 +1375,7 @@
     #modalConfiguracionVariablesFisico .div-content-input-variables>div {
         grid-template-columns: 1fr 1fr;
     }
+
 }
 
 @media screen and (max-width:444px) {
@@ -1640,4 +1643,60 @@
         font-size: 2 !important;
     }
 
+}
+
+#mainMenu .title-hover-menu {
+    position: absolute;
+    z-index: 999999;
+    left: 9%;
+    display: block;
+    opacity: 1;
+}
+
+@media screen and (max-width:300px) {
+    #mainGlobalForm .div-content-form {
+        word-wrap: break-word;
+        word-break: break-all;
+    }
+
+    #mainTablas .title-avanzado-group {
+        display: none;
+    }
+
+    #mainGlobalForm .div-content-form {
+        padding-top: 30px;
+    }
+
+    #mainMenu .nav-main .esquina-opciones-usuario {
+        display: none;
+    }
+
+    #mainMenu .nav-main .contenido-opciones-usuario {
+        position: relative;
+    }
+
+    #mainMenu .nav-main .opciones-usuario {
+        height: calc(100% - 20px);
+    }
+
+    #mainMenu .nav-main .opciones-usuario {
+        border: unset;
+    }
+
+    #mainMenu .nav-main .li-content-usuarios,
+    #mainMenu .nav-main .li-opciones-usuario {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #mainMenu .nav-main .contenido-opciones-usuario {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    #mainMenu .nav-main .link-opciones-usuarios {
+        width: max-content;
+    }
 }

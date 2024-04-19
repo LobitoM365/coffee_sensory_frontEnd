@@ -82,7 +82,8 @@ export const Tablas = (array) => {
         "15",
         "20",
         "25",
-        "30"
+        "30",
+        "50"
     ]
 
 
@@ -483,7 +484,6 @@ export const Tablas = (array) => {
                             firstSize = true
                         }
                     }
-
                 }
                 setTimeout(() => {
                     if (document.getElementById("loadTable")) {
@@ -1450,9 +1450,7 @@ export const Tablas = (array) => {
                                         <tbody key={"tBody"}>
                                             {data.length > 0 ? (
                                                 data.map((keysD, valuesD) => (
-
                                                     <tr key={keysD["id"] ? keysD["id"] : valuesD} className='tr-table'>
-                                                        
                                                         {
                                                             keysPrint.map((keys, index) => {
 
@@ -1611,7 +1609,17 @@ export const Tablas = (array) => {
                                                                                                     <path d="M1580 935 l0 -317 123 3 c112 4 126 6 169 31 89 53 134 132 145 258 7 81 -16 179 -56 234 -15 22 -52 54 -82 70 -51 29 -62 31 -176 35 l-123 3 0 -317z m239 210 c46 -23 79 -70 91 -131 18 -86 -3 -197 -48 -248 -26 -29 -92 -56 -139 -56 l-43 0 0 225 0 225 55 0 c31 0 69 -7 84 -15z" />
                                                                                                     <path d="M2140 935 l0 -315 50 0 50 0 0 135 0 135 105 0 105 0 0 45 0 45 -105 0 -105 0 0 90 0 90 116 0 115 0 -3 43 -3 42 -162 3 -163 2 0 -315z" />
                                                                                                 </g>
-                                                                                            </svg> : print[keys]["inputs"][keysInputs[x]]["element"]}</div>
+                                                                                            </svg>
+                                                                                                :
+                                                                                                print[keys]["inputs"][keysInputs[x]]["element"] == "icon-reset" ?
+                                                                                                    <div className='div-icon-reset'>
+                                                                                                        <svg version="1.0" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
+                                                                                                            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" stroke="none">
+                                                                                                                <path d="M2414 4419 c-373 -27 -767 -189 -1063 -439 l-74 -62 -161 159 c-88 88 -172 168 -186 177 -56 37 -166 8 -212 -56 l-23 -33 0 -590 c0 -656 -3 -621 68 -679 l39 -31 591 0 c579 0 593 0 627 21 69 40 103 155 64 214 -9 14 -94 103 -188 197 l-171 173 35 30 c52 45 187 134 255 168 341 170 756 167 1098 -7 349 -177 578 -481 663 -876 23 -109 23 -331 0 -448 -48 -249 -165 -468 -345 -648 -180 -180 -400 -297 -648 -345 -107 -21 -318 -23 -423 -5 -293 51 -554 205 -762 449 -32 37 -41 42 -80 42 -43 0 -44 -1 -225 -187 -222 -226 -220 -219 -120 -334 191 -222 490 -417 792 -518 555 -185 1149 -104 1640 224 208 138 362 292 500 500 376 563 426 1250 135 1853 -179 372 -443 647 -802 837 -321 169 -662 240 -1024 214z" />
+                                                                                                            </g>
+                                                                                                        </svg>
+                                                                                                    </div>
+                                                                                                    : print[keys]["inputs"][keysInputs[x]]["element"]}</div>
                                                                                         );
                                                                                     }
                                                                                 } else if (print[keys]["type"] == "text") {

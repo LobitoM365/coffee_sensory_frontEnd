@@ -108,6 +108,7 @@ export const Cafes = (userInfo) => {
     const keys = {
         "ca_id": {
             "referencia": "Id",
+            "priority" : 1
         },
         "finca": {
             "referencia": "Finca",
@@ -117,7 +118,8 @@ export const Cafes = (userInfo) => {
             "upper_case": true
         },
         "variedad": {
-            "referencia": "Variedad"
+            "referencia": "Variedad",
+            "priority" : 3
         },
         "fecha_creacion": {
             "referencia": "Fecha Creación",
@@ -125,7 +127,9 @@ export const Cafes = (userInfo) => {
         },
         "estado": {
             "referencia": "Estado",
-            "rol": ["administrador", "catador"]
+            "rol": ["administrador", "catador"],
+            "priority" : 2
+
         },
         "actualizar": {
             "referencia": "actualizar",

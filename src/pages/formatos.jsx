@@ -326,13 +326,16 @@ export const Formatos = (userInfo) => {
     const keys = {
         "forma_id": {
             "referencia": "Id",
+            "priority": 1
         },
         "an_id": {
             "referencia": "Analisis",
+            "priority": 2
         },
         "proceso": {
             "referencia": "Tipo de proceso",
-            "upper_case": true
+            "upper_case": true,
+            "priority": 4
         },
         "muestra_codigo": {
             "referencia": "Muestra",
@@ -393,6 +396,7 @@ export const Formatos = (userInfo) => {
 
         "tipos_analisis_id": {
             "referencia": "Tipo de análisis",
+            "priority": 3,
             "conditions": {
                 "1": {
                     "element": {
@@ -409,7 +413,7 @@ export const Formatos = (userInfo) => {
             },
             "upper_case": true
         },
-        "forma_tipos_analisis_id": {
+        "forma_tipos_analisis_id": {    
             "referencia": "Formato",
             "conditions": {
                 "1": {

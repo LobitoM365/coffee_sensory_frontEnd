@@ -3,6 +3,7 @@ import { Tablas } from "../componentes/tablas.jsx"
 import Api from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 import { host } from '../componentes/Api.jsx'
+import "../../public/css/usuarios.css"
 
 export const RegistrosUsuarios = () => {
     let [dataFilterTable, setDataFilterTable] = useState({
@@ -224,6 +225,28 @@ export const RegistrosUsuarios = () => {
         "actualizar": {
             "referencia": "actualizar",
             "priority": 11,
+        },
+        "reporte": {
+            "normal": true,
+            "referencia": "Reporte",
+            "inputs": {
+
+                "pdf": {
+                    "type": "free",
+                    "element": "icon-reset",
+                    "function": {
+                        "value": confirmRestetPassword,
+                        "execute": {
+                            "type": "table",
+                            "value": "us_id"
+                        }
+                    },
+                    "class": "div-icon-reporte-pdf",
+                }
+            },
+            "class": "div-reporte-pdf",
+            "upper_case": true,
+            "priority": 2
         }
     }
     const filterEstado = {
@@ -238,6 +261,57 @@ export const RegistrosUsuarios = () => {
         getusuarios()
     }, [])
 
+    async function confirmRestetPassword(id) {
+        setStatusAlert(true)
+        setStatusAlert(true)
+        setdataAlert(
+            {
+                status: "warning",
+                "tittle": "¡Asegurate de realizar la acción!.",
+                description: "¿Estás seguro(a) de resetear la contraseña del usuario " + id + "?, Si reseteas la contraseña del usuario, este ya no podrá ingresar con su contraseña actual pero si podrá ingresar con su número de documento.",
+                continue: {
+                    "function": resetearContraseña,
+                    "execute": id,
+                }
+            }
+        )
+    }
+    async function resetearContraseña(id) {
+        try {
+            const response = await Api.put("auth/resetPassword/" + id)
+
+            if (response.data.status == true) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: response.data.message,
+                        "tittle": "Excelente",
+                    }
+                )
+            } else if (response.data.update_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.update_error,
+                        "tittle": response.data.title,
+                    }
+                )
+            } else {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: response.data.message,
+                        "tittle": "Error interno.",
+                    }
+                )
+            }
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
     async function getusuarios() {
         try {
             const response = await Api.post("usuarios/listar", dataFilterTable);
@@ -671,11 +745,11 @@ export const RegistrosUsuarios = () => {
 
 
     return (
-        <>
+        <div id='mainUsuarios'>
             <Tablas getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} getDataPdf={getDataPdf} buttonsHeaderTable={buttonsHeaderTable} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
-        </>
+        </div>
     )
 }

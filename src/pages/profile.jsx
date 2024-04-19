@@ -39,36 +39,35 @@ export const Profile = (data) => {
         try {
             const response = await Api.get("usuarios/perfil");
             changeCount(1)
-
-            if (response.data.status == true) {
-                let data = response.data.data
-                setUser(response.data.data)
-                function getInfoInputs() {
-                    if (heightForm.current) {
-                        nombre.current.value = data.nombre.replace(/(?:^|\s)\S/g, match => match.toUpperCase());
-                        apellido.current.value = data.apellido.replace(/(?:^|\s)\S/g, match => match.toUpperCase());
-                        telefono.current.value = data.telefono;
-                        correo_electronico.current.value = data.correo_electronico;
-                        numero_documento.current.value = data.numero_documento;
-                        setDni(data.numero_documento);
-                    } else {
-                        user_password.current.value = "";
-                        new_password.current.value = "";
-                        confirm_password.current.value = "";
+            if (apellido.current, nombre.current, telefono.current, correo_electronico.current, numero_documento.current) {
+                if (response.data.status == true) {
+                    let data = response.data.data
+                    setUser(response.data.data)
+                    function getInfoInputs() {
+                        if (heightForm.current) {
+                            nombre.current.value = data.nombre.replace(/(?:^|\s)\S/g, match => match.toUpperCase());
+                            apellido.current.value = data.apellido.replace(/(?:^|\s)\S/g, match => match.toUpperCase());
+                            telefono.current.value = data.telefono;
+                            correo_electronico.current.value = data.correo_electronico;
+                            numero_documento.current.value = data.numero_documento;
+                            setDni(data.numero_documento);
+                        } else {
+                            user_password.current.value = "";
+                            new_password.current.value = "";
+                            confirm_password.current.value = "";
+                        }
                     }
+                    getInfoInputs()
+                } else if (response.errors) {
+                    setMensaje(response.data.errors)
+                    setUser({})
+                    changeCount(0)
+                } else {
+
+                    setMensaje({ "find_error": "Error interno del servidor" })
+
                 }
-                getInfoInputs()
-            } else if (response.errors) {
-
-                setMensaje(response.data.errors)
-                setUser({})
-                changeCount(0)
-            } else {
-
-                setMensaje({ "find_error": "Error interno del servidor" })
-
             }
-
         } catch (e) {
             setUser({})
             console.error("Error" + e)
@@ -307,7 +306,7 @@ export const Profile = (data) => {
                             </div>
                         </div>
                         {form == 0 ?
-                            <div style={{ height: maxHeightForm > 0 ? maxHeightForm : "", display: countUser == 0 ? "unset" : "" }} className='div-form-profile'>
+                            <div key={10000} style={{ height: maxHeightForm > 0 ? maxHeightForm : "", display: countUser == 0 ? "unset" : "" }} className='div-form-profile'>
                                 <div ref={heightForm} className="form-profile" >
                                     {Object.keys(user).length > 0 ?
                                         <form className='form-update' action="" >

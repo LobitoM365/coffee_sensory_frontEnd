@@ -370,11 +370,13 @@ export const Analisis = (userInfo) => {
         },
         "proceso": {
             "referencia": "Tipo de proceso",
-            "upper_case": true
+            "upper_case": true,
+            "priority": 2
         },
         "muestras_id": {
             "referencia": "Muestra",
-            "upper_case": true
+            "upper_case": true,
+            "priority": 3
         },
         "variedad": {
             "referencia": "Variedad",
@@ -383,6 +385,7 @@ export const Analisis = (userInfo) => {
         "finca": {
             "referencia": "Finca",
             "upper_case": true,
+            "priority": 4
         },
         "lote": {
             "referencia": "Lote",
@@ -854,6 +857,7 @@ export const Analisis = (userInfo) => {
         setdataAlert(
             {
                 status: "warning",
+                "tittle": "¡Asegurate de realizar la acción!.",
                 description: "¿Estás seguro(a) de desactivar la geolocalizacion para el análisis " + id + "?, si desactivas la geolocalización los resultados del análisis no se verán en el mapa.",
                 continue: {
                     "function": cambiarEstadoMapa,
@@ -867,6 +871,7 @@ export const Analisis = (userInfo) => {
         setdataAlert(
             {
                 status: "warning",
+                "tittle": "¡Asegurate de realizar la acción!.",
                 description: "¿Estás seguro(a) de activar la geolocalización para el análisis " + id + "?, ten en cuenta que para un lote solo una muestra puede geolocalizarse al mismo tiempo, si activas la opcion de geolocalizacion, los análisis asociados al mismo lote se dejarán de ver en el mapa.",
                 continue: {
                     "function": cambiarEstadoMapa,
@@ -2341,7 +2346,6 @@ export const Analisis = (userInfo) => {
     return (
         <div>
             <div id='mainAnalisis'>
-
 
                 <Tablas getAvanzado={getAvanzado} buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 

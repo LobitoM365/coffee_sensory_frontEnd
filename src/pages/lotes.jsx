@@ -99,10 +99,12 @@ export const Lotes = (userInfo) => {
     const keys = {
         "lo_id": {
             "referencia": "Id",
+            "priority" : 1
         },
         "finca": {
             "referencia": "Finca",
-            "upper_case": true
+            "upper_case": true,
+            "priority" : 3
         },
         "nombre": {
             "referencia": "Nombre del lote",
@@ -121,7 +123,9 @@ export const Lotes = (userInfo) => {
         "estado": {
             "referencia": "Estado",
             "filter": false,
-            "rol": ["administrador", "catador"]
+            "rol": ["administrador", "catador"],
+            "priority" : 2
+
 
         },
         "actualizar": {

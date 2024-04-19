@@ -1,7 +1,7 @@
-*{
+#mainNotFound * {
     font-family: "arial";
 }
 
-button:hover{
+#mainNotFound button:hover {
     filter: brightness(1.1);
 }

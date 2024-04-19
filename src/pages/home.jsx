@@ -6,14 +6,14 @@ import Api from '../componentes/Api';
 /* import SinGraficosSVG from '../assets/svg/SinGraficos.svg'; */
 import "../../public/css/graficas.css"
 import "../../public/css/graficos.css"
- 
+
 export const Home = ({ userInfo }) => {
 
   const [user, setUser] = useState(userInfo);
   const [inputValue, setInputValue] = useState({
     muestras_id: '',
     fecha: '',
-    anio: '', 
+    anio: '',
     limite: '',
   });
   const [Data, setData] = useState([])
@@ -101,7 +101,7 @@ export const Home = ({ userInfo }) => {
           )
         }
       } catch (error) {
-        console.error("Error al obtener fechas:", error.message);
+        console.log("Error al obtener fechas:", error.message);
       }
     };
 
@@ -120,11 +120,15 @@ export const Home = ({ userInfo }) => {
       try {
         if (urlIdReady) {
           const response = await Api.post(urlId)
-          const nuevasFechas = response.data.data.map((item) => item.fecha);
-          setFechas(nuevasFechas);
+          if (response.data) {
+            if (response.data.data) {
+              const nuevasFechas = response.data.data.map((item) => item.fecha);
+              setFechas(nuevasFechas);
+            }
+          }
         }
       } catch (error) {
-        console.error('Error al cargar las fechas:', error.message);
+        console.log('Error al cargar las fechas:', error.message);
       }
     };
 
@@ -135,7 +139,7 @@ export const Home = ({ userInfo }) => {
   if (Data === undefined || Data.length === 0) {
     return (
       <>
-  
+
         <div id='graficos' >
           <div className='Graphic-none'>
             <div className="formulario">
@@ -158,7 +162,7 @@ export const Home = ({ userInfo }) => {
                   options={fechas && fechas.length > 0 ? fechas.map(fecha => ({ value: fecha.value, label: fecha.label })) : null}
 
                   inputValueMuestras={inputValue.muestras_id}
-                  readonly
+
 
                 />
               )}
@@ -171,10 +175,10 @@ export const Home = ({ userInfo }) => {
                   handleInputChange({
                     target: { name: 'muestras_id', value: selectedOption.value },
                   })
-                }  
+                }
                 url="muestra/listar"
                 opcion="codigo_muestra"
-                readonly
+
               />
               <input
                 type="number"
@@ -186,7 +190,7 @@ export const Home = ({ userInfo }) => {
                 id="anio2"
                 placeholder="Año"
                 value={inputValue.anio}
-                readonly
+
               />
               <input
                 type="number"
@@ -199,7 +203,7 @@ export const Home = ({ userInfo }) => {
                 id="limite2"
                 placeholder="Cantidad"
                 value={inputValue.limite}
-                readonly
+
               />
             </div>
 

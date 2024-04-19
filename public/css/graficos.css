@@ -76,9 +76,8 @@
      display: flex;
      justify-content: center;
      align-items: center;
-
      margin: auto;
-
+     flex-wrap: wrap;
  }
 
 
@@ -202,7 +201,7 @@
      border-radius: 3px;
      box-shadow: 1px 1px 5px 1.5px gray;
      width: 80%;
-     height: 60vh;
+     /* height: 60vh; */
      display: flex;
      justify-content: center;
      align-items: center;
@@ -305,7 +304,7 @@
          align-items: center;
          flex-direction: column;
          margin: auto;
-         background-color: #4ec74e;
+       /*   background-color: #4ec74e; */
      }
 
      #graficos

@@ -3,6 +3,7 @@ import { Tablas } from "../componentes/tablas.jsx"
 import Api, { host } from '../componentes/Api.jsx'
 import { Alert } from '../componentes/alert.jsx'
 import { GlobalModal } from '../componentes/globalModal.jsx'
+import "../../public/css/fincas.css"
 
 export const Fincas = (userInfo) => {
     let [dataFilterTable, setDataFilterTable] = useState({
@@ -255,10 +256,13 @@ export const Fincas = (userInfo) => {
     const keys = {
         "fin_id": {
             "referencia": "Id",
+            "priority": 1
         },
         "nombre": {
             "referencia": "Nombre",
-            "upper_case": true
+            "upper_case": true,
+            "priority": 2
+
         },
         "numero_documento_usuario": {
             "values": [
@@ -312,7 +316,9 @@ export const Fincas = (userInfo) => {
         },
         "estado": {
             "referencia": "Estado",
-            "rol": ["administrador", "catador"]
+            "rol": ["administrador", "catador"],
+            "priority": 3
+
         },
         "actualizar": {
             "referencia": "actualizar",
@@ -341,11 +347,11 @@ export const Fincas = (userInfo) => {
     }
     async function getFincas() {
         try {
-          /*   dataFilterTable.filter.where["fin.id"] = {
-                "value": "0",
-                "operador": "!=",
-                "require": "or"
-            } */
+            /*   dataFilterTable.filter.where["fin.id"] = {
+                  "value": "0",
+                  "operador": "!=",
+                  "require": "or"
+              } */
             const response = await Api.post("finca/listar", dataFilterTable);
             if (response.data.status == true) {
                 setFincas(response.data.data)
@@ -1077,7 +1083,6 @@ export const Fincas = (userInfo) => {
     }
     return (
         <>
-            <link rel="stylesheet" href="../../public/css/fincas.css" />
             <Tablas getAvanzado={getAvanzado} generatePdf={generatePdf} buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} userInfo={userInfo.userInfo} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
 

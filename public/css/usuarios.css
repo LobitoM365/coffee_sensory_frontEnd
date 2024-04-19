@@ -1,0 +1,18 @@
+#mainUsuarios,
+#mainUsuarios>div {
+    width: 100%;
+    max-width: 100%;
+}
+
+#mainUsuarios .div-icon-reset {
+    width: 40px;
+}
+
+#mainUsuarios .div-icon-reset svg {
+    width: 100%;
+    fill: rgb(160, 160, 160) !important;
+}
+
+#mainUsuarios .div-icon-reporte-pdf:hover {
+    background-color: rgba(0, 0, 0, 0.123);
+}   

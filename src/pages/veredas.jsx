@@ -77,10 +77,13 @@ export const Veredas = () => {
     const keys = {
         "ve_id": {
             "referencia": "Id",
+            "priority": 2
         },
         "nombre": {
             "referencia": "Nombre",
-            "upper_case": true
+            "upper_case": true,
+            "priority": 1
+
         },
         "municipio": {
             "referencia": "Municipio",

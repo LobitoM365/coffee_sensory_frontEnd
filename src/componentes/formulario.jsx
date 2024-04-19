@@ -3,7 +3,7 @@ export const Formulario = () => {
     
     return (
         <>
-        <link rel="stylesheet" href="../../public/css/formulario.css" />
+        {/* <link rel="stylesheet" href="../../public/css/formulario.css" /> */}
         <section className="form-register">
             <h4>Formulario Registro</h4>
                 <input className="controls" type="text" name="nombres" id="nombres" placeholder="Ingrese su Nombre"/>

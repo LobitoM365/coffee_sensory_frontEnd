@@ -2,7 +2,8 @@ import Api from "../componentes/Api"
 import React, { useEffect, useState } from 'react';
 import { Alert } from "../componentes/alert";
 import { useLocation } from 'react-router-dom';
-import "../../public/css/login.css"
+import "../../public/css/login.css";
+import "../../public/css/recover.css";
 
 export const RecoveryPassword = () => {
     const [email, setEmail] = useState({});
@@ -23,7 +24,7 @@ export const RecoveryPassword = () => {
             const searchParams = new URLSearchParams(url.search);
             const token = searchParams.get('key');
             const data = {};
-            
+
             data.token = token;
             const response = await Api.post('auth/protect/recover', data);
             console.log('RESPONSE: ', response);
@@ -92,8 +93,8 @@ export const RecoveryPassword = () => {
 
     return (
         <div id="mainLogin" className="main-container">
-            
-            <link rel="stylesheet" href="../../public/css/recover.css" />
+
+
             <div className="bg-img">
 
             </div>

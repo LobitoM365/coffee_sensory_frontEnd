@@ -146,19 +146,24 @@ export const Muestras = (userInfo) => {
         },
         "cafes_id": {
             "referencia": "Café",
-            "upper_case": true
+            "upper_case": true,
+            "priority" : 4
         },
         "codigo_externo": {
             "referencia": "Codigo Externo",
-            "upper_case": true
+            "upper_case": true,
+            "priority" : 3
         },
         "codigo_muestra": {
             "referencia": "Codigo Muestra",
-            "upper_case": true
+            "upper_case": true,
+            "priority" : 1
+
         },
         "cantidad": {
             "referencia": "Cantidad",
-            "upper_case": true
+            "upper_case": true,
+            "priority" : 2
         },
         "fecha_creacion": {
             "referencia": "Fecha creación",
@@ -166,7 +171,8 @@ export const Muestras = (userInfo) => {
         },
         "estado": {
             "referencia": "Estado",
-            "rol": ["administrador", "catador"]
+            "rol": ["administrador", "catador"],
+            "priority" : 5
         },
         "actualizar": {
             "referencia": "actualizar",

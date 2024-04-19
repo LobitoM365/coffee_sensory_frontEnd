@@ -343,6 +343,10 @@
      width: 100%;
  }
 
+ #mainInicio .div-informacion-analisis table td:not(.value-table-formato-fisico) {
+     font-weight: 700;
+ }
+
  #mainInicio .div-informacion-analisis table td {
      border: 1px solid black;
      padding: 9px;
@@ -430,4 +434,62 @@
  #mainInicio .modal-carrusel .div-content-form {
      width: 1200px;
      /* max-width: 100%; */
+ }
+
+ @media screen and (max-width: 1550px) {
+     #mainInicio .div-info-general {
+         grid-template-columns: 1fr;
+     }
+
+     #mainInicio .div-informacion-analisis {
+         grid-column-end: unset;
+         grid-column-start: unset;
+     }
+
+     #mainInicio .info-puntaje {
+         display: grid;
+         grid-template-columns: 1fr 1fr 1fr 1fr;
+         width: calc(100% - 20px);
+     }
+
+     #mainInicio .info-puntaje>div {
+         height: calc(100% - 40px);
+     }
+
+     #mainInicio .content-info-analisis {
+         grid-template-columns: 1fr;
+     }
+
+     #mainInicio .info-analisis-sensorial {
+         grid-column-end: unset;
+         grid-column-start: unset;
+     }
+ }
+
+ @media screen and (max-width: 1550px) {
+     #mainInicio .info-puntaje {
+         grid-template-columns: 1fr 1fr;
+     }
+ }
+
+ @media screen and (max-width: 900px) {
+
+     #mainInicio .info-puntaje,
+     #mainInicio .div-info-caficultor {
+         grid-template-columns: 1fr;
+     }
+
+     #mainInicio .value-table-formato-fisico {
+         width: unset;
+     }
+
+     #mainInicio .div-informacion-analisis table td {
+         display: flex;
+     }
+
+     #mainInicio #imgAtributos,
+     #mainInicio .div-img-info-general>img {
+         height: auto;
+         max-width: 100%;
+     }
  }

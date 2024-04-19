@@ -3,7 +3,7 @@ import React from "react";
 export const FormRegiser = (data) => {
     return (
         <>
-            <link rel="stylesheet" href="../../public/css/formRegister.css" />
+            {/* <link rel="stylesheet" href="../../public/css/formRegister.css" /> */}
 
             <div className="container-form">
                 <form action="" className="formRegister">

@@ -1700,3 +1700,9 @@
         width: max-content;
     }
 }
+
+#mainGlobalForm .div-codigos-muestra{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}

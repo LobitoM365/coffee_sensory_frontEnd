@@ -702,12 +702,23 @@ body {
 .formato-error-area {
     background-color: rgba(255, 0, 0, 0.247)
 }
-.formato-error-area-range{
+
+.formato-error-area-range {
     border-top: 0.2vw solid red;
 }
+
 .formato-error-input {
     border: 0.2vw solid red;
 }
-.defectos-focus{
+
+.defectos-focus {
     background-color: orange !important;
+}
+
+.darkMode #contenidoFormatoSca{
+    color: white;
+    
+}
+.darkMode #contenidoFormatoSca .linea6{
+    background-color: rebeccapurple;
 }

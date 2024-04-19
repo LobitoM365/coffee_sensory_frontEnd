@@ -810,15 +810,21 @@ export const Inicio = () => {
 
                                                 <div className="div-info-content-general">
                                                     <div>
-                                                        <h4>Código</h4>
+                                                        <h4>Código de muestra</h4>
                                                         <h4>
-                                                            {muestra["codigo_externo"] ? muestra["codigo_externo"] : "No Registra"}
+                                                            {muestra["codigo_muestra"] ? muestra["codigo_muestra"] : "No Registra"}
                                                         </h4>
                                                     </div>
                                                     <div>
                                                         <h4>Variedad</h4>
                                                         <h4>
                                                             {muestra["variedad"] ? muestra["variedad"] : "No Registra"}
+                                                        </h4>
+                                                    </div>
+                                                    <div>
+                                                        <h4>Código externo</h4>
+                                                        <h4>
+                                                            {muestra["codigo_externo"] ? muestra["codigo_externo"] : "No Registra"}
                                                         </h4>
                                                     </div>
                                                     {/*     <div>

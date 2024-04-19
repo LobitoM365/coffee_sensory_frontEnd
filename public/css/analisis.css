@@ -344,10 +344,14 @@
     text-align: left;
 }
 
+#mainAnalisis .input-cantidad-formatos:focus {
+    overflow: none;
+}
 #mainAnalisis .input-cantidad-formatos {
     width: 70px;
     padding: 10px 20px;
     border-radius: 4px;
+    border: unset;
     font-size: 1.4em;
     max-width: calc(100% - 20px);
 }

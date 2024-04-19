@@ -927,6 +927,19 @@ export const FormResultados = forwardRef((data, ref) => {
             }
         )
     }
+
+    useEffect(() => {
+        let formatoSca = document.querySelectorAll(".iframe-formato-sca");
+        console.log(formatoSca, localStorage.getItem("darkMode"))
+        if (localStorage.getItem("darkMode")) {
+            if (localStorage.getItem("darkMode") == "true") {
+
+                for (let x = 0; x < formatoSca.length; x++) {
+                    formatoSca[x].classList.add("darkMode")
+                }
+            }
+        }
+    }, [localStorage.getItem("darkMode")])
     return (
 
         <>

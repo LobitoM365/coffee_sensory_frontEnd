@@ -10,6 +10,7 @@ import { Alert } from "../componentes/alert.jsx";
 import { GlobalInputs } from "../componentes/globalInputs.jsx";
 import { fn } from "jquery";
 import { Mensajeria } from "../componentes/mensajeria.jsx"
+import { Doughnut } from "react-chartjs-2";
 
 export const Menu = (data) => {
     const locationPath = useLocation();
@@ -1189,6 +1190,14 @@ export const Menu = (data) => {
 
         }
     }
+    useEffect(() => {
+        if (data.valueDarkMode) {
+            let formatoSca = document.querySelectorAll(".iframe-formato-sca");
+            for (let x = 0; x < formatoSca.length; x++){
+                formatoSca[x].classList.add("darkMode")
+            }
+        }
+    }, [data.valueDarkMode])
     return (
 
         <div>
@@ -1654,7 +1663,7 @@ export const Menu = (data) => {
             </div >
             {
                 modalConfiguracion ?
-                    <GlobalModal class={"div-modal-configuraciones"} statusModal={setModalConfiguracion} content={
+                    <GlobalModal class={"div-modal-configuraciones" + (!data.valueDarkMode ? " lightMode" : " darkMode")} statusModal={setModalConfiguracion} content={
                         < div id="mainModalConfifuraciones" >
                             <div className="div-content-configuraciones">
                                 <div className="div-title-configuraciones">
@@ -1716,7 +1725,7 @@ export const Menu = (data) => {
 
             {
                 modalConfiguracionFormatoFisico ?
-                    <GlobalModal class={"div-modal-configuracion-variables-fisicas"} statusModal={setModalConfiguracionFormatoFisico} content={
+                    <GlobalModal class={"div-modal-configuracion-variables-fisicas" + (!data.valueDarkMode ? " lightMode" : " darkMode")} statusModal={setModalConfiguracionFormatoFisico} content={
                         <div ref={refModalConfiguracionFormatoFisico} id="modalConfiguracionVariablesFisico">
                             <h2>Crear Fórmula</h2>
                             <div className="div-crear-formula-main">
@@ -1952,7 +1961,7 @@ export const Menu = (data) => {
                                                                     </div>
                                                                     <div onClick={() => { clearFormula() }} className="div-icon-reload">
                                                                         <svg version="1.0" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
-                                                                            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                                                                            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" stroke="none">
                                                                                 <path d="M2414 4419 c-373 -27 -767 -189 -1063 -439 l-74 -62 -161 159 c-88 88 -172 168 -186 177 -56 37 -166 8 -212 -56 l-23 -33 0 -590 c0 -656 -3 -621 68 -679 l39 -31 591 0 c579 0 593 0 627 21 69 40 103 155 64 214 -9 14 -94 103 -188 197 l-171 173 35 30 c52 45 187 134 255 168 341 170 756 167 1098 -7 349 -177 578 -481 663 -876 23 -109 23 -331 0 -448 -48 -249 -165 -468 -345 -648 -180 -180 -400 -297 -648 -345 -107 -21 -318 -23 -423 -5 -293 51 -554 205 -762 449 -32 37 -41 42 -80 42 -43 0 -44 -1 -225 -187 -222 -226 -220 -219 -120 -334 191 -222 490 -417 792 -518 555 -185 1149 -104 1640 224 208 138 362 292 500 500 376 563 426 1250 135 1853 -179 372 -443 647 -802 837 -321 169 -662 240 -1024 214z" />
                                                                             </g>
                                                                         </svg>
@@ -2019,8 +2028,8 @@ export const Menu = (data) => {
             }
 
             {modalConfiguracionCodigos ?
-                <GlobalModal class={"div-modal-configuracion-variables-fisicas"} statusModal={setModalConfiguracionCodigos} content={
-                    <div >
+                <GlobalModal class={"div-modal-configuracion-variables-fisicas" + (!data.valueDarkMode ? " lightMode" : " darkMode")} statusModal={setModalConfiguracionCodigos} content={
+                    <div className="div-codigos-muestra">
                         <h2>Codigos para Muestra - Informe</h2>
 
                         <GlobalInputs

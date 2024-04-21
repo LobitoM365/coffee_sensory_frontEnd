@@ -146,7 +146,9 @@
 }
 
 #mainMenu .nav-main .footer-nav li {
-    width: max-content;
+    width: calc(100% - 20px);
+    display: flex;
+    justify-content: space-between;
 }
 
 #mainMenu .nav-main .footer-nav ul {
@@ -405,11 +407,11 @@
     padding: 15px;
     background-color: whitesmoke;
     box-shadow: 0px 0px 5px rgb(199, 199, 199) inset;
+    border-radius: 8px;
 }
 
 #mainMenu .nav-main .notificacion-analisis:hover {
     background-color: rgba(170, 170, 170, 0.235);
-    border-radius: 8px;
 }
 
 #mainMenu .nav-main .h4-informacion-notificacion-analisis {
@@ -461,16 +463,31 @@
     border-radius: 8px;
 }
 
+#mainMenu .title-info-notificaciones-text {
+    font-weight: 700 !important;
+}
+
+#mainMenu .value-info-notificaciones-text {
+    font-weight: 400 !important;
+}
+
+#mainMenu .div-info-notificaciones-text {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
 #mainMenu .nav-main .img-analisis {
-    margin-top: 10px;
+    /* margin-top: 10px; */
     width: 65px;
-    border-radius: 8px;
+    border-radius: 4px;
+    max-width: 100%;
 }
 
 #mainMenu .nav-main .asignado,
 #mainMenu .nav-main .registrado,
 #mainMenu .nav-main .rechazado,
-.nav-main .pendiente {
+#mainMenu .nav-main .pendiente {
     padding: 2px 4px 2px 4px;
     border-radius: 4px;
 }
@@ -485,6 +502,7 @@
 
 #mainMenu .nav-main .pendiente {
     background-color: gray;
+    color: white;
 }
 
 #mainMenu .nav-main .rechazado {
@@ -501,7 +519,7 @@
     background-color: rgb(12, 92, 114);
     border: unset;
     border-radius: 4px;
-    margin-right: 60px;
+    /* margin-right: 60px; */
 }
 
 #mainMenu .nav-main .input-proceder-analisis:hover {
@@ -1701,8 +1719,53 @@
     }
 }
 
-#mainGlobalForm .div-codigos-muestra{
+#mainGlobalForm .div-codigos-muestra {
     display: flex;
     flex-direction: column;
     gap: 30px;
+}
+
+
+@media screen and (max-width:500px) {
+    #mainMenu .nav-main .quit-notificaciones {
+        display: none;
+    }
+
+    #mainMenu .nav-main .contenido-notificaciones {
+        border: unset;
+        position: relative;
+        top: unset;
+        left: unset;
+        background-color: unset;
+        max-width: 100%;
+        overflow: hidden;
+        min-width: 100%;
+    }
+
+    #mainMenu .nav-main .asignaciones-notificaciones {
+        max-width: 100%;
+    }
+
+    #mainMenu .nav-main .informacion-analisis>div {
+        flex-wrap: wrap;
+    }
+
+    #mainMenu .nav-main .div-img-analisis {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+@media screen and (max-width:220px) {
+    #mainMenu .nav-main .header-notificaciones {
+        display: none;
+    }
+}
+
+#mainMenu .div-img-analisis {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

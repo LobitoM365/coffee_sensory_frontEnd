@@ -147,23 +147,23 @@ export const Muestras = (userInfo) => {
         "cafes_id": {
             "referencia": "Café",
             "upper_case": true,
-            "priority" : 4
+            "priority": 4
         },
         "codigo_externo": {
             "referencia": "Codigo Externo",
             "upper_case": true,
-            "priority" : 3
+            "priority": 3
         },
         "codigo_muestra": {
             "referencia": "Codigo Muestra",
             "upper_case": true,
-            "priority" : 1
+            "priority": 1
 
         },
         "cantidad": {
             "referencia": "Cantidad",
             "upper_case": true,
-            "priority" : 2
+            "priority": 2
         },
         "fecha_creacion": {
             "referencia": "Fecha creación",
@@ -172,7 +172,7 @@ export const Muestras = (userInfo) => {
         "estado": {
             "referencia": "Estado",
             "rol": ["administrador", "catador"],
-            "priority" : 5
+            "priority": 5
         },
         "actualizar": {
             "referencia": "actualizar",
@@ -223,7 +223,6 @@ export const Muestras = (userInfo) => {
     async function getMuestra() {
         try {
             const response = await Api.post("muestra/listar", dataFilterTable);
-            console.log('DATA FILTER: ', dataFilterTable);
             if (response.data.status == true) {
                 setMuestras(response.data.data)
                 setCountRegisters(response.data.count)
@@ -472,8 +471,10 @@ export const Muestras = (userInfo) => {
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
+        if (data["valueSearch"] != undefined) {
+            dataFilterTable.filter["search"] = data["valueSearch"]
+        }
         getMuestra()
-
     }
     async function buscarMuestra(id) {
 
@@ -528,7 +529,6 @@ export const Muestras = (userInfo) => {
                 }
             }
             const response = await Api.post("muestra/listar", filterReport);
-            console.log(response)
             if (response.data.status == true) {
                 if (tipo == "pdf") {
                     if (response.data.count > 100) {
@@ -571,8 +571,6 @@ export const Muestras = (userInfo) => {
             filter,
             table: { ...cloneTable }
         };
-        console.log(data, "hahsd")
-
         try {
             const response = await fetch('http://' + host + ':8000/generateReporte.php', {
 
@@ -598,11 +596,10 @@ export const Muestras = (userInfo) => {
             setdataAlert(
                 {
                     status: "false",
-                    description: "Error interno del servidor: " + error,
+                    description: "Error interno del servidor: Inténtalo más tarde.",
                     "tittle": "Inténtalo de nuevo"
                 }
             )
-            console.error('Error:', error);
         }
     }
     async function getAvanzado(tipo, filter) {
@@ -623,12 +620,10 @@ export const Muestras = (userInfo) => {
         if (!dataFilterTable["filter"]["order"]) {
             cloneDataFilterTable["filter"]["order"] = {}
         }
-        console.log(cloneDataFilterTable, "cloooooooooooooooooon")
         if (!cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]) {
             cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
-            console.log("ahhh")
             cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
             if (cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]) {
@@ -733,16 +728,38 @@ export const Muestras = (userInfo) => {
             setdataAlert(
                 {
                     status: "false",
-                    description: "Error interno del servidor: " + error,
+                    description: "Error interno del servidor: Inténtalo más tarde.",
                     "tittle": "Inténtalo de nuevo"
                 }
             )
 
         }
     }
+    async function clearFilters(data) {
+        dataFilterTable = {
+            "filter": {
+                "where": {
+
+                },
+                "limit": {
+                    "inicio": 0,
+                    "fin": 10
+                }
+            }
+        }
+        if (typeof data == "object") {
+            if (data.inicio) {
+                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            }
+            if (data.fin) {
+                dataFilterTable.filter["limit"]["fin"] = data.fin
+            }
+        }
+        getMuestra()
+    }
     return (
         <>
-            <Tablas getAvanzado={getAvanzado} generatePdf={generatePdf} userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setMuestra} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateMuestra} tittle={"Muestra"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} generatePdf={generatePdf} userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setMuestra} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateMuestra} tittle={"Muestra"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

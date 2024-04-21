@@ -17,12 +17,10 @@ const Root = () => {
   const [serverStatus, setServerStatus] = useState(true)
   useEffect(() => {
     socket.on('connect', () => {
-      console.log('Conectado al servidor');
       setServerStatus(true);
     });
 
     socket.on('connect_error', (error) => {
-      console.error('Error de conexión:', error);
       setServerStatus(false);
     });
     return () => {

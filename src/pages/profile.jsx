@@ -8,7 +8,6 @@ import { host } from '../componentes/Api'
 import "../../public/css/profile.css";
 
 export const Profile = (data) => {
-    console.log('data: ', data.userInfo != null ? data.userInfo.rol : '');
     const [user, setUser] = useState({ "nombre": "" });
     const [form, changeForm] = useState(0);
     const [errors, setErrors] = useState({});
@@ -70,17 +69,13 @@ export const Profile = (data) => {
             }
         } catch (e) {
             setUser({})
-            console.error("Error" + e)
             setMensaje({ "find_error": "Error interno del servidor" })
         }
     }
 
     async function listarIconos() {
         try {
-            console.log("listaaaaaaaaaaaa")
             const response = await Api.post("/img/icono/listar");
-            console.log("listaaaaaaaaaaaa", response, "reee")
-
             if (response.data.status == true) {
                 setImgs(response.data.data)
             } else {
@@ -101,7 +96,6 @@ export const Profile = (data) => {
         })
         listarIconos()
         fetchUser();
-        console.log(data.userInfo, "ahahha")
     }, [])
 
     async function fecthUpdateUser() {
@@ -179,8 +173,7 @@ export const Profile = (data) => {
 
 
         } catch (e) {
-
-            console.error("Error" + e)
+            console.log("Error" + e)
         }
     }
     function updateForm() {
@@ -217,7 +210,7 @@ export const Profile = (data) => {
                         const formData = new FormData();
                         formData.append("img", file)
                         formData.forEach((input, key) => {
-                            console.log(`${key}: ${input}`);
+                            /* console.log(`${key}: ${input}`); */
                         });
                         let route = "cargar"
                         let method = "post"
@@ -238,7 +231,6 @@ export const Profile = (data) => {
                                 "tittle": "Error de validación.",
                             });
                         }
-                        console.log(response, "ressssssss")
                     }
                 }
                 input.remove()
@@ -256,7 +248,6 @@ export const Profile = (data) => {
                 listarIconos()
                 setModalImgChange()
             }
-            console.log(response, "siuuuuuuu")
         } catch (e) {
             console.log("Error: " + e)
         }
@@ -269,7 +260,6 @@ export const Profile = (data) => {
                 listarIconos()
                 setModalImgChange()
             }
-            console.log(response, "siuuuuuuu")
         } catch (e) {
             console.log("Error: " + e)
         }

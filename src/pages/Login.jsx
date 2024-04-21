@@ -148,7 +148,6 @@ export const Login = (data) => {
                         description: 'Intente acceder de nuevo más tarde.',
                         "tittle": "Error interno del servidor! ",
                     });
-                    console.error('ERROR LOGIN: ', error);
                     // alert('ERROR LOGIN')
                 } else {
 
@@ -165,8 +164,6 @@ export const Login = (data) => {
         const formData = new FormData(event.target)
         const form = Object.fromEntries(formData);
         form.link = 'http://' + host + ':5173/recover';
-
-        console.log('FOMR DATA: ', form);
         try {
 
             serLoader(true);
@@ -195,9 +192,6 @@ export const Login = (data) => {
                     "tittle": response.data.title,
                 });
             }
-
-            console.log('RESPONSE EMAIL: ', response.data);
-            console.log('ERROR VALIDATION: ', validationError);
         } catch (error) {
             serLoader(false);
 
@@ -207,7 +201,6 @@ export const Login = (data) => {
                 description: 'Por favor inténtelo de nuevo más tarde. Si el problema persiste porfavor contáctese con el administrador.',
                 "tittle": "Ah ocurrido un error!",
             });
-            console.log('ERROR EMAIL: ', error);
         }
     }
 

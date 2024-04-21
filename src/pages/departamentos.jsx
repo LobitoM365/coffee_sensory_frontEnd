@@ -60,13 +60,13 @@ export const Departamentos = (userInfo) => {
     const keys = {
         "id": {
             "referencia": "Id",
-            "priority" : 2
+            "priority": 2
 
         },
         "nombre": {
             "referencia": "Nombre",
-           "upper_case": true,
-            "priority" : 1
+            "upper_case": true,
+            "priority": 1
 
         },
         "fecha_creacion": {
@@ -112,7 +112,6 @@ export const Departamentos = (userInfo) => {
     async function getEntities() {
         try {
             const response = await Api.post("departamento/listar", dataFilterTable);
-            console.log('DEPARTAMENTS: ', dataFilterTable);
             if (response.data.status == true) {
                 setEntities(response.data.data)
                 setCountRegisters(response.data.count)
@@ -274,8 +273,10 @@ export const Departamentos = (userInfo) => {
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
+        if (data["valueSearch"] != undefined) {
+            dataFilterTable.filter["search"] = data["valueSearch"]
+        }
         getEntities()
-
     }
     async function buscarDepartamento(id) {
 
@@ -322,12 +323,10 @@ export const Departamentos = (userInfo) => {
         if (!dataFilterTable["filter"]["order"]) {
             cloneDataFilterTable["filter"]["order"] = {}
         }
-        console.log(cloneDataFilterTable, "cloooooooooooooooooon")
         if (!cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"]) {
             cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
-            console.log("ahhh")
             cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
             if (cloneDataFilterTable["filter"]["date"]["de.fecha_creacion"]) {
@@ -360,9 +359,6 @@ export const Departamentos = (userInfo) => {
                 }
             }
         }
-
-        console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
-
         setDataFilterTable(cloneDataFilterTable)
         getEntities()
 
@@ -432,16 +428,38 @@ export const Departamentos = (userInfo) => {
             setdataAlert(
                 {
                     status: "false",
-                    description: "Error interno del servidor: " + error,
+                    description: "Error interno del servidor: Inténtalo más tarde.",
                     "tittle": "Inténtalo de nuevo"
                 }
             )
 
         }
     }
+    async function clearFilters(data) {
+        dataFilterTable = {
+            "filter": {
+                "where": {
+
+                },
+                "limit": {
+                    "inicio": 0,
+                    "fin": 10
+                }
+            }
+        }
+        if (typeof data == "object") {
+            if (data.inicio) {
+                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            }
+            if (data.fin) {
+                dataFilterTable.filter["limit"]["fin"] = data.fin
+            }
+        }
+        getusuarios()
+    }
     return (
         <>
-            <Tablas getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={data} keys={keys} updateEntitie={updateFinca} tittle={"Departamentos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={data} keys={keys} updateEntitie={updateFinca} tittle={"Departamentos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

@@ -54,19 +54,20 @@ export const Tablas = (array) => {
     const [nameEstadoFocus, changeNameEstadoFocus] = useState("Estado...");
     const [modalEstado, changeModalEstado] = useState(false)
     const [modalFilter, changeModalFilter] = useState(false)
-    const [nameLimitRegisters, changeNameModalLimitRegisters] = useState(50)
+    const [nameLimitRegisters, changeNameModalLimitRegisters] = useState(10)
     const [positionElementPaginate, changePositionElementPaginate] = useState(1)
     const [modalAvanzado, setStatusModalAvanzado] = useState(false)
     const [statusAmpliarTable, setStatusAmpliarTable] = useState(false)
     const [tipoAvanzado, setTipoAvanzado] = useState("")
     const formRef = useRef(null);
-    const [limit, setLimit] = useState(50);
+    const [limit, setLimit] = useState(10);
     const [inicio, setInicio] = useState(0);
     const [fin, setFin] = useState(limit);
     const [positionFocusPaginate, setPositionFocusPaginate] = useState(1);
     let paginate = 0;
     const paginateJson = []
     const [posicionPaginate, setPosicionPaginate] = useState(0);
+    const [keyModalAvanzado, setKeyModalAvanzado] = useState(0);
 
     const [pageLoad, setPageLoad] = useState(false);
 
@@ -83,7 +84,8 @@ export const Tablas = (array) => {
         "20",
         "25",
         "30",
-        "50"
+        "50",
+        "100"
     ]
 
 
@@ -164,9 +166,11 @@ export const Tablas = (array) => {
         setPositionFocusPaginate(1)
         setInicio(0);
     }
-    function functionSetPaginate(data) {
+    function functionSetPaginate(data, valueSearch) {
         if (array.limitRegisters) {
-            array.limitRegisters({ "inicio": limit * (data - 1), "fin": limit })
+            const dataLimitRegisters = { "inicio": limit * (data - 1), "fin": limit };
+            dataLimitRegisters["valueSearch"] = valueSearch
+            array.limitRegisters(dataLimitRegisters)
         }
         setPositionFocusPaginate(data)
         setInicio(limit * (data - 1));
@@ -250,8 +254,6 @@ export const Tablas = (array) => {
             }
 
 
-            const prioritykeysQuit = { ...quitElements };
-
             const resizeObserver = new ResizeObserver(entries => {
                 for (let entry of entries) {
                     resizeTable()
@@ -263,10 +265,8 @@ export const Tablas = (array) => {
             let cloneObserveElements = observeElements
             cloneObserveElements.push(contentComponent.current)
             setObserveElements(cloneObserveElements)
-            resizeTable()
 
             function resizeTable() {
-
                 const loadTable = document.getElementById("loadTable");
                 if (tableRef.current) {
                     countResize = countResize + 1
@@ -279,13 +279,12 @@ export const Tablas = (array) => {
                     const divAdd = tableTBody.querySelectorAll(".new-div-table");
                     if (divAdd.length == 0 && !data.find_error) {
                         quitSizeOne = true;
-                        countQuit = [];
-                        quitElements = {}
+                        /*  countQuit = [];
+                         quitElements = {} */
                     }
                     if (table.scrollWidth > contentTable.clientWidth) {
 
                         const keysQuitElement = Object.keys(prioritykeys);
-
                         if (keysQuitElement.length > 0) {
                             let indexQuit = prioritykeys[keysQuitElement[keysQuitElement.length - 1]][0]
                             let elementsDisponibles = prioritykeys[keysQuitElement[keysQuitElement.length - 1]]
@@ -403,12 +402,8 @@ export const Tablas = (array) => {
                             }
 
                         }
-
                     } else {
-
-
                         const keysQuitAdd = Object.keys(quitElements)
-
                         if (keysQuitAdd.length > 0) {
                             const addElement = quitElements[keysQuitAdd[0]][quitElements[keysQuitAdd[0]].length - 1];
 
@@ -491,6 +486,8 @@ export const Tablas = (array) => {
                     }
                 }, 200);
             }
+
+            resizeTable()
             return () => {
                 resizeObserver.disconnect();
                 /*  quitElements = { ...prioritykeysQuit }
@@ -685,8 +682,49 @@ export const Tablas = (array) => {
             }
         }
     }
-    return (
+    async function clearFilters() {
+        setPositionFocusPaginate(1)
+        changeNameModalLimitRegisters(10)
+        setInicio(0)
+        setFin(0)
+        setLimit(10)
 
+        if (document.getElementById("inputSearch")) {
+            document.getElementById("inputSearch").value = ""
+        }
+
+        if (keysInputsDocumento && array.dataDocumento) {
+            const clonetValueGlovalInput = { ...valueGlobalInput }
+            let clearInput = false;
+            for (let x = 0; x < keysInputsDocumento.length; x++) {
+                if (typeof array.dataDocumento[keysInputsDocumento[x]] == "object") {
+                    if (array.dataDocumento[keysInputsDocumento[x]]["inputs"]) {
+                        let inputs = Object.keys(array.dataDocumento[keysInputsDocumento[x]]["inputs"])
+                        for (let i = 0; i < inputs.length; i++) {
+                            if (clonetValueGlovalInput[inputs[i]]) {
+                                delete clonetValueGlovalInput[inputs[i]]
+                                if (clearInput == false) {
+                                    clearInput = true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            /* if (array.getFiltersOrden) {
+                array.getFiltersOrden({})
+            } */
+            changeFilterRotate({})
+            if (clearInput == true && array.clearFilters) {
+                setKeyModalAvanzado(keyModalAvanzado + 1)
+                setValueGlobalInput(clonetValueGlovalInput)
+            }
+            if (array.clearFilters) {
+                array.clearFilters({ "inicio": 0, "fin": fin })
+            }
+        }
+    }
+    return (
         <div>
             <div id='mainTablas'>
                 <div ref={contentTableRef}>
@@ -736,7 +774,7 @@ export const Tablas = (array) => {
                                                                         </button>
                                                                         <div style={{ display: "none" }} id='divAvanzado' className='child-div-modal'>
 
-                                                                            <GlobalModal statusModal={closeModalAvanzado} active={{ "width": 930 }} content={
+                                                                            <GlobalModal key={keyModalAvanzado} statusModal={closeModalAvanzado} active={{ "width": 930 }} content={
                                                                                 <div className='div-input-documento'>
                                                                                     <form onSubmit={(e) => { applyAvanzado(e) }}>
                                                                                         <div className='div-body-avanzado'>
@@ -853,6 +891,7 @@ export const Tablas = (array) => {
                                                                                                 " "
                                                                                         }
                                                                                         <div className='footer-get-avanzado'>
+                                                                                            <button onClick={() => { clearFilters() }} type='button' className='button-get-avanzado button-restablecer'>Restablecer</button>
                                                                                             <button type='submit' className='button-get-avanzado'>Aplicar</button>
                                                                                         </div>
 
@@ -1228,7 +1267,7 @@ export const Tablas = (array) => {
                                                                                 referencia: "Tamaño de letra del contenido de la tabla (px)",
                                                                             },
                                                                         }} />
-                                                                    < GlobalInputs
+                                                                    {/*  < GlobalInputs
                                                                         input={setValueGlobalInput}
                                                                         value={valueGlobalInput}
                                                                         elementEdit={{ "papel": "letter" }}
@@ -1256,7 +1295,7 @@ export const Tablas = (array) => {
                                                                                 upper_case: true,
                                                                                 key: "value",
                                                                             },
-                                                                        }} />
+                                                                        }} /> */}
                                                                 </div>
                                                                 <h4 className='title-avanzado-group'>Contenido</h4>
                                                                 <div className='content-div-inputs-group'>
@@ -1347,7 +1386,7 @@ export const Tablas = (array) => {
                                                     {filtersLimitRegister.map((key, index) => {
                                                         return <h4 key={key} onClick={() => {
                                                             functionSetLimit(key);
-                                                        }} className='select-option select-option-limit-filter'>{key}</h4>
+                                                        }} className={'select-option select-option-limit-filter' + (key == nameLimitRegisters ? " limit-focus" : "")}>{key}</h4>
 
                                                     })}
 
@@ -1382,7 +1421,7 @@ export const Tablas = (array) => {
                                             </div>
                                         </div> */}
                                         <div className="filters-search">
-                                            <div className="icon-search" onClick={() => { array.filterSeacth(valueSearch); setPosicionPaginate(0); functionSetPaginate(1) }}>
+                                            <div className="icon-search" onClick={() => { setPosicionPaginate(0); functionSetPaginate(1, valueSearch) }}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256"     >
                                                     <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>
                                                     <g><g><g><path d="M93,10.1c-0.7,0.1-3.3,0.4-5.6,0.7c-28.3,3.5-54.3,22-67.7,48.1c-6.9,13.4-9.8,25.4-9.8,41c0,15.5,2.9,27.6,9.8,41c13.2,25.8,37,43,66.3,48c6.4,1.1,21.1,1.1,27.5,0c14.9-2.5,28.9-8.4,39.6-16.5l2.8-2.1l4.5,4.5l4.6,4.5l-1.1,1.7c-2.5,3.6-2.8,9.8-0.7,13.8c0.8,1.5,8.8,9.9,24.2,25.5c26,26.4,25.5,26,31.8,25.9c5.5,0,6.9-0.9,16.4-10.4c9.5-9.6,10.4-10.9,10.4-16.4c0.1-6,0.3-5.8-25.7-32.1c-25.1-25.4-25-25.3-30.5-25.6c-3.6-0.2-6.2,0.4-8.6,2.1l-1.8,1.2l-4.6-4.6l-4.5-4.5l2-2.6c8-10.5,13.9-24.7,16.4-39.5c1.1-6.4,1.1-21.1,0-27.5c-3.3-18.9-11.2-34.9-23.8-48.2C151,23.3,133.7,14.3,113.8,11C109.5,10.3,95.8,9.6,93,10.1z M109.7,25.9c16.4,2.1,30.9,9.3,42.8,21.2c25.8,25.8,29.2,66.3,8,96.1c-4,5.6-11.7,13.3-17.4,17.4c-22.7,16.1-52,18.4-76.8,6c-7.5-3.7-13.4-8.1-19.4-14c-11.9-11.9-19.1-26.5-21.2-42.8c-3.1-23.4,4.6-46,21.2-62.6C63.7,30.5,86.3,22.8,109.7,25.9z" /><path d="M52.8,70.1c-5.6,8.6-9,19.6-9,29.5c0,19.7,11.8,38.7,29.4,47.6c9,4.5,15.4,6,25.4,6c7.4,0,11.9-0.7,17.9-2.7c3-1,10.8-4.8,10.8-5.1c0-0.1-2.9-0.1-6.4,0c-18.1,0.7-34.6-5.6-47.6-18.2c-9.7-9.4-15.7-20.4-18.6-33.9c-1-4.9-1.2-19.2-0.3-23.3c0.3-1.4,0.5-2.6,0.4-2.7C54.7,67.3,53.9,68.5,52.8,70.1z" /></g></g></g>
@@ -1450,7 +1489,9 @@ export const Tablas = (array) => {
                                         <tbody key={"tBody"}>
                                             {data.length > 0 ? (
                                                 data.map((keysD, valuesD) => (
+
                                                     <tr key={keysD["id"] ? keysD["id"] : valuesD} className='tr-table'>
+
                                                         {
                                                             keysPrint.map((keys, index) => {
 
@@ -1598,7 +1639,7 @@ export const Tablas = (array) => {
                                                                                             }
                                                                                         }
                                                                                         tableData.push(
-                                                                                            <div onClick={() => { functionProcedure ? functionProcedure(valueFunctionProcedure) : "" }} className={"div-element-free " + classProcedure} key={x}>{print[keys]["inputs"][keysInputs[x]]["element"] == "icon-pdf" ? <svg className='icon-pdf-table' xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 358.000000 438.000000" preserveAspectRatio="xMidYMid meet">
+                                                                                            <div onClick={() => { functionProcedure ? functionProcedure(valueFunctionProcedure) : "" }} className={"div-element-free " + classProcedure} key={keys + x}>{print[keys]["inputs"][keysInputs[x]]["element"] == "icon-pdf" ? <svg className='icon-pdf-table' xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 358.000000 438.000000" preserveAspectRatio="xMidYMid meet">
                                                                                                 <metadata>
                                                                                                     Created by potrace 1.16, written by Peter Selinger 2001-2019
                                                                                                 </metadata>
@@ -1761,7 +1802,7 @@ export const Tablas = (array) => {
                                                                                                             }
                                                                                                         }
                                                                                                         div.push(
-                                                                                                            <div onClick={(e) => { typeof functionProcedure == "function" ? functionProcedure(valueFunctionProcedure, e) : "" }} className={"div-element-free " + classProcedure} key={index}>{print[keys]["conditions"]["inputs"][keyC][keyT]["inputs"][keysInputs[x]]["element"] == "icon-pdf" ? <svg className='icon-pdf-table' xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 358.000000 438.000000" preserveAspectRatio="xMidYMid meet">
+                                                                                                            <div onClick={(e) => { typeof functionProcedure == "function" ? functionProcedure(valueFunctionProcedure, e) : "" }} className={"div-element-free " + classProcedure} key={keys + index}>{print[keys]["conditions"]["inputs"][keyC][keyT]["inputs"][keysInputs[x]]["element"] == "icon-pdf" ? <svg className='icon-pdf-table' xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 358.000000 438.000000" preserveAspectRatio="xMidYMid meet">
                                                                                                                 <metadata>
                                                                                                                     Created by potrace 1.16, written by Peter Selinger 2001-2019
                                                                                                                 </metadata>
@@ -1776,9 +1817,9 @@ export const Tablas = (array) => {
                                                                                                         );
                                                                                                     }
 
-                                                                                                    return (<td><div className='div-td-inputs-table'>{div}</div></td>);
+                                                                                                    return (<td key={"td" + keys + index} ><div className='div-td-inputs-table'>{div}</div></td>);
                                                                                                 } else {
-                                                                                                    return (<td className="td-table-print" key={index}><h4 className='table-attribute-no-registra'>{referenciaProcedure}</h4></td>);
+                                                                                                    return (<td className="td-table-print" key={"td" + keys + index}><h4 className='table-attribute-no-registra'>{referenciaProcedure}</h4></td>);
                                                                                                 }
                                                                                             }
                                                                                         }

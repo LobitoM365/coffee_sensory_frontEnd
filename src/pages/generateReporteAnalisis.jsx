@@ -27,9 +27,7 @@ export const GenerateReporteAnalisis = (data) => {
     const [statusReporte, setStatusReporte] = useState(false);
     const [statusPermission, setStatusPermission] = useState(false);
     useEffect(() => {
-        console.log(data.userInfo, "infooooooooooooo")
         if (data.userInfo) {
-
             if (data.userInfo.rol == "administrador") {
                 setStatusPermission(true)
             } else {
@@ -272,7 +270,6 @@ export const GenerateReporteAnalisis = (data) => {
                             }
                         }
                         const resultado = await Api.post("resultado/buscar/not", filterResultado);
-                        console.log(resultado, "formaaaaaaaaaaaaaaa")
                         if (resultado.data.status == true) {
 
                             const promedio = {};
@@ -774,7 +771,7 @@ export const GenerateReporteAnalisis = (data) => {
             textAlign: "center"
         },
         marginTopSeparate: {
-            paddingTop: '100px',
+            paddingTop: '80px',
             margin: 0
         },
     });

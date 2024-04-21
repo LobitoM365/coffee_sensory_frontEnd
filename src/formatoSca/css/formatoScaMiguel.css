@@ -715,10 +715,67 @@ body {
     background-color: orange !important;
 }
 
-.darkMode #contenidoFormatoSca{
+.darkMode #contenidoFormatoSca {
     color: white;
-    
+
 }
-.darkMode #contenidoFormatoSca .linea6{
+
+.darkMode #contenidoFormatoSca .linea6 {
     background-color: rebeccapurple;
+}
+
+.darkMode .formato-sca {
+    border-color: white;
+}
+
+.darkMode {
+    color: white;
+}
+
+.darkMode .nivel-tostion {
+    border-color: white;
+}
+
+.darkMode .guia-range-item>div {
+    background-color: white;
+}
+
+.darkMode .puntaje-item {
+    border-color: white;
+}
+
+.darkMode .cuadro-select {
+    border-color: white;
+}
+
+.darkMode .fragancia-aroma,
+.darkMode .sabor,
+.darkMode .sabor-residual,
+.darkMode .acidez,
+.darkMode .cuerpo,
+.darkMode .uniformidad,
+.darkMode .balance,
+.darkMode .taza-limpia,
+.darkMode .dulzor,
+.darkMode .puntaje-catador,
+.darkMode .defectos,
+.darkMode .notas-final,
+.darkMode .item-puntaje-final,
+.darkMode .div-puntaje2-calidad-area-intensidad,
+.darkMode .div-puntaje1-calidad-area-intensidad,
+.darkMode .tazas-defectos {
+    border-color: white;
+}
+
+.darkMode .focus-cuadro-select {
+    background-color: white;
+}
+
+.darkMode .guia-range-item .value-range-item {
+    background-color: rgba(165, 165, 165, 0.392);
+}
+
+.darkMode input,
+.darkMode textarea {
+    color: white;
 }

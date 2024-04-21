@@ -233,6 +233,8 @@
     display: grid;
     grid-template-columns: 900px 1fr;
     gap: 90px;
+    overflow: hidden;
+    max-width: 100%;
 }
 
 #mainAnalisis .div-content-asignar {
@@ -347,6 +349,7 @@
 #mainAnalisis .input-cantidad-formatos:focus {
     overflow: none;
 }
+
 #mainAnalisis .input-cantidad-formatos {
     width: 70px;
     padding: 10px 20px;
@@ -444,11 +447,12 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
 }
 
 #mainAnalisis .button-users-formatos,
 .h4-estado-formato-asing {
-    padding: 10px 20px;
+    padding: 10px 15px;
     border: unset;
     color: white;
     border-radius: 4px;
@@ -457,8 +461,20 @@
     font-size: 1em;
 }
 
+#mainAnalisis .div-muestra-asing .filter-estado {
+    max-width: 500px;
+}
+
+#mainAnalisis .div-muestra-asing {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
 #mainAnalisis .h4-estado-formato-asing {
-    padding: 7.5px 20px;
+    /* padding: 7.5px 20px; */
     width: max-content;
     cursor: unset;
 }

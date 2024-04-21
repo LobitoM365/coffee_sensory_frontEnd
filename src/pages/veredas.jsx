@@ -117,7 +117,6 @@ export const Veredas = () => {
 
 
     async function getMunicipios(data) {
-        console.log('MINCIPIOS EXCUTE: ', data);
         try {
             let filterReport = {
                 "filter": {
@@ -141,7 +140,6 @@ export const Veredas = () => {
                     municipios["municipios_id"] = {}
                 }
                 municipios["municipios_id"]["opciones"] = response.data.data
-                console.log("MUNICIPIOS GET: ", municipios)
                 setInputsForm(municipios)
             } else if (response.data.find_error) {
                 if (municipios["municipios_id"]) {
@@ -169,7 +167,6 @@ export const Veredas = () => {
                 }
             }
             const response = await Api.post("municipio/listar", filterReport);
-            console.log(response, filterReport)
             if (response.data.status == true) {
                 let depPdf = inputsDocumento
                 depPdf.municipios_id.inputs.municipios_id["opciones"] = response.data.data
@@ -200,7 +197,6 @@ export const Veredas = () => {
                 }
             }
             const response = await Api.post("veredas/listar", filterReport);
-            console.log('VEREDAS: ', response);
             let veredas = inputsForm;
 
             if (response.data.status == true) {
@@ -492,14 +488,15 @@ export const Veredas = () => {
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
+        if (data["valueSearch"] != undefined) {
+            dataFilterTable.filter["search"] = data["valueSearch"]
+        }
         getVariedades()
-
     }
     async function buscarFinca(id) {
 
         const response = await Api.post("veredas/buscar/" + id);
         if (response.data.status == true) {
-            console.log(response.data.data[0], "veeeeeeeeeeeeeeee")
             setVariedadEdit(response.data.data[0])
             if (response.data.data[0].departamentos_id) {
                 getMunicipios(response.data.data[0].departamentos_id)
@@ -584,7 +581,6 @@ export const Veredas = () => {
             cloneDataFilterTable["filter"]["date"]["ve.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
-            console.log("ahhh")
             cloneDataFilterTable["filter"]["date"]["ve.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
             if (cloneDataFilterTable["filter"]["date"]["ve.fecha_creacion"]) {
@@ -631,9 +627,6 @@ export const Veredas = () => {
                 }
             }
         }
-
-        console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
-
         setDataFilterTable(cloneDataFilterTable)
         getVariedades()
 
@@ -703,16 +696,38 @@ export const Veredas = () => {
             setdataAlert(
                 {
                     status: "false",
-                    description: "Error interno del servidor: " + error,
+                    description: "Error interno del servidor: Inténtalo más tarde.",
                     "tittle": "Inténtalo de nuevo"
                 }
             )
 
         }
     }
+    async function clearFilters(data) {
+        dataFilterTable = {
+            "filter": {
+                "where": {
+
+                },
+                "limit": {
+                    "inicio": 0,
+                    "fin": 10
+                }
+            }
+        }
+        if (typeof data == "object") {
+            if (data.inicio) {
+                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            }
+            if (data.fin) {
+                dataFilterTable.filter["limit"]["fin"] = data.fin
+            }
+        }
+        getVariedades()
+    }
     return (
         <>
-            <Tablas getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Vereda"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} hidden={'status'} />
+            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Vereda"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} hidden={'status'} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

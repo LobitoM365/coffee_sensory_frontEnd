@@ -25,7 +25,6 @@ export const GeneratePdfTable = () => {
     }
 
     useEffect(() => {
-        console.log(data)
         if (data) {
             if (!data.data && !data.table) {
                 window.close()

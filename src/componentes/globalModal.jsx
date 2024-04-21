@@ -12,8 +12,15 @@ export const GlobalModal = forwardRef((data, ref) => {
     function resizeForm() {
         if (typeModal) {
             if (modalRef.current != null) {
+                if (modalRef.current.parentNode) {
+                    if (modalRef.current.parentNode.style.display == "none") {
+                        modalRef.current.parentNode.style.display = "unset"
+                    }
+                }
                 let modalForm = modalRef.current;
                 const divContentForm = modalRef.current.querySelector('.div-content-form');
+
+
                 if (modalForm) {
                     let displayNone = false;
                     if (modalForm.style.display == "none") {
@@ -34,6 +41,11 @@ export const GlobalModal = forwardRef((data, ref) => {
                     }
                     if (displayNone) {
                         modalForm.style.display = "none"
+                    }
+                }
+                if (modalRef.current.parentNode) {
+                    if (modalRef.current.parentNode.style.display == "unset") {
+                        modalRef.current.parentNode.style.display = "none"
                     }
                 }
             }
@@ -62,34 +74,31 @@ export const GlobalModal = forwardRef((data, ref) => {
         }
     }, [])
     useEffect(() => {
+
         if (modalRef.current != null) {
-            setTimeout(() => {
-                resizeForm()
-            }, 100);
-
-
+            /*             setTimeout(() => {
+                            resizeForm()
+                        }, 100); */
             resizeForm()
             window.addEventListener("resize", resizeForm)
             return () => {
                 window.removeEventListener("resize", resizeForm)
             }
+
         }
-    }, [modalRef.current])
+    }, [divContentFormRef.current])
     useEffect(() => {
         resizeForm()
-    }, [data.content])
+    }, [data.content, typeModal])
 
 
     return (
         <>
             {typeModal ?
-
-
                 <div onClick={(e) => {
                     if (divContentFormRef.current != null) {
                         if (e.target != divContentFormRef.current && !divContentFormRef.current.contains(e.target)) {
                             if (data.statusModal) {
-
                                 if (data.execute) {
                                     if (data.execute == "normal") {
                                         data.statusModal(e)

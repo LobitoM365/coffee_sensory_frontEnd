@@ -7,7 +7,6 @@ export const Socket = (event, excute) => {
     useEffect(() => {
         // Escuchar el evento desde el backend
         const handleEvent = (data) => {
-            console.log('Funcion ejecutada');
             excute();
         }
 

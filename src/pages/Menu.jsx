@@ -71,16 +71,15 @@ export const Menu = (data) => {
                         }, audio.duration * 1000);
                     });
                 }
-                if (message) {
-                    if (Array.isArray(message)) {
-                        /* setAsignaciones(prevState => [...prevState, message]) */
-                        setAsignaciones([])
-                        setLimitNoticaciones(0)
-                        getAsignaciones()
-                    }
-                }
-
-                /* getAsignaciones(); */
+                setStatusLoader(prevState => {
+                    const clonePrevState = { ...prevState };
+                    clonePrevState["div_notificaciones"] = false
+                    return clonePrevState
+                })
+                setAsignaciones([])
+                setLimitNoticaciones(0)
+                setCantidadNotificaciones(0)
+                getAsignaciones()
             };
 
             data.socket.on('perfilChange', perfilChange);
@@ -96,7 +95,7 @@ export const Menu = (data) => {
                 data.socket.off('asignAnalisis', asignAnalisis);
             };
         }
-    }, [data.socket, asignaciones]);
+    }, [data.socket]);
 
     useEffect(() => {
         if (divNotificaciones.current) {
@@ -106,25 +105,22 @@ export const Menu = (data) => {
                         divNotificaciones.current.removeEventListener("scroll", scrollNotificaciones)
                     }
                 } else {
-                    if (statusLoader["div_notificaciones"] == false || "disconnect") {
+                    if (statusLoader["div_notificaciones"] == false || statusLoader["div_notificaciones"] == "disconnect") {
+
                         if ((Math.floor(e.target.scrollHeight) - Math.floor(e.target.clientHeight)) - Math.floor(e.target.scrollTop) <= 30) {
                             getAsignaciones()
                         }
                     }
                 }
             }
-            /* if (limitNotificaciones != false) { */
             divNotificaciones.current.addEventListener("scroll", scrollNotificaciones)
-            /* } */
             return () => {
                 if (divNotificaciones.current) {
                     divNotificaciones.current.removeEventListener("scroll", scrollNotificaciones)
                 }
             }
         }
-
-    }, [divNotificaciones.current, limitNotificaciones, statusLoader])
-    // console.log("DATA OC", data.socket);
+    }, [divNotificaciones.current, limitNotificaciones])
 
     const [pageLoad, setPageLoad] = useState({});
     const [queryMenu, setQueryMenu] = useState(document.body.scrollWidth <= 610 ? true : false)
@@ -165,14 +161,17 @@ export const Menu = (data) => {
                 /*     if (divNotificaciones.current) {
                         divNotificaciones.current.scrollTop = divNotificaciones.current.scrollHeight + 100
                     } */
-                let newLimit = limitNotificaciones;
-                newLimit = newLimit + 5
+
                 const filterFormato = {
                     "filter": {
                         "where": {
                             "forma.estado": {
                                 "value": 4,
                                 "operador": "!=",
+                                "require": "and"
+                            },
+                            "an.proceso": {
+                                "value": "certificar",
                                 "require": "and"
                             }
                         },
@@ -181,6 +180,9 @@ export const Menu = (data) => {
                                 "value": "desc"
                             }, */
                             "fecha_actualizacion": {
+                                "value": "desc"
+                            },
+                            "forma_id": {
                                 "value": "desc"
                             }
                         },
@@ -193,23 +195,21 @@ export const Menu = (data) => {
                 if (Array.isArray(asignaciones)) {
                     const response = await Api.post("formatos/listarPendientes", filterFormato);
                     if (response.data.status == true) {
-                        setLimitNoticaciones(limitNotificaciones + 5)
+                        setCantidadNotificaciones(response.data.count);
+                        setAsignaciones(prevElementos => [...prevElementos, ...response.data.data]);
+                        setLimitNoticaciones(limitNotificaciones + 5);
                         setStatusLoader(prevState => {
                             const clonePrevState = { ...prevState };
                             clonePrevState["div_notificaciones"] = false
                             return clonePrevState
-                        })
-                        /* limitNotificaciones = limitNotificaciones + 5 */
-                        /* limitNotificaciones = limitNotificaciones + 5 */
-                        setAsignaciones(prevElementos => [...prevElementos, ...response.data.data])
-                        setCantidadNotificaciones(response.data.count)
+                        });
                     } else {
-                        setLimitNoticaciones(false)
+                        setLimitNoticaciones(false);
                         setStatusLoader(prevState => {
                             const clonePrevState = { ...prevState };
                             clonePrevState["div_notificaciones"] = false
                             return clonePrevState
-                        })
+                        });
                     }
                 }
             }
@@ -218,11 +218,22 @@ export const Menu = (data) => {
                 const clonePrevState = { ...prevState };
                 clonePrevState["div_notificaciones"] = "disconnect"
                 return clonePrevState
-            })
+            });
         }
     }
 
     useEffect(() => {
+        window.addEventListener("resize", function (event) {
+            if (document.body.scrollWidth <= 500) {
+                if (statusLoader["div_notificaciones"] != true) {
+                    setStatusLoader(prevState => {
+                        const clonePrevState = { ...prevState };
+                        clonePrevState["div_notificaciones"] = false
+                        return clonePrevState
+                    });
+                }
+            }
+        })
         window.addEventListener("click", function (event) {
             let divSelect = document.querySelectorAll(".div-select")
             let optionsInputs = document.querySelectorAll(".opciones-input-select")
@@ -237,10 +248,12 @@ export const Menu = (data) => {
         window.addEventListener("click", function (event) {
             let divSelect = document.querySelectorAll(".father-div-modal")
             let optionsInputs = document.querySelectorAll(".child-div-modal")
-            for (let o = 0; o < divSelect.length; o++) {
-                if (event.target !== divSelect[o] && !divSelect[o].contains(event.target)) {
-                    if (optionsInputs[o]) {
-                        optionsInputs[o].style.display = "none"
+            if (event.target.getAttribute("id") != "mainAlert" && !event.target.closest("#mainAlert")) {
+                for (let o = 0; o < divSelect.length; o++) {
+                    if (event.target !== divSelect[o] && !divSelect[o].contains(event.target)) {
+                        if (optionsInputs[o]) {
+                            optionsInputs[o].style.display = "none"
+                        }
                     }
                 }
             }
@@ -259,15 +272,18 @@ export const Menu = (data) => {
         }
     }
 
-    /*     useEffect(() => {
-            if (queryMenu) {
-                stateMenu()
-                setHamburguerMode(0)
-            }
-        }, [queryMenu, hamburguerMode]) */
+
     useEffect(() => {
-        getAsignaciones();
-    }, [])
+        if (responseValidate) {
+            if (responseValidate.data) {
+                if (responseValidate.data.user) {
+                    if (responseValidate.data.user.rol == "catador" && (responseValidate.data.user.cargo == "instructor" || responseValidate.data.user.cargo == "aprendiz")) {
+                        getAsignaciones();
+                    }
+                }
+            }
+        }
+    }, [responseValidate])
     useEffect(() => {
         getUser();
     }, [responseValidate])
@@ -277,15 +293,7 @@ export const Menu = (data) => {
         data.changeDarkMode(!data.valueDarkMode)
         localStorage.setItem("darkMode", !data.valueDarkMode)
     }
-    /*   async function obtenerNotificaciones() {
-          try {
-              const response = await Api.put("/analisis/cambiarEstado");
-              getAsignaciones()
-          } catch (e) {
-  
-          }
-  
-      } */
+
     function verNotificaciones() {
         changeModalPerfil(false)
         changeModalNotificaciones(!modalNotificaciones)
@@ -563,7 +571,6 @@ export const Menu = (data) => {
 
 
             return () => {
-                /* alert("d") */
                 if (refModalConfiguracionFormatoFisico) {
                     if (refModalConfiguracionFormatoFisico.current) {
                         refModalConfiguracionFormatoFisico.current.removeEventListener("mousedown", mouseDownFunction)
@@ -634,7 +641,6 @@ export const Menu = (data) => {
                 div.classList.add("div-input-operar")
                 div.innerHTML = '<div class="" style="top: 471.5px; left: 624.5px;"><div class="item-operador-formula"></div><h4 class="h4-variable-formula signo-formula" data-signo="' + variable["nombre"] + '">V_' + (index + 1) + '</h4></div>';
                 divCrearFormula.current.appendChild(div)
-                console.log(divCrearFormula.current, "cureeeeeeeeeeeeeeeeeeeeeeeeeeent")
                 /* evaluarFormula() */
             }
         }
@@ -642,8 +648,6 @@ export const Menu = (data) => {
     pageLoad[locationPath.pathname] = false
 
     function evaluarFormula() {
-        console.log(divCrearFormula.current, "cureeeeeeeeeeeeeeeeeeeeeeeeeeent")
-
         if (divEvaluarFormula.current != null) {
             if (divLLenarCamporFormulario) {
                 if (divLLenarCamporFormulario.current) {
@@ -1010,7 +1014,7 @@ export const Menu = (data) => {
 
         if (queryMenu == true) {
             if (navHorizontal) {
-                navHorizontal.style.height = "calc(100% - " + (navVertical.scrollHeight + "px") + " - " + (document.body.scrollWidth <= 140 ? 10 + "vw" : 50 + "px") + ")"
+                navHorizontal.style.height = "calc(100% - " + (navVertical.clientHeight + "px") + " - " + (document.body.scrollWidth <= 140 ? 10 + "vw" : 50 + "px") + ")"
                 navHorizontal.style.width = "100%"
             }
             if (navVertical) {
@@ -1046,6 +1050,8 @@ export const Menu = (data) => {
     useEffect(() => {
         if (refIconHamburguer.current) {
             function resizeMenuFunction() {
+
+
                 let divHeaderNav = document.getElementById("divHeaderNav")
                 let navVertical = document.getElementById("navVertical");
                 let headerNav = document.getElementById("headerNav");
@@ -1054,8 +1060,9 @@ export const Menu = (data) => {
                 let hamburguerCentered = document.querySelectorAll(".hamburguer-centered");
 
                 if (document.body.scrollWidth <= 610) {
+
                     if (navHorizontal) {
-                        navHorizontal.style.height = "calc(100% - " + (navVertical.scrollHeight + "px") + " - " + (document.body.scrollWidth <= 140 ? 10 + "vw" : 50 + "px") + ")"
+                        navHorizontal.style.height = "calc(100% - " + (navVertical.clientHeight + "px") + " - " + (document.body.scrollWidth <= 140 ? 10 + "vw" : 50 + "px") + ")"
                     }
                     if (queryMenu == false) {
                         if (divHeaderNav && navVertical) {
@@ -1112,12 +1119,11 @@ export const Menu = (data) => {
                 window.removeEventListener("resize", resizeMenuFunction)
             }
         }
-    }, [refIconHamburguer.current, hamburguerMode, queryMenu])
+    }, [refIconHamburguer, hamburguerMode, queryMenu])
 
 
     // Panel de configuración para Codigo Muestra y Codigo Informe
     const configCodigosMuestra = async () => {
-        console.log('XXXXXXXXXXXXXXXXXXXXXXX');
         try {
             const filter = {
                 "filter": {
@@ -1140,7 +1146,6 @@ export const Menu = (data) => {
             const cloneGlobalInputEdit = { ...globalInputEdit };
             cloneGlobalInputEdit['codigo_muestra'] = response.data.data[0].valor
             cloneGlobalInputEdit['codigo_informe'] = response.data.data[1].valor
-            console.log('CONF: ', response.data.data);
             setGlobalInputEdit(cloneGlobalInputEdit);
             setModalConfiguracionCodigos(true)
 
@@ -1152,33 +1157,29 @@ export const Menu = (data) => {
     const updateCodigosConf = async () => {
         try {
             const cloneConfigData = [...configCode];
-
             cloneConfigData[0]['valor'] = globalInputsValue.codigo_muestra;
             cloneConfigData[1]['valor'] = globalInputsValue.codigo_informe;
-
-            console.log(configCode);
-
             const resp = await Api.put('/configGeneral/update', cloneConfigData)
-            console.log('UPDATE CODES: ', resp);
         } catch (error) {
             console.log('UPDATE CODES ERORORROR: ', error);
-
         }
     }
     async function closeModalAvanzado(e) {
-
         if (e) {
-
             let divModal;
-
             if (e.target.closest(".child-div-modal")) {
-                divModal = e.target.closest(".child-div-modal")
+                divModal = e.target.closest(".child-div-modal");
             } else if (e.target.querySelectorAll(".child-div-modal").length > 0) {
-                divModal = e.target.querySelectorAll(".child-div-modal")[0]
+                divModal = e.target.querySelectorAll(".child-div-modal")[0];
             } else if (e.target.parentNode.querySelectorAll(".child-div-modal").length > 0) {
-                divModal = e.target.parentNode.querySelectorAll(".child-div-modal")[0]
+                divModal = e.target.parentNode.querySelectorAll(".child-div-modal")[0];
+            } else if (e.target.closest(".father-div-modal")) {
+                if (e.target.closest(".father-div-modal").parentNode) {
+                    if (e.target.closest(".father-div-modal").parentNode.querySelectorAll(".child-div-modal")) {
+                        divModal = e.target.closest(".father-div-modal").parentNode.querySelectorAll(".child-div-modal")[0];
+                    }
+                }
             }
-
             if (divModal) {
                 divModal.style.display = divModal.style.display == "none" || divModal.style.display == "" ? "block" : "none"
             }
@@ -1187,17 +1188,10 @@ export const Menu = (data) => {
             if (divAvanzado) {
                 divAvanzado.style.display = divAvanzado.style.display == "none" || divAvanzado.style.display == "" ? "block" : "none"
             }
-
         }
     }
-    useEffect(() => {
-        if (data.valueDarkMode) {
-            let formatoSca = document.querySelectorAll(".iframe-formato-sca");
-            for (let x = 0; x < formatoSca.length; x++){
-                formatoSca[x].classList.add("darkMode")
-            }
-        }
-    }, [data.valueDarkMode])
+
+
     return (
 
         <div>
@@ -1208,7 +1202,7 @@ export const Menu = (data) => {
                         <div className="div-img-nav">
                             <img className="logo-menu" src="/img/logoENCC.png" alt="" />
 
-                            <img className="img-nav" src={!data.valueDarkMode ? "/img/fondoMenuVertical2.webp" : "/public/img/imgDarkMenu.jpg"} alt="" />
+                            <img className="img-nav" src={!data.valueDarkMode ? "/img/fondoMenuVertical2.webp" : "/public/img/imgDarkMenu (2).jpg"} alt="" />
 
                         </div>
                         {!queryMenu ?
@@ -1408,7 +1402,7 @@ export const Menu = (data) => {
                                         </svg>
 
                                     </div>
-                                    <h4 className="change-hamburguer-quit">Dark Mode</h4>
+                                    <h4 className="change-hamburguer-quit">{data.valueDarkMode ? "Dark Mode" : "Light Mode"}</h4>
                                     <div className="change-hamburguer-quit toogle-footer-nav-horizontal">
                                         <div style={{ marginLeft: !data.valueDarkMode ? "0%" : "calc(100% - 20px)" }} className="circle-footer-nav-horizontal"></div>
                                     </div>
@@ -1530,7 +1524,7 @@ export const Menu = (data) => {
                                                 <GlobalModal execute={"normal"} statusModal={closeModalAvanzado} active={{ "width": 300 }}
                                                     content={
                                                         <div>
-                                                            <div className="esquina-opciones-usuario"></div>
+                                                            {/* <div className="esquina-opciones-usuario"></div> */}
                                                             <div className="contenido-opciones-usuario">
 
                                                                 <div className="opciones-usuario">
@@ -1576,75 +1570,88 @@ export const Menu = (data) => {
                                     {asignaciones.length > 0 && asignaciones ? <div className="cantidad-notificaciones"> {cantidadNotificaciones > 9 ? "9+" : cantidadNotificaciones} </div> : ""
                                     }
                                     <div className="secccion-notificaciones">
-                                        <svg onClick={(e) => { /* obtenerNotificaciones() */; /* verNotificaciones() */
-                                            const father = e.target.closest(".secccion-notificaciones");
-                                            if (father) {
-                                                let divChild = father.querySelector(".child-div-modal")
-                                                if (divChild) {
-                                                    divChild.style.display == "block" ? divChild.style.display = "none" : divChild.style.display = "block"
-                                                }
-                                            }
+                                        <svg onClick={(e) => {
+                                            closeModalAvanzado(e)
                                         }} className="father-div-modal h-6 w-6 icono-notificaciones" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"></path>
                                         </svg>
+
                                         <div style={{ display: "none" }}/* style={{ display: !modalNotificaciones ? "none" : "" }} */ className="child-div-modal">
-                                            <div className="esquina-notificaciones"></div>
-                                            <div className="contenido-notificaciones">
-                                                <div className="header-notificaciones">
-                                                    <h4 className="titulo-notififcaciones">Lista de análisis por registrar</h4>
-                                                    <div onClick={verNotificaciones} className="quit-notificaciones">
-                                                        X
+                                            {/* <div className="esquina-notificaciones"></div> */}
+                                            <GlobalModal execute={"normal"} statusModal={closeModalAvanzado} active={{ "width": 500 }} content={
+                                                <div className="contenido-notificaciones">
+                                                    <div className="header-notificaciones">
+                                                        <h4 className="titulo-notififcaciones">Lista de análisis por registrar</h4>
+                                                        <div onClick={verNotificaciones} className="quit-notificaciones">
+                                                            X
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="contenido-analisis">
-                                                    <div ref={divNotificaciones} className="asignaciones-notificaciones">
+                                                    <div className="contenido-analisis">
+                                                        <div ref={divNotificaciones} className="asignaciones-notificaciones">
 
-                                                        {asignaciones.length > 0 ? (
+                                                            {asignaciones.length > 0 ? (
 
-                                                            asignaciones.map((asignacion, value) => {
-                                                                let procedureNormal = true
-                                                                if (asignacion.proceso && asignacion.estado) {
-                                                                    if (asignacion.proceso == "practica" && asignacion.estado == 5) {
-                                                                        procedureNormal = false
+                                                                asignaciones.map((asignacion, value) => {
+                                                                    let procedureNormal = true
+                                                                    if (asignacion.proceso && asignacion.estado) {
+                                                                        if (asignacion.proceso == "practica" && asignacion.estado == 5) {
+                                                                            procedureNormal = false
+                                                                        }
                                                                     }
-                                                                }
-                                                                if (procedureNormal == true) {
-                                                                    return <div key={asignacion.id} className="notificacion-analisis">
-                                                                        <div className="informacion-analisis">
-                                                                            <div>
-                                                                                <div className="container-data">
-                                                                                    <h4>Formato: {asignacion.id ? asignacion.id : ""}</h4>
-                                                                                    <h4>Análisis: {asignacion.tipos_analisis_id == 1 ? 'Fisico' : 'Sensorial'}</h4>
-                                                                                    <h4>Asignado: {formatDate(asignacion.fecha_creacion)}</h4>
-                                                                                    <h4 className="h4-informacion-notificacion-analisis">
-                                                                                        Estado: <span className={`${asignacion.estado == 2 ? "pendiente" : asignacion.estado == 3 ? "asignado" : asignacion.estado == 5 ? "registrado" : asignacion.estado == 6 ? "rechazado" : ""}`}>{asignacion.estado == 2 ? "Pendiente" : asignacion.estado == 3 ? "Asignado" : asignacion.estado == 5 ? "Registrado" : asignacion.estado == 6 ? "Rechazado" : ""}</span></h4>
-                                                                                    <h4>Cd. Muestra: {asignacion.codigo_externo}</h4>
+                                                                    if (procedureNormal == true) {
+                                                                        return <div key={asignacion.id} className="notificacion-analisis">
+                                                                            <div className="informacion-analisis">
+                                                                                <div>
+                                                                                    <div className="container-data">
+                                                                                        <div className="div-info-notificaciones-text">
+                                                                                            <h4 className="title-info-notificaciones-text">Formato:</h4>
+                                                                                            <h4 className="value-info-notificaciones-text">{asignacion.id ? asignacion.id : ""}</h4>
+                                                                                        </div>
+                                                                                        <div className="div-info-notificaciones-text">
+                                                                                            <h4 className="title-info-notificaciones-text">Análisis:</h4>
+                                                                                            <h4 className="value-info-notificaciones-text"> {asignacion.tipos_analisis_id == 1 ? 'Fisico' : 'Sensorial'}</h4>
+                                                                                        </div>
+                                                                                        <div className="div-info-notificaciones-text">
+                                                                                            <h4 className="title-info-notificaciones-text">Asignado:</h4>
+                                                                                            <h4 className="value-info-notificaciones-text">{formatDate(asignacion.fecha_creacion)}</h4>
+                                                                                        </div>
+                                                                                        <div className="div-info-notificaciones-text">
+                                                                                            <h4 className="h4-informacion-notificacion-analisis title-info-notificaciones-text">
+                                                                                                Estado: </h4>
+                                                                                            <h4><span className={`${asignacion.estado == 2 ? "pendiente" : asignacion.estado == 3 ? "asignado" : asignacion.estado == 5 ? "registrado" : asignacion.estado == 6 ? "rechazado" : ""}`}>{asignacion.estado == 2 ? "Pendiente" : asignacion.estado == 3 ? "Asignado" : asignacion.estado == 5 ? "Registrado" : asignacion.estado == 6 ? "Rechazado" : ""}</span></h4>
+                                                                                        </div>
+                                                                                        <div className="div-info-notificaciones-text">
+                                                                                            <h4 className="title-info-notificaciones-text">Cd. Muestra:</h4>
+                                                                                            <h4 className="value-info-notificaciones-text">{asignacion.codigo_externo}</h4>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div className="div-img-analisis">
+                                                                                        {asignacion.tipos_analisis_id == 2 ?
+                                                                                            <img className="img-analisis" src="../../public/img/iconoAnalisisSeonsorial.png" alt="" />
+                                                                                            :
+                                                                                            <img className="img-analisis" src="../../public/img/iconoAnalisisFisico.png" alt="" />
+                                                                                        }
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div className="img-analisis">
-                                                                                    {asignacion.tipos_analisis_id == 2 ?
-                                                                                        <img className="img-analisis" src="../../public/img/iconoAnalisisSeonsorial.png" alt="" />
-                                                                                        :
-                                                                                        <img className="img-analisis" src="../../public/img/iconoAnalisisFisico.png" alt="" />
-                                                                                    }
-                                                                                </div>
+                                                                                <button onClick={() => { localStorage.setItem("formatos_id", asignacion.id); localStorage.setItem("tipos_analisis_id", asignacion.tipos_analisis_id), location.href = "/dashboard/formatos/registros" }} className="input-proceder-analisis">Proceder</button>
                                                                             </div>
-                                                                            <button onClick={() => { localStorage.setItem("formatos_id", asignacion.id); localStorage.setItem("tipos_analisis_id", asignacion.tipos_analisis_id), location.href = "/dashboard/formatos/registros" }} className="input-proceder-analisis">Proceder</button>
                                                                         </div>
-                                                                    </div>
-                                                                }
-                                                            })
+                                                                    }
+                                                                })
 
-                                                        ) : <h4 className="h4-notificaciones-vacias">No hay análisis pendientes por realizar</h4>}
-                                                        {statusLoader ? statusLoader["div_notificaciones"] ?
-                                                            <div className="notificaicones div-loader-notificaciones">
-                                                                <div className="loader-div">
+                                                            ) : <h4 className="h4-notificaciones-vacias">No hay análisis pendientes por realizar</h4>}
+                                                            {statusLoader ? statusLoader["div_notificaciones"] ?
+                                                                <div className="notificaicones div-loader-notificaciones">
+                                                                    <div className="loader-div">
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            : "" : ""
-                                                        }
+                                                                : "" : ""
+                                                            }
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            }
+                                            />
                                         </div>
                                     </div>
 

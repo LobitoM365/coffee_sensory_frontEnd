@@ -53,12 +53,12 @@ export const Variedades = () => {
     const keys = {
         "vari_id": {
             "referencia": "Id",
-            "priority" : 2 
+            "priority": 2
         },
         "nombre": {
             "referencia": "Nombre",
             "upper_case": true,
-            "priority" : 1
+            "priority": 1
         },
         "fecha_creacion": {
             "referencia": "Fecha creación",
@@ -317,8 +317,10 @@ export const Variedades = () => {
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
+        if (data["valueSearch"] != undefined) {
+            dataFilterTable.filter["search"] = data["valueSearch"]
+        }
         getVariedades()
-
     }
     async function buscarFinca(id) {
 
@@ -380,12 +382,10 @@ export const Variedades = () => {
         if (!dataFilterTable["filter"]["order"]) {
             cloneDataFilterTable["filter"]["order"] = {}
         }
-        console.log(cloneDataFilterTable, "cloooooooooooooooooon")
         if (!cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"]) {
             cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
-            console.log("ahhh")
             cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
             if (cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"]) {
@@ -402,10 +402,6 @@ export const Variedades = () => {
                 cloneDataFilterTable["filter"]["date"]["var.fecha_creacion"]
             }
         }
-
-        
-        console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
-
         setDataFilterTable(cloneDataFilterTable)
         getVariedades()
 
@@ -475,16 +471,38 @@ export const Variedades = () => {
             setdataAlert(
                 {
                     status: "false",
-                    description: "Error interno del servidor: " + error,
+                    description: "Error interno del servidor: Inténtalo más tarde.",
                     "tittle": "Inténtalo de nuevo"
                 }
             )
 
         }
     }
+    async function clearFilters(data) {
+        dataFilterTable = {
+            "filter": {
+                "where": {
+
+                },
+                "limit": {
+                    "inicio": 0,
+                    "fin": 10
+                }
+            }
+        }
+        if (typeof data == "object") {
+            if (data.inicio) {
+                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            }
+            if (data.fin) {
+                dataFilterTable.filter["limit"]["fin"] = data.fin
+            }
+        }
+        getVariedades()
+    }
     return (
         <>
-            <Tablas getAvanzado={getAvanzado} generatePdf={generatePdf} dataDocumento={inputsDocumento} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Variedad"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} hidden={'status'} />
+            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} generatePdf={generatePdf} dataDocumento={inputsDocumento} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Variedad"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} hidden={'status'} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

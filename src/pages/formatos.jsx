@@ -131,6 +131,14 @@ export const Formatos = (userInfo) => {
                         upper_case: true,
                         key: "value"
                     },
+                    estado_analisis: {
+                        type: "select",
+                        referencia: "Estado del análisis",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "aprobado", value: "7" }, { nombre: "pendiente", value: "2" }, { nombre: "finalizado", value: "4" }],
+                        upper_case: true,
+                        key: "value"
+                    },
                 },
                 referencia: "Filtrar por estado"
             },
@@ -413,7 +421,7 @@ export const Formatos = (userInfo) => {
             },
             "upper_case": true
         },
-        "forma_tipos_analisis_id": {    
+        "forma_tipos_analisis_id": {
             "referencia": "Formato",
             "conditions": {
                 "1": {
@@ -514,6 +522,55 @@ export const Formatos = (userInfo) => {
                         "element": {
                             "type": "free",
                             "element": <h4 className="estado-no-pointer estado-0">Inactivo</h4>,
+                        }
+                    },
+                },
+                "default": {
+                    "type": "button",
+                    "referencia": "Ver"
+                }
+            },
+            "upper_case": true
+        },
+        "estado_analisis": {
+            "referencia": "Estado del análisis",
+            "normal": true,
+            "conditions": {
+                "inputs": {
+                    "2": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-table estado-no-pointer estado-2">Pendiente</h4>,
+                        }
+                    },
+                    "4": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-table estado-no-pointer estado-4">Finalizado</h4>,
+                        }
+                    },
+                    "7": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-no-pointer estado-7">Aprobado</h4>,
+                        }
+                    },
+                    "1": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-table estado-no-pointer estado-1">Activo</h4>,
+                        }
+                    },
+                    "0": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-table estado-no-pointer estado-0">Inactivo</h4>,
+                        }
+                    },
+                    "0": {
+                        "element": {
+                            "type": "free",
+                            "element": <h4 className="estado-table estado-no-pointer estado-0">Inactivo</h4>,
                         }
                     },
                 },
@@ -998,8 +1055,10 @@ export const Formatos = (userInfo) => {
 
     }
     async function limitRegisters(data) {
-        console.log(data, "filteeeeeeeeer")
         dataFilterTable.filter["limit"] = data
+        if (data["valueSearch"] != undefined) {
+            dataFilterTable.filter["search"] = data["valueSearch"]
+        }
         getAnalisis()
     }
     async function clearInputs() {
@@ -1007,7 +1066,6 @@ export const Formatos = (userInfo) => {
             inputsForm["usuario_formato_sca"]["visibility"] = true
             inputsForm["usuario_formato_fisico"]["visibility"] = true
         }
-
     }
     async function buscarUsuario(id) {
         inputsForm["usuario_formato_sca"]["visibility"] = false
@@ -1276,7 +1334,6 @@ export const Formatos = (userInfo) => {
         delete cloneTable["estado_formato"]
         delete cloneTable["forma_tipos_analisis_id"]
         delete cloneTable["tipos_analisis_id"]
-        console.log(cloneTable, "tableeeeeeeeeee")
         const dataGeneratePdf = {
             "dataTable": usuarios,
             "filter": dataFilterTable,
@@ -1338,7 +1395,7 @@ export const Formatos = (userInfo) => {
             setdataAlert(
                 {
                     status: "false",
-                    description: "Error interno del servidor: " + error,
+                    description: "Error interno del servidor: Inténtalo más tarde.",
                     "tittle": "Inténtalo de nuevo"
                 }
             )
@@ -1347,7 +1404,6 @@ export const Formatos = (userInfo) => {
     }
 
     async function getAvanzado(tipo, filter) {
-
         const cloneDataFilterTable = { ...dataFilterTable }
         if (!dataFilterTable["filter"]) {
             cloneDataFilterTable["filter"] = {}
@@ -1364,12 +1420,10 @@ export const Formatos = (userInfo) => {
         if (!dataFilterTable["filter"]["order"]) {
             cloneDataFilterTable["filter"]["order"] = {}
         }
-        console.log(cloneDataFilterTable, "cloooooooooooooooooon")
         if (!cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"]) {
             cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
-            console.log("ahhh")
             cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
             if (cloneDataFilterTable["filter"]["date"]["forma.fecha_creacion"]) {
@@ -1388,7 +1442,8 @@ export const Formatos = (userInfo) => {
         }
 
 
-        const dataWhere = ["estado", "proceso", "tipos_analisis_id"]
+        const dataWhere = ["estado", "tipos_analisis_id"]
+        const dataWhereAnalisis = ["proceso", "estado_analisis"]
 
         for (let x = 0; x < dataWhere.length; x++) {
             if (filter[dataWhere[x]]) {
@@ -1403,16 +1458,53 @@ export const Formatos = (userInfo) => {
                 }
             }
         }
-
-        console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
+        for (let x = 0; x < dataWhereAnalisis.length; x++) {
+            let referenceKey = dataWhereAnalisis[x]
+            if (referenceKey == "estado_analisis") {
+                referenceKey = "estado"
+            }
+            if (filter[dataWhereAnalisis[x]]) {
+                cloneDataFilterTable["filter"]["where"]["an." + [referenceKey]] = {
+                    "value": filter[[dataWhereAnalisis[x]]],
+                    "operador": "=",
+                    "require": "and"
+                }
+            } else {
+                if (cloneDataFilterTable["filter"]["where"]["an." + [referenceKey]]) {
+                    delete cloneDataFilterTable["filter"]["where"]["an." + [referenceKey]]
+                }
+            }
+        }
 
         setDataFilterTable(cloneDataFilterTable)
         getAnalisis()
+    }
 
+    async function clearFilters(data) {
+        dataFilterTable = {
+            "filter": {
+                "where": {
+
+                },
+                "limit": {
+                    "inicio": 0,
+                    "fin": 10
+                }
+            }
+        }
+        if (typeof data == "object") {
+            if (data.inicio) {
+                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            }
+            if (data.fin) {
+                dataFilterTable.filter["limit"]["fin"] = data.fin
+            }
+        }
+        getAnalisis()
     }
     return (
         <div id='mainFormatos'>
-            <Tablas getAvanzado={getAvanzado} buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Formatos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Formatos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             {modalFormResults ?
                 <FormResultados getAnalisis={getAnalisis} setInfoFormato={setInfoFormato} finalizarFormato={finalizarFormato} setModalFormNormal={setModalFormNormal} modalFormNormal={modalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
                 : ""}

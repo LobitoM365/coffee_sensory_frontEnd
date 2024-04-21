@@ -288,7 +288,7 @@ export const Home = ({ userInfo }) => {
 
             {/* Asegúrate de que Graficos y GraficoCircular reciban los datos correctamente */}
             <Graficos user={user?.id} inputData={inputValue} />
-            <GraficoCircular user={user?.id} inputData={inputValue} />
+            {/* <GraficoCircular user={user?.id} inputData={inputValue} /> */}
           </div>
 
           <div className="Tablecolors">

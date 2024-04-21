@@ -325,7 +325,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                         return match.charAt(0).toUpperCase() + match.slice(1);
                                     }) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : "";
 
-                                    data.value[key] = elementEdit[key]  != undefined ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function (match) {
+                                    data.value[key] = elementEdit[key] != undefined ? dataInputs[key]["upper_case"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/\b\w{4,}\b/g, function (match) {
                                         return match.charAt(0).toUpperCase() + match.slice(1);
                                     }) : elementEdit[key] ?? '' : dataInputs[key]["capital_letter"] ? typeof elementEdit[key] === "string" ? elementEdit[key].toString().replace(/^[a-z]/, match => match.toUpperCase()) : elementEdit[key] ?? '' : elementEdit[key] ?? "" : ""
                                     if (dataInputs[key]["type"] == "color") {
@@ -357,7 +357,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                             dataInputs[key]["type"] === "area" ?
                                                 ""
                                                 :
-                                                < button type="button" id={key} name={key} className="input-form" > {value != "" ? value : data.value[key]}</button>
+                                                < button type="button" id={key} name={key} className="input-form" > {value != "" ? value : data.value[key] ? data.value[key] : ""}</button>
                                             :
 
                                             dataInputs[key]["type"] === "area" ?
@@ -368,16 +368,17 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                                     inputChange(e, key, dataInputs[key]["type"]); setStatusInputDefault(false);/*  data.setStatusInput(false) */
                                                 }}
 
-                                                    value={value != "" ? value : data.value[key]} className="input-form text-area-form" type="text" />
+                                                    value={value != "" ? value : data.value[key] ? data.value[key] : ""} className="input-form text-area-form" type="text" />
                                                 : dataInputs[key]["type"] === "date" ?
-                                                    <input placeholder={dataInputs[key]["placeholder"] ? dataInputs[key]["placeholder"] : ""} id={key} name={key} autoComplete="false" onInput={(e) => {
-                                                        if (typeof functionExecute == "function") {
-                                                            functionExecute(execute == "key" ? dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] : execute == "all" ? dataInputs[key]["opciones"][indexSelect] : "", dataInputs[key]["index"] ? indexSelect : "");
-                                                        }
-                                                        inputChange(e, key, dataInputs[key]["type"]); setStatusInputDefault(false);/*  data.setStatusInput(false) */
-                                                    }}
-
-                                                        value={value != "" ? value : data.value[key]} className="input-date" type="datetime-local" />
+                                                    <div>
+                                                        <input placeholder={dataInputs[key]["placeholder"] ? dataInputs[key]["placeholder"] : ""} id={key} name={key} autoComplete="false" onInput={(e) => {
+                                                            if (typeof functionExecute == "function") {
+                                                                functionExecute(execute == "key" ? dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] : execute == "all" ? dataInputs[key]["opciones"][indexSelect] : "", dataInputs[key]["index"] ? indexSelect : "");
+                                                            }
+                                                            inputChange(e, key, dataInputs[key]["type"]); setStatusInputDefault(false);/*  data.setStatusInput(false) */
+                                                        }}
+                                                            value={value != "" ? value : data.value[key] ? data.value[key] : ""} className="input-date" type="datetime-local" />
+                                                    </div>
                                                     :
                                                     dataInputs[key]["type"] === "color" ?
                                                         <div className="div-input-color">
@@ -388,7 +389,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                                                     }
                                                                     inputChange(e, key, dataInputs[key]["type"]); setStatusInputDefault(false);/*  data.setStatusInput(false) */
                                                                 }}
-                                                                    value={value != "" ? value : data.value[key]} className="input-color" type="color" />
+                                                                    value={value != "" ? value : data.value[key] ? data.value[key] : ""} className="input-color" type="color" />
                                                             </div>
 
                                                             {dataInputs[key]["opacity"] ?
@@ -396,7 +397,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                                                     <input onInput={(e) => {
                                                                         setStatusInputDefault(false);
                                                                         inputChange(e, key + "_opacity", "color_opacity")
-                                                                    }} type="range" min={0} max={100} step={0.1} value={data.value[key + "_opacity"]} id={key + "_opacity"} name={key + "_opacity"} className="range-input-color" />
+                                                                    }} type="range" min={0} max={100} step={0.1} value={data.value[key + "_opacity"] ? data.value[key + "_opacity"] : "0"} id={key + "_opacity"} name={key + "_opacity"} className="range-input-color" />
                                                                 </div>
                                                                 : ""}
                                                         </div>
@@ -408,7 +409,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                                             inputChange(e, key, dataInputs[key]["type"]); setStatusInputDefault(false);/*  data.setStatusInput(false) */
                                                         }}
 
-                                                            value={value != "" ? value : data.value[key]} className="input-form" type="text" />}
+                                                            value={value != "" ? value : data.value[key] ? data.value[key] : ""} className="input-form" type="text" />}
 
                                     </div>
 
@@ -542,13 +543,12 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                                     const divOptions = parentElement.querySelectorAll(".opciones-input-select")
                                                     divOptions[0] ? divOptions[0].style.display == "block" ? divOptions[0].style.display = "none" : divOptions[0].style.display = "block" : ""
                                                 }}>
-
                                                     <input id={key} type="text" className="input-select" onInput={(e) => {
                                                         const parentElement = e.target.closest(".div-select");
                                                         const divOptions = parentElement.querySelectorAll(".opciones-input-select")
                                                         divOptions[0] ? divOptions[0].style.display = "block" : ""
                                                         selectSearch(e.target.value, key, functionExecute, execute == "key" ? "key" : "");
-                                                    }} placeholder={"Seleccione una opción..."} value={inputValor != "Seleccione una opción..." ? inputValor : ""} />
+                                                    }} placeholder={"Seleccione una opción..."} value={inputValor != "Seleccione una opción..." ? inputValor ? inputValor : "" : ""} />
                                                     <div className="icon-chevron-estado">
                                                         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 256 256" >
                                                             <metadata> Svg Vector Icons : http://www.onlinewebfonts.com/icon </metadata>

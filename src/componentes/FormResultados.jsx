@@ -804,7 +804,6 @@ export const FormResultados = forwardRef((data, ref) => {
                     "descripcion": prevState["descripcion"]
                 }
                 const response = await Api.post("formatos/rechazar", dataRechazar)
-                console.log(response, "reeeeeeeeeeeeeee")
                 if (response.data.status == true) {
                     setStatusAlert(true)
                     setdataAlert(
@@ -863,9 +862,7 @@ export const FormResultados = forwardRef((data, ref) => {
                 "descripcion": globalInputs["descripcion"]
             }
             const response = await Api.put("formatos/rechazo/cambiar/" + datModel.id, dataRechazar)
-            console.log(response, "reeeeeeeeeeeeee")
             if (response.data.status == true) {
-
                 setStatusAlert(true)
                 setdataAlert(
                     {
@@ -930,16 +927,21 @@ export const FormResultados = forwardRef((data, ref) => {
 
     useEffect(() => {
         let formatoSca = document.querySelectorAll(".iframe-formato-sca");
-        console.log(formatoSca, localStorage.getItem("darkMode"))
         if (localStorage.getItem("darkMode")) {
             if (localStorage.getItem("darkMode") == "true") {
-
                 for (let x = 0; x < formatoSca.length; x++) {
-                    formatoSca[x].classList.add("darkMode")
+                    formatoSca[x].addEventListener("load", function () {
+                        if (formatoSca[x].contentDocument) {
+                            let divContent = formatoSca[x].contentDocument.getElementById("contenidoFormatoSca")
+                            if (divContent) {
+                                divContent.classList.add("darkMode")
+                            }
+                        }
+                    })
                 }
             }
         }
-    }, [localStorage.getItem("darkMode")])
+    }, [localStorage.getItem("darkMode"), data.modalFormNormal, data.dataModalAnalisis])
     return (
 
         <>
@@ -1593,7 +1595,6 @@ export const FormResultados = forwardRef((data, ref) => {
                                                             </div>
                                                             : <iframe id="iframeFormatoSca" className="iframe-formato-sca" src="/src/formatoSca/formatoScaTemplate.html" frameBorder="0"></iframe>}
                                                     </div>
-                                                    {console.log(data.dataModalResultado)}
                                                     {data.dataModalResultado ? data.dataModalResultado[0] ? data.dataModalResultado[0].estado == 4 ?
 
 

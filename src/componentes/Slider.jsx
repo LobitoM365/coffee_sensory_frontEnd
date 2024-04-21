@@ -7,7 +7,6 @@ export const Slider = (data) => {
         let count = 0;
         if (data.data) {
             if (data.data.length > 1) {
-                console.log(data, "aaaaaaaaaaaaaaaaaaaaaa")
                 let imgSlider = document.querySelectorAll(".div-element-slider");
                 let chevronRight = document.getElementById("chevronRight");
                 let chevronLeft = document.getElementById("chevronLeft");

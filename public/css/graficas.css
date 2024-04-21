@@ -4,6 +4,11 @@
  }
 
 
+ #graficos canvas {
+   /* max-height: 900px; */
+   /* position: absolute; */
+ }
+
  #graficos .BoxMain {
    width: 100%;
    height: 40vh;
@@ -65,7 +70,7 @@
    flex-direction: column;
    margin: auto;
    width: 100%;
-   height: 60vh;
+   height: max-content;
    grid-area: grafica;
  }
 
@@ -134,12 +139,11 @@
    }
 
    #graficos .BoxGraficas {
-
      display: flex;
      justify-content: center;
      align-items: center;
      width: 100%;
-     height: 60vh;
+     height: max-content;
      grid-area: grafica;
    }
 

@@ -24,7 +24,6 @@ export const SelectComponent = (props) => {
           console.log("No se encontraron datos válidos en la respuesta");
         }
       } catch (error) {
-        console.log('Error al obtener datos:', error);
         setError('Error al obtener datos. Inténtalo de nuevo más tarde.');
       }
     };

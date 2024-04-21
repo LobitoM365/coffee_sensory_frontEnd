@@ -64,8 +64,6 @@ export const Mensajeria = (data) => {
                         }
                     }
                     let statusMessage = 2
-
-                    console.log(message.send)
                     if (message.send == "you") {
                         if (chatId != message.comunicaciones_id) {
                             audioPlay("../../public/audio/tonoNotificacion/tonoNotificacion (2).mp3")
@@ -126,7 +124,6 @@ export const Mensajeria = (data) => {
                                 if (message.send == "you" && message.emisor == data.user.id) {
                                     procedureMessage = false
                                 }
-                                /* console.log(message.emisor == data.user.id, "emisorrrrrrrrr") */
                                 if (message.emisor == data.user.id) {
                                     messageEstado = 0
                                 }
@@ -141,7 +138,6 @@ export const Mensajeria = (data) => {
                                     let clonePositionChats = { ...positionChats }
                                     clonePositionChats[message.comunicaciones_id]["message"].unshift(newMessage)
                                     setPositionChats(clonePositionChats)
-                                    console.log(clonePositionChats, "positionssssssssssssssssssssssssssssssssssssssssssss")
                                     divChatRef.current.scrollTop = divChatRef.current.scrollHeight
                                     setMovementChat(cloneMessage.comunicaciones_id)
                                 }
@@ -159,8 +155,6 @@ export const Mensajeria = (data) => {
                 if (message.comunicaciones_id == chatId) {
                     const divCheckSend = document.querySelectorAll(".div-icon-confirm-message-send")
                     const iconCheckSendReceived = document.querySelectorAll(".icon-check-confirm-message-received")
-
-                    console.log(divCheckSend, "seneeeeeeeeeeeeeeeeeeeeeeeeeed")
                     for (let x = 0; x < iconCheckSendReceived.length; x++) {
                         if (iconCheckSendReceived[x]) {
                             if (message.message_receptor_status == 0) {
@@ -367,9 +361,6 @@ export const Mensajeria = (data) => {
 
             if (chatUserFocus != id) {
                 const response = await Api.post("/comunicaciones/buscar", { vinculos_id: id })
-                console.log(response, "responssssssssse")
-                /* updateMessage(response.id, miembros_id, statusMessage) */
-
                 if (response.data.status == true) {
                     setChatUserFocus(id)
                     setChatId(response.data.data.id)
@@ -382,11 +373,7 @@ export const Mensajeria = (data) => {
                                 setPositionChats(clonePositionChats)
                             }
                             setMessagesChat(positionChats[response.data.data.id]["message"])
-
                             const actualizarMessage = await Api.post("/comunicaciones/actualizar/estado/mensajes", { "comunicaciones_id": response.data.data.id })
-                            alert("xd")
-                            console.log(actualizarMessage, "mesaaaaaa")
-
                         }
                     }
 
@@ -999,7 +986,6 @@ export const Mensajeria = (data) => {
                                                         return messagesChat.slice().reverse().map((value, index) => {
                                                             /*    return messagesChat.map((value, index) => { */
                                                             count = count + 1
-
                                                             statusMessage = value.estado_mensaje
                                                             /* if (value.last_count_mensajes != 0) {
                                                                 if (messagesChat.length - count == value.last_count_mensajes) {

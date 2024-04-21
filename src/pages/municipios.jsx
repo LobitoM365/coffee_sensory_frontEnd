@@ -72,12 +72,12 @@ export const Municipios = (userInfo) => {
     const keys = {
         "muni_id": {
             "referencia": "Id",
-            "priority" : 2
+            "priority": 2
         },
         "nombre": {
             "referencia": "Nombre",
             "upper_case": true,
-            "priority" : 1 
+            "priority": 1
 
         },
         "departamento": {
@@ -103,7 +103,6 @@ export const Municipios = (userInfo) => {
     async function getEntities() {
         try {
             const response = await Api.post("municipio/listar", dataFilterTable);
-            console.log(dataFilterTable, "filterrrrrrrrrrrrr")
             if (response.data.status == true) {
                 setEntities(response.data.data)
                 setCountRegisters(response.data.count)
@@ -384,8 +383,10 @@ export const Municipios = (userInfo) => {
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
+        if (data["valueSearch"] != undefined) {
+            dataFilterTable.filter["search"] = data["valueSearch"]
+        }
         getEntities()
-
     }
     async function buscarFinca(id) {
 
@@ -416,7 +417,6 @@ export const Municipios = (userInfo) => {
     }, [])
     async function getReporte(tipo, filter) {
         try {
-
             let filterReport = {
                 "filter": {
                     "where": {
@@ -427,9 +427,7 @@ export const Municipios = (userInfo) => {
                     }
                 }
             }
-            console.log(filter)
             if (filter.departamentos_id != "" && filter.departamentos_id != undefined) {
-                console.log(filter.departamentos_id, "hahsdhashdahsd")
                 filterReport["filter"]["where"]["mu.departamentos_id"] = {
 
                     "value": filter.departamentos_id ? filter.departamentos_id : "",
@@ -440,7 +438,6 @@ export const Municipios = (userInfo) => {
             }
 
             const response = await Api.post("municipio/listar", filterReport);
-            console.log(response, "muniiiiiiiiiiiiiiii")
             if (response.data.count <= 100) {
                 let dataPdf = {
                     data: response.data.data,
@@ -488,12 +485,11 @@ export const Municipios = (userInfo) => {
         if (!dataFilterTable["filter"]["order"]) {
             cloneDataFilterTable["filter"]["order"] = {}
         }
-        console.log(cloneDataFilterTable, "cloooooooooooooooooon")
         if (!cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]) {
             cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
-            console.log("ahhh")
+
             cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
             if (cloneDataFilterTable["filter"]["date"]["mu.fecha_creacion"]) {
@@ -526,8 +522,6 @@ export const Municipios = (userInfo) => {
                 }
             }
         }
-        console.log(cloneDataFilterTable)
-
         setDataFilterTable(cloneDataFilterTable)
         getEntities()
 
@@ -597,16 +591,38 @@ export const Municipios = (userInfo) => {
             setdataAlert(
                 {
                     status: "false",
-                    description: "Error interno del servidor: " + error,
+                    description: "Error interno del servidor: Inténtalo más tarde.",
                     "tittle": "Inténtalo de nuevo"
                 }
             )
 
         }
     }
+    async function clearFilters(data) {
+        dataFilterTable = {
+            "filter": {
+                "where": {
+
+                },
+                "limit": {
+                    "inicio": 0,
+                    "fin": 10
+                }
+            }
+        }
+        if (typeof data == "object") {
+            if (data.inicio) {
+                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            }
+            if (data.fin) {
+                dataFilterTable.filter["limit"]["fin"] = data.fin
+            }
+        }
+        getEntities()
+    }
     return (
         <>
-            <Tablas getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Municipio"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Municipio"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

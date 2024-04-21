@@ -27,7 +27,6 @@ export const RecoveryPassword = () => {
 
             data.token = token;
             const response = await Api.post('auth/protect/recover', data);
-            console.log('RESPONSE: ', response);
             if (response.data.authorized == false) {
                 setStatusAlert(true);
                 setdataAlert({
@@ -46,7 +45,6 @@ export const RecoveryPassword = () => {
                 "tittle": '404',
             });
             location.href = '/login'
-            console.log('ERROR PROTECT: ', error);
         }
     }
 
@@ -84,8 +82,6 @@ export const RecoveryPassword = () => {
                     }
                 }, 2500)
             }
-            console.log('VALIDATION : ', validationError);
-
         } catch (error) {
             console.log('ERROR EMAIL: ', error);
         }

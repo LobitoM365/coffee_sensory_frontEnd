@@ -45,12 +45,6 @@ export const Graficos = ({ user, inputData }) => {
     const fetchData = async () => {
       try {
         let VariableIdUser = user;
-        /*  let UserIdSesion = user?.user?.userInfo || 0;
-         console.log(UserIdSesion,"Inicio Sesion");
-         if (!UserIdSesion) {
-           console.log('UserIdSesion es nulo');
-           return;
-         }  */
         const dataToSend = {
           muestras_id: nuevoDato.muestras_id,
           anio: nuevoDato.anio
@@ -58,10 +52,6 @@ export const Graficos = ({ user, inputData }) => {
 
         const response = await Api.post(`analisis/total/${VariableIdUser}`, dataToSend);
         const responseData = response.data;
-
-        /*  console.log(dataToSend,'Data Body', UserIdSesion.id , 'User')
-         console.log(responseData,'responseData') */
-
         if (responseData.status === true) {
           setData(responseData.data);
         } else {
@@ -69,7 +59,6 @@ export const Graficos = ({ user, inputData }) => {
 
           ]);
         }
-        // console.log(responseData,"DATA RESPONSE")
       } catch (error) {
         console.error('Error al obtener los datos:', error);
       }
@@ -120,8 +109,6 @@ export const Graficos = ({ user, inputData }) => {
     } else {
       color.push("rgb(255, 174, 0)")
     }
-
-    /* console.log(color, "colores") */
   })
   const ResultLabel = []
   data.map(element => ResultLabel.push(element.fecha.substring(0, 3)))

@@ -16,13 +16,10 @@ export const PruebaPdf = () => {
     const openPdfInNewTab = () => {
         alert("xd")
         const pdfContent = generatePDF();
-
-        console.log(pdfContent,"ahh")
         // Convertir el PDF a Blob
         pdfContent.toBlob((blob) => {
             // Crear una URL para el Blob
             const pdfURL = URL.createObjectURL(blob);
-
             window.open(pdfURL, '_blank');
 
             // Actualizar el estado con la URL

@@ -4,8 +4,6 @@ import "../../public/css/menuInicio.css";
 
 export const MenuInicio = ({ userInfo }) => {
     const location = useLocation()
-
-    console.log(location.pathname)
     return (
         <>
             <div id='mainMenuInicio'>

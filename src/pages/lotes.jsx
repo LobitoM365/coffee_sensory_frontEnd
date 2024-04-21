@@ -99,12 +99,12 @@ export const Lotes = (userInfo) => {
     const keys = {
         "lo_id": {
             "referencia": "Id",
-            "priority" : 1
+            "priority": 1
         },
         "finca": {
             "referencia": "Finca",
             "upper_case": true,
-            "priority" : 3
+            "priority": 3
         },
         "nombre": {
             "referencia": "Nombre del lote",
@@ -124,7 +124,7 @@ export const Lotes = (userInfo) => {
             "referencia": "Estado",
             "filter": false,
             "rol": ["administrador", "catador"],
-            "priority" : 2
+            "priority": 2
 
 
         },
@@ -249,7 +249,6 @@ export const Lotes = (userInfo) => {
     async function setLote(data) {
         try {
             const axios = await Api.post("lotes/registrar/", data);
-            console.log(axios)
             if (axios.data.status == true) {
                 getLotes();
                 setErrors({})
@@ -427,6 +426,9 @@ export const Lotes = (userInfo) => {
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
+        if (data["valueSearch"] != undefined) {
+            dataFilterTable.filter["search"] = data["valueSearch"]
+        }
         getLotes()
 
     }
@@ -485,7 +487,6 @@ export const Lotes = (userInfo) => {
                 }
             }
             const response = await Api.post("lotes/listar", filterReport);
-            console.log(response)
             if (response.data.status == true) {
                 if (tipo == "pdf") {
                     if (response.data.count > 100) {
@@ -523,7 +524,6 @@ export const Lotes = (userInfo) => {
         delete cloneTable["permission_formato_sca"]
         delete cloneTable["actualizar"]
         delete cloneTable["reporte"]
-        console.log(cloneTable, "hahsd")
         const data = {
             dataTable,
             filter,
@@ -554,11 +554,10 @@ export const Lotes = (userInfo) => {
             setdataAlert(
                 {
                     status: "false",
-                    description: "Error interno del servidor: " + error,
+                    description: "Error interno del servidor: Inténtalo más tarde.",
                     "tittle": "Inténtalo de nuevo"
                 }
             )
-            console.error('Error:', error);
         }
     }
     async function getAvanzado(tipo, filter) {
@@ -579,12 +578,10 @@ export const Lotes = (userInfo) => {
         if (!dataFilterTable["filter"]["order"]) {
             cloneDataFilterTable["filter"]["order"] = {}
         }
-        console.log(cloneDataFilterTable, "cloooooooooooooooooon")
         if (!cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"]) {
             cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
-            console.log("ahhh")
             cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
             if (cloneDataFilterTable["filter"]["date"]["lo.fecha_creacion"]) {
@@ -604,7 +601,6 @@ export const Lotes = (userInfo) => {
 
         const dataWhere = ["estado"]
 
-
         for (let x = 0; x < dataWhere.length; x++) {
             if (filter[dataWhere[x]]) {
                 cloneDataFilterTable["filter"]["where"]["lo." + [dataWhere[x]]] = {
@@ -618,11 +614,8 @@ export const Lotes = (userInfo) => {
                 }
             }
         }
-        console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
-
         setDataFilterTable(cloneDataFilterTable)
         getLotes()
-
     }
     async function generatePdf(e, orientacion, papel, alto, ancho, margen_superior, margen_derecho, margen_inferior, margen_izquierdo, fuente, font_size_content_tabla, font_size_encabezado_tabla, font_size_encabezado, color_fondo, espaciado_superior_contenido, espaciado_derecho_contenido, espaciado_inferior_contenido, espaciado_izquierdo_contenido) {
         let cloneTable = { ...keys }
@@ -689,16 +682,38 @@ export const Lotes = (userInfo) => {
             setdataAlert(
                 {
                     status: "false",
-                    description: "Error interno del servidor: " + error,
+                    description: "Error interno del servidor: Inténtalo más tarde.",
                     "tittle": "Inténtalo de nuevo"
                 }
             )
 
         }
     }
+    async function clearFilters(data) {
+        dataFilterTable = {
+            "filter": {
+                "where": {
+
+                },
+                "limit": {
+                    "inicio": 0,
+                    "fin": 10
+                }
+            }
+        }
+        if (typeof data == "object") {
+            if (data.inicio) {
+                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            }
+            if (data.fin) {
+                dataFilterTable.filter["limit"]["fin"] = data.fin
+            }
+        }
+        getusuarios()
+    }
     return (
         <>
-            <Tablas getAvanzado={getAvanzado} generatePdf={generatePdf} userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/img-form-state.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarLote} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setLote} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={lotes} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateLote} tittle={"Lotes"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} generatePdf={generatePdf} userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/img-form-state.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarLote} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setLote} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={lotes} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateLote} tittle={"Lotes"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

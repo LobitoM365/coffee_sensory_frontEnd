@@ -81,7 +81,7 @@ export const Fincas = (userInfo) => {
                         formData.append("img", file)
                         formData.append("fincas_id", focusFinca)
                         formData.forEach((input, key) => {
-                            console.log(`${key}: ${input}`);
+                            /*  console.log(`${key}: ${input}`); */
                         });
                         let route = "cargar"
                         let method = "post"
@@ -104,7 +104,6 @@ export const Fincas = (userInfo) => {
                                 "tittle": "Error de validación.",
                             });
                         }
-                        console.log(response, "ressssssss")
                     }
                 }
                 input.remove()
@@ -113,20 +112,6 @@ export const Fincas = (userInfo) => {
             console.log("Error:" + e)
         }
     }
-    /* 
-        async function predeterminarImg(id) {
-            try {
-                const response = await Api.post("/img/icono/predeterminar/" + id)
-                if (response.data.status == true) {
-                    fetchUser()
-                    listarIconos()
-                    setModalImgChange()
-                }
-                console.log(response, "siuuuuuuu")
-            } catch (e) {
-                console.log("Error: " + e)
-            }
-        } */
     async function eliminarImg(id) {
         try {
             const response = await Api.delete("/img/finca/eliminar/" + id)
@@ -134,7 +119,6 @@ export const Fincas = (userInfo) => {
                 listarIconos(focusFinca)
                 setModalImgChange()
             }
-            console.log(response, "siuuuuuuu")
         } catch (e) {
             console.log("Error: " + e)
         }
@@ -370,7 +354,6 @@ export const Fincas = (userInfo) => {
     async function desactivarFinca() {
         try {
             const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
-            console.log('FINCA ABLE: ', axios)
             if (axios.data.status == true) {
                 getFincas();
                 setStatusAlert(true)
@@ -443,8 +426,6 @@ export const Fincas = (userInfo) => {
     }
     async function setFinca(data) {
         const axios = await Api.post("finca/registrar/", data);
-        console.log(axios, "ahhh-----------------")
-
         try {
             if (axios.data.status == true) {
                 getFincas();
@@ -578,7 +559,6 @@ export const Fincas = (userInfo) => {
     }
 
     async function getMunicipios(data) {
-        console.log('MINCIPIOS EXCUTE: ', data);
         try {
             let filterReport = {
                 "filter": {
@@ -595,7 +575,6 @@ export const Fincas = (userInfo) => {
                 }
             }
             const response = await Api.post("municipio/listar", filterReport);
-            console.log(response)
             let municipios = { ...inputsForm };
 
             if (response.data.status == true) {
@@ -603,7 +582,6 @@ export const Fincas = (userInfo) => {
                     municipios["municipios_id"] = {}
                 }
                 municipios["municipios_id"]["opciones"] = response.data.data
-                console.log("MUNICIPIOS GET: ", municipios)
                 setInputsForm(municipios)
             } else if (response.data.find_error) {
                 if (municipios["municipios_id"]) {
@@ -619,7 +597,6 @@ export const Fincas = (userInfo) => {
 
     //Obtener Veredas
     async function getVeredas(data) {
-        console.log(data, "dataaaaaaaa")
         try {
             let filterReport = {
                 "filter": {
@@ -636,7 +613,6 @@ export const Fincas = (userInfo) => {
                 }
             }
             const response = await Api.post("veredas/listar", filterReport);
-            console.log('VEREDAS: ', response);
             let veredas = inputsForm;
 
             if (response.data.status == true) {
@@ -666,7 +642,6 @@ export const Fincas = (userInfo) => {
 
         try {
             const axios = await Api.put("finca/actualizar/" + id, data);
-            console.log(axios)
             if (axios.data.status == true) {
                 getFincas();
                 setErrors({})
@@ -737,8 +712,10 @@ export const Fincas = (userInfo) => {
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
+        if (data["valueSearch"] != undefined) {
+            dataFilterTable.filter["search"] = data["valueSearch"]
+        }
         getFincas()
-
     }
     async function buscarFinca(id) {
         const response = await Api.get("finca/buscar/" + id);
@@ -767,7 +744,6 @@ export const Fincas = (userInfo) => {
                     "tittle": "Inténtalo de nuevo"
                 }
             )
-            console.error('ERROR GET FINCA: ', e);
         }
     }
     async function updateTable() {
@@ -798,7 +774,6 @@ export const Fincas = (userInfo) => {
                 }
             }
             const response = await Api.post("municipio/listar", filterReport);
-            console.log(response, filterReport)
             if (response.data.status == true) {
                 let depPdf = inputsDocumento
                 depPdf.municipios_id.inputs.municipios_id["opciones"] = response.data.data
@@ -839,7 +814,6 @@ export const Fincas = (userInfo) => {
                 }
             }
             const response = await Api.post("finca/listar", filterReport);
-            console.log(response)
             if (response.data.status == true) {
                 if (tipo == "pdf") {
                     if (response.data.count > 100) {
@@ -877,7 +851,6 @@ export const Fincas = (userInfo) => {
         delete cloneTable["permission_formato_sca"]
         delete cloneTable["actualizar"]
         delete cloneTable["reporte"]
-        console.log(cloneTable, "hahsd")
         const data = {
             dataTable,
             filter,
@@ -908,11 +881,10 @@ export const Fincas = (userInfo) => {
             setdataAlert(
                 {
                     status: "false",
-                    description: "Error interno del servidor: " + error,
+                    description: "Error interno del servidor: Inténtalo más tarde.",
                     "tittle": "Inténtalo de nuevo"
                 }
             )
-            console.error('Error:', error);
         }
     }
 
@@ -926,7 +898,6 @@ export const Fincas = (userInfo) => {
                 listarIconos(focusFinca)
                 setModalImgChange()
             }
-            console.log(response, "siuuuuuuu")
         } catch (e) {
             console.log("Error: " + e)
         }
@@ -950,12 +921,10 @@ export const Fincas = (userInfo) => {
         if (!dataFilterTable["filter"]["order"]) {
             cloneDataFilterTable["filter"]["order"] = {}
         }
-        console.log(cloneDataFilterTable, "cloooooooooooooooooon")
         if (!cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"]) {
             cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
-            console.log("ahhh")
             cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
             if (cloneDataFilterTable["filter"]["date"]["fin.fecha_creacion"]) {
@@ -1003,11 +972,8 @@ export const Fincas = (userInfo) => {
                 }
             }
         }
-        console.log(filter, "aaaaaaaaa", cloneDataFilterTable)
-
         setDataFilterTable(cloneDataFilterTable)
         getFincas()
-
     }
     async function generatePdf(e, orientacion, papel, alto, ancho, margen_superior, margen_derecho, margen_inferior, margen_izquierdo, fuente, font_size_content_tabla, font_size_encabezado_tabla, font_size_encabezado, color_fondo, espaciado_superior_contenido, espaciado_derecho_contenido, espaciado_inferior_contenido, espaciado_izquierdo_contenido) {
         let cloneTable = { ...keys }
@@ -1074,16 +1040,38 @@ export const Fincas = (userInfo) => {
             setdataAlert(
                 {
                     status: "false",
-                    description: "Error interno del servidor: " + error,
+                    description: "Error interno del servidor: Inténtalo más tarde.",
                     "tittle": "Inténtalo de nuevo"
                 }
             )
 
         }
     }
+    async function clearFilters(data) {
+        dataFilterTable = {
+            "filter": {
+                "where": {
+
+                },
+                "limit": {
+                    "inicio": 0,
+                    "fin": 10
+                }
+            }
+        }
+        if (typeof data == "object") {
+            if (data.inicio) {
+                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            }
+            if (data.fin) {
+                dataFilterTable.filter["limit"]["fin"] = data.fin
+            }
+        }
+        getFincas()
+    }
     return (
         <>
-            <Tablas getAvanzado={getAvanzado} generatePdf={generatePdf} buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} userInfo={userInfo.userInfo} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} generatePdf={generatePdf} buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} userInfo={userInfo.userInfo} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setFinca} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Fincas"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
 
             {modalImg ? <GlobalModal statusModal={setModaImgs} key={"icons-img"} class="modal-img" content={
@@ -1107,7 +1095,6 @@ export const Fincas = (userInfo) => {
                                 {
                                     imgs.map((value, key) => {
                                         return <div key={key} className='div-imgs-iconos-add'>
-                                            {console.log(value)}
                                             <img className='img-icono' src={"http://" + host + ":3000/img/usuarios/" + (value.usuarios_id ? value.usuarios_id : "") + "/fincas/" + value.fincas_id + "/" + (value.nombre ? value.nombre : "")} />
                                             <div onClick={(e) => { setFocusImgChange({ id: value.id, src: "http://" + host + ":3000/img/usuarios/" + (value.usuarios_id ? value.usuarios_id : "") + "/fincas/" + value.fincas_id + "/" + (value.nombre ? value.nombre : ""), estado: value.estado }); setModalImgChange(true) }} className='div-ver-iconos'>
                                                 <h4>Ver</h4>

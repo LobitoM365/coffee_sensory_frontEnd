@@ -51,14 +51,11 @@ export default function App(data) {
       return;
     }
 
-
-    console.log()
     async function LogoutSesion() {
       // alert('?xd')
       // const navigate = useNavigate();
       try {
         const response = await Api.post("/auth/close");
-        console.log(response, "resssssssssss")
         location.href = '/Login'
 
       } catch (e) {

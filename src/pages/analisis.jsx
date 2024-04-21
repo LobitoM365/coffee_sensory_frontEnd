@@ -127,7 +127,7 @@ export const Analisis = (userInfo) => {
             }, */ muestras_id: {
                 type: "select",
                 referencia: "Muestra",
-                values: ["numero_documento", "nombre_completo", "finca", "lote", "mu_id"],
+                values: ["codigo_muestra", "numero_documento", "finca", "lote"],
                 upper_case: true,
                 key: "id"
             },
@@ -1566,12 +1566,16 @@ export const Analisis = (userInfo) => {
         getAnalisis(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
+        console.log(filter, "fffffffff")
         dataFilterTable.filter["order"] = filter
         getAnalisis();
 
     }
     async function limitRegisters(data) {
         dataFilterTable.filter["limit"] = data
+        if (data["valueSearch"] != undefined) {
+            dataFilterTable.filter["search"] = data["valueSearch"]
+        }
         getAnalisis()
 
     }
@@ -1596,8 +1600,10 @@ export const Analisis = (userInfo) => {
     }
     async function limitRegistersUsuario(data) {
         dataFilterTableAsignar.filter["limit"] = data
+        if (data["valueSearch"] != undefined) {
+            dataFilterTableAsignar.filter["search"] = data["valueSearch"]
+        }
         getusuariosAsignar()
-
     }
 
 
@@ -1870,8 +1876,6 @@ export const Analisis = (userInfo) => {
             "referencia": "Estado",
         }
 
-        console.log(cloneTable, "cloeeeeeeeeeeeeeeeeee")
-
         const dataGeneratePdf = {
             "dataTable": usuarios,
             "filter": dataFilterTable,
@@ -1933,11 +1937,10 @@ export const Analisis = (userInfo) => {
             setdataAlert(
                 {
                     status: "false",
-                    description: "Error interno del servidor: " + error,
+                    description: "Error interno del servidor: Inténtalo más tarde.",
                     "tittle": "Inténtalo de nuevo"
                 }
             )
-
         }
     }
 
@@ -2188,7 +2191,6 @@ export const Analisis = (userInfo) => {
         }
     }
     async function confirmarEditarAnalisis(id, muestra) {
-        console.log(muestraIdAsignar, muestra, id)
         setStatusAlert(true)
         setdataAlert(
             {
@@ -2236,12 +2238,10 @@ export const Analisis = (userInfo) => {
         if (!dataFilterTable["filter"]["order"]) {
             cloneDataFilterTable["filter"]["order"] = {}
         }
-        console.log(cloneDataFilterTable, "cloooooooooooooooooon")
         if (!cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"]) {
             cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"] = {}
         }
         if (filter.desde_registro) {
-            console.log("ahhh")
             cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"]["desde"] = filter.desde_registro
         } else {
             if (cloneDataFilterTable["filter"]["date"]["an.fecha_creacion"]) {
@@ -2274,7 +2274,6 @@ export const Analisis = (userInfo) => {
                 }
             }
         }
-
         setDataFilterTable(cloneDataFilterTable)
         getAnalisis()
 
@@ -2298,7 +2297,6 @@ export const Analisis = (userInfo) => {
     async function aprobarAnalisis(id) {
         try {
             const response = await Api.put("analisis/aprobar/" + id);
-            console.log(response, id)
             if (response.data.status == true) {
                 setStatusAlert(true)
                 setdataAlert(
@@ -2343,11 +2341,34 @@ export const Analisis = (userInfo) => {
             console.log("Error: " + e)
         }
     }
+
+    async function clearFilters(data) {
+        dataFilterTable = {
+            "filter": {
+                "where": {
+
+                },
+                "limit": {
+                    "inicio": 0,
+                    "fin": 10
+                }
+            }
+        }
+        if (typeof data == "object") {
+            if (data.inicio) {
+                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            }
+            if (data.fin) {
+                dataFilterTable.filter["limit"]["fin"] = data.fin
+            }
+        }
+        getAnalisis()
+    }
     return (
         <div>
             <div id='mainAnalisis'>
 
-                <Tablas getAvanzado={getAvanzado} buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+                <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
                 {!modalFormResults ?
                     < FormResultados modalFormNormal={modalFormNormal} setModalFormNormal={setModalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
@@ -2415,7 +2436,7 @@ export const Analisis = (userInfo) => {
                                                                     }
 
                                                                     {infoAnalisisUpdateAsignar[0].permission_update != 'false' ?
-                                                                        <div>
+                                                                        <div className='div-muestra-asing'>
                                                                             <GlobalInputs
                                                                                 input={setMuestraIdAsignar}
                                                                                 value={muestraIdAsignar}

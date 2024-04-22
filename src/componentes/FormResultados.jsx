@@ -730,6 +730,18 @@ export const FormResultados = forwardRef((data, ref) => {
                         "tittle": "Excelente"
                     }
                 )
+            } else if (response.data.permission_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
+                    }
+                )
             } else {
                 setStatusAlert(true)
                 setdataAlert(
@@ -1596,14 +1608,11 @@ export const FormResultados = forwardRef((data, ref) => {
                                                             : <iframe id="iframeFormatoSca" className="iframe-formato-sca" src="/src/formatoSca/formatoScaTemplate.html" frameBorder="0"></iframe>}
                                                     </div>
                                                     {data.dataModalResultado ? data.dataModalResultado[0] ? data.dataModalResultado[0].estado == 4 ?
-
-
-
-
                                                         data.userInfo.userInfo.rol == "administrador" ? data.dataModalResultado ? data.dataModalResultado[0] ?
 
-                                                            data.dataModalResultado[0].estado == 4 ?
+                                                            data.dataModalResultado[0].estado == 4 && data.dataModalResultado[0].estado_analisis != 7 ?
                                                                 <div className="footer-asignar">
+                                                                    {console.log(data.dataModalResultado[0], "eeeeeeee")}
                                                                     <button
                                                                         type="button"
                                                                         onClick={() => { confirmarRechazar(data.dataModalResultado[0].id) }}
@@ -1613,7 +1622,6 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                 : "" : "" : "" : "" : " " : ""
 
                                                         : ""}
-
                                                     {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].descripcion_rechazo ? data.dataModalResultadoAnalisis[0].estado == 6 ?
                                                         <div className="div-info-rechazo">
                                                             <h4 className="title-razon-rechazo">Razón del rechazo</h4>
@@ -1642,7 +1650,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                             {data.userInfo.userInfo.rol == "administrador" ?
                                                                 <div className="div-options-rechzo-formato">
                                                                     <button onClick={() => { confirmarCambiarRechazo(data.dataModalResultado[0].rechazos_id, data.dataModalResultado[0].id) }} type="button" className="button-submit-form button-cambiar-formato">Cambiar</button>
-                                                                    <button onClick={() => { data.finalizarFormato ? data.finalizarFormato(data.dataModalResultado[0].id) : "" }} type="button" className="button-submit-form button-deshacer-formato">deshacer</button>
+                                                                    {/*  <button onClick={() => { data.finalizarFormato ? data.finalizarFormato(data.dataModalResultado[0].id) : "" }} type="button" className="button-submit-form button-deshacer-formato">deshacer</button> */}
                                                                 </div>
                                                                 : ""}
                                                         </div>
@@ -1801,7 +1809,7 @@ export const FormResultados = forwardRef((data, ref) => {
                         <div className="div-body-form">
                             {modeFormato == 2 ?
                                 (
-                                    <div>
+                                    <div className="div-template-analisis">
 
                                         {tipoRegistro == 1 ? (
                                             <div className="div-content-formato-sca">
@@ -1950,13 +1958,13 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                                 valueGlobalInput[key.nombre] = value
 
                                                                                             } else {
-                                                                                                valueGlobalInput[key.nombre] = 0
+                                                                                                valueGlobalInput[key.nombre] = "0"
                                                                                             }
                                                                                         } else {
-                                                                                            valueGlobalInput[key.nombre] = 0
+                                                                                            valueGlobalInput[key.nombre] = "0"
                                                                                         }
                                                                                     } else {
-                                                                                        valueGlobalInput[key.nombre] = 0
+                                                                                        valueGlobalInput[key.nombre] = "0"
                                                                                     }
                                                                                 }
                                                                                 setPlugisGlobalInput(clonePluginsGlobalInput)

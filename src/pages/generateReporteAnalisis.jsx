@@ -204,6 +204,8 @@ export const GenerateReporteAnalisis = (data) => {
                                         promedioResultadoFisico[keys[x]] = value
                                     }
                                     /* promedioResultadoFisico[keys[x]] = promedioResultadoFisico[keys[x]] / parseFloat(resultado.data.data.length) */
+                                }else{
+                                    promedioResultadoFisico[keys[x]] = 0
                                 }
                             }
                             setResultadoFisico(promedioResultadoFisico)
@@ -1121,7 +1123,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["peso_cps"] ? resultadoFisico["peso_cps"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["peso_cps"] != undefined ? resultadoFisico["peso_cps"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1131,7 +1133,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["humedad"] ? resultadoFisico["humedad"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["humedad"] != undefined ? resultadoFisico["humedad"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1143,7 +1145,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["peso_cisco"] ? resultadoFisico["peso_cisco"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["peso_cisco"] != undefined ? resultadoFisico["peso_cisco"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1153,7 +1155,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["merma_trilla"] ? resultadoFisico["merma_trilla"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["merma_trilla"] != undefined ? resultadoFisico["merma_trilla"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1165,7 +1167,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["peso_total_almendra"] ? resultadoFisico["peso_total_almendra"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["peso_total_almendra"] != undefined ? resultadoFisico["peso_total_almendra"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1175,7 +1177,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["porcentaje_almendra_sana"] ? resultadoFisico["porcentaje_almendra_sana"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["porcentaje_almendra_sana"] != undefined ? resultadoFisico["porcentaje_almendra_sana"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1187,7 +1189,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["peso_defectos_totales"] ? resultadoFisico["peso_defectos_totales"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["peso_defectos_totales"] != undefined ? resultadoFisico["peso_defectos_totales"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1197,7 +1199,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["factor_rendimiento"] ? resultadoFisico["factor_rendimiento"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["factor_rendimiento"] != undefined ? resultadoFisico["factor_rendimiento"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1209,7 +1211,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["peso_almendra_sana"] ? resultadoFisico["peso_almendra_sana"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["peso_almendra_sana"] != undefined ? resultadoFisico["peso_almendra_sana"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1219,7 +1221,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["porcentaje_defectos_totales"] ? resultadoFisico["porcentaje_defectos_totales"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["porcentaje_defectos_totales"] != undefined ? resultadoFisico["porcentaje_defectos_totales"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1231,7 +1233,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["negro_total"] ? resultadoFisico["negro_total"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["negro_total"] != undefined ? resultadoFisico["negro_total"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1241,7 +1243,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["cardenillo"] ? resultadoFisico["cardenillo"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["cardenillo"] != undefined ? resultadoFisico["cardenillo"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1253,7 +1255,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["vinagre"] ? resultadoFisico["vinagre"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["vinagre"] != undefined ? resultadoFisico["vinagre"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1263,7 +1265,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["cristalizado"] ? resultadoFisico["cristalizado"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["cristalizado"] != undefined ? resultadoFisico["cristalizado"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1275,7 +1277,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["veteado"] ? resultadoFisico["veteado"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["veteado"] != undefined ? resultadoFisico["veteado"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1285,7 +1287,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["ambar"] ? resultadoFisico["ambar"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["ambar"] != undefined ? resultadoFisico["ambar"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1297,7 +1299,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["sobresecado"] ? resultadoFisico["sobresecado"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["sobresecado"] != undefined ? resultadoFisico["sobresecado"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1307,7 +1309,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["mordido"] ? resultadoFisico["mordido"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["mordido"] != undefined ? resultadoFisico["mordido"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1319,7 +1321,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["picado_insectos"] ? resultadoFisico["picado_insectos"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["picado_insectos"] != undefined ? resultadoFisico["picado_insectos"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1329,7 +1331,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["averanado"] ? resultadoFisico["averanado"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["averanado"] != undefined ? resultadoFisico["averanado"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1341,7 +1343,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["inmaduro"] ? resultadoFisico["inmaduro"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["inmaduro"] != undefined ? resultadoFisico["inmaduro"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1351,7 +1353,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["aplastado"] ? resultadoFisico["aplastado"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["aplastado"] != undefined ? resultadoFisico["aplastado"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1363,7 +1365,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["flojo"] ? resultadoFisico["flojo"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["flojo"] != undefined ? resultadoFisico["flojo"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1373,7 +1375,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["decolorado"] ? resultadoFisico["decolorado"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["decolorado"] != undefined ? resultadoFisico["decolorado"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1385,7 +1387,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["malla18"] ? resultadoFisico["malla18"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["malla18"] != undefined ? resultadoFisico["malla18"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1395,7 +1397,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["malla15"] ? resultadoFisico["malla15"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["malla15"] != undefined ? resultadoFisico["malla15"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1407,7 +1409,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["malla17"] ? resultadoFisico["malla17"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["malla17"] != undefined ? resultadoFisico["malla17"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1417,7 +1419,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["malla14"] ? resultadoFisico["malla14"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["malla14"] != undefined ? resultadoFisico["malla14"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1429,7 +1431,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["malla16"] ? resultadoFisico["malla16"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["malla16"] != undefined ? resultadoFisico["malla16"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable]}>
@@ -1439,7 +1441,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                         </View>
                                                         <View style={[estyle.tableColStyle, estyle.colTable, estyle.tableCellAuto]}>
                                                             <Text style={[estyle.tableCellStyle]}>
-                                                                {resultadoFisico["mallas_menores"] ? resultadoFisico["mallas_menores"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                {resultadoFisico["mallas_menores"] != undefined ? resultadoFisico["mallas_menores"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -1475,7 +1477,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                                 </View>
                                                                 <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                     <Text style={[estyle.tableCellStyle]}>
-                                                                        {resultadoSensorialPromedio["fragancia_aroma"] ? resultadoSensorialPromedio["fragancia_aroma"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                        {resultadoSensorialPromedio["fragancia_aroma"] != undefined ? resultadoSensorialPromedio["fragancia_aroma"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                     </Text>
                                                                 </View>
                                                             </View>
@@ -1487,7 +1489,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                                 </View>
                                                                 <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                     <Text style={[estyle.tableCellStyle]}>
-                                                                        {resultadoSensorialPromedio["sabor"] ? resultadoSensorialPromedio["sabor"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                        {resultadoSensorialPromedio["sabor"] != undefined ? resultadoSensorialPromedio["sabor"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                     </Text>
                                                                 </View>
                                                             </View>
@@ -1499,7 +1501,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                                 </View>
                                                                 <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                     <Text style={[estyle.tableCellStyle]}>
-                                                                        {resultadoSensorialPromedio["sabor_residual"] ? resultadoSensorialPromedio["sabor_residual"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                        {resultadoSensorialPromedio["sabor_residual"] != undefined ? resultadoSensorialPromedio["sabor_residual"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                     </Text>
                                                                 </View>
                                                             </View>
@@ -1511,7 +1513,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                                 </View>
                                                                 <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                     <Text style={[estyle.tableCellStyle]}>
-                                                                        {resultadoSensorialPromedio["acidez"] ? resultadoSensorialPromedio["acidez"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                        {resultadoSensorialPromedio["acidez"] != undefined ? resultadoSensorialPromedio["acidez"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                     </Text>
                                                                 </View>
                                                             </View>
@@ -1523,7 +1525,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                                 </View>
                                                                 <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                     <Text style={[estyle.tableCellStyle]}>
-                                                                        {resultadoSensorialPromedio["cuerpo"] ? resultadoSensorialPromedio["cuerpo"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                        {resultadoSensorialPromedio["cuerpo"] != undefined ? resultadoSensorialPromedio["cuerpo"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                     </Text>
                                                                 </View>
                                                             </View>
@@ -1535,7 +1537,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                                 </View>
                                                                 <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                     <Text style={[estyle.tableCellStyle]}>
-                                                                        {resultadoSensorialPromedio["uniformidad"] ? resultadoSensorialPromedio["uniformidad"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                        {resultadoSensorialPromedio["uniformidad"] != undefined ? resultadoSensorialPromedio["uniformidad"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                     </Text>
                                                                 </View>
                                                             </View>
@@ -1547,7 +1549,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                                 </View>
                                                                 <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                     <Text style={[estyle.tableCellStyle]}>
-                                                                        {resultadoSensorialPromedio["balance"] ? resultadoSensorialPromedio["balance"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                        {resultadoSensorialPromedio["balance"] != undefined ? resultadoSensorialPromedio["balance"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                     </Text>
                                                                 </View>
                                                             </View>
@@ -1559,7 +1561,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                                 </View>
                                                                 <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                     <Text style={[estyle.tableCellStyle]}>
-                                                                        {resultadoSensorialPromedio["taza_limpia"] ? resultadoSensorialPromedio["taza_limpia"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                        {resultadoSensorialPromedio["taza_limpia"] != undefined ? resultadoSensorialPromedio["taza_limpia"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                     </Text>
                                                                 </View>
                                                             </View>
@@ -1571,7 +1573,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                                 </View>
                                                                 <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                     <Text style={[estyle.tableCellStyle]}>
-                                                                        {resultadoSensorialPromedio["dulzor"] ? resultadoSensorialPromedio["dulzor"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                        {resultadoSensorialPromedio["dulzor"] != undefined ? resultadoSensorialPromedio["dulzor"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                     </Text>
                                                                 </View>
                                                             </View>
@@ -1583,7 +1585,7 @@ export const GenerateReporteAnalisis = (data) => {
                                                                 </View>
                                                                 <View style={[estyle.tableColStyle, estyle.colTable, estyle.colFormatoSensorial, estyle.tableCellStyleFormatoSensorial]}>
                                                                     <Text style={[estyle.tableCellStyle]}>
-                                                                        {resultadoSensorialPromedio["puntaje_catador"] ? resultadoSensorialPromedio["puntaje_catador"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
+                                                                        {resultadoSensorialPromedio["puntaje_catador"] != undefined ? resultadoSensorialPromedio["puntaje_catador"].toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase()) : "No registra"}
                                                                     </Text>
                                                                 </View>
                                                             </View>

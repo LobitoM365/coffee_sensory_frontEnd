@@ -685,7 +685,7 @@
 #mainMenu .div-img-perfil-nav img {
     height: 100%;
     cursor: pointer;
-    z-index: 3;
+    z-index: 2;
 }
 
 #mainMenu .btn-cerrar-sesion {
@@ -1588,6 +1588,11 @@
         border-width: 0.4vw;
     }
 
+    #mainMenu .nav-horizontal ul li ul a {
+        border-width: 0.4vw;
+        border-radius: 0.4vw;
+    }
+
     #mainMenu .nav-main .line-nav-li {
         border-width: 0.4vw;
     }
@@ -1597,9 +1602,12 @@
         gap: 3vw;
     }
 
-    #mainMenu .nav-main .title-li,
-    #mainMenu .nav-main .line-nav-li {
+    #mainMenu .nav-main .title-li {
         padding: 4vw;
+    }
+
+    #mainMenu .nav-main .line-nav-li {
+        padding: 0vw;
     }
 
     #mainMenu .nav-main .link-memu-horizontal {

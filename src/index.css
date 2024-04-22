@@ -57,6 +57,7 @@
 
 }
 
+#mainMenu .darkMode .table-fixed .table-asignar .div-filters,
 #mainMenu .darkMode .div-filters {
     background-color: rgb(31, 38, 60) !important;
     color: white;
@@ -231,13 +232,16 @@
     border: 1px solid white
 }
 
-#mainMenu .darkMode #mainAlert .alert {
+#mainMenu .darkMode #mainAlert .alert,
+#root .darkMode #mainAlert .alert {
     background-color: rgb(22, 26, 43);
     border: 1px solid white;
 }
 
 #mainMenu .darkMode #mainAlert .titulo-alert,
-#mainMenu .darkMode .description-alert {
+#mainMenu .darkMode .description-alert,
+#root .darkMode #mainAlert .alert {
+
     color: white;
 }
 
@@ -354,7 +358,46 @@
     fill: white;
 }
 
-.darkMode #mainModalForm .label-error-submit-form {
+.darkMode #mainTablas .filter-asc-desc-focus {
+    fill: #ffa300;
+}
+
+.darkMode #mainTablas .item-paginate-focus,
+.darkMode #mainTablas .item-paginate-round {
+    background-color: rgb(31, 41, 83);
+    border: 1px solid white;
+    color: white;
+}
+
+.darkMode #mainTablas .no-focus-chevron-paginate {
+    fill: #e5a503c2 !important;
+}
+
+.darkMode #mainTablas .focus-chevron-paginate {
+    fill: #ffa300 !important;
+}
+
+.darkMode #mainTablas .item-paginate-focus {
+    color: #ffa300;
+    border: 1px solid #ffa300;
+}
+
+.darkMode #mainTablas .points-paginate {
+    background-color: #ffa300;
+}
+
+.darkMode #mainTablas .icon-pdf-table {
+    fill: #ffa300;
+}
+
+.darkMode #mainTablas .div-icon-reporte-pdf:hover {
+    background-color: #ffa20024;
+}
+
+.darkMode #mainModalForm .label-error-submit-form,
+.darkMode #modalConfiguracionVariablesFisico .label-error-submit-form,
+#root .darkMode .label-error-submit-form,
+.darkMode #modalConfiguracionVariablesFisico .h6-error-formula-variable {
     color: #ffa300;
 }
 
@@ -370,9 +413,44 @@
     fill: white;
 }
 
+.darkMode .icon-quit-svg-form {
+    fill: white;
+}
+
+.darkMode .div-content-form input {
+    background-color: rgb(31, 38, 60);
+    border: 1px solid white;
+    color: white;
+}
+
+.darkMode #modalConfiguracionVariablesFisico .div-no-campo-select {
+    background-color: rgb(31, 38, 60);
+}
+
 @media screen and (max-width:500px) {
     #mainMenu .darkMode .nav-main .contenido-notificaciones {
         background-color: unset;
         color: white;
     }
+}
+
+@media screen and (max-width: 430px) {
+    .darkMode #mainTablas .div-chevron-paginate {
+        background-color: rgb(18, 26, 84);
+        border: 1px solid rgb(219, 133, 13);
+    }
+}
+
+#root .darkMode textarea {
+    color: white;
+}
+
+#mainMenu .darkMode .nav-main .div-img-perfil-focus {
+    background-color: rgb(8 7 22 / 56%);
+}
+
+.darkMode #mainAlert .tittle-warning-alert,
+.darkMode .div-content-errros-formato h3,
+.darkMode .div-content-errros-formato h4 {
+    color: #ffa300;
 }

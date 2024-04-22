@@ -11,8 +11,12 @@ export const Alert = (data) => {
 
 
                     <div id="mainAlert" style={{ background: data.dataAlert.backGroundColor ? data.dataAlert.backGroundColor : "" }} className="div-alert">
-                        <div className="alert">
+                        {data.dataAlert["img_fondo"] ?
+                            <img className="img-fondo-alert" src={data.dataAlert["img_fondo"]} alt="Imagen de Fondo" />
+                            : ""}
+                        <div className={"alert" + (data.dataAlert["img_fondo"] ? " alert-border" : "")}>
                             <div className="div-img-alert">
+
                                 {data.dataAlert["icon"] ?
 
                                     <div className="icon-true-alert">
@@ -142,7 +146,13 @@ export const Alert = (data) => {
                                                 </div>
                                             } else if (data.dataAlert["status"] === "interrogative") {
                                                 return <button onClick={() => {
-                                                    if (data.dataAlert.continue.location) { location.href = data.dataAlert.continue.location } /* else { location.href = "/" } */
+                                                    if (data.dataAlert["continue"]) {
+                                                        console.log(data.dataAlert)
+                                                        if (data.dataAlert["continue"].close != false) {
+                                                            data.setStatusAlert(false);
+                                                        }
+                                                        if (data.dataAlert.continue.location) { location.href = data.dataAlert.continue.location } /* else { location.href = "/" } */
+                                                    }
                                                 }} className="input-alert input-entiendo-alert">Entiendo</button>
                                             } else {
                                                 return <button onClick={() => { data.setStatusAlert(false) }} className="input-alert input-cancelar-alert">Cancelar</button>

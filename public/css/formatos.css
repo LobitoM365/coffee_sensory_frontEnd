@@ -688,3 +688,7 @@
         display: unset;
     }
 }
+
+#mainFormatos .div-template-analisis, #mainFormatos .div-template-analisis iframe{
+    width: 100%;
+}

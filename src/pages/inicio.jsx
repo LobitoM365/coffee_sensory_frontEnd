@@ -706,10 +706,36 @@ export const Inicio = () => {
             console.log("Error: " + e)
         }
     }
+
+    const formatDate = (data) => {
+        let date = new Date(data);
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        let hour = date.getHours();
+        let minutes = date.getMinutes();
+        let orientation = "a.m"
+        if (hour >= 12) {
+            hour = hour - 12
+            orientation = "p.m"
+        }
+        if (hour == 0) {
+            hour = 12
+        }
+        if (minutes < 10) {
+            minutes = "0" + minutes
+        }
+        return `${day < 10 ? '0' + day : day} / ${month < 10 ? '0' + month : month} / ${year} , ${hour}:${minutes} ${orientation}`
+    }
+
     return (
         <div id='mainInicio'>
-            <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
+            <div className='iframe-mapa' >
+                <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
+                <img className='img-fondo' src="/public/img/fondoMapa2.jpg" alt="" />
 
+                <iframe id='iframeMapa' className='iframe' src="src/mapa/MapaV4/index.html" frameBorder={0}></iframe>
+            </div>
             {modalStatus ?
 
                 analisis ? Object.keys(analisis).length > 0 ?
@@ -828,9 +854,9 @@ export const Inicio = () => {
                                                         </h4>
                                                     </div>
                                                     {/*     <div>
-                                                        <h4>Muestra</h4>
-                                                        <h4>N-1</h4>
-                                                    </div> */}
+                                        <h4>Muestra</h4>
+                                        <h4>N-1</h4>
+                                    </div> */}
                                                 </div>
                                             </div>
                                         </div>
@@ -924,13 +950,31 @@ export const Inicio = () => {
                                     </div>
                                     <div className="div-informacion-analisis">
                                         <div className="content-info-analisis">
+                                            {console.log(analisis)}
+                                            {analisis ?
+                                                <div className='div-informacion-general-analisis'>
+                                                    <h4 className='title-informacion-general-analisis'>Información sobre el análisis</h4>
+                                                    <div className='div-info-asf'>
+                                                        <div>
+                                                            <h4>
+                                                                Fecha de aprobación
+                                                            </h4>
+                                                            <h3>
+                                                                {formatDate(analisis.fecha_finalizacion)}
+                                                            </h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                : ""}
                                             <div className="info-analisis info-analisis-fisico">
                                                 <div className="div-table-formato-fisico-template">
                                                     <table cellSpacing="0" className="table-formato-fisico-template">
                                                         <thead>
                                                             <tr>
                                                                 <th colSpan="999999">
-                                                                    Análisis Físico
+                                                                    <h4 className='h4-title-analisis'>
+                                                                        Análisis Físico
+                                                                    </h4>
                                                                 </th>
                                                             </tr>
                                                         </thead>
@@ -1031,13 +1075,17 @@ export const Inicio = () => {
                                                 </div>
                                             </div>
                                             <div className="info-analisis info-analisis-atributos">
-                                                <h3>Análisis de Atributos</h3>
+                                                <h4 className='h4-title-analisis title-analisis-normal-atributos'>
+                                                    Análisis de Atributos
+                                                </h4>
                                                 <div className='div-img-atributos'>
                                                     <img id='imgAtributos' src="" alt="" />
                                                 </div>
                                             </div>
                                             <div className="info-analisis info-analisis-sensorial">
-                                                <h3>Análisis sensorial</h3>
+                                                <h4 className='h4-title-analisis title-analisis-normal'>
+                                                    Análisis sensorial
+                                                </h4>
                                                 <iframe id="iframeFormatoSca" className="iframe-vacio-formato-sca iframe-formato-sca"
                                                     src="/src/formatoSca/formatoScaTemplate.html" frameBorder="0"></iframe>
 
@@ -1065,10 +1113,6 @@ export const Inicio = () => {
                             : "" : ""}
                     </div>
                     : "" : "" : ""}
-
-            <img className='img-fondo' src="/public/img/fondoMapa2.jpg" alt="" />
-
-            <iframe id='iframeMapa' className='iframe' src="src/mapa/MapaV4/index.html" frameBorder={0}></iframe>
         </div>
     )
 }

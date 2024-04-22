@@ -4,7 +4,7 @@
      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
  }
 
- #mainInicio {
+ #mainInicio .iframe-mapa{
      position: fixed;
      width: 100%;
      height: 100%;
@@ -292,7 +292,7 @@
      display: flex;
      padding: 20px;
      gap: 95px;
-     justify-content: space-between;
+     justify-content: center;
      align-items: center;
  }
 
@@ -310,6 +310,7 @@
      justify-content: center;
      align-items: center;
      overflow: hidden;
+     flex-direction: column;
  }
 
  #mainInicio .content-info-analisis {
@@ -322,7 +323,7 @@
  #mainInicio .content-info-analisis {
      display: grid;
      grid-template-columns: 1fr 1fr;
-     gap: 30px;
+     gap: 65px;
  }
 
  #mainInicio .info-analisis-sensorial {
@@ -406,6 +407,7 @@
 
  #mainInicio #contentForm {
      background-color: #0000005e;
+     z-index: 999999999;
  }
 
  #mainInicio .div-img-info-general {
@@ -426,17 +428,65 @@
  }
 
  #mainInicio .div-carrusel {
-     height: 35vw;
-     max-height: 600px;
+     height: 75vw;
+     max-height: 700px;
      max-width: 100%;
  }
 
  #mainInicio .modal-carrusel .div-content-form {
-     width: 1200px;
+     width: 1500px;
      /* max-width: 100%; */
  }
 
+
+
+ #mainInicio .div-informacion-general-analisis {
+     grid-column-start: 1;
+     grid-column-end: 3;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     flex-direction: column;
+     gap: 50px;
+ }
+
+ #mainInicio .title-informacion-general-analisis {
+     font-size: 2em;
+ }
+
+ #mainInicio .h4-title-analisis {
+     font-size: 1.2em;
+ }
+
+ #mainInicio .title-analisis-normal {
+     text-align: center;
+     padding: 20px 0px 40px 0px;
+ }
+
+ #mainInicio .title-analisis-normal-atributos {
+     text-align: center;
+     padding-top: 12px;
+ }
+
+ #mainInicio .div-info-asf {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     max-width: 100%;
+     gap: 70px;
+     padding: 20px;
+     height: max-content;
+     width: calc(100% - 40px);
+     justify-content: center;
+     align-items: center;
+     overflow: hidden;
+ }
+
  @media screen and (max-width: 1550px) {
+     #mainInicio .div-informacion-general-analisis {
+         grid-column-start: unset;
+         grid-column-end: unset;
+     }
+
      #mainInicio .div-info-general {
          grid-template-columns: 1fr;
      }

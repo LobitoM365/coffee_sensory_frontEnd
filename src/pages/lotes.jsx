@@ -106,6 +106,11 @@ export const Lotes = (userInfo) => {
             "upper_case": true,
             "priority": 3
         },
+        "vereda": {
+            "referencia": "Vereda",
+            "upper_case": true,
+            "priority": 3
+        },
         "nombre": {
             "referencia": "Nombre del lote",
             "upper_case": true
@@ -118,6 +123,10 @@ export const Lotes = (userInfo) => {
         },
         "fecha_creacion": {
             "referencia": "Fecha creación",
+            "format": true
+        },
+        "fecha_actualizacion": {
+            "referencia": "Fecha de actualización",
             "format": true
         },
         "estado": {
@@ -174,42 +183,39 @@ export const Lotes = (userInfo) => {
 
     async function desactivarLote() {
         try {
-            const axios = await Api.delete("lotes/eliminar/" + idLoteCambiarEstado);
-            if (axios.data.status == true) {
+            const response = await Api.delete("lotes/eliminar/" + idLoteCambiarEstado);
+            if (response.data.status == true) {
                 getLotes();
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                     }
                 )
-            } else if (axios.data.delete_error) {
+            } else if (response.data.delete_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.delete_error,
+                        description: response.data.delete_error,
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if (axios.data.permission_error) {
+            } else if (response.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
-                        status: "false",
-                        description: axios.data.permission_error,
+                        status: "interrogative",
+                        description: response.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
                         continue: {
-                            "function": procedureTrue,
-                            location: "/dashboard"
+                            "close": true
                         }
                     }
                 )
             }
-
-
         } catch (e) {
             setStatusAlert(true)
             setdataAlert(
@@ -248,43 +254,43 @@ export const Lotes = (userInfo) => {
     }
     async function setLote(data) {
         try {
-            const axios = await Api.post("lotes/registrar/", data);
-            if (axios.data.status == true) {
+            const response = await Api.post("lotes/registrar/", data);
+            if (response.data.status == true) {
                 getLotes();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                         continue: {
                             "function": procedureTrue
                         }
                     }
                 )
-            } else if (axios.data.register_error) {
+            } else if (response.data.register_error) {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.register_error,
+                        description: response.data.register_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
-            } else if (axios.data.permission_error) {
+            } else if (response.data.errors) {
+                setErrors(response.data.errors)
+            } else if (response.data.permission_error) {
+                changeModalForm(false)
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "interrogative",
-                        description: axios.data.permission_error,
+                        description: response.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
                         continue: {
-                            "function": procedureTrue,
-                            location: "/dashboard"
+                            "close": true
                         }
                     }
                 )
@@ -294,7 +300,7 @@ export const Lotes = (userInfo) => {
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.register_error,
+                        description: response.data.register_error,
                         "tittle": "Error!!!"
                     }
                 )
@@ -355,15 +361,15 @@ export const Lotes = (userInfo) => {
     async function updateLote(data, id) {
 
         try {
-            const axios = await Api.put("lotes/actualizar/" + id, data);
-            if (axios.data.status == true) {
+            const response = await Api.put("lotes/actualizar/" + id, data);
+            if (response.data.status == true) {
                 getLotes();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                         continue: {
                             "function": procedureTrue,
@@ -371,25 +377,38 @@ export const Lotes = (userInfo) => {
                         }
                     }
                 )
-            } else if (axios.data.update_error) {
+            } else if (response.data.update_error) {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.update_error,
+                        description: response.data.update_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
+            } else if (response.data.errors) {
+                setErrors(response.data.errors)
+            } else if (response.data.permission_error) {
+                setUpdateStatus(false)
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
+                    }
+                )
             } else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.update_error,
+                        description: response.data.update_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
@@ -420,17 +439,20 @@ export const Lotes = (userInfo) => {
         getLotes(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
-        dataFilterTable.filter["order"] = filter
+        let cloneDataFilterTable = { ...dataFilterTable }
+        cloneDataFilterTable.filter["order"] = filter
+        setDataFilterTable(cloneDataFilterTable)
         getLotes();
-
     }
     async function limitRegisters(data) {
-        dataFilterTable.filter["limit"] = data
-        if (data["valueSearch"] != undefined) {
-            dataFilterTable.filter["search"] = data["valueSearch"]
-        }
-        getLotes()
+        let cloneDataFilterTable = { ...dataFilterTable }
 
+        cloneDataFilterTable.filter["limit"] = data
+        if (data["valueSearch"] != undefined) {
+            cloneDataFilterTable.filter["search"] = data["valueSearch"]
+        }
+        setDataFilterTable(cloneDataFilterTable)
+        getLotes()
     }
     async function buscarLote(id) {
 
@@ -690,8 +712,8 @@ export const Lotes = (userInfo) => {
         }
     }
     async function clearFilters(data) {
-        dataFilterTable = {
-            "filter": {
+        try {
+            dataFilterTable["filter"] = {
                 "where": {
 
                 },
@@ -700,16 +722,18 @@ export const Lotes = (userInfo) => {
                     "fin": 10
                 }
             }
-        }
-        if (typeof data == "object") {
-            if (data.inicio) {
-                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            if (typeof data == "object") {
+                if (data.inicio) {
+                    dataFilterTable.filter["limit"]["inicio"] = data.inicio
+                }
+                if (data.fin) {
+                    dataFilterTable.filter["limit"]["fin"] = data.fin
+                }
             }
-            if (data.fin) {
-                dataFilterTable.filter["limit"]["fin"] = data.fin
-            }
+            getusuarios()
+        } catch (e) {
+            console.log("Error: " + e)
         }
-        getusuarios()
     }
     return (
         <>

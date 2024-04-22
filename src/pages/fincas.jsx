@@ -118,6 +118,27 @@ export const Fincas = (userInfo) => {
             if (response.data.status == true) {
                 listarIconos(focusFinca)
                 setModalImgChange()
+            } else if (response.data.delete_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.delete_error,
+                        "tittle": "Inténtalo de nuevo.",
+                    }
+                )
+            } else if (response.data.permission_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
+                    }
+                )
             }
         } catch (e) {
             console.log("Error: " + e)
@@ -322,7 +343,7 @@ export const Fincas = (userInfo) => {
         getDepartamentos();
         getMunicipiosReporte()
     }, [])
-    getUsers()
+
 
     async function viewIcons(id) {
         setFocusFinca(id)
@@ -353,36 +374,35 @@ export const Fincas = (userInfo) => {
 
     async function desactivarFinca() {
         try {
-            const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
-            if (axios.data.status == true) {
+            const response = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
+            if (response.data.status == true) {
                 getFincas();
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                     }
                 )
-            } else if (axios.data.delete_error) {
+            } else if (response.data.delete_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.delete_error,
+                        description: response.data.delete_error,
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if (axios.data.permission_error) {
+            }  else if (response.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
-                        status: "false",
-                        description: axios.data.permission_error,
+                        status: "interrogative",
+                        description: response.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
                         continue: {
-                            "function": procedureTrue,
-                            location: "/dashboard"
+                            "close": true
                         }
                     }
                 )
@@ -425,44 +445,44 @@ export const Fincas = (userInfo) => {
 
     }
     async function setFinca(data) {
-        const axios = await Api.post("finca/registrar/", data);
+        const response = await Api.post("finca/registrar/", data);
         try {
-            if (axios.data.status == true) {
+            if (response.data.status == true) {
                 getFincas();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                         continue: {
                             "function": procedureTrue
                         }
                     }
                 )
-            } else if (axios.data.register_error) {
+            } else if (response.data.register_error) {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.register_error,
+                        description: response.data.register_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
-            } else if (axios.data.permission_error) {
+            } else if (response.data.errors) {
+                setErrors(response.data.errors)
+            } else if (response.data.permission_error) {
+                changeModalForm(false)
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "interrogative",
-                        description: axios.data.permission_error,
+                        description: response.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
                         continue: {
-                            "function": procedureTrue,
-                            location: "/dashboard"
+                            "close": true
                         }
                     }
                 )
@@ -472,7 +492,7 @@ export const Fincas = (userInfo) => {
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.register_error,
+                        description: response.data.register_error,
                         "tittle": "Error!!!"
                     }
                 )
@@ -641,15 +661,15 @@ export const Fincas = (userInfo) => {
     async function updateFinca(data, id) {
 
         try {
-            const axios = await Api.put("finca/actualizar/" + id, data);
-            if (axios.data.status == true) {
+            const response = await Api.put("finca/actualizar/" + id, data);
+            if (response.data.status == true) {
                 getFincas();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                         continue: {
                             "function": procedureTrue,
@@ -657,25 +677,38 @@ export const Fincas = (userInfo) => {
                         }
                     }
                 )
-            } else if (axios.data.update_error) {
+            } else if (response.data.update_error) {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.update_error,
+                        description: response.data.update_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
+            } else if (response.data.errors) {
+                setErrors(response.data.errors)
+            } else if (response.data.permission_error) {
+                setUpdateStatus(false)
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
+                    }
+                )
             } else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.update_error,
+                        description: response.data.update_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
@@ -706,23 +739,27 @@ export const Fincas = (userInfo) => {
         getFincas(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
-        dataFilterTable.filter["order"] = filter
+        let cloneDataFilterTable = { ...dataFilterTable }
+        cloneDataFilterTable.filter["order"] = filter
+        setDataFilterTable(cloneDataFilterTable)
         getFincas();
-
     }
     async function limitRegisters(data) {
-        dataFilterTable.filter["limit"] = data
+        let cloneDataFilterTable = { ...dataFilterTable }
+
+        cloneDataFilterTable.filter["limit"] = data
         if (data["valueSearch"] != undefined) {
-            dataFilterTable.filter["search"] = data["valueSearch"]
+            cloneDataFilterTable.filter["search"] = data["valueSearch"]
         }
+        setDataFilterTable(cloneDataFilterTable)
         getFincas()
     }
     async function buscarFinca(id) {
         const response = await Api.get("finca/buscar/" + id);
         try {
             if (response.data.status == true) {
-                getMunicipios(response.data.data[0].departamentos_id)
-                getVeredas(response.data.data[0].municipios_id)
+                await getMunicipios(response.data.data[0].departamentos_id)
+                await getVeredas(response.data.data[0].municipios_id)
                 setfincaEdit(response.data.data[0])
             } else if (response.data.find_error) {
                 setErrors({})
@@ -1048,8 +1085,8 @@ export const Fincas = (userInfo) => {
         }
     }
     async function clearFilters(data) {
-        dataFilterTable = {
-            "filter": {
+        try {
+            dataFilterTable["filter"] = {
                 "where": {
 
                 },
@@ -1058,16 +1095,18 @@ export const Fincas = (userInfo) => {
                     "fin": 10
                 }
             }
-        }
-        if (typeof data == "object") {
-            if (data.inicio) {
-                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            if (typeof data == "object") {
+                if (data.inicio) {
+                    dataFilterTable.filter["limit"]["inicio"] = data.inicio
+                }
+                if (data.fin) {
+                    dataFilterTable.filter["limit"]["fin"] = data.fin
+                }
             }
-            if (data.fin) {
-                dataFilterTable.filter["limit"]["fin"] = data.fin
-            }
+            getFincas()
+        } catch (e) {
+            console.log("Error: " + e)
         }
-        getFincas()
     }
     return (
         <>

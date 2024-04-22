@@ -262,7 +262,7 @@ export const Login = (data) => {
                             </div>
                             {validationError.credentials_error && <div className="credentials-error"> {validationError.credentials_error}</div>}
                         </div>
-                        <button type="submit">Iniciar sesión</button>
+                        <button className="button-iniciar-sesesion" type="submit">Iniciar sesión</button>
                         <span className="recover-password">¿Olvidó su contraseña? <br />
                             <p href="" id="btnRecovery">Click aqui para obtener ayuda.</p>
                         </span>

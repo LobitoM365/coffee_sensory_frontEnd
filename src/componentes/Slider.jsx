@@ -64,12 +64,10 @@ export const Slider = (data) => {
                         } else {
                             imgSlider[x].style.transition = transitionMargin;
                             imgSlider[x].style.marginLeft = dataSlider[x] + "%";
-
                         }
                     }
                 }
                 function volver(dataSlider) {
-
                     for (let x = 0; x < dataSlider.length; x++) {
                         if (dataSlider[x] == (imgSlider.length - lessLenght) * 100) {
                             dataSlider[x] = inicio;
@@ -78,7 +76,6 @@ export const Slider = (data) => {
                         } else {
                             imgSlider[x].style.transition = transitionMargin;
                             imgSlider[x].style.marginLeft = dataSlider[x] + "%";
-
                         }
                     }
                 }

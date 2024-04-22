@@ -128,3 +128,15 @@
      overflow: hidden;
      max-width: 100%;
  }
+
+ #mainAlert .img-fondo-alert {
+     position: fixed;
+     width: 100%;
+     height: 100%;
+     z-index: -1;
+     filter: blur(2px);
+ }
+
+ #mainAlert .alert-border {
+     border: 1px solid rgb(198, 198, 198);
+ }

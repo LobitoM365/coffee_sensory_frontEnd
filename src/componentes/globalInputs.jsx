@@ -62,6 +62,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
         }
     }
     const inputChange = (e, key, type) => {
+
         setStatusInputDefault(false)
 
         if (type === "color") {
@@ -161,10 +162,16 @@ export const GlobalInputs = forwardRef((data, ref) => {
             e.target.value = e.target.value.replace("  ", " ").trimStart()
         }
         let value = "";
+
+
+
         setInputValor(e.target.value)
         if (typeof data.value == "object") {
             let cloneDataInput = { ...data.value }
             cloneDataInput[key] = e.target.value
+
+            console.log(data.value[key], e.target.value, cloneDataInput)
+            data.value[key] = e.target.value
             data.input(cloneDataInput)
         } else {
             data.input(e.target.value)
@@ -344,7 +351,6 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                 }
                                 setStatusInputDefault(false)
                             }
-
                             return (
                                 <div key={key} className={`${dataInputs[key]["type"] === "email" ? "input-email " : ""}input-content-form-register`}>
                                     <div className="head-input">
@@ -482,7 +488,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                                     }} className='select-option'>Seleccione una opción...</h4>
 
                                                     {
-                                                        dataInputs[key]["opciones"] ? dataInputs[key]["opciones"].map((select, indexSelect) => {
+                                                        dataInputs[key]["opciones"] ? typeof dataInputs[key]["opciones"] == "object" ? dataInputs[key]["opciones"].map((select, indexSelect) => {
 
                                                             let value = ""
                                                             if (dataInputs[key]["values"]) {
@@ -535,7 +541,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                                             }} className={`select-option select-option-${key} ${typeof data.value == "object" ? data.value[key] == dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] ? 'option-focus' : "" : data.value == dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] ? 'option-focus' : ""}`} value="">
                                                                 {value}
                                                             </h4>
-                                                        }) : ""
+                                                        }) : "" : ""
                                                     }
                                                 </div>
                                                 <div className='input-select-estado input-select-search' name="" id="" onClick={(e) => {

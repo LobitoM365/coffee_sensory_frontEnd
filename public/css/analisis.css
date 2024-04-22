@@ -233,7 +233,7 @@
     display: grid;
     grid-template-columns: 900px 1fr;
     gap: 90px;
-    overflow: hidden;
+    /* overflow: hidden; */
     max-width: 100%;
 }
 
@@ -357,6 +357,7 @@
     border: unset;
     font-size: 1.4em;
     max-width: calc(100% - 20px);
+    border: 1px solid gray;
 }
 
 #mainAnalisis .table-add-asignar .svg-icon-quit-table-asing {

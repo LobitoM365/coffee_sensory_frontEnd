@@ -5,9 +5,9 @@ import "../../public/css/form.css"
 
 export const Form = forwardRef((data, ref) => {
 
-    let elementEdit = [];
-    let inputs = []
-    let [dataInputs, setDataInputs] = useState({});
+    const [elementEdit, setElementEdit] = useState([]);
+    const [inputs, setInputs] = useState([]);
+    const [dataInputs, setDataInputs] = useState({});
     const [selectsValues, changeSelectsValues] = useState({});
     const [dataSelect, setDataSelects] = useState({});
     const [inputValor, setInputValor] = useState({});
@@ -92,13 +92,14 @@ export const Form = forwardRef((data, ref) => {
     };
 
 
+    useEffect(() => {
+        if (data.data) {
+            setInputs(Object.keys(data.data))
+            setDataInputs(data.data)
+            setElementEdit(data.elementEdit)
+        }
+    }, [data])
 
-    if (data.data) {
-        inputs = Object.keys(data.data)
-        dataInputs = data.data
-
-        elementEdit = data.elementEdit
-    }
     function Init() {
         let cloneSlectValue = { ...selectsValues }
         let cloneModalSelect = { ...selectsValues }
@@ -394,7 +395,7 @@ export const Form = forwardRef((data, ref) => {
                                                                                         selectsValues[key] = value;
                                                                                         dataSelect[key] = dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]]
                                                                                     }
-                                                                                    
+
                                                                                 }
                                                                                 return <h4 key={indexSelect} onClick={(e) => {
                                                                                     clearOptionsSelect(key);

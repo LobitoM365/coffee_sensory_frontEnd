@@ -270,32 +270,32 @@ export const Veredas = () => {
 
     async function desactivarFinca() {
         try {
-            const axios = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
-            if (axios.data.status == true) {
+            const response = await Api.delete("finca/eliminar/" + idFincaCambiarEstado);
+            if (response.data.status == true) {
                 getVariedades();
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                     }
                 )
-            } else if (axios.data.delete_error) {
+            } else if (response.data.delete_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.delete_error,
+                        description: response.data.delete_error,
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if (axios.data.permission_error) {
+            } else if (response.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.permission_error,
+                        description: response.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
                         continue: {
                             "function": procedureTrue,
@@ -343,43 +343,43 @@ export const Veredas = () => {
     }
     async function setVariedad(data) {
         try {
-            const axios = await Api.post("veredas/registrar/", data);
-            if (axios.data.status == true) {
+            const response = await Api.post("veredas/registrar/", data);
+            if (response.data.status == true) {
                 getVariedades();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                         continue: {
                             "function": procedureTrue
                         }
                     }
                 )
-            } else if (axios.data.register_error) {
+            } else if (response.data.register_error) {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.register_error,
+                        description: response.data.register_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
-            } else if (axios.data.permission_error) {
+            } else if (response.data.errors) {
+                setErrors(response.data.errors)
+            } else if (response.data.permission_error) {
+                changeModalForm(false)
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "interrogative",
-                        description: axios.data.permission_error,
+                        description: response.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
                         continue: {
-                            "function": procedureTrue,
-                            location: "/dashboard"
+                            "close": true
                         }
                     }
                 )
@@ -389,7 +389,7 @@ export const Veredas = () => {
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.register_error,
+                        description: response.data.register_error,
                         "tittle": "Error!!!"
                     }
                 )
@@ -417,15 +417,15 @@ export const Veredas = () => {
     async function updateFinca(data, id) {
 
         try {
-            const axios = await Api.put("veredas/actualizar/" + id, data);
-            if (axios.data.status == true) {
+            const response = await Api.put("veredas/actualizar/" + id, data);
+            if (response.data.status == true) {
                 getVariedades();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                         continue: {
                             "function": procedureTrue,
@@ -433,25 +433,38 @@ export const Veredas = () => {
                         }
                     }
                 )
-            } else if (axios.data.update_error) {
+            } else if (response.data.update_error) {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.update_error,
+                        description: response.data.update_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
+            } else if (response.data.errors) {
+                setErrors(response.data.errors)
+            } else if (response.data.permission_error) {
+                setUpdateStatus(false)
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
+                    }
+                )
             } else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.update_error,
+                        description: response.data.update_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
@@ -482,15 +495,19 @@ export const Veredas = () => {
         getVariedades(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
-        dataFilterTable.filter["order"] = filter
+        let cloneDataFilterTable = { ...dataFilterTable }
+        cloneDataFilterTable.filter["order"] = filter
+        setDataFilterTable(cloneDataFilterTable)
         getVariedades();
-
     }
     async function limitRegisters(data) {
-        dataFilterTable.filter["limit"] = data
+        let cloneDataFilterTable = { ...dataFilterTable }
+
+        cloneDataFilterTable.filter["limit"] = data
         if (data["valueSearch"] != undefined) {
-            dataFilterTable.filter["search"] = data["valueSearch"]
+            cloneDataFilterTable.filter["search"] = data["valueSearch"]
         }
+        setDataFilterTable(cloneDataFilterTable)
         getVariedades()
     }
     async function buscarFinca(id) {
@@ -704,8 +721,8 @@ export const Veredas = () => {
         }
     }
     async function clearFilters(data) {
-        dataFilterTable = {
-            "filter": {
+        try {
+            dataFilterTable["filter"] = {
                 "where": {
 
                 },
@@ -714,16 +731,18 @@ export const Veredas = () => {
                     "fin": 10
                 }
             }
-        }
-        if (typeof data == "object") {
-            if (data.inicio) {
-                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            if (typeof data == "object") {
+                if (data.inicio) {
+                    dataFilterTable.filter["limit"]["inicio"] = data.inicio
+                }
+                if (data.fin) {
+                    dataFilterTable.filter["limit"]["fin"] = data.fin
+                }
             }
-            if (data.fin) {
-                dataFilterTable.filter["limit"]["fin"] = data.fin
-            }
+            getVariedades()
+        } catch (e) {
+            console.log("Error: " + e)
         }
-        getVariedades()
     }
     return (
         <>

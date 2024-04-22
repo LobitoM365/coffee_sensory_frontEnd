@@ -239,46 +239,44 @@ export const Muestras = (userInfo) => {
 
     async function desactivaMuestra() {
         try {
-            const axios = await Api.delete("muestra/desactivar/" + idFincaCambiarEstado);
-            if (axios.data.status == true) {
+            const response = await Api.delete("muestra/desactivar/" + idFincaCambiarEstado);
+            if (response.data.status == true) {
                 getMuestra();
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                     }
                 )
-            } else if (axios.data.delete_error) {
+            } else if (response.data.delete_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.delete_error,
+                        description: response.data.delete_error,
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if (axios.data.permission_error) {
+            } else if (response.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
-                        status: "false",
-                        description: axios.data.permission_error,
+                        status: "interrogative",
+                        description: response.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
                         continue: {
-                            "function": procedureTrue,
-                            location: "/dashboard"
+                            "close": true
                         }
                     }
                 )
-            }
-            else if (axios.data.find_error) {
+            } else if (response.data.find_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.find_error,
+                        description: response.data.find_error,
                         "tittle": "Verfique antes!",
                         continue: {
                             "function": procedureTrue,
@@ -326,43 +324,43 @@ export const Muestras = (userInfo) => {
     }
     async function setMuestra(data) {
         try {
-            const axios = await Api.post("muestra/registrar/", data);
-            if (axios.data.status == true) {
+            const response = await Api.post("muestra/registrar/", data);
+            if (response.data.status == true) {
                 getMuestra();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                         continue: {
                             "function": procedureTrue
                         }
                     }
                 )
-            } else if (axios.data.register_error) {
+            } else if (response.data.register_error) {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.register_error,
+                        description: response.data.register_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
-            } else if (axios.data.permission_error) {
+            } else if (response.data.errors) {
+                setErrors(response.data.errors)
+            } else if (response.data.permission_error) {
+                changeModalForm(false)
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "interrogative",
-                        description: axios.data.permission_error,
+                        description: response.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
                         continue: {
-                            "function": procedureTrue,
-                            location: "/dashboard"
+                            "close": true
                         }
                     }
                 )
@@ -372,7 +370,7 @@ export const Muestras = (userInfo) => {
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.register_error,
+                        description: response.data.register_error,
                         "tittle": "Error!!!"
                     }
                 )
@@ -400,15 +398,15 @@ export const Muestras = (userInfo) => {
     async function updateMuestra(data, id) {
 
         try {
-            const axios = await Api.put("muestra/actualizar/" + id, data);
-            if (axios.data.status == true) {
+            const response = await Api.put("muestra/actualizar/" + id, data);
+            if (response.data.status == true) {
                 getMuestra();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                         continue: {
                             "function": procedureTrue,
@@ -416,25 +414,38 @@ export const Muestras = (userInfo) => {
                         }
                     }
                 )
-            } else if (axios.data.update_error) {
+            } else if (response.data.update_error) {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.update_error,
+                        description: response.data.update_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
+            } else if (response.data.errors) {
+                setErrors(response.data.errors)
+            } else if (response.data.permission_error) {
+                setUpdateStatus(false)
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
+                    }
+                )
             } else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.update_error,
+                        description: response.data.update_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
@@ -465,15 +476,19 @@ export const Muestras = (userInfo) => {
         getMuestra(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
-        dataFilterTable.filter["order"] = filter
+        let cloneDataFilterTable = { ...dataFilterTable }
+        cloneDataFilterTable.filter["order"] = filter
+        setDataFilterTable(cloneDataFilterTable)
         getMuestra();
-
     }
     async function limitRegisters(data) {
-        dataFilterTable.filter["limit"] = data
+        let cloneDataFilterTable = { ...dataFilterTable }
+
+        cloneDataFilterTable.filter["limit"] = data
         if (data["valueSearch"] != undefined) {
-            dataFilterTable.filter["search"] = data["valueSearch"]
+            cloneDataFilterTable.filter["search"] = data["valueSearch"]
         }
+        setDataFilterTable(cloneDataFilterTable)
         getMuestra()
     }
     async function buscarMuestra(id) {
@@ -736,8 +751,8 @@ export const Muestras = (userInfo) => {
         }
     }
     async function clearFilters(data) {
-        dataFilterTable = {
-            "filter": {
+        try {
+            dataFilterTable["filter"] = {
                 "where": {
 
                 },
@@ -746,16 +761,18 @@ export const Muestras = (userInfo) => {
                     "fin": 10
                 }
             }
-        }
-        if (typeof data == "object") {
-            if (data.inicio) {
-                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            if (typeof data == "object") {
+                if (data.inicio) {
+                    dataFilterTable.filter["limit"]["inicio"] = data.inicio
+                }
+                if (data.fin) {
+                    dataFilterTable.filter["limit"]["fin"] = data.fin
+                }
             }
-            if (data.fin) {
-                dataFilterTable.filter["limit"]["fin"] = data.fin
-            }
+            getMuestra()
+        } catch (e) {
+            console.log("Error: " + e)
         }
-        getMuestra()
     }
     return (
         <>

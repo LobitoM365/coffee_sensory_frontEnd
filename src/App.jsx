@@ -191,38 +191,38 @@ export default function App(data) {
           <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
           {responseValidateViews ? responseValidateViews.data ? responseValidateViews.data["permission"] == false ? "" :
             <Routes>
+
+              {/* Rutas Públicas */}
               <Route path='*' element={<NotFound />} />
+              <Route path='/recover' element={<RecoveryPassword />} />
               <Route path='pruebaPdf' element={<PruebaPdf />} />
               <Route path='/dashboard/generatePdfTable/' element={<GeneratePdfTable />} />
               <Route path='/dashboard/generateReporteAnalisis/:id' element={<GenerateReporteAnalisis userInfo={userInfo} />} />
-              <Route path='/recover' element={<RecoveryPassword />} />
               <Route path='/'>
                 <Route path='/' element={<MenuInicio userInfo={userInfo} />}>
                   <Route path='/' element={<Inicio />} />
                   <Route path='login' element={<Login socket={data.socket} />} />
                 </Route>
 
-
-           
-                  <Route path='/dashboard' element={<Menu socket={data.socket} valueDarkMode={valueDarkMode} changeDarkMode={changeDarkMode} />}>
-                    <Route path='' element={<Home userInfo={userInfo} />} />
-                    <Route path='profile' element={<Profile userInfo={userInfo} valueDarkMode={valueDarkMode} />} />
-                    <Route path="usuarios/registros" element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} /> : ""} />
-                    <Route path='formulario' element={<FormRegiser userInfo={userInfo} />} />
-                    <Route path='formatoSCA/registros' element={<RegistroFormatoSca userInfo={userInfo} />} />
-                    <Route path='fincas/registros' element={<Fincas userInfo={userInfo} />} />
-                    <Route path='analisis/registros' element={<Analisis socket={data.socket} userInfo={userInfo} />} />
-                    <Route path='formatos/registros' element={<Formatos socket={data.socket} userInfo={userInfo} />} />
-                    <Route path='cafes/registros' element={<Cafes userInfo={userInfo} />} />
-                    <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} /> : ""} />
-                    <Route path='municipios/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Municipios} /> : ""} />
-                    <Route path='variedades/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Variedades} /> : ""} />
-                    <Route path='veredas/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Veredas} /> : ""} />
-                    <Route path='muestras/registros' element={<Muestras userInfo={userInfo} />} />
-                    <Route path='lotes/registros' element={<Lotes userInfo={userInfo} />} />
-                    <Route path='muestras/verRegistros' element={<VerRegistros userInfo={userInfo} />} />
-                  </Route>
-            
+                {/* Rutas privadas */}
+                <Route path='/dashboard' element={<Menu userInfo={userInfo} socket={data.socket} valueDarkMode={valueDarkMode} changeDarkMode={changeDarkMode} />}>
+                  <Route path='' element={<Home userInfo={userInfo} />} />
+                  <Route path='profile' element={<Profile userInfo={userInfo} valueDarkMode={valueDarkMode} />} />
+                  <Route path="usuarios/registros" element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={RegistrosUsuarios} /> : ""} />
+                  <Route path='formulario' element={<FormRegiser userInfo={userInfo} />} />
+                  <Route path='formatoSCA/registros' element={<RegistroFormatoSca userInfo={userInfo} />} />
+                  <Route path='fincas/registros' element={<Fincas userInfo={userInfo} />} />
+                  <Route path='analisis/registros' element={<Analisis socket={data.socket} userInfo={userInfo} />} />
+                  <Route path='formatos/registros' element={<Formatos socket={data.socket} userInfo={userInfo} />} />
+                  <Route path='cafes/registros' element={<Cafes userInfo={userInfo} />} />
+                  <Route path='departamentos/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Departamentos} /> : ""} />
+                  <Route path='municipios/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Municipios} /> : ""} />
+                  <Route path='variedades/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Variedades} /> : ""} />
+                  <Route path='veredas/registros' element={userInfo ? <ProtectedRoute allowRoles={'administrador'} userInfo={userInfo} Element={Veredas} /> : ""} />
+                  <Route path='muestras/registros' element={<Muestras userInfo={userInfo} />} />
+                  <Route path='lotes/registros' element={<Lotes userInfo={userInfo} />} />
+                  <Route path='muestras/verRegistros' element={<VerRegistros userInfo={userInfo} />} />
+                </Route>
               </Route>
 
             </Routes>

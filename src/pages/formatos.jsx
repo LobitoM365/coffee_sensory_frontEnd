@@ -1050,15 +1050,19 @@ export const Formatos = (userInfo) => {
         getAnalisis(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
-        dataFilterTable.filter["order"] = filter
+        let cloneDataFilterTable = { ...dataFilterTable }
+        cloneDataFilterTable.filter["order"] = filter
+        setDataFilterTable(cloneDataFilterTable)
         getAnalisis();
-
     }
     async function limitRegisters(data) {
-        dataFilterTable.filter["limit"] = data
+        let cloneDataFilterTable = { ...dataFilterTable }
+
+        cloneDataFilterTable.filter["limit"] = data
         if (data["valueSearch"] != undefined) {
-            dataFilterTable.filter["search"] = data["valueSearch"]
+            cloneDataFilterTable.filter["search"] = data["valueSearch"]
         }
+        setDataFilterTable(cloneDataFilterTable)
         getAnalisis()
     }
     async function clearInputs() {
@@ -1227,6 +1231,18 @@ export const Formatos = (userInfo) => {
                         }
                     }
                 )
+            } else if (response.data.permission_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
+                    }
+                )
             } else if (response.data.errors) {
                 setErrorsFormato(response.data.errors)
             }
@@ -1332,8 +1348,19 @@ export const Formatos = (userInfo) => {
         delete cloneTable["actualizar"]
         delete cloneTable["formato"]
         delete cloneTable["estado_formato"]
+        delete cloneTable["estado_analisis"]
         delete cloneTable["forma_tipos_analisis_id"]
         delete cloneTable["tipos_analisis_id"]
+        cloneTable["forma_tipos_analisis_id"] = {
+            "referencia": "Tipo de análisis",
+        }
+        cloneTable["estado"] = {
+            "referencia": "Estado del formato",
+        }
+        cloneTable["estado_analisis"] = {
+            "referencia": "Estado del análisis",
+        }
+
         const dataGeneratePdf = {
             "dataTable": usuarios,
             "filter": dataFilterTable,
@@ -1395,7 +1422,7 @@ export const Formatos = (userInfo) => {
             setdataAlert(
                 {
                     status: "false",
-                    description: "Error interno del servidor: Inténtalo más tarde.",
+                    description: "Error interno del servidor: Inténtalo más tarde." + error,
                     "tittle": "Inténtalo de nuevo"
                 }
             )
@@ -1481,8 +1508,8 @@ export const Formatos = (userInfo) => {
     }
 
     async function clearFilters(data) {
-        dataFilterTable = {
-            "filter": {
+        try {
+            dataFilterTable["filter"] = {
                 "where": {
 
                 },
@@ -1491,16 +1518,18 @@ export const Formatos = (userInfo) => {
                     "fin": 10
                 }
             }
-        }
-        if (typeof data == "object") {
-            if (data.inicio) {
-                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            if (typeof data == "object") {
+                if (data.inicio) {
+                    dataFilterTable.filter["limit"]["inicio"] = data.inicio
+                }
+                if (data.fin) {
+                    dataFilterTable.filter["limit"]["fin"] = data.fin
+                }
             }
-            if (data.fin) {
-                dataFilterTable.filter["limit"]["fin"] = data.fin
-            }
+            getAnalisis()
+        } catch (e) {
+            console.log("Error: " + e)
         }
-        getAnalisis()
     }
     return (
         <div id='mainFormatos'>

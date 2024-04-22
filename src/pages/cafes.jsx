@@ -112,6 +112,7 @@ export const Cafes = (userInfo) => {
         },
         "finca": {
             "referencia": "Finca",
+            "upper_case": true
         },
         "lote": {
             "referencia": "Lote",
@@ -119,7 +120,8 @@ export const Cafes = (userInfo) => {
         },
         "variedad": {
             "referencia": "Variedad",
-            "priority": 3
+            "priority": 3,
+            "upper_case": true
         },
         "fecha_creacion": {
             "referencia": "Fecha Creación",
@@ -219,36 +221,35 @@ export const Cafes = (userInfo) => {
 
     async function desactivarFinca() {
         try {
-            const axios = await Api.delete("cafes/cambiarEstado/" + idFincaCambiarEstado);
-            if (axios.data.status == true) {
+            const response = await Api.delete("cafes/cambiarEstado/" + idFincaCambiarEstado);
+            if (response.data.status == true) {
                 getCafes();
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                     }
                 )
-            } else if (axios.data.delete_error) {
+            } else if (response.data.delete_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.delete_error,
+                        description: response.data.delete_error,
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if (axios.data.permission_error) {
+            } else if (response.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
-                        status: "false",
-                        description: axios.data.permission_error,
+                        status: "interrogative",
+                        description: response.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
                         continue: {
-                            "function": procedureTrue,
-                            location: "/dashboard"
+                            "close": true
                         }
                     }
                 )
@@ -291,43 +292,43 @@ export const Cafes = (userInfo) => {
     }
     async function setFinca(data) {
         try {
-            const axios = await Api.post("cafes/registrar", data);
-            if (axios.data.status == true) {
+            const response = await Api.post("cafes/registrar", data);
+            if (response.data.status == true) {
                 getCafes();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                         continue: {
                             "function": procedureTrue
                         }
                     }
                 )
-            } else if (axios.data.register_error) {
+            } else if (response.data.register_error) {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.register_error,
+                        description: response.data.register_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
-            } else if (axios.data.permission_error) {
+            } else if (response.data.errors) {
+                setErrors(response.data.errors)
+            } else if (response.data.permission_error) {
+                changeModalForm(false)
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "interrogative",
-                        description: axios.data.permission_error,
+                        description: response.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
                         continue: {
-                            "function": procedureTrue,
-                            location: "/dashboard"
+                            "close": true
                         }
                     }
                 )
@@ -337,7 +338,7 @@ export const Cafes = (userInfo) => {
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.register_error,
+                        description: response.data.register_error,
                         "tittle": "Error!!!"
                     }
                 )
@@ -365,15 +366,15 @@ export const Cafes = (userInfo) => {
     async function updateCafe(data, id) {
 
         try {
-            const axios = await Api.put("cafes/actualizar/" + id, data);
-            if (axios.data.status == true) {
+            const response = await Api.put("cafes/actualizar/" + id, data);
+            if (response.data.status == true) {
                 getCafes();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                         continue: {
                             "function": procedureTrue,
@@ -381,25 +382,38 @@ export const Cafes = (userInfo) => {
                         }
                     }
                 )
-            } else if (axios.data.update_error) {
+            } else if (response.data.update_error) {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.update_error,
+                        description: response.data.update_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
+            } else if (response.data.errors) {
+                setErrors(response.data.errors)
+            } else if (response.data.permission_error) {
+                setUpdateStatus(false)
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
+                    }
+                )
             } else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.update_error,
+                        description: response.data.update_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
@@ -430,15 +444,19 @@ export const Cafes = (userInfo) => {
         getCafes(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
-        dataFilterTable.filter["order"] = filter
+        let cloneDataFilterTable = { ...dataFilterTable }
+        cloneDataFilterTable.filter["order"] = filter
+        setDataFilterTable(cloneDataFilterTable)
         getCafes();
-
     }
     async function limitRegisters(data) {
-        dataFilterTable.filter["limit"] = data
+        let cloneDataFilterTable = { ...dataFilterTable }
+
+        cloneDataFilterTable.filter["limit"] = data
         if (data["valueSearch"] != undefined) {
-            dataFilterTable.filter["search"] = data["valueSearch"]
+            cloneDataFilterTable.filter["search"] = data["valueSearch"]
         }
+        setDataFilterTable(cloneDataFilterTable)
         getCafes()
     }
     async function buscarFinca(id) {
@@ -702,8 +720,8 @@ export const Cafes = (userInfo) => {
         }
     }
     async function clearFilters(data) {
-        dataFilterTable = {
-            "filter": {
+        try {
+            dataFilterTable["filter"] = {
                 "where": {
 
                 },
@@ -712,16 +730,18 @@ export const Cafes = (userInfo) => {
                     "fin": 10
                 }
             }
-        }
-        if (typeof data == "object") {
-            if (data.inicio) {
-                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            if (typeof data == "object") {
+                if (data.inicio) {
+                    dataFilterTable.filter["limit"]["inicio"] = data.inicio
+                }
+                if (data.fin) {
+                    dataFilterTable.filter["limit"]["fin"] = data.fin
+                }
             }
-            if (data.fin) {
-                dataFilterTable.filter["limit"]["fin"] = data.fin
-            }
+            getCafes()
+        } catch (e) {
+            console.log("Error: " + e)
         }
-        getCafes()
     }
     return (
         <>

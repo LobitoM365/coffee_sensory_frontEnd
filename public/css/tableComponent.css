@@ -861,6 +861,10 @@
         width: 100%;
     }
 
+    #mainTablas .items-overflow-paginate .item-paginate-round {
+        width: calc(100% - 16px);
+    }
+
     #mainTablas .items-overflow-paginate {
         display: flex;
         flex-direction: column;
@@ -990,6 +994,7 @@
     padding: 20px;
 }
 
+#mainTablas .table-fixed .table-asignar .div-filters,
 #mainTablas .table-fixed .div-filters,
 #mainTablas .table-fixed .table-component,
 #mainTablas .table-fixed thead,
@@ -997,6 +1002,9 @@
     background-color: white !important;
 }
 
+#mainTablas .filter-asc-desc-focus {
+    fill: blue;
+}
 
 #mainTablas .limit-focus {
     background-color: #5ea87f;

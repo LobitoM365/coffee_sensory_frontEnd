@@ -226,9 +226,9 @@ export const RegistrosUsuarios = () => {
             "referencia": "actualizar",
             "priority": 11,
         },
-        "reporte": {
+        "restablecer_password": {
             "normal": true,
-            "referencia": "Reporte",
+            "referencia": "Restablecer contraseña",
             "inputs": {
 
                 "pdf": {
@@ -314,6 +314,8 @@ export const RegistrosUsuarios = () => {
     }
     async function getusuarios() {
         try {
+            console.log(dataFilterTable, "cloneeeeeee")
+
             const response = await Api.post("usuarios/listar", dataFilterTable);
             if (response.data.status == true) {
                 setUsuarios(response.data.data)
@@ -331,46 +333,44 @@ export const RegistrosUsuarios = () => {
 
     async function desactivarUsuario() {
         try {
-            const axios = await Api.delete("usuarios/desactivar/" + idUsuarioCambiarEstado);
-            if (axios.data.status == true) {
+            const response = await Api.delete("usuarios/desactivar/" + idUsuarioCambiarEstado);
+            if (response.data.status == true) {
                 getusuarios();
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                     }
                 )
-            } else if (axios.data.delete_error) {
+            } else if (response.data.delete_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.delete_error,
+                        description: response.data.delete_error,
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if (axios.data.admin_error) {
+            } else if (response.data.admin_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.admin_error,
+                        description: response.data.admin_error,
                         "tittle": "Nó lo hagas",
                     }
                 )
-            }
-            else if (axios.data.permission_error) {
+            } else if (response.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
-                        status: "false",
-                        description: axios.data.permission_error,
+                        status: "interrogative",
+                        description: response.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
                         continue: {
-                            "function": procedureTrue,
-                            location: "/dashboard"
+                            "close": true
                         }
                     }
                 )
@@ -414,43 +414,43 @@ export const RegistrosUsuarios = () => {
     }
     async function setUsuario(data) {
         try {
-            const axios = await Api.post("usuarios/registrar/", data);
-            if (axios.data.status == true) {
+            const response = await Api.post("usuarios/registrar/", data);
+            if (response.data.status == true) {
                 getusuarios();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                         continue: {
                             "function": procedureTrue
                         }
                     }
                 )
-            } else if (axios.data.register_error) {
+            } else if (response.data.register_error) {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.register_error,
+                        description: response.data.register_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
-            } else if (axios.data.permission_error) {
+            } else if (response.data.errors) {
+                setErrors(response.data.errors)
+            } else if (response.data.permission_error) {
+                changeModalForm(false)
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "interrogative",
-                        description: axios.data.permission_error,
+                        description: response.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
                         continue: {
-                            "function": procedureTrue,
-                            location: "/dashboard"
+                            "close": true
                         }
                     }
                 )
@@ -460,7 +460,7 @@ export const RegistrosUsuarios = () => {
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.register_error,
+                        description: response.data.register_error,
                         "tittle": "Error!!!"
                     }
                 )
@@ -488,15 +488,15 @@ export const RegistrosUsuarios = () => {
     async function updateUsuario(data, id) {
 
         try {
-            const axios = await Api.put("usuarios/actualizar/" + id, data);
-            if (axios.data.status == true) {
+            const response = await Api.put("usuarios/actualizar/" + id, data);
+            if (response.data.status == true) {
                 getusuarios();
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                         continue: {
                             "function": procedureTrue,
@@ -504,25 +504,38 @@ export const RegistrosUsuarios = () => {
                         }
                     }
                 )
-            } else if (axios.data.update_error) {
+            } else if (response.data.update_error) {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.update_error,
+                        description: response.data.update_error,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
+            } else if (response.data.errors) {
+                setErrors(response.data.errors)
+            } else if (response.data.permission_error) {
+                changeModalForm(false)
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
+                    }
+                )
             } else {
                 setErrors({})
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Inténtalo de nuevo"
                     }
                 )
@@ -553,15 +566,20 @@ export const RegistrosUsuarios = () => {
         getusuarios(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
-        dataFilterTable.filter["order"] = filter
+        let cloneDataFilterTable = { ...dataFilterTable }
+        cloneDataFilterTable.filter["order"] = filter
+        setDataFilterTable(cloneDataFilterTable)
         getusuarios();
 
     }
     async function limitRegisters(data) {
-        dataFilterTable.filter["limit"] = data
+        let cloneDataFilterTable = { ...dataFilterTable }
+
+        cloneDataFilterTable.filter["limit"] = data
         if (data["valueSearch"] != undefined) {
-            dataFilterTable.filter["search"] = data["valueSearch"]
+            cloneDataFilterTable.filter["search"] = data["valueSearch"]
         }
+        setDataFilterTable(cloneDataFilterTable)
         getusuarios()
     }
     async function clearInputs() {
@@ -602,6 +620,7 @@ export const RegistrosUsuarios = () => {
     async function generatePdf(e, orientacion, papel, alto, ancho, margen_superior, margen_derecho, margen_inferior, margen_izquierdo, fuente, font_size_content_tabla, font_size_encabezado_tabla, font_size_encabezado, color_fondo, espaciado_superior_contenido, espaciado_derecho_contenido, espaciado_inferior_contenido, espaciado_izquierdo_contenido) {
         let cloneTable = { ...keys }
         delete cloneTable["actualizar"]
+        delete cloneTable["restablecer_password"]
 
         const data = {
             "dataTable": usuarios,
@@ -685,39 +704,37 @@ export const RegistrosUsuarios = () => {
             const cloneDataFilterTable = { ...dataFilterTable }
             const dataWhere = ["estado", "rol", "cargo", "tipo_documento"]
             if (!dataFilterTable["filter"]) {
-                dataFilterTable["filter"] = {}
-                if (!dataFilterTable["filter"]["where"]) {
-                    cloneDataFilterTable["filter"]["where"] = {}
-                }
-                if (!dataFilterTable["filter"]["limit"]) {
-                    cloneDataFilterTable["filter"]["limit"] = {}
-                }
-                if (!dataFilterTable["filter"]["date"]) {
-                    cloneDataFilterTable["filter"]["date"] = {}
-                }
-                if (!dataFilterTable["filter"]["order"]) {
-                    cloneDataFilterTable["filter"]["order"] = {}
-                }
+                cloneDataFilterTable["filter"] = {}
             }
-
-
+            if (!dataFilterTable["filter"]["where"]) {
+                cloneDataFilterTable["filter"]["where"] = {}
+            }
+            if (!dataFilterTable["filter"]["limit"]) {
+                cloneDataFilterTable["filter"]["limit"] = {}
+            }
+            if (!dataFilterTable["filter"]["date"]) {
+                cloneDataFilterTable["filter"]["date"] = {}
+            }
+            if (!dataFilterTable["filter"]["order"]) {
+                cloneDataFilterTable["filter"]["order"] = {}
+            }
+            if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+            }
             if (filter.desde_registro) {
-                if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                    cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
-                }
                 cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["desde"] = filter.desde_registro
             } else {
                 if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
                     delete cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
                 }
             }
+            if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+                cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
+            }
             if (filter.hasta_registro) {
-                if (!cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
-                    cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"] = {}
-                }
                 cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]["hasta"] = filter.hasta_registro
             } else {
-                if (cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]) {
+                if (cloneDataFilterTable["filter"]["date"]["ud.fecha_creacion"]) {
                     cloneDataFilterTable["filter"]["date"]["us.fecha_creacion"]
                 }
             }
@@ -743,8 +760,8 @@ export const RegistrosUsuarios = () => {
     }
 
     async function clearFilters(data) {
-        dataFilterTable = {
-            "filter": {
+        try {
+            dataFilterTable["filter"] = {
                 "where": {
 
                 },
@@ -753,16 +770,18 @@ export const RegistrosUsuarios = () => {
                     "fin": 10
                 }
             }
-        }
-        if (typeof data == "object") {
-            if (data.inicio) {
-                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            if (typeof data == "object") {
+                if (data.inicio) {
+                    dataFilterTable.filter["limit"]["inicio"] = data.inicio
+                }
+                if (data.fin) {
+                    dataFilterTable.filter["limit"]["fin"] = data.fin
+                }
             }
-            if (data.fin) {
-                dataFilterTable.filter["limit"]["fin"] = data.fin
-            }
+            getusuarios()
+        } catch (e) {
+            console.log("Error: " + e)
         }
-        getusuarios()
     }
     return (
         <div id='mainUsuarios'>

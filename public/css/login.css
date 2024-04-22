@@ -308,3 +308,11 @@
   }
 
 }
+
+#mainLogin .login-form .button-iniciar-sesesion{
+  background-color: green;
+}
+#mainLogin .login-form .button-iniciar-sesesion:hover {
+  box-shadow: 0px 0px 4px 0px rgb(158, 158, 158);
+  background: radial-gradient(rgb(12, 90, 12), rgb(42, 166, 42));
+}

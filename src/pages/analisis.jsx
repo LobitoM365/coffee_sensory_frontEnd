@@ -176,6 +176,14 @@ export const Analisis = (userInfo) => {
                         upper_case: true,
                         key: "value"
                     },
+                    estado_mapa: {
+                        type: "select",
+                        referencia: "Geolocalización",
+                        values: ["nombre"],
+                        opciones: [{ nombre: "oculto", value: "0" }, { nombre: "geolocalizado", value: "1" }],
+                        upper_case: true,
+                        key: "value"
+                    },
                 },
                 referencia: "Filtrar por estado"
             },
@@ -373,7 +381,7 @@ export const Analisis = (userInfo) => {
             "upper_case": true,
             "priority": 2
         },
-        "muestras_id": {
+        "codigo_muestra": {
             "referencia": "Muestra",
             "upper_case": true,
             "priority": 3
@@ -836,6 +844,18 @@ export const Analisis = (userInfo) => {
                         status: "false",
                         description: response.data.modal_error,
                         "tittle": "Inténtalo de nuevo."
+                    }
+                )
+            } else if (response.data.permission_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
                     }
                 )
             } else {
@@ -1528,6 +1548,21 @@ export const Analisis = (userInfo) => {
                 )
             } else if (axios.data.errors) {
                 setErrors(axios.data.errors)
+            } else if (axios.data.permission_error) {
+                changeModalForm(false)
+                setUpdateStatus(false)
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: axios.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
+                    }
+                )
+
             } else {
                 setErrors({})
                 setStatusAlert(true)
@@ -1566,18 +1601,20 @@ export const Analisis = (userInfo) => {
         getAnalisis(dataFilterTable)
     }
     async function getFiltersOrden(filter) {
-        console.log(filter, "fffffffff")
-        dataFilterTable.filter["order"] = filter
+        let cloneDataFilterTable = { ...dataFilterTable }
+        cloneDataFilterTable.filter["order"] = filter
+        setDataFilterTable(cloneDataFilterTable)
         getAnalisis();
-
     }
     async function limitRegisters(data) {
-        dataFilterTable.filter["limit"] = data
-        if (data["valueSearch"] != undefined) {
-            dataFilterTable.filter["search"] = data["valueSearch"]
-        }
-        getAnalisis()
+        let cloneDataFilterTable = { ...dataFilterTable }
 
+        cloneDataFilterTable.filter["limit"] = data
+        if (data["valueSearch"] != undefined) {
+            cloneDataFilterTable.filter["search"] = data["valueSearch"]
+        }
+        setDataFilterTable(cloneDataFilterTable)
+        getAnalisis()
     }
     async function getFilterEstadoUsuario(value) {
         let cloneDataFilterTable = { ...dataFilterTableAsignar }
@@ -1594,19 +1631,21 @@ export const Analisis = (userInfo) => {
         getusuariosAsignar()
     }
     async function getFiltersOrdenUsuario(filter) {
-        dataFilterTableAsignar.filter["order"] = filter
-        getusuariosAsignar()
-
+        let cloneDataFilterTable = { ...dataFilterTableAsignar }
+        cloneDataFilterTable.filter["order"] = filter
+        setDataFilterTable(cloneDataFilterTable)
+        getusuariosAsignar();
     }
     async function limitRegistersUsuario(data) {
-        dataFilterTableAsignar.filter["limit"] = data
+        let cloneDataFilterTable = { ...dataFilterTableAsignar }
+
+        cloneDataFilterTable.filter["limit"] = data
         if (data["valueSearch"] != undefined) {
-            dataFilterTableAsignar.filter["search"] = data["valueSearch"]
+            cloneDataFilterTable.filter["search"] = data["valueSearch"]
         }
+        setDataFilterTable(cloneDataFilterTable)
         getusuariosAsignar()
     }
-
-
 
 
 
@@ -2063,6 +2102,19 @@ export const Analisis = (userInfo) => {
                     }
                 }
                 setErrorsAsignar(response.data.errors)
+            } else if (response.data.permission_error) {
+                setStatusModalAsignar(false)
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
+                    }
+                )
             }
         } catch (e) {
             console.log("Error: " + e)
@@ -2133,6 +2185,19 @@ export const Analisis = (userInfo) => {
                         status: "false",
                         description: response.data.update_error,
                         "tittle": "Excelente"
+                    }
+                )
+            } else if (response.data.permission_error) {
+                setStatusModalAsignar(false)
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
                     }
                 )
             }
@@ -2259,7 +2324,7 @@ export const Analisis = (userInfo) => {
             }
         }
 
-        const dataWhere = ["estado", "proceso"]
+        const dataWhere = ["estado", "proceso", "estado_mapa"]
 
         for (let x = 0; x < dataWhere.length; x++) {
             if (filter[dataWhere[x]]) {
@@ -2327,6 +2392,19 @@ export const Analisis = (userInfo) => {
                         "tittle": "Excelente"
                     }
                 )
+            } else if (response.data.permission_error) {
+                setStatusModalAsignar(false)
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "interrogative",
+                        description: response.data.permission_error,
+                        "tittle": "¿Qué haces aquí?",
+                        continue: {
+                            "close": true
+                        }
+                    }
+                )
             } else {
                 setStatusAlert(true)
                 setdataAlert(
@@ -2343,8 +2421,8 @@ export const Analisis = (userInfo) => {
     }
 
     async function clearFilters(data) {
-        dataFilterTable = {
-            "filter": {
+        try {
+            dataFilterTable["filter"] = {
                 "where": {
 
                 },
@@ -2353,16 +2431,18 @@ export const Analisis = (userInfo) => {
                     "fin": 10
                 }
             }
-        }
-        if (typeof data == "object") {
-            if (data.inicio) {
-                dataFilterTable.filter["limit"]["inicio"] = data.inicio
+            if (typeof data == "object") {
+                if (data.inicio) {
+                    dataFilterTable.filter["limit"]["inicio"] = data.inicio
+                }
+                if (data.fin) {
+                    dataFilterTable.filter["limit"]["fin"] = data.fin
+                }
             }
-            if (data.fin) {
-                dataFilterTable.filter["limit"]["fin"] = data.fin
-            }
+            getAnalisis()
+        } catch (e) {
+            console.log("Error: " + e)
         }
-        getAnalisis()
     }
     return (
         <div>
@@ -2763,9 +2843,11 @@ export const Analisis = (userInfo) => {
                                                     : ""}
                                             </div>
                                             <div>
-                                                <div className='footer-asignar'>
-                                                    <button onClick={() => { confirmarActualizarAnálisis(analisisAsignar) }} className='button-users-formatos button-set-aprobar-analisis'>Aprobar</button>
-                                                </div>
+                                                {infoAnalisisUpdateAsignar ? infoAnalisisUpdateAsignar.length > 0 ? infoAnalisisUpdateAsignar[0].estado == 4 ?
+                                                    <div className='footer-asignar'>
+                                                        <button onClick={() => { confirmarActualizarAnálisis(analisisAsignar) }} className='button-users-formatos button-set-aprobar-analisis'>Aprobar</button>
+                                                    </div>
+                                                    : "" : "" : ""}
                                             </div>
                                         </div >
                                     } />

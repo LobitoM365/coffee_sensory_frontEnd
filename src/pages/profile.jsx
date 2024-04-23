@@ -29,6 +29,7 @@ export const Profile = (data) => {
     const [imgs, setImgs] = useState([])
     const [modalImg, setModaImgs] = useState(false)
     const [modalImgChange, setModalImgChange] = useState(false)
+    const [statusImgLoad, setStatusImgLoad] = useState(false)
     const [focusImgChange, setFocusImgChange] = useState({})
     const [eyes, setEyes] = useState({ "new_password": false, "confirm_password": false })
 
@@ -206,30 +207,34 @@ export const Profile = (data) => {
                 let file = ""
                 if (input) {
                     if (input.files[0]) {
-                        file = input.files[0]
-                        const formData = new FormData();
-                        formData.append("img", file)
-                        formData.forEach((input, key) => {
-                            /* console.log(`${key}: ${input}`); */
-                        });
-                        let route = "cargar"
-                        let method = "post"
-                        if (tipo == "editar") {
-                            route = "actualizar/" + focusImgChange.id
-                            method = "put"
-                        }
-                        const response = await Api[method]("/img/icono/" + route, formData);
-                        if (response.data.status == true) {
-                            fetchUser()
-                            listarIconos();
-                            setModalImgChange();
-                        } else if (response.data.register_error) {
-                            setStatusAlert(true);
-                            setdataAlert({
-                                status: "false",
-                                description: response.data.register_error,
-                                "tittle": "Error de validación.",
+                        setStatusImgLoad(true)
+                        if (statusImgLoad == false) {
+                            file = input.files[0]
+                            const formData = new FormData();
+                            formData.append("img", file)
+                            formData.forEach((input, key) => {
+                                /* console.log(`${key}: ${input}`); */
                             });
+                            let route = "cargar"
+                            let method = "post"
+                            if (tipo == "editar") {
+                                route = "actualizar/" + focusImgChange.id
+                                method = "put"
+                            }
+                            const response = await Api[method]("/img/icono/" + route, formData);
+                            setStatusImgLoad(false)
+                            if (response.data.status == true) {
+                                fetchUser()
+                                listarIconos();
+                                setModalImgChange();
+                            } else if (response.data.register_error) {
+                                setStatusAlert(true);
+                                setdataAlert({
+                                    status: "false",
+                                    description: response.data.register_error,
+                                    "tittle": "Error de validación.",
+                                });
+                            }
                         }
                     }
                 }
@@ -480,16 +485,21 @@ export const Profile = (data) => {
                     {modalImg ? <GlobalModal statusModal={setModaImgs} key={"icons-img"} class="modal-img" content={
                         <div className='div-icons-img' key={"div-icons-img"} >
                             {imgs.length >= 5 ? "" :
-                                <div className='load-icono' onClick={(e) => { loadImg(e, "cargar") }}>
-                                    <svg viewBox="0 0 182.000000 164.000000" preserveAspectRatio="xMidYMid meet">
-
-                                        <g transform="translate(0.000000,164.000000) scale(0.100000,-0.100000)" stroke="none">
-                                            <path d="M87 1619 c-10 -6 -26 -9 -36 -6 -41 10 -41 4 -41 -651 0 -475 3 -631 12 -640 9 -9 131 -12 488 -12 l476 0 29 -62 c37 -77 113 -154 190 -192 250 -122 546 28 596 302 21 110 -10 238 -76 321 l-35 44 0 441 c0 331 -3 445 -12 454 -16 16 -1564 17 -1591 1z m1423 -479 l0 -309 -32 7 c-18 4 -65 7 -105 6 -79 -1 -144 -21 -211 -65 -24 -16 -45 -29 -47 -29 -2 0 -33 36 -69 80 -37 44 -71 80 -76 80 -6 0 -20 -11 -32 -25 -12 -14 -25 -25 -28 -25 -4 0 -64 65 -134 145 -69 80 -130 145 -135 145 -14 0 -36 -29 -230 -315 l-191 -280 383 -3 384 -2 -5 -30 -4 -30 -392 2 -391 3 -3 478 -2 477 660 0 660 0 0 -310z m32 -384 c73 -35 139 -100 175 -174 25 -50 28 -68 28 -152 0 -84 -3 -102 -28 -152 -35 -71 -104 -140 -176 -176 -49 -24 -68 -27 -151 -27 -83 0 -102 3 -150 27 -293 144 -272 556 33 669 76 28 192 22 269 -15z" />
-                                            <path d="M1220 1317 c-13 -7 -35 -28 -48 -47 -57 -83 21 -195 122 -176 36 7 79 48 91 87 29 89 -80 179 -165 136z" />
-                                            <path d="M1372 598 c-7 -7 -12 -39 -12 -75 l0 -63 -64 0 c-71 0 -99 -17 -76 -45 9 -10 32 -15 76 -15 l64 0 0 -64 c0 -44 5 -67 15 -76 28 -23 45 5 45 76 l0 64 64 0 c44 0 67 5 76 15 23 28 -5 45 -76 45 l-64 0 0 63 c0 56 -11 87 -30 87 -3 0 -11 -5 -18 -12z" />
-                                        </g>
-                                    </svg>
-                                </div>}
+                                !statusImgLoad ?
+                                    <div className='load-icono' onClick={(e) => { loadImg(e, "cargar") }}>
+                                        <svg viewBox="0 0 182.000000 164.000000" preserveAspectRatio="xMidYMid meet">
+                                            <g transform="translate(0.000000,164.000000) scale(0.100000,-0.100000)" stroke="none">
+                                                <path d="M87 1619 c-10 -6 -26 -9 -36 -6 -41 10 -41 4 -41 -651 0 -475 3 -631 12 -640 9 -9 131 -12 488 -12 l476 0 29 -62 c37 -77 113 -154 190 -192 250 -122 546 28 596 302 21 110 -10 238 -76 321 l-35 44 0 441 c0 331 -3 445 -12 454 -16 16 -1564 17 -1591 1z m1423 -479 l0 -309 -32 7 c-18 4 -65 7 -105 6 -79 -1 -144 -21 -211 -65 -24 -16 -45 -29 -47 -29 -2 0 -33 36 -69 80 -37 44 -71 80 -76 80 -6 0 -20 -11 -32 -25 -12 -14 -25 -25 -28 -25 -4 0 -64 65 -134 145 -69 80 -130 145 -135 145 -14 0 -36 -29 -230 -315 l-191 -280 383 -3 384 -2 -5 -30 -4 -30 -392 2 -391 3 -3 478 -2 477 660 0 660 0 0 -310z m32 -384 c73 -35 139 -100 175 -174 25 -50 28 -68 28 -152 0 -84 -3 -102 -28 -152 -35 -71 -104 -140 -176 -176 -49 -24 -68 -27 -151 -27 -83 0 -102 3 -150 27 -293 144 -272 556 33 669 76 28 192 22 269 -15z" />
+                                                <path d="M1220 1317 c-13 -7 -35 -28 -48 -47 -57 -83 21 -195 122 -176 36 7 79 48 91 87 29 89 -80 179 -165 136z" />
+                                                <path d="M1372 598 c-7 -7 -12 -39 -12 -75 l0 -63 -64 0 c-71 0 -99 -17 -76 -45 9 -10 32 -15 76 -15 l64 0 0 -64 c0 -44 5 -67 15 -76 28 -23 45 5 45 76 l0 64 64 0 c44 0 67 5 76 15 23 28 -5 45 -76 45 l-64 0 0 63 c0 56 -11 87 -30 87 -3 0 -11 -5 -18 -12z" />
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    :
+                                    <div className='load-icono load-icono-loadding'>
+                                        <div className='loader-div-button'></div>
+                                    </div>
+                            }
 
                             {
                                 imgs.length > 0 ?

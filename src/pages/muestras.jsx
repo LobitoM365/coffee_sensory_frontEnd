@@ -37,6 +37,8 @@ export const Muestras = (userInfo) => {
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
     const [modalForm, changeModalForm] = useState(false);
+    const [statusButtonLoading, setStatusButtonLoading] = useState(false);
+
     let idFincaCambiarEstado = 0;
 
     let [inputsDocumento, setinputsDocumento] = useState(
@@ -222,15 +224,18 @@ export const Muestras = (userInfo) => {
     }
     async function getMuestra() {
         try {
-            const response = await Api.post("muestra/listar", dataFilterTable);
-            if (response.data.status == true) {
-                setMuestras(response.data.data)
-                setCountRegisters(response.data.count)
-            } else if (response.data.find_error) {
-                setCountRegisters(0)
-                setMuestras(response.data)
-            } else {
-                setMuestras(response.data)
+            if (statusButtonLoading == false) {
+                const response = await Api.post("muestra/listar", dataFilterTable);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    setMuestras(response.data.data)
+                    setCountRegisters(response.data.count)
+                } else if (response.data.find_error) {
+                    setCountRegisters(0)
+                    setMuestras(response.data)
+                } else {
+                    setMuestras(response.data)
+                }
             }
         } catch (e) {
 
@@ -324,59 +329,61 @@ export const Muestras = (userInfo) => {
     }
     async function setMuestra(data) {
         try {
-            const response = await Api.post("muestra/registrar/", data);
-            if (response.data.status == true) {
-                getMuestra();
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: response.data.message,
-                        "tittle": "Excelente",
-                        continue: {
-                            "function": procedureTrue
+            if (statusButtonLoading == false) {
+                const response = await Api.post("muestra/registrar/", data);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    getMuestra();
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente",
+                            continue: {
+                                "function": procedureTrue
+                            }
                         }
-                    }
-                )
-            } else if (response.data.register_error) {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.register_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
-            } else if (response.data.errors) {
-                setErrors(response.data.errors)
-            } else if (response.data.permission_error) {
-                changeModalForm(false)
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "interrogative",
-                        description: response.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "close": true
+                    )
+                } else if (response.data.register_error) {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Inténtalo de nuevo"
                         }
-                    }
-                )
-            } else {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.register_error,
-                        "tittle": "Error!!!"
-                    }
-                )
+                    )
+                } else if (response.data.errors) {
+                    setErrors(response.data.errors)
+                } else if (response.data.permission_error) {
+                    changeModalForm(false)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "interrogative",
+                            description: response.data.permission_error,
+                            "tittle": "¿Qué haces aquí?",
+                            continue: {
+                                "close": true
+                            }
+                        }
+                    )
+                } else {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Error!!!"
+                        }
+                    )
+                }
+
             }
-
-
         } catch (e) {
             setStatusAlert(true)
             setdataAlert(
@@ -398,57 +405,60 @@ export const Muestras = (userInfo) => {
     async function updateMuestra(data, id) {
 
         try {
-            const response = await Api.put("muestra/actualizar/" + id, data);
-            if (response.data.status == true) {
-                getMuestra();
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: response.data.message,
-                        "tittle": "Excelente",
-                        continue: {
-                            "function": procedureTrue,
-                            location: "/"
+            if (statusButtonLoading == false) {
+                const response = await Api.put("muestra/actualizar/" + id, data);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    getMuestra();
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente",
+                            continue: {
+                                "function": procedureTrue,
+                                location: "/"
+                            }
                         }
-                    }
-                )
-            } else if (response.data.update_error) {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.update_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
-            } else if (response.data.errors) {
-                setErrors(response.data.errors)
-            } else if (response.data.permission_error) {
-                setUpdateStatus(false)
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "interrogative",
-                        description: response.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "close": true
+                    )
+                } else if (response.data.update_error) {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.update_error,
+                            "tittle": "Inténtalo de nuevo"
                         }
-                    }
-                )
-            } else {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.update_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
+                    )
+                } else if (response.data.errors) {
+                    setErrors(response.data.errors)
+                } else if (response.data.permission_error) {
+                    setUpdateStatus(false)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "interrogative",
+                            description: response.data.permission_error,
+                            "tittle": "¿Qué haces aquí?",
+                            continue: {
+                                "close": true
+                            }
+                        }
+                    )
+                } else {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.update_error,
+                            "tittle": "Inténtalo de nuevo"
+                        }
+                    )
+                }
             }
         } catch (e) {
             setStatusAlert(true)
@@ -776,7 +786,7 @@ export const Muestras = (userInfo) => {
     }
     return (
         <>
-            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} generatePdf={generatePdf} userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setMuestra} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateMuestra} tittle={"Muestra"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas statusButtonLoading={statusButtonLoading} setStatusButtonLoading={setStatusButtonLoading} clearFilters={clearFilters} getAvanzado={getAvanzado} generatePdf={generatePdf} userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} getReporte={getReporte} dataDocumento={inputsDocumento} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setMuestra} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateMuestra} tittle={"Muestra"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

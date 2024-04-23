@@ -143,6 +143,8 @@ export const Alert = (data) => {
                                                             }
                                                         }
                                                     }} className="input-alert input-warning-alert">Continuar</button>
+
+
                                                 </div>
                                             } else if (data.dataAlert["status"] === "interrogative") {
                                                 return <button onClick={() => {

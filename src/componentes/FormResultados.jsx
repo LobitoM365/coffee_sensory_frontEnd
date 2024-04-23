@@ -1064,7 +1064,13 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                                 data.dataModalResultado[0]["permission_update"] == "true" ?
                                                                                     data.dataModalResultado[0]["estado"] != 7 ?
                                                                                         <div>
-                                                                                            <button onClick={() => { data.actualizarFormato(data.dataModalAnalisis.length > 0 ? data.dataModalAnalisis[0].id ? data.dataModalAnalisis[0].id : "" : "", data.dataModalResultado[0].id, data.tipoAnalisis, valueGlobalInput["usuarios_id"]) }} type="button" className="button-submit-form">Actualizar</button>
+                                                                                            {data.statusButtonLoading}
+                                                                                            {!data.statusButtonLoading ?
+                                                                                                <button onClick={() => { data.actualizarFormato(data.dataModalAnalisis.length > 0 ? data.dataModalAnalisis[0].id ? data.dataModalAnalisis[0].id : "" : "", data.dataModalResultado[0].id, data.tipoAnalisis, valueGlobalInput["usuarios_id"]) }} type="button" className="button-submit-form">Actualizar</button>
+                                                                                                : <button type="button" className="button-submit-form">
+                                                                                                    <div className="loader-div-button "> </div>
+                                                                                                </button>}
+
                                                                                             {/*  <button onClick={() => { data.finalizarFormato ? data.finalizarFormato(data.dataModalResultado[0].id) : "" }} type="button" className="button-submit-form">Finalizar</button> */}
                                                                                         </div>
                                                                                         : ""
@@ -1661,6 +1667,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                     {data.dataModalResultado.length > 0 ? data.dataModalResultado[0].estado != 4 && data.dataModalResultado[0].permission_formato == "true" ?
                                                         <div className="footer-content-info-analisis-formato">
                                                             <button onClick={() => { setStatusInputDefault(true); setIdFormato(data.dataModalResultado[0].id); setModeFormato(data.dataModalResultado[0].tipos_analisis_id); setTipoRegistro(2); data.setModalFormNormal(true) }} type="button" className="button-submit-form">Actualizar</button>
+
                                                             <button onClick={() => { data.finalizarFormato ? data.finalizarFormato(data.dataModalResultado[0].id) : "" }} type="button" className="button-submit-form button-finalizar-formato">Finalizar</button>
                                                         </div>
 
@@ -2011,12 +2018,14 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                             {inputsNormal}
                                                                         </div>
                                                                     </div>
-                                                                    <div>
-                                                                        <h3>Campos Automáticos</h3>
-                                                                        <div className="div-inputs-calculado">
-                                                                            {inputsCalculado}
+                                                                    {inputsCalculado ? inputsCalculado.length > 0 ?
+                                                                        <div>
+                                                                            <h3>Campos Automáticos</h3>
+                                                                            <div className="div-inputs-calculado">
+                                                                                {inputsCalculado}
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
+                                                                        : "" : ""}
                                                                     {getValueFormula()}
                                                                     <div>
                                                                         <h3>Observaciones</h3>
@@ -2048,8 +2057,9 @@ export const FormResultados = forwardRef((data, ref) => {
                                             </div>
                                             {tipoRegistro == 1 ? (
                                                 <div className="div-footer-content-formato">
-                                                    <button onClick={() => { }} type="submit" className="button-submit-form">Registrar</button>
-
+                                                    {data.statusButtonLoading ?
+                                                        <button onClick={() => { }} type="submit" className="button-submit-form">Registrar</button>
+                                                        : ""}
                                                 </div>
                                             ) : (
                                                 <div className="div-footer-content-formato">

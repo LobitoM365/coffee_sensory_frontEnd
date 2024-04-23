@@ -39,7 +39,7 @@ import { Veredas } from './pages/veredas.jsx';
 export default function App(data) {
   const [statusAlert, setStatusAlert] = useState(false);
   const [dataAlert, setdataAlert] = useState({});
-  const responseValidateViews = validateViews();
+  const responseValidateViews = validateViews({});
   const [userInfo, setUserInfo] = useState(null);
   const locationPath = useLocation();
   const [valueDarkMode, changeDarkMode] = useState(JSON.parse(localStorage.getItem("darkMode")));
@@ -47,8 +47,7 @@ export default function App(data) {
   useEffect(() => {
 
     if (!responseValidateViews) {
-
-      return;
+      return
     }
 
     async function LogoutSesion() {
@@ -64,29 +63,31 @@ export default function App(data) {
       }
 
     };
-    if (responseValidateViews.data) {
-      if (responseValidateViews.data.permission == false) {
-        setStatusAlert(true);
-        setdataAlert({
-          buttonDefault: "Continuar",
-          backGroundColor: "rgb(4 22 37)",
-          icon: <img className="icon-ban-alert" src="../../public/img/imgBan.png" alt="" />,
-          status: "false",
-          description: responseValidateViews.data.message,
-          continue: {
-            "function": LogoutSesion,
-          },
-          tittle: "No tienes acceso!",
-        });
-      } else if (responseValidateViews.data !== undefined) {
-        setUserInfo(responseValidateViews.data.user);
-      } else {
-        setStatusAlert(true);
-        setdataAlert({
-          status: "false",
-          description: 'Intente acceder de nuevo más tarde.',
-          "tittle": "Error interno del servidor! ",
-        });
+    if (responseValidateViews) {
+      if (responseValidateViews.data) {
+        if (responseValidateViews.data.permission == false) {
+          setStatusAlert(true);
+          setdataAlert({
+            buttonDefault: "Continuar",
+            backGroundColor: "rgb(4 22 37)",
+            icon: <img className="icon-ban-alert" src="../../public/img/imgBan.png" alt="" />,
+            status: "false",
+            description: responseValidateViews.data.message,
+            continue: {
+              "function": LogoutSesion,
+            },
+            tittle: "No tienes acceso!",
+          });
+        } else if (responseValidateViews.data !== undefined) {
+          setUserInfo(responseValidateViews.data.user);
+        } else {
+          setStatusAlert(true);
+          setdataAlert({
+            status: "false",
+            description: 'Intente acceder de nuevo más tarde.',
+            "tittle": "Error interno del servidor! ",
+          });
+        }
       }
     }
   }, [responseValidateViews]);
@@ -99,9 +100,9 @@ export default function App(data) {
 
         if (response.data.permission == false) {
         } else if (!response.data.authorized) {
-          if (locationPath.pathname.includes('dashboard')) {
+          /* if (locationPath.pathname.includes('dashboard')) {
             window.location.href = '/login';
-          }
+          } */
         } else {
           if (locationPath.pathname.toLocaleLowerCase() === '/login') {
             window.history.go(-1);
@@ -181,7 +182,7 @@ export default function App(data) {
               <h4 className='h4-internal-server-error'>0</h4>
             </div>
             <div>
-              <p>An error ocurred an your request couldt'n be completed.</p>
+              <p>An error ocurred and your request couldn't be completed.</p>
               <p className='p-report'>Please report this problem.</p>
             </div>
           </div>
@@ -189,22 +190,22 @@ export default function App(data) {
         :
         <>
           <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
-          {responseValidateViews ? responseValidateViews.data ? responseValidateViews.data["permission"] == false ? "" :
-            <Routes>
+          <Routes>
 
-              {/* Rutas Públicas */}
-              <Route path='*' element={<NotFound />} />
-              <Route path='/recover' element={<RecoveryPassword />} />
-              <Route path='pruebaPdf' element={<PruebaPdf />} />
-              <Route path='/dashboard/generatePdfTable/' element={<GeneratePdfTable />} />
-              <Route path='/dashboard/generateReporteAnalisis/:id' element={<GenerateReporteAnalisis userInfo={userInfo} />} />
-              <Route path='/'>
-                <Route path='/' element={<MenuInicio userInfo={userInfo} />}>
-                  <Route path='/' element={<Inicio />} />
-                  <Route path='login' element={<Login socket={data.socket} />} />
-                </Route>
+            {/* Rutas Públicas */}
+            <Route path='/recover' element={<RecoveryPassword />} />
+            <Route path='pruebaPdf' element={<PruebaPdf />} />
+            <Route path='/dashboard/generatePdfTable/' element={<GeneratePdfTable />} />
+            <Route path='/dashboard/generateReporteAnalisis/:id' element={<GenerateReporteAnalisis userInfo={userInfo} />} />
+            <Route path='/'>
+              <Route path='/' element={<MenuInicio userInfo={userInfo} />}>
+                <Route path='/' element={<Inicio />} />
+                <Route path='login' element={<Login socket={data.socket} />} />
+              </Route>
 
-                {/* Rutas privadas */}
+              {/* Rutas privadas */}
+              {console.log(responseValidateViews)}
+              {responseValidateViews ? responseValidateViews.data ? responseValidateViews.data["authorized"] == false ? "" :
                 <Route path='/dashboard' element={<Menu userInfo={userInfo} socket={data.socket} valueDarkMode={valueDarkMode} changeDarkMode={changeDarkMode} />}>
                   <Route path='' element={<Home userInfo={userInfo} />} />
                   <Route path='profile' element={<Profile userInfo={userInfo} valueDarkMode={valueDarkMode} />} />
@@ -223,10 +224,13 @@ export default function App(data) {
                   <Route path='lotes/registros' element={<Lotes userInfo={userInfo} />} />
                   <Route path='muestras/verRegistros' element={<VerRegistros userInfo={userInfo} />} />
                 </Route>
-              </Route>
+                : "" : ""}
+              {responseValidateViews ?
+                <Route path='*' element={<NotFound responseValidate={responseValidateViews} />} />
+                : ""}
+            </Route>
 
-            </Routes>
-            : "" : ""}
+          </Routes>
         </>
       }
 

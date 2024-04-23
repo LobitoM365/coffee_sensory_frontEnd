@@ -454,3 +454,18 @@
 .darkMode .div-content-errros-formato h4 {
     color: #ffa300;
 }
+
+.darkMode .input-date::-webkit-calendar-picker-indicator {
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+
+.darkMode #mainMenu .h4-title-focus {
+    background-color: rgb(22, 26, 43);
+    color: white;
+    border: 1px solid white;
+    font-weight: 600;
+}

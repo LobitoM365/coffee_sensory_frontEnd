@@ -1777,3 +1777,21 @@
     justify-content: center;
     align-items: center;
 }
+
+#mainMenu .h4-title-focus {
+    position: fixed;
+    color: rgb(103 103 103);
+    left: 100px;
+    padding: 2px 5px;
+    background-color: white;
+    display: none;
+    border: 1px solid rgba(0, 170, 108, 0.611);
+    z-index: 3;
+    border-radius: 2px;
+}
+
+#mainMenu .h4-tittle-menu-no-focus {
+    display: none;
+    top: 0;
+    left: 0;
+}

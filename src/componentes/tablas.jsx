@@ -603,6 +603,9 @@ export const Tablas = (array) => {
         setDataSelectsDocumento(cloneDataSelect)
     }
     const applyAvanzado = (event) => {
+        if (array.setStatusButtonLoading) {
+            array.setStatusButtonLoading(true)
+        }
         event.preventDefault();
         // const formData = new FormData(event.target);
         // const json = Object.fromEntries(formData);
@@ -685,6 +688,9 @@ export const Tablas = (array) => {
         }
     }
     async function clearFilters() {
+        if (array.setStatusButtonLoading) {
+            array.setStatusButtonLoading(true)
+        }
         setPositionFocusPaginate(1)
         changeNameModalLimitRegisters(10)
         setInicio(0)
@@ -910,8 +916,17 @@ export const Tablas = (array) => {
                                                                                                     " "
                                                                                             }
                                                                                             <div className='footer-get-avanzado'>
-                                                                                                <button onClick={() => { clearFilters() }} type='button' className='button-get-avanzado button-restablecer'>Restablecer</button>
-                                                                                                <button type='submit' className='button-get-avanzado'>Aplicar</button>
+                                                                                                {!array.statusButtonLoading ?
+                                                                                                    <button type='submit' className='button-get-avanzado'>Aplicar</button>
+                                                                                                    : <button className="button-get-avanzado">
+                                                                                                        <div className="loader-div-button "> </div>
+                                                                                                    </button>}
+                                                                                                {!array.statusButtonLoading ?
+                                                                                                    <button onClick={() => { clearFilters() }} type='button' className='button-get-avanzado button-restablecer'>Restablecer</button>
+                                                                                                    : <button className="button-get-avanzado button-restablecer">
+                                                                                                        <div className="loader-div-button "> </div>
+                                                                                                    </button>}
+
                                                                                             </div>
 
                                                                                         </form>
@@ -2084,7 +2099,7 @@ export const Tablas = (array) => {
                         </div>
 
                     </div>
-                    <Form userInfo={array.userInfo} imgForm={array.imgForm} ref={formRef} setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} tittle={array.tittle} />
+                    <Form statusButtonLoading={array.statusButtonLoading} setStatusButtonLoading={array.setStatusButtonLoading} userInfo={array.userInfo} imgForm={array.imgForm} ref={formRef} setStatusInput={setStatusInput} statusInput={statusInput} setStatusInputDefault={setStatusInputDefault} statusInputDefault={statusInputDefault} setStatusSelect={setStatusSelect} statusSelect={statusSelect} setStatusSelectDefault={setStatusSelectDefault} statusSelectDefault={statusSelectDefault} updateEntitie={array.updateEntitie} updateStatus={array.updateStatus} editarStatus={array.editarStatus} editar={array.editar} elementEdit={array.elementEdit} changeModalForm={array.changeModalForm} modalForm={array.modalForm} errors={array.errors} funcionregistrar={array.funcionregistrar} data={array.inputsForm} tittle={array.tittle} />
                 </div>
                 : ""}
         </div >

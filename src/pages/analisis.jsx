@@ -39,6 +39,7 @@ export const Analisis = (userInfo) => {
     const [statusUpdateAsignar, setStatusUpdateAsignar] = useState(false)
     const [errorsInputGlobal, setErrorsInputGlobal] = useState({})
     const [filtersTable, setFiltersTable] = useState({})
+    const [statusButtonLoading, setStatusButtonLoading] = useState(false);
 
     const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
         "buttons": {
@@ -1321,15 +1322,18 @@ export const Analisis = (userInfo) => {
 
     async function getAnalisis() {
         try {
-            const response = await Api.post("analisis/listar", dataFilterTable);
-            if (response.data.status == true) {
-                setUsuarios(response.data.data)
-                setCountRegisters(response.data.count)
-            } else if (response.data.find_error) {
-                setCountRegisters(0)
-                setUsuarios(response.data)
-            } else {
-                setUsuarios(response.data)
+            if (statusButtonLoading == false) {
+                const response = await Api.post("analisis/listar", dataFilterTable);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    setUsuarios(response.data.data)
+                    setCountRegisters(response.data.count)
+                } else if (response.data.find_error) {
+                    setCountRegisters(0)
+                    setUsuarios(response.data)
+                } else {
+                    setUsuarios(response.data)
+                }
             }
         } catch (e) {
 
@@ -1353,42 +1357,42 @@ export const Analisis = (userInfo) => {
 
     async function desactivarUsuario() {
         try {
-            const axios = await Api.delete("analisis/eliminar/" + idAnalisis);
-            if (axios.data.status == true) {
+            const response = await Api.delete("analisis/eliminar/" + idAnalisis);
+            if (response.data.status == true) {
                 getAnalisis();
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "true",
-                        description: axios.data.message,
+                        description: response.data.message,
                         "tittle": "Excelente",
                     }
                 )
-            } else if (axios.data.delete_error) {
+            } else if (response.data.delete_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.delete_error,
+                        description: response.data.delete_error,
                         "tittle": "Inténtalo de nuevo",
                     }
                 )
-            } else if (axios.data.admin_error) {
+            } else if (response.data.admin_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.admin_error,
+                        description: response.data.admin_error,
                         "tittle": "Nó lo hagas",
                     }
                 )
             }
-            else if (axios.data.permission_error) {
+            else if (response.data.permission_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.permission_error,
+                        description: response.data.permission_error,
                         "tittle": "¿Qué haces aquí?",
                         continue: {
                             "function": procedureTrue,
@@ -1396,12 +1400,12 @@ export const Analisis = (userInfo) => {
                         }
                     }
                 )
-            } else if (axios.data.find_error) {
+            } else if (response.data.find_error) {
                 setStatusAlert(true)
                 setdataAlert(
                     {
                         status: "false",
-                        description: axios.data.find_error,
+                        description: response.data.find_error,
                         "tittle": '¡Verfiquie antes!'
                     }
                 )
@@ -1445,59 +1449,60 @@ export const Analisis = (userInfo) => {
     }
     async function setUsuario(data) {
         try {
-
-            const axios = await Api.post("analisis/registrar/", data);
-            if (axios.data.status == true) {
-                getAnalisis();
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: axios.data.message,
-                        "tittle": "Excelente",
-                        continue: {
-                            "function": procedureTrue
+            if (statusButtonLoading == false) {
+                const response = await Api.post("analisis/registrar/", data);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    getAnalisis();
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente",
+                            continue: {
+                                "function": procedureTrue
+                            }
                         }
-                    }
-                )
-            } else if (axios.data.register_error) {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: axios.data.register_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
-            } else if (axios.data.permission_error) {
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "interrogative",
-                        description: axios.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "function": procedureTrue,
-                            location: "/dashboard"
+                    )
+                } else if (response.data.register_error) {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Inténtalo de nuevo"
                         }
-                    }
-                )
-            } else {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: axios.data.register_error,
-                        "tittle": "Error!!!"
-                    }
-                )
+                    )
+                } else if (response.data.errors) {
+                    setErrors(response.data.errors)
+                } else if (response.data.permission_error) {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "interrogative",
+                            description: response.data.permission_error,
+                            "tittle": "¿Qué haces aquí?",
+                            continue: {
+                                "function": procedureTrue,
+                                location: "/dashboard"
+                            }
+                        }
+                    )
+                } else {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Error!!!"
+                        }
+                    )
+                }
             }
-
 
         } catch (e) {
             setStatusAlert(true)
@@ -1520,61 +1525,63 @@ export const Analisis = (userInfo) => {
     async function updateUsuario(data, id) {
 
         try {
-            const axios = await Api.put("analisis/actualizar/" + id, data);
-            if (axios.data.status == true) {
-                getAnalisis();
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: axios.data.message,
-                        "tittle": "Excelente",
-                        continue: {
-                            "function": procedureTrue,
-                            location: "/"
+            if (statusButtonLoading == false) {
+                const response = await Api.put("analisis/actualizar/" + id, data);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    getAnalisis();
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente",
+                            continue: {
+                                "function": procedureTrue,
+                                location: "/"
+                            }
                         }
-                    }
-                )
-            } else if (axios.data.update_error) {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: axios.data.update_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
-            } else if (axios.data.errors) {
-                setErrors(axios.data.errors)
-            } else if (axios.data.permission_error) {
-                changeModalForm(false)
-                setUpdateStatus(false)
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "interrogative",
-                        description: axios.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "close": true
+                    )
+                } else if (response.data.update_error) {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.update_error,
+                            "tittle": "Inténtalo de nuevo"
                         }
-                    }
-                )
+                    )
+                } else if (response.data.errors) {
+                    setErrors(response.data.errors)
+                } else if (response.data.permission_error) {
+                    changeModalForm(false)
+                    setUpdateStatus(false)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "interrogative",
+                            description: response.data.permission_error,
+                            "tittle": "¿Qué haces aquí?",
+                            continue: {
+                                "close": true
+                            }
+                        }
+                    )
 
-            } else {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: axios.data.message,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
+                } else {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.message,
+                            "tittle": "Inténtalo de nuevo"
+                        }
+                    )
+                }
             }
-
         } catch (e) {
             setStatusAlert(true)
             setdataAlert(
@@ -1723,25 +1730,25 @@ export const Analisis = (userInfo) => {
             method = "put"
             route = "resultado/actualizar/" + id
         }
-        const axios = await Api[method](route, data);
-        if (axios.data.status == true) {
+        const response = await Api[method](route, data);
+        if (response.data.status == true) {
             setInfoFormato(idAnalisisResult, tipoAnalisis)
             setStatusAlert(true)
             setdataAlert(
                 {
                     status: "true",
-                    description: axios.data.message,
+                    description: response.data.message,
                     "tittle": "Excelente",
                 }
             )
-        } else if (axios.data.errors) {
-            setErrorsFormato(axios.data.errors)
-        } else if (axios.data.register_error) {
+        } else if (response.data.errors) {
+            setErrorsFormato(response.data.errors)
+        } else if (response.data.register_error) {
             setStatusAlert(true)
             setdataAlert(
                 {
                     status: "false",
-                    description: axios.data.register_error,
+                    description: response.data.register_error,
                     "tittle": "Inténtalo de nuevo",
                     continue: {
 
@@ -1753,6 +1760,7 @@ export const Analisis = (userInfo) => {
 
     async function asignarFormato(idAnalisis, tipo, usuario) {
         try {
+            
             const data = {
                 "analisis_id": idAnalisis,
                 "tipos_analisis_id": tipo,
@@ -1790,35 +1798,41 @@ export const Analisis = (userInfo) => {
     }
     async function actualizarFormato(idAnalisis, idFormato, tipo, usuario) {
         try {
-            const data = {
-                "tipos_analisis_id": tipo,
-                "usuarios_id": usuario
-            }
-            const response = await Api.put("formatos/actualizar/" + idFormato, data);
-            if (response.data.status == true) {
-                setInfoFormato(idAnalisis, tipoAnalisis)
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: response.data.message,
-                        "tittle": "Excelente",
-                    }
-                )
-            } else if (response.data.register_error) {
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.register_error,
-                        "tittle": "Inténtalo de nuevo",
-                        continue: {
-
+            setStatusButtonLoading(true)
+            if (statusButtonLoading == false) {
+                alert("xd")
+                const data = {
+                    "tipos_analisis_id": tipo,
+                    "usuarios_id": usuario
+                }
+                const response = await Api.put("formatos/actualizar/" + idFormato, data);
+                setStatusButtonLoading(false)
+   
+                if (response.data.status == true) {
+                    setInfoFormato(idAnalisis, tipoAnalisis)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente",
                         }
-                    }
-                )
-            } else if (response.data.errors) {
-                setErrorsFormato(response.data.errors)
+                    )
+                } else if (response.data.register_error) {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Inténtalo de nuevo",
+                            continue: {
+
+                            }
+                        }
+                    )
+                } else if (response.data.errors) {
+                    setErrorsFormato(response.data.errors)
+                }
             }
         } catch (e) {
             console.log(e)
@@ -2017,7 +2031,7 @@ export const Analisis = (userInfo) => {
     }
     async function setAsignarAnalisis() {
         try {
-
+            setStatusButtonLoading(true)
             const trError = document.querySelectorAll(".tr-error-table-asignar")
             for (let x = 0; x < trError.length; x++) {
                 if (trError[x].previousSibling) {
@@ -2038,120 +2052,134 @@ export const Analisis = (userInfo) => {
                 data["muestras_id"] = muestraIdAsignar["muestras_id"]
             }
             setErrorsAsignar({})
-
-            const response = await Api.post("analisis/asignar" + route, data)
-            if (response.data.status == true) {
-                if (statusUpdateAsignar) {
-                    getEncargadosAnalisisUpdate(analisisAsignar)
-                } else {
-                    getAnalisis()
-                }
-                let widthErrors = []
-                if (response.data.width_errors) {
-                    let keysWidthErrors = Object.keys(response.data.width_errors)
-                    for (let x = 0; x < keysWidthErrors.length; x++) {
-                        widthErrors.push(
-                            <div className='span-width-errors' key={x}>
-                                <h3>
-                                    {keysWidthErrors[x]}:
-                                </h3>
-                                <h4>
-                                    {response.data.width_errors[keysWidthErrors[x]]}
-                                </h4>
-                            </div>
-                        );
+            if (statusButtonLoading == false) {
+                const response = await Api.post("analisis/asignar" + route, data)
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    if (statusUpdateAsignar) {
+                        getEncargadosAnalisisUpdate(analisisAsignar)
+                    } else {
+                        getAnalisis()
                     }
-                }
-
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: <span > <h4 className='span-message-alerta'>{response.data.message}</h4>  <br /> {widthErrors}</span>,
-                        "tittle": "Excelente",
-                        continue: {
-                            "function": !statusUpdateAsignar ? setModalAsignarFalse : "",
+                    let widthErrors = []
+                    if (response.data.width_errors) {
+                        let keysWidthErrors = Object.keys(response.data.width_errors)
+                        for (let x = 0; x < keysWidthErrors.length; x++) {
+                            widthErrors.push(
+                                <div className='span-width-errors' key={x}>
+                                    <h3>
+                                        {keysWidthErrors[x]}:
+                                    </h3>
+                                    <h4>
+                                        {response.data.width_errors[keysWidthErrors[x]]}
+                                    </h4>
+                                </div>
+                            );
                         }
                     }
-                )
 
-            } else if (response.data.register_error) {
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.register_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
-            } else if (response.data.errors) {
-                const keysErrors = Object.keys(response.data.errors)
-                for (let x = 0; x < keysErrors.length; x++) {
-                    if (keysErrors[x] != "muestras_id") {
-                        const element = document.getElementById(keysErrors[x])
-                        if (element) {
-                            element.style.background = "#ff00001f"
-                            let trError = document.createElement("tr")
-                            trError.classList.add("tr-error-table-asignar")
-                            let tdError = document.createElement("td")
-                            tdError.innerHTML = "<h4>" + response.data.errors[keysErrors[x]] + " </h4>"
-                            tdError.setAttribute("colspan", "9999")
-                            trError.appendChild(tdError)
-                            element.parentNode.insertBefore(trError, element.nextSibling)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: <span > <h4 className='span-message-alerta'>{response.data.message}</h4>  <br /> {widthErrors}</span>,
+                            "tittle": "Excelente",
+                            continue: {
+                                "function": !statusUpdateAsignar ? setModalAsignarFalse : "",
+                            }
+                        }
+                    )
+
+                } else if (response.data.register_error) {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Inténtalo de nuevo"
+                        }
+                    )
+                } else if (response.data.errors) {
+                    const keysErrors = Object.keys(response.data.errors)
+                    for (let x = 0; x < keysErrors.length; x++) {
+                        if (keysErrors[x] != "muestras_id") {
+                            const element = document.getElementById(keysErrors[x])
+                            if (element) {
+                                element.style.background = "#ff00001f"
+                                let trError = document.createElement("tr")
+                                trError.classList.add("tr-error-table-asignar")
+                                let tdError = document.createElement("td")
+                                tdError.innerHTML = "<h4>" + response.data.errors[keysErrors[x]] + " </h4>"
+                                tdError.setAttribute("colspan", "9999")
+                                trError.appendChild(tdError)
+                                element.parentNode.insertBefore(trError, element.nextSibling)
+                            }
                         }
                     }
+                    setErrorsAsignar(response.data.errors)
+                } else if (response.data.permission_error) {
+                    setStatusModalAsignar(false)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "interrogative",
+                            description: response.data.permission_error,
+                            "tittle": "¿Qué haces aquí?",
+                            continue: {
+                                "close": true
+                            }
+                        }
+                    )
                 }
-                setErrorsAsignar(response.data.errors)
-            } else if (response.data.permission_error) {
-                setStatusModalAsignar(false)
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "interrogative",
-                        description: response.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "close": true
-                        }
-                    }
-                )
             }
         } catch (e) {
             console.log("Error: " + e)
         }
     }
-    async function cambiarFormato(dataAlert, name) {
-
+    async function cambiarFormato(dataAlert) {
+        setStatusButtonLoading(true)
         setErrorsInputGlobal()
         try {
-            const data = {
-                "usuarios_id": (dataAlert ? dataAlert.usuarios_id ? dataAlert.usuarios_id : "" : "")
-            }
-            const response = await Api.put("formatos/actualizar/" + (dataAlert ? dataAlert.id ? dataAlert.id : "" : ""), data)
-            if (response.data.status == true) {
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: response.data.message,
-                        "tittle": "Excelente"
+            if (statusButtonLoading == false) {
+                const trError = document.querySelectorAll(".tr-error-table-asignar")
+                for (let x = 0; x < trError.length; x++) {
+                    if (trError[x].previousSibling) {
+                        trError[x].previousSibling.style.background = ""
                     }
-                )
-                getEncargadosAnalisisUpdate(analisisAsignar)
-            } else if (response.data.errors) {
-                const keys = Object.keys(response.data.errors)
-                let cloneSetErrrosInputGlobal = { ...errorsInputGlobal }
-                cloneSetErrrosInputGlobal[name] = response.data.errors[keys[0]]
-                setErrorsInputGlobal(cloneSetErrrosInputGlobal)
-            } else if (response.data.update_error) {
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.update_error,
-                        "tittle": "Excelente"
-                    }
-                )
+                    trError[x].remove()
+                }
+
+                const data = {
+                    "usuarios_id": (dataAlert ? dataAlert.usuarios_id ? dataAlert.usuarios_id : "" : "")
+                }
+                const response = await Api.put("formatos/actualizar/" + (dataAlert ? dataAlert.id ? dataAlert.id : "" : ""), data)
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente"
+                        }
+                    )
+                    getEncargadosAnalisisUpdate(analisisAsignar)
+                } else if (response.data.errors) {
+                    const keys = Object.keys(response.data.errors)
+                    let cloneSetErrrosInputGlobal = { ...errorsInputGlobal }
+                    cloneSetErrrosInputGlobal[dataAlert["name"]] = response.data.errors[keys[0]]
+                    setErrorsInputGlobal(cloneSetErrrosInputGlobal)
+                    console.log(cloneSetErrrosInputGlobal)
+                } else if (response.data.update_error) {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.update_error,
+                            "tittle": "Excelente"
+                        }
+                    )
+                }
             }
         } catch (e) {
             console.log("Error: " + e)
@@ -2159,47 +2187,50 @@ export const Analisis = (userInfo) => {
     }
     async function editarAnalisis(dataAlert) {
         try {
-
-            const data = {
-                "muestras_id": (dataAlert ? dataAlert.muestras_id ? dataAlert.muestras_id : "" : "")
-            }
-            const response = await Api.put("analisis/actualizar/" + (dataAlert ? dataAlert.id ? dataAlert.id : "" : ""), data)
-            if (response.data.status == true) {
-                getEncargadosAnalisisUpdate((dataAlert ? dataAlert.id ? dataAlert.id : "" : ""))
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: response.data.message,
-                        "tittle": "Excelente"
-                    }
-                )
-                getEncargadosAnalisisUpdate(id)
-            } else if (response.data.errors) {
-                const keys = Object.keys(response.data.errors)
-                setErrorsAsignar(response.data.errors)
-            } else if (response.data.update_error) {
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.update_error,
-                        "tittle": "Excelente"
-                    }
-                )
-            } else if (response.data.permission_error) {
-                setStatusModalAsignar(false)
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "interrogative",
-                        description: response.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "close": true
+            setStatusButtonLoading(true)
+            if (statusButtonLoading == false) {
+                const data = {
+                    "muestras_id": (dataAlert ? dataAlert.muestras_id ? dataAlert.muestras_id : "" : "")
+                }
+                const response = await Api.put("analisis/actualizar/" + (dataAlert ? dataAlert.id ? dataAlert.id : "" : ""), data)
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    getEncargadosAnalisisUpdate((dataAlert ? dataAlert.id ? dataAlert.id : "" : ""))
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente"
                         }
-                    }
-                )
+                    )
+                    getEncargadosAnalisisUpdate(id)
+                } else if (response.data.errors) {
+                    const keys = Object.keys(response.data.errors)
+                    setErrorsAsignar(response.data.errors)
+                } else if (response.data.update_error) {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.update_error,
+                            "tittle": "Excelente"
+                        }
+                    )
+                } else if (response.data.permission_error) {
+                    setStatusModalAsignar(false)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "interrogative",
+                            description: response.data.permission_error,
+                            "tittle": "¿Qué haces aquí?",
+                            continue: {
+                                "close": true
+                            }
+                        }
+                    )
+                }
             }
         } catch (e) {
             console.log("Error: " + e)
@@ -2270,7 +2301,7 @@ export const Analisis = (userInfo) => {
             }
         )
     }
-    async function confirmarCambiarFormato(id, value) {
+    async function confirmarCambiarFormato(id, value, name) {
         setStatusAlert(true)
         setdataAlert(
             {
@@ -2279,7 +2310,7 @@ export const Analisis = (userInfo) => {
                 "tittle": "¡Asegurate de realizar la ación!",
                 continue: {
                     "function": cambiarFormato,
-                    "execute": { "id": id, "usuarios_id": value },
+                    "execute": { "id": id, "usuarios_id": value, "name": name },
                     location: "/dashboard"
                 }
             }
@@ -2448,10 +2479,10 @@ export const Analisis = (userInfo) => {
         <div>
             <div id='mainAnalisis'>
 
-                <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+                <Tablas statusButtonLoading={statusButtonLoading} setStatusButtonLoading={setStatusButtonLoading} clearFilters={clearFilters} getAvanzado={getAvanzado} buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} getReporte={getReporte} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Análisis"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
                 {!modalFormResults ?
-                    < FormResultados modalFormNormal={modalFormNormal} setModalFormNormal={setModalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
+                    < FormResultados statusButtonLoading={statusButtonLoading} setStatusButtonLoading={setStatusButtonLoading} modalFormNormal={modalFormNormal} setModalFormNormal={setModalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
                     : ""}
                 <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
                 <div className='div-main-asignar'>
@@ -2534,7 +2565,12 @@ export const Analisis = (userInfo) => {
                                                                                     },
                                                                                 }} />
                                                                             <div className='div-change-muestra'>
-                                                                                <button onClick={() => { confirmarEditarAnalisis(analisisAsignar, muestraIdAsignar["muestras_id"]) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                                {!statusButtonLoading ?
+                                                                                    <button onClick={() => { confirmarEditarAnalisis(analisisAsignar, muestraIdAsignar["muestras_id"]) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                                    : <button className="button-users-formatos button-users-formatos-cambiar">
+                                                                                        <div className="loader-div-button "> </div>
+                                                                                    </button>}
+
                                                                             </div>
                                                                         </div>
                                                                         :
@@ -2631,7 +2667,13 @@ export const Analisis = (userInfo) => {
                                                                                                                                     Rechazado
                                                                                                                                 </h4>
                                                                                                                                 : ""}
-                                                                                                                <button onClick={() => { confirmarCambiarFormato(value.id, valueGlobalInput["catador_fisico_" + value.catador_id + "" + index], "catador_fisico_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                                                                {!statusButtonLoading ?
+                                                                                                                    <button onClick={() => { confirmarCambiarFormato(value.id, valueGlobalInput["catador_fisico_" + value.catador_id + "" + index], "catador_fisico_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                                                                    : <button className="button-users-formatos button-users-formatos-cambiar">
+                                                                                                                        <div className="loader-div-button "> </div>
+                                                                                                                    </button>}
+
+
                                                                                                                 <button
                                                                                                                     onClick={() => { confirmarEliminarFormato(value.id) }}
                                                                                                                     className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
@@ -2733,7 +2775,13 @@ export const Analisis = (userInfo) => {
                                                                                                                                     Rechazado
                                                                                                                                 </h4>
                                                                                                                                 : ""}
-                                                                                                                <button onClick={() => { confirmarCambiarFormato(value.id, valueGlobalInput["catador_sca_" + value.catador_id + "" + index], "catador_sca_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+
+                                                                                                                {!statusButtonLoading ?
+                                                                                                                    <button onClick={() => { confirmarCambiarFormato(value.id, valueGlobalInput["catador_sca_" + value.catador_id + "" + index], "catador_sca_" + value.catador_id + "" + index) }} className='button-users-formatos button-users-formatos-cambiar'>Cambiar</button>
+                                                                                                                    : <button className="button-users-formatos button-users-formatos-cambiar">
+                                                                                                                        <div className="loader-div-button "> </div>
+                                                                                                                    </button>}
+
                                                                                                                 <button
                                                                                                                     onClick={() => { confirmarEliminarFormato(value.id) }}
                                                                                                                     className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
@@ -2826,7 +2874,12 @@ export const Analisis = (userInfo) => {
 
 
                                                                 <div className='footer-asignar'>
-                                                                    <button onClick={() => { setAsignarAnalisis() }} className='button-set-asignar-analisis'>Asignar</button>
+                                                                    {!statusButtonLoading ?
+                                                                        <button onClick={() => { setAsignarAnalisis() }} className='button-set-asignar-analisis'>Asignar</button>
+
+                                                                        : <button className="button-set-asignar-analisis">
+                                                                            <div className="loader-div-button "> </div>
+                                                                        </button>}
                                                                 </div>
                                                             </div>
 

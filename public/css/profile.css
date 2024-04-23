@@ -418,3 +418,11 @@
         flex-direction: column;
     }
 }
+
+#mainProfile .load-icono-loadding:hover {
+    background-color: unset;
+}
+
+#mainProfile .load-icono-loadding {
+    
+}

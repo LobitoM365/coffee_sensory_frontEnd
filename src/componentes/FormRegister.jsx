@@ -53,7 +53,9 @@ export const FormRegiser = (data) => {
                         </div>
 
                     </div>
-                    <button type="submit">Registrar</button>
+                    {data.statusButtonLoading ?
+                        <button type="submit">Registrar</button>
+                        : ""}
                 </form>
             </div>
         </>

@@ -38,6 +38,8 @@ export const Veredas = () => {
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
     const [modalForm, changeModalForm] = useState(false);
+    const [statusButtonLoading, setStatusButtonLoading] = useState(false);
+
     let idFincaCambiarEstado = 0;
 
     let [inputsForm, setInputsForm] = useState(
@@ -182,52 +184,58 @@ export const Veredas = () => {
     //Obtener Veredas
     async function getVeredas(data) {
         try {
-            let filterReport = {
-                "filter": {
-                    "where": {
-                        "ve.municipios_id": {
-                            "value": data,
-                            "require": "and"
+            if (statusButtonLoading == false) {
+                setStatusButtonLoading(false)
+                let filterReport = {
+                    "filter": {
+                        "where": {
+                            "ve.municipios_id": {
+                                "value": data,
+                                "require": "and"
+                            }
+                        },
+                        "limit": {
+                            inicio: 0,
+                            fin: 4444
                         }
-                    },
-                    "limit": {
-                        inicio: 0,
-                        fin: 4444
                     }
                 }
-            }
-            const response = await Api.post("veredas/listar", filterReport);
-            let veredas = inputsForm;
+                const response = await Api.post("veredas/listar", filterReport);
+                let veredas = inputsForm;
 
-            if (response.data.status == true) {
-                if (!veredas["veredas_id"]) {
-                    veredas["veredas_id"] = {}
+                if (response.data.status == true) {
+                    if (!veredas["veredas_id"]) {
+                        veredas["veredas_id"] = {}
+                    }
+                    veredas["veredas_id"]["opciones"] = response.data.data
+                    setInputsForm(veredas)
+                } else if (response.data.find_error) {
+                    if (veredas["veredas_id"]) {
+                        veredas["veredas_id"]["opciones"] = []
+                    }
+                    setInputsForm(veredas)
+
+                } else {
+
                 }
-                veredas["veredas_id"]["opciones"] = response.data.data
-                setInputsForm(veredas)
-            } else if (response.data.find_error) {
-                if (veredas["veredas_id"]) {
-                    veredas["veredas_id"]["opciones"] = []
-                }
-                setInputsForm(veredas)
-
-            } else {
-
             }
         } catch (e) {
         }
     }
     async function getVariedades() {
         try {
-            const response = await Api.post("veredas/listar", dataFilterTable);
-            if (response.data.status == true) {
-                setVariedads(response.data.data)
-                setCountRegisters(response.data.count)
-            } else if (response.data.find_error) {
-                setCountRegisters(0)
-                setVariedads(response.data)
-            } else {
-                setVariedads(response.data)
+            if (statusButtonLoading == false) {
+                const response = await Api.post("veredas/listar", dataFilterTable);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    setVariedads(response.data.data)
+                    setCountRegisters(response.data.count)
+                } else if (response.data.find_error) {
+                    setCountRegisters(0)
+                    setVariedads(response.data)
+                } else {
+                    setVariedads(response.data)
+                }
             }
         } catch (e) {
 
@@ -343,59 +351,60 @@ export const Veredas = () => {
     }
     async function setVariedad(data) {
         try {
-            const response = await Api.post("veredas/registrar/", data);
-            if (response.data.status == true) {
-                getVariedades();
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: response.data.message,
-                        "tittle": "Excelente",
-                        continue: {
-                            "function": procedureTrue
+            if (statusButtonLoading == false) {
+                const response = await Api.post("veredas/registrar/", data);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    getVariedades();
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente",
+                            continue: {
+                                "function": procedureTrue
+                            }
                         }
-                    }
-                )
-            } else if (response.data.register_error) {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.register_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
-            } else if (response.data.errors) {
-                setErrors(response.data.errors)
-            } else if (response.data.permission_error) {
-                changeModalForm(false)
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "interrogative",
-                        description: response.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "close": true
+                    )
+                } else if (response.data.register_error) {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Inténtalo de nuevo"
                         }
-                    }
-                )
-            } else {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.register_error,
-                        "tittle": "Error!!!"
-                    }
-                )
+                    )
+                } else if (response.data.errors) {
+                    setErrors(response.data.errors)
+                } else if (response.data.permission_error) {
+                    changeModalForm(false)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "interrogative",
+                            description: response.data.permission_error,
+                            "tittle": "¿Qué haces aquí?",
+                            continue: {
+                                "close": true
+                            }
+                        }
+                    )
+                } else {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Error!!!"
+                        }
+                    )
+                }
             }
-
-
         } catch (e) {
             setStatusAlert(true)
             setdataAlert(
@@ -415,59 +424,61 @@ export const Veredas = () => {
         setUpdateStatus(false)
     }
     async function updateFinca(data, id) {
-
         try {
-            const response = await Api.put("veredas/actualizar/" + id, data);
-            if (response.data.status == true) {
-                getVariedades();
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: response.data.message,
-                        "tittle": "Excelente",
-                        continue: {
-                            "function": procedureTrue,
-                            location: "/"
+            if (statusButtonLoading == false) {
+                const response = await Api.put("veredas/actualizar/" + id, data);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    getVariedades();
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente",
+                            continue: {
+                                "function": procedureTrue,
+                                location: "/"
+                            }
                         }
-                    }
-                )
-            } else if (response.data.update_error) {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.update_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
-            } else if (response.data.errors) {
-                setErrors(response.data.errors)
-            } else if (response.data.permission_error) {
-                setUpdateStatus(false)
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "interrogative",
-                        description: response.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "close": true
+                    )
+                } else if (response.data.update_error) {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.update_error,
+                            "tittle": "Inténtalo de nuevo"
                         }
-                    }
-                )
-            } else {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.update_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
+                    )
+                } else if (response.data.errors) {
+                    setErrors(response.data.errors)
+                } else if (response.data.permission_error) {
+                    setUpdateStatus(false)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "interrogative",
+                            description: response.data.permission_error,
+                            "tittle": "¿Qué haces aquí?",
+                            continue: {
+                                "close": true
+                            }
+                        }
+                    )
+                } else {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.update_error,
+                            "tittle": "Inténtalo de nuevo"
+                        }
+                    )
+                }
             }
         } catch (e) {
             setStatusAlert(true)
@@ -746,7 +757,7 @@ export const Veredas = () => {
     }
     return (
         <>
-            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Vereda"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} hidden={'status'} />
+            <Tablas statusButtonLoading={statusButtonLoading} setStatusButtonLoading={setStatusButtonLoading} clearFilters={clearFilters} getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Vereda"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} hidden={'status'} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

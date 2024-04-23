@@ -38,8 +38,9 @@ export const Variedades = () => {
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
     const [modalForm, changeModalForm] = useState(false);
-    let idFincaCambiarEstado = 0;
+    const [statusButtonLoading, setStatusButtonLoading] = useState(false);
 
+    let idFincaCambiarEstado = 0;
     let [inputsForm, setInputsForm] = useState(
         {
             nombre: {
@@ -82,15 +83,18 @@ export const Variedades = () => {
 
     async function getVariedades() {
         try {
-            const response = await Api.post("variedades/listar", dataFilterTable);
-            if (response.data.status == true) {
-                setVariedads(response.data.data)
-                setCountRegisters(response.data.count)
-            } else if (response.data.find_error) {
-                setCountRegisters(0)
-                setVariedads(response.data)
-            } else {
-                setVariedads(response.data)
+            if (statusButtonLoading == false) {
+                const response = await Api.post("variedades/listar", dataFilterTable);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    setVariedads(response.data.data)
+                    setCountRegisters(response.data.count)
+                } else if (response.data.find_error) {
+                    setCountRegisters(0)
+                    setVariedads(response.data)
+                } else {
+                    setVariedads(response.data)
+                }
             }
         } catch (e) {
 
@@ -172,59 +176,61 @@ export const Variedades = () => {
     }
     async function setVariedad(data) {
         try {
-            const response = await Api.post("variedades/registrar/", data);
-            if (response.data.status == true) {
-                getVariedades();
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: response.data.message,
-                        "tittle": "Excelente",
-                        continue: {
-                            "function": procedureTrue
+            if (statusButtonLoading == false) {
+                const response = await Api.post("variedades/registrar/", data);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    getVariedades();
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente",
+                            continue: {
+                                "function": procedureTrue
+                            }
                         }
-                    }
-                )
-            } else if (response.data.register_error) {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.register_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
-            } else if (response.data.errors) {
-                setErrors(response.data.errors)
-            } else if (response.data.permission_error) {
-                changeModalForm(false)
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "interrogative",
-                        description: response.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "close": true
+                    )
+                } else if (response.data.register_error) {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Inténtalo de nuevo"
                         }
-                    }
-                )
-            } else {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.register_error,
-                        "tittle": "Error!!!"
-                    }
-                )
+                    )
+                } else if (response.data.errors) {
+                    setErrors(response.data.errors)
+                } else if (response.data.permission_error) {
+                    changeModalForm(false)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "interrogative",
+                            description: response.data.permission_error,
+                            "tittle": "¿Qué haces aquí?",
+                            continue: {
+                                "close": true
+                            }
+                        }
+                    )
+                } else {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Error!!!"
+                        }
+                    )
+                }
+
             }
-
-
         } catch (e) {
             setStatusAlert(true)
             setdataAlert(
@@ -246,57 +252,60 @@ export const Variedades = () => {
     async function updateFinca(data, id) {
 
         try {
-            const response = await Api.put("variedades/actualizar/" + id, data);
-            if (response.data.status == true) {
-                getVariedades();
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: response.data.message,
-                        "tittle": "Excelente",
-                        continue: {
-                            "function": procedureTrue,
-                            location: "/"
+            if (statusButtonLoading == false) {
+                const response = await Api.put("variedades/actualizar/" + id, data);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    getVariedades();
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente",
+                            continue: {
+                                "function": procedureTrue,
+                                location: "/"
+                            }
                         }
-                    }
-                )
-            } else if (response.data.update_error) {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.update_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
-            } else if (response.data.errors) {
-                setErrors(response.data.errors)
-            } else if (response.data.permission_error) {
-                setUpdateStatus(false)
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "interrogative",
-                        description: response.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "close": true
+                    )
+                } else if (response.data.update_error) {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.update_error,
+                            "tittle": "Inténtalo de nuevo"
                         }
-                    }
-                )
-            } else {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.update_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
+                    )
+                } else if (response.data.errors) {
+                    setErrors(response.data.errors)
+                } else if (response.data.permission_error) {
+                    setUpdateStatus(false)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "interrogative",
+                            description: response.data.permission_error,
+                            "tittle": "¿Qué haces aquí?",
+                            continue: {
+                                "close": true
+                            }
+                        }
+                    )
+                } else {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.update_error,
+                            "tittle": "Inténtalo de nuevo"
+                        }
+                    )
+                }
             }
         } catch (e) {
             setStatusAlert(true)
@@ -521,7 +530,7 @@ export const Variedades = () => {
     }
     return (
         <>
-            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} generatePdf={generatePdf} dataDocumento={inputsDocumento} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Variedad"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} hidden={'status'} />
+            <Tablas statusButtonLoading={statusButtonLoading} setStatusButtonLoading={setStatusButtonLoading} clearFilters={clearFilters} getAvanzado={getAvanzado} generatePdf={generatePdf} dataDocumento={inputsDocumento} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setVariedad} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={fincas} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateFinca} tittle={"Variedad"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} hidden={'status'} />
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>
     )

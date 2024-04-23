@@ -32,6 +32,7 @@ export const RegistrosUsuarios = () => {
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
     const [modalForm, changeModalForm] = useState(false);
+    const [statusButtonLoading, setStatusButtonLoading] = useState(false);
     let idUsuarioCambiarEstado = 0;
     const [buttonsHeaderTable, setButtonsHeaderTable] = useState({
         "buttons": {
@@ -314,17 +315,18 @@ export const RegistrosUsuarios = () => {
     }
     async function getusuarios() {
         try {
-            console.log(dataFilterTable, "cloneeeeeee")
-
-            const response = await Api.post("usuarios/listar", dataFilterTable);
-            if (response.data.status == true) {
-                setUsuarios(response.data.data)
-                setCountRegisters(response.data.count)
-            } else if (response.data.find_error) {
-                setCountRegisters(0)
-                setUsuarios(response.data)
-            } else {
-                setUsuarios(response.data)
+            if (statusButtonLoading == false) {
+                const response = await Api.post("usuarios/listar", dataFilterTable);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    setUsuarios(response.data.data)
+                    setCountRegisters(response.data.count)
+                } else if (response.data.find_error) {
+                    setCountRegisters(0)
+                    setUsuarios(response.data)
+                } else {
+                    setUsuarios(response.data)
+                }
             }
         } catch (e) {
 
@@ -414,56 +416,59 @@ export const RegistrosUsuarios = () => {
     }
     async function setUsuario(data) {
         try {
-            const response = await Api.post("usuarios/registrar/", data);
-            if (response.data.status == true) {
-                getusuarios();
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: response.data.message,
-                        "tittle": "Excelente",
-                        continue: {
-                            "function": procedureTrue
+            if (statusButtonLoading == false) {
+                const response = await Api.post("usuarios/registrar/", data);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    getusuarios();
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente",
+                            continue: {
+                                "function": procedureTrue
+                            }
                         }
-                    }
-                )
-            } else if (response.data.register_error) {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.register_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
-            } else if (response.data.errors) {
-                setErrors(response.data.errors)
-            } else if (response.data.permission_error) {
-                changeModalForm(false)
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "interrogative",
-                        description: response.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "close": true
+                    )
+                } else if (response.data.register_error) {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Inténtalo de nuevo"
                         }
-                    }
-                )
-            } else {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.register_error,
-                        "tittle": "Error!!!"
-                    }
-                )
+                    )
+                } else if (response.data.errors) {
+                    setErrors(response.data.errors)
+                } else if (response.data.permission_error) {
+                    changeModalForm(false)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "interrogative",
+                            description: response.data.permission_error,
+                            "tittle": "¿Qué haces aquí?",
+                            continue: {
+                                "close": true
+                            }
+                        }
+                    )
+                } else {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Error!!!"
+                        }
+                    )
+                }
             }
 
 
@@ -488,57 +493,60 @@ export const RegistrosUsuarios = () => {
     async function updateUsuario(data, id) {
 
         try {
-            const response = await Api.put("usuarios/actualizar/" + id, data);
-            if (response.data.status == true) {
-                getusuarios();
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: response.data.message,
-                        "tittle": "Excelente",
-                        continue: {
-                            "function": procedureTrue,
-                            location: "/"
+            if (statusButtonLoading == false) {
+                const response = await Api.put("usuarios/actualizar/" + id, data);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    getusuarios();
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente",
+                            continue: {
+                                "function": procedureTrue,
+                                location: "/"
+                            }
                         }
-                    }
-                )
-            } else if (response.data.update_error) {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.update_error,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
-            } else if (response.data.errors) {
-                setErrors(response.data.errors)
-            } else if (response.data.permission_error) {
-                changeModalForm(false)
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "interrogative",
-                        description: response.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "close": true
+                    )
+                } else if (response.data.update_error) {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.update_error,
+                            "tittle": "Inténtalo de nuevo"
                         }
-                    }
-                )
-            } else {
-                setErrors({})
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.message,
-                        "tittle": "Inténtalo de nuevo"
-                    }
-                )
+                    )
+                } else if (response.data.errors) {
+                    setErrors(response.data.errors)
+                } else if (response.data.permission_error) {
+                    changeModalForm(false)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "interrogative",
+                            description: response.data.permission_error,
+                            "tittle": "¿Qué haces aquí?",
+                            continue: {
+                                "close": true
+                            }
+                        }
+                    )
+                } else {
+                    setErrors({})
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.message,
+                            "tittle": "Inténtalo de nuevo"
+                        }
+                    )
+                }
             }
         } catch (e) {
             setStatusAlert(true)
@@ -785,7 +793,7 @@ export const RegistrosUsuarios = () => {
     }
     return (
         <div id='mainUsuarios'>
-            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} getDataPdf={getDataPdf} buttonsHeaderTable={buttonsHeaderTable} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas statusButtonLoading={statusButtonLoading} setStatusButtonLoading={setStatusButtonLoading} clearFilters={clearFilters} getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} getDataPdf={getDataPdf} buttonsHeaderTable={buttonsHeaderTable} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Usuario"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />

@@ -7,22 +7,21 @@ export const validateViews = () => {
     useEffect(() => {
         const authorized = async () => {
             try {
-
                 const response = await Api.post('auth/protectViews', {});
-                /* if (response.data.permission == false) {
+                if (response.data.permission == false) {
 
                 } else if (!response.data.authorized) {
-                    if (location.pathname.includes('dashboard')) {
+                    /* if (location.pathname.includes('dashboard')) {
                         window.location.href = '/login';
-                    }
-                    if (location.pathname !== '/' && location.pathname !== '/login') {
+                    } */
+                    /* if (location.pathname !== '/' && location.pathname !== '/login') {
                         window.location.href = '/login';
-                    }
+                    } */
                 } else {
                     if (location.pathname === '/login') {
                         window.history.go(-1);
                     }
-                } */
+                }
                 setResponse(response);
             } catch (error) {
                 setResponse(error);

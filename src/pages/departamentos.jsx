@@ -37,6 +37,8 @@ export const Departamentos = (userInfo) => {
     const [statusAlert, setStatusAlert] = useState(false);
     const [dataAlert, setdataAlert] = useState({});
     const [modalForm, changeModalForm] = useState(false);
+    const [statusButtonLoading, setStatusButtonLoading] = useState(false);
+
 
     let idFincaCambiarEstado = 0;
 
@@ -111,15 +113,18 @@ export const Departamentos = (userInfo) => {
 
     async function getEntities() {
         try {
-            const response = await Api.post("departamento/listar", dataFilterTable);
-            if (response.data.status == true) {
-                setEntities(response.data.data)
-                setCountRegisters(response.data.count)
-            } else if (response.data.find_error) {
-                setCountRegisters(0)
-                setEntities(response.data)
-            } else {
-                setEntities(response.data)
+            if (statusButtonLoading == false) {
+                const response = await Api.post("departamento/listar", dataFilterTable);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    setEntities(response.data.data)
+                    setCountRegisters(response.data.count)
+                } else if (response.data.find_error) {
+                    setCountRegisters(0)
+                    setEntities(response.data)
+                } else {
+                    setEntities(response.data)
+                }
             }
         } catch (e) {
 
@@ -467,7 +472,7 @@ export const Departamentos = (userInfo) => {
     }
     return (
         <>
-            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={data} keys={keys} updateEntitie={updateFinca} tittle={"Departamentos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas statusButtonLoading={statusButtonLoading} setStatusButtonLoading={setStatusButtonLoading} clearFilters={clearFilters} getAvanzado={getAvanzado} dataDocumento={inputsDocumento} generatePdf={generatePdf} userInfo={userInfo.userInfo} buttonsHeaderTable={buttonsHeaderTable} imgForm={"/img/formularios/imgFinca.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarFinca} elementEdit={fincaEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setEntitie} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={data} keys={keys} updateEntitie={updateFinca} tittle={"Departamentos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
 
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
         </>

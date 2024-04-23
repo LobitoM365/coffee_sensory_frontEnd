@@ -175,7 +175,7 @@ export const Form = forwardRef((data, ref) => {
 
                 let labelErrorSubmitForm = modalRef.current.querySelectorAll(".label-error-submit-form");
 
-                if (modalForm && divContentForm) {
+                if (modalForm) {
                     let displayNone = false;
                     if (modalForm.style.display == "none") {
                         modalForm.style.display = "block"
@@ -237,6 +237,9 @@ export const Form = forwardRef((data, ref) => {
 
     const chageData = (event) => {
         event.preventDefault();
+        if (data.setStatusButtonLoading) {
+            data.setStatusButtonLoading(true)
+        }
         const formData = new FormData(event.target);
         const json = Object.fromEntries(formData);
         let objectSelect = Object.keys(dataSelect);
@@ -458,7 +461,11 @@ export const Form = forwardRef((data, ref) => {
 
                             </div>
                             <div className="div-div-input-submit-form">
-                                <button onClick={() => { clearElementsClick() }} type="submit" className="button-submit-form"> {!data.updateStatus ? "Registrar" : "Actualizar"}</button>
+                                {!data.statusButtonLoading ?
+                                    <button onClick={() => { clearElementsClick() }} type="submit" className="button-submit-form"> {!data.updateStatus ? "Registrar" : "Actualizar"}</button>
+                                    : <button type="button" className="button-submit-form">
+                                        <div className="loader-div-button "> </div>
+                                    </button>}
                             </div>
                         </form>
                     </div>

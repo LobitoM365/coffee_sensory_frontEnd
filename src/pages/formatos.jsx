@@ -54,6 +54,7 @@ export const Formatos = (userInfo) => {
     const [modalForm, changeModalForm] = useState(false);
     const [tipoAnalisis, setTipoAnalisis] = useState(null);
     const [idAnalisisResult, setIdAnalisisResult] = useState(null);
+    const [statusButtonLoading, setStatusButtonLoading] = useState(false);
 
 
     useEffect(() => {
@@ -799,15 +800,18 @@ export const Formatos = (userInfo) => {
 
     async function getAnalisis() {
         try {
-            const response = await Api.post("/formatos/listar", dataFilterTable);
-            if (response.data.status == true) {
-                setUsuarios(response.data.data)
-                setCountRegisters(response.data.count)
-            } else if (response.data.find_error) {
-                setCountRegisters(0)
-                setUsuarios(response.data)
-            } else {
-                setUsuarios(response.data)
+            if (statusButtonLoading == false) {
+                const response = await Api.post("/formatos/listar", dataFilterTable);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    setUsuarios(response.data.data)
+                    setCountRegisters(response.data.count)
+                } else if (response.data.find_error) {
+                    setCountRegisters(0)
+                    setUsuarios(response.data)
+                } else {
+                    setUsuarios(response.data)
+                }
             }
         } catch (e) {
 
@@ -1201,50 +1205,54 @@ export const Formatos = (userInfo) => {
     }
     async function actualizarFormato(idAnalisis, idFormato, tipo, usuario) {
         try {
-            const data = {
-                "tipos_analisis_id": tipo,
-                "usuarios_id": usuario
-            }
-            const response = await Api.put("formatos/actualizar/" + idFormato, data);
-            if (response.data.status == true) {
-                getAnalisis()
-                setDataModalAnalisis([])
-                setDataModalResultado([])
-                setInfoFormato(idFormato, tipoAnalisis)
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "true",
-                        description: response.data.message,
-                        "tittle": "Excelente",
-                    }
-                )
-            } else if (response.data.register_error) {
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "false",
-                        description: response.data.register_error,
-                        "tittle": "Inténtalo de nuevo",
-                        continue: {
+            setStatusButtonLoading(true)
+            if (statusButtonLoading == false) {
+                const data = {
+                    "tipos_analisis_id": tipo,
+                    "usuarios_id": usuario
+                }
+                const response = await Api.put("formatos/actualizar/" + idFormato, data);
+                setStatusButtonLoading(false)
+                if (response.data.status == true) {
+                    getAnalisis()
+                    setDataModalAnalisis([])
+                    setDataModalResultado([])
+                    setInfoFormato(idFormato, tipoAnalisis)
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "true",
+                            description: response.data.message,
+                            "tittle": "Excelente",
+                        }
+                    )
+                } else if (response.data.register_error) {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "false",
+                            description: response.data.register_error,
+                            "tittle": "Inténtalo de nuevo",
+                            continue: {
 
+                            }
                         }
-                    }
-                )
-            } else if (response.data.permission_error) {
-                setStatusAlert(true)
-                setdataAlert(
-                    {
-                        status: "interrogative",
-                        description: response.data.permission_error,
-                        "tittle": "¿Qué haces aquí?",
-                        continue: {
-                            "close": true
+                    )
+                } else if (response.data.permission_error) {
+                    setStatusAlert(true)
+                    setdataAlert(
+                        {
+                            status: "interrogative",
+                            description: response.data.permission_error,
+                            "tittle": "¿Qué haces aquí?",
+                            continue: {
+                                "close": true
+                            }
                         }
-                    }
-                )
-            } else if (response.data.errors) {
-                setErrorsFormato(response.data.errors)
+                    )
+                } else if (response.data.errors) {
+                    setErrorsFormato(response.data.errors)
+                }
             }
         } catch (e) {
             console.log(e)
@@ -1533,9 +1541,9 @@ export const Formatos = (userInfo) => {
     }
     return (
         <div id='mainFormatos'>
-            <Tablas clearFilters={clearFilters} getAvanzado={getAvanzado} buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Formatos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
+            <Tablas statusButtonLoading={statusButtonLoading} setStatusButtonLoading={setStatusButtonLoading} clearFilters={clearFilters} getAvanzado={getAvanzado} buttonsHeaderTable={buttonsHeaderTable} userInfo={userInfo.userInfo} generatePdf={generatePdf} filterPdfLimit={filterPdfLimit} setFilterPdflimit={setFilterPdflimit} dataDocumento={inputsDocumento} clearInputs={clearInputs} imgForm={"/img/formularios/registroUsuario.jpg"} changeModalForm={changeModalForm} modalForm={modalForm} filterSeacth={filterSeacth} updateStatus={updateStatus} editarStatus={setUpdateStatus} editar={editarUsuario} elementEdit={usuarioEdit} errors={errors} setErrors={setErrors} inputsForm={inputsForm} funcionregistrar={setUsuario} updateTable={updateTable} limitRegisters={limitRegisters} count={countRegisters} data={usuarios} keys={keys} cambiarEstado={cambiarEstado} updateEntitie={updateUsuario} tittle={"Formatos"} filterEstado={filterEstado} getFilterEstado={getFilterEstado} getFiltersOrden={getFiltersOrden} />
             {modalFormResults ?
-                <FormResultados getAnalisis={getAnalisis} setInfoFormato={setInfoFormato} finalizarFormato={finalizarFormato} setModalFormNormal={setModalFormNormal} modalFormNormal={modalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
+                <FormResultados statusButtonLoading={statusButtonLoading} setStatusButtonLoading={setStatusButtonLoading} getAnalisis={getAnalisis} setInfoFormato={setInfoFormato} finalizarFormato={finalizarFormato} setModalFormNormal={setModalFormNormal} modalFormNormal={modalFormNormal} inputsFormatoFisico={inputsFormatoFisico} actualizarFormato={actualizarFormato} setErrorsFormato={setErrorsFormato} errorsFormato={errorsFormato} tipoAnalisis={tipoAnalisis} asignarFormato={asignarFormato} userInfo={userInfo} inputsForm={selectAsignar} setAnalisisFormato={setAnalisisFormato} dataModalResultadoAnalisis={dataModalResultadoAnalisis} dataModalResultado={dataModalResultado} dataModalAnalisis={dataModalAnalisis} changeModalFormResults={changeModalFormResults} modalFormResults={modalFormResults} />
                 : ""}
             <Alert setStatusAlert={setStatusAlert} statusAlert={statusAlert} dataAlert={dataAlert} />
 

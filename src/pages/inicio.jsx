@@ -866,7 +866,8 @@ export const Inicio = () => {
                                             <div className="tittle-puntaje">
                                                 Puntaje
                                             </div>
-                                            <div className={"body-puntaje " + (analisis["calidad"] > 9 ? "body-puntaje-extraordinario" : analisis["calidad"] > 8 ? "body-puntaje-excelente" : analisis["calidad"] > 7 ? "body-puntaje-muy-bueno" : "body-puntaje-bueno")}>
+                                            {console.log(analisis["calidad"] > 90, analisis["calidad"])}
+                                            <div className={"body-puntaje " + (analisis["calidad"] > 90 ? "text-extraordinario" : analisis["calidad"] > 85 ? "text-excelente" : analisis["calidad"] >= 82 ? "text-muy-bueno" : "text-bueno")}>
                                                 {analisis["calidad"] ? analisis["calidad"] : 0}
                                             </div>
                                         </div>

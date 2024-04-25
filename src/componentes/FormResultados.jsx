@@ -446,7 +446,7 @@ export const FormResultados = forwardRef((data, ref) => {
                         if (divElementInput) {
                             divElementInput.value = data[0][keysNormal[n]]
                         }
-                        if (data[0][keysNormal[n]]) {
+                        if (data[0][keysNormal[n]] != undefined) {
                             if (divElement) {
                                 divElement.innerHTML = data[0][keysNormal[n]];
                             }
@@ -1103,7 +1103,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                             <div className="div-info-analisis">
                                                                 <div>
                                                                     <h4>Id del análisis:</h4>
-                                                                    <p>{key.id ? key.id : "No registra"}</p>
+                                                                    <p>{(key.id ? key.id : "No registra") + ", " + (key.codigo_muestra ? key.codigo_muestra : "")}</p>
                                                                 </div>
                                                                 <div>
                                                                     <h4>Tipo de proceso: </h4>
@@ -1184,11 +1184,11 @@ export const FormResultados = forwardRef((data, ref) => {
                                                             <div className="div-info-analisis">
                                                                 <div>
                                                                     <h4>Id del análisis:</h4>
-                                                                    <p>{key.id ? key.id : "No registra"}</p>
+                                                                    <p>{(key.id ? key.id : "No registra") + ", " + (key.codigo_muestra ? key.codigo_muestra : "")}</p>
                                                                 </div>
                                                                 <div>
                                                                     <h4>Código de la muestra:</h4>
-                                                                    <p>{key.mu_id ? key.mu_id : "No registra"}</p>
+                                                                    <p>{key.codigo_muestra ? key.codigo_muestra : "No registra"}</p>
                                                                 </div>
                                                                 <div>
                                                                     <h4>Cantidad: </h4>
@@ -1227,7 +1227,7 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                 <div className="div-info-analisis div-table-analisis">
                                                                     <div>
                                                                         <h4>Id del Formato</h4>
-                                                                        <p>{key.id ? key.id : "No registra"}</p>
+                                                                        <p>{(key.id ? key.id : "No registra") + ", " + (key.codigo_muestra ? key.codigo_muestra : "")}</p>
                                                                     </div>
                                                                     <div>
                                                                         <h4>Fecha de registro</h4>
@@ -2029,7 +2029,6 @@ export const FormResultados = forwardRef((data, ref) => {
                                                                     {getValueFormula()}
                                                                     <div>
                                                                         <h3>Observaciones</h3>
-
                                                                         <GlobalInputs
                                                                             input={setValueGlobalInput}
                                                                             value={valueGlobalInput}
@@ -2057,13 +2056,23 @@ export const FormResultados = forwardRef((data, ref) => {
                                             </div>
                                             {tipoRegistro == 1 ? (
                                                 <div className="div-footer-content-formato">
-                                                    {data.statusButtonLoading ?
+                                                    {!data.statusButtonLoading ?
                                                         <button onClick={() => { }} type="submit" className="button-submit-form">Registrar</button>
-                                                        : ""}
+                                                        :
+                                                        <button type="button" className="button-submit-form">
+                                                            <div className="loader-div-button "> </div>
+                                                        </button>
+                                                    }
                                                 </div>
                                             ) : (
                                                 <div className="div-footer-content-formato">
-                                                    <button onClick={() => { }} type="submit" className="button-submit-form">Guardar</button>
+                                                    {!data.statusButtonLoading ?
+                                                        <button onClick={() => { }} type="submit" className="button-submit-form">Guardar</button>
+                                                        :
+                                                        <button type="button" className="button-submit-form">
+                                                            <div className="loader-div-button "> </div>
+                                                        </button>
+                                                    }
                                                 </div>
                                             )}
                                         </form>

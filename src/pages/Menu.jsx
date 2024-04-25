@@ -1129,6 +1129,7 @@ export const Menu = (data) => {
     // Panel de configuración para Codigo Muestra y Codigo Informe
     const configCodigosMuestra = async () => {
         try {
+            setErrorsInputGlobal({});
             const filter = {
                 "filter": {
                     "where": {
@@ -1601,9 +1602,9 @@ export const Menu = (data) => {
                                                 <h4 className="nombre-usuario">{Object.keys(user).length > 0 ? (user.nombre.replace(/(?:^|\s)\S/g, match => match.toUpperCase())) : ""}</h4>
                                                 {Object.keys(user).length > 0 ?
                                                     <div>
-                                                        <h4 className="rol-usuario"> {(user.rol.replace(/(?:^|\s)\S/g, match => match.toUpperCase()))},
+                                                        <h4 className="rol-usuario"> {(user.rol.replace(/(?:^|\s)\S/g, match => match.toUpperCase()))}
                                                             {user.rol == "catador" ?
-                                                                (" " + user.cargo.replace(/(?:^|\s)\S/g, match => match.toUpperCase())) : " "
+                                                                (", " + user.cargo.replace(/(?:^|\s)\S/g, match => match.toUpperCase())) : " "
                                                             }
                                                         </h4>
 

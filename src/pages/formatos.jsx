@@ -333,10 +333,10 @@ export const Formatos = (userInfo) => {
     )
 
     const keys = {
-        "forma_id": {
-            "referencia": "Id",
-            "priority": 1
-        },
+        // "forma_id": {
+        //     "referencia": "Id",
+        //     "priority": 1
+        // },
         "an_id": {
             "referencia": "Analisis",
             "priority": 2
@@ -346,7 +346,7 @@ export const Formatos = (userInfo) => {
             "upper_case": true,
             "priority": 4
         },
-        "muestra_codigo": {
+        "codigo_muestra": {
             "referencia": "Muestra",
             "upper_case": true
         },
@@ -1123,45 +1123,49 @@ export const Formatos = (userInfo) => {
 
     }
     async function setAnalisisFormato(data, id, tipoRegistro, tipoAnalisis, idAnalisis) {
-        let route = "";
-        let method = "post";
-        data["tipos_analisis_id"] = tipoAnalisis ? tipoAnalisis : ""
-        data["formatos_id"] = id ? id : ""
+        setStatusButtonLoading(true)
+        if (statusButtonLoading == false) {
+            let route = "";
+            let method = "post";
+            data["tipos_analisis_id"] = tipoAnalisis ? tipoAnalisis : ""
+            data["formatos_id"] = id ? id : ""
 
-        if (tipoRegistro == 1) {
-            route = "resultado/registrar/"
-        } else {
-            method = "put"
-            route = "resultado/actualizar/" + id
-        }
-        const axios = await Api[method](route, data);
-        if (axios.data.status == true) {
-            getAnalisis()
-            setDataModalAnalisis([])
-            setDataModalResultado([])
-            setInfoFormato(id, tipoAnalisis)
-            setStatusAlert(true)
-            setdataAlert(
-                {
-                    status: "true",
-                    description: axios.data.message,
-                    "tittle": "Excelente",
-                }
-            )
-        } else if (axios.data.errors) {
-            setErrorsFormato(axios.data.errors)
-        } else if (axios.data.register_error) {
-            setStatusAlert(true)
-            setdataAlert(
-                {
-                    status: "false",
-                    description: axios.data.register_error,
-                    "tittle": "Inténtalo de nuevo",
-                    continue: {
-
+            if (tipoRegistro == 1) {
+                route = "resultado/registrar/"
+            } else {
+                method = "put"
+                route = "resultado/actualizar/" + id
+            }
+            const axios = await Api[method](route, data);
+            setStatusButtonLoading(false)   
+            if (axios.data.status == true) {
+                getAnalisis()
+                setDataModalAnalisis([])
+                setDataModalResultado([])
+                setInfoFormato(id, tipoAnalisis)
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "true",
+                        description: axios.data.message,
+                        "tittle": "Excelente",
                     }
-                }
-            )
+                )
+            } else if (axios.data.errors) {
+                setErrorsFormato(axios.data.errors)
+            } else if (axios.data.register_error) {
+                setStatusAlert(true)
+                setdataAlert(
+                    {
+                        status: "false",
+                        description: axios.data.register_error,
+                        "tittle": "Inténtalo de nuevo",
+                        continue: {
+
+                        }
+                    }
+                )
+            }
         }
     }
 

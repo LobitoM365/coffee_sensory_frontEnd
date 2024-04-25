@@ -1760,7 +1760,7 @@ export const Analisis = (userInfo) => {
 
     async function asignarFormato(idAnalisis, tipo, usuario) {
         try {
-            
+
             const data = {
                 "analisis_id": idAnalisis,
                 "tipos_analisis_id": tipo,
@@ -1807,7 +1807,7 @@ export const Analisis = (userInfo) => {
                 }
                 const response = await Api.put("formatos/actualizar/" + idFormato, data);
                 setStatusButtonLoading(false)
-   
+
                 if (response.data.status == true) {
                     setInfoFormato(idAnalisis, tipoAnalisis)
                     setStatusAlert(true)
@@ -2558,7 +2558,7 @@ export const Analisis = (userInfo) => {
                                                                                     muestras_id: {
                                                                                         type: "select",
                                                                                         referencia: "Muestra",
-                                                                                        values: ["id", "numero_documento", "nombre_completo", "finca", "lote"],
+                                                                                        values: ["codigo_muestra", "numero_documento", "nombre_completo", "finca", "lote"],
                                                                                         opciones: muestrasAsignar,
                                                                                         upper_case: true,
                                                                                         key: "id",
@@ -2595,7 +2595,7 @@ export const Analisis = (userInfo) => {
                                                                     muestras_id: {
                                                                         type: "select",
                                                                         referencia: "Muestra",
-                                                                        values: ["id", "numero_documento", "nombre_completo", "finca", "lote"],
+                                                                        values: ["codigo_muestra", "numero_documento", "nombre_completo", "finca", "lote"],
                                                                         opciones: muestrasAsignar,
                                                                         upper_case: true,
                                                                         key: "id",

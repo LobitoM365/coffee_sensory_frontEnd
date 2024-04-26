@@ -457,7 +457,7 @@ export const Analisis = (userInfo) => {
             "format": true
         },
         "fecha_finalizacion": {
-            "referencia": "Fecha de Finalización",
+            "referencia": "Fecha de Aprobación",
             "format": true
         },
         "encargados": {
@@ -687,7 +687,8 @@ export const Analisis = (userInfo) => {
                     "referencia": "Ver"
                 }
             },
-            "upper_case": true
+            "upper_case": true,
+            "rol" : ["administrador"]
         }
         // "reporte": {
         //     "normal": true,
@@ -1293,6 +1294,8 @@ export const Analisis = (userInfo) => {
                             }
                         }
                     }
+                }else{
+                    /* filter.where["mu."] */
                 }
             }
             filter.filter.where["mu.estado"] = {
@@ -2517,7 +2520,7 @@ export const Analisis = (userInfo) => {
                                                                         <div className='div-anaisis-finalizado-asignar-formato'>
                                                                             <div>
                                                                                 <h4>Muestra Actual:</h4>
-                                                                                <h5>{(infoAnalisisUpdateAsignar[0].mu_id + ", " + infoAnalisisUpdateAsignar[0].documento_propietario + ", " + infoAnalisisUpdateAsignar[0].nombre_propietario + ", " + infoAnalisisUpdateAsignar[0].finca + ", " + infoAnalisisUpdateAsignar[0].lote).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h5>
+                                                                                <h5>{(infoAnalisisUpdateAsignar[0].codigo_muestra + ", " + infoAnalisisUpdateAsignar[0].documento_propietario + ", " + infoAnalisisUpdateAsignar[0].nombre_propietario + ", " + infoAnalisisUpdateAsignar[0].finca + ", " + infoAnalisisUpdateAsignar[0].lote).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h5>
                                                                             </div>
                                                                         </div>
                                                                         : "" : ""}
@@ -2546,7 +2549,7 @@ export const Analisis = (userInfo) => {
                                                                         </div>
                                                                     }
 
-                                                                    {infoAnalisisUpdateAsignar[0].permission_update != 'false' ?
+                                                                    {infoAnalisisUpdateAsignar[0].permission_update != 'false' && infoAnalisisUpdateAsignar[0].estado != 7 ?
                                                                         <div className='div-muestra-asing'>
                                                                             <GlobalInputs
                                                                                 input={setMuestraIdAsignar}
@@ -2575,12 +2578,12 @@ export const Analisis = (userInfo) => {
                                                                         </div>
                                                                         :
                                                                         <div>
-                                                                            <div className='div-anaisis-finalizado-asignar-formato'>
+                                                                            {/* <div className='div-anaisis-finalizado-asignar-formato'>
                                                                                 <div>
                                                                                     <h4>Muestra:</h4>
-                                                                                    <h5>{(infoAnalisisUpdateAsignar[0].mu_id + ", " + infoAnalisisUpdateAsignar[0].documento_propietario + ", " + infoAnalisisUpdateAsignar[0].nombre_propietario + ", " + infoAnalisisUpdateAsignar[0].finca + ", " + infoAnalisisUpdateAsignar[0].lote).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h5>
+                                                                                    <h5>{(infoAnalisisUpdateAsignar[0].codigo_muestra + ", " + infoAnalisisUpdateAsignar[0].documento_propietario + ", " + infoAnalisisUpdateAsignar[0].nombre_propietario + ", " + infoAnalisisUpdateAsignar[0].finca + ", " + infoAnalisisUpdateAsignar[0].lote).toString().replace(/(?:^|\s)\S/g, match => match.toUpperCase())}</h5>
                                                                                 </div>
-                                                                            </div>
+                                                                            </div> */}
                                                                         </div>
                                                                     }
                                                                 </div>
@@ -2672,11 +2675,12 @@ export const Analisis = (userInfo) => {
                                                                                                                     : <button className="button-users-formatos button-users-formatos-cambiar">
                                                                                                                         <div className="loader-div-button "> </div>
                                                                                                                     </button>}
-
-
-                                                                                                                <button
-                                                                                                                    onClick={() => { confirmarEliminarFormato(value.id) }}
-                                                                                                                    className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
+                                                                                                                {infoAnalisisUpdateAsignar[0].estado != 7 ?
+                                                                                                                    <button
+                                                                                                                        onClick={() => { confirmarEliminarFormato(value.id) }}
+                                                                                                                        className='button-users-formatos button-users-formatos-eliminar'>Eliminar
+                                                                                                                    </button>
+                                                                                                                    : ""}
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         :
@@ -2696,10 +2700,12 @@ export const Analisis = (userInfo) => {
                                                                                                                             onClick={() => { localStorage.setItem("formatos_id", value.id); localStorage.setItem("tipos_analisis_id", value.tipos_analisis_id), location.href = "/dashboard/formatos/registros" }}
                                                                                                                             className='button-users-formatos button-users-formatos-ver-resultados'>Ver resultado
                                                                                                                         </button>
-                                                                                                                        <button
-                                                                                                                            onClick={() => { confirmarEliminarFormato(value.id) }}
-                                                                                                                            className='button-users-formatos button-users-formatos-eliminar'>Eliminar
-                                                                                                                        </button>
+                                                                                                                        {infoAnalisisUpdateAsignar[0].estado != 7 ?
+                                                                                                                            <button
+                                                                                                                                onClick={() => { confirmarEliminarFormato(value.id) }}
+                                                                                                                                className='button-users-formatos button-users-formatos-eliminar'>Eliminar
+                                                                                                                            </button>
+                                                                                                                            : ""}
                                                                                                                     </div>
                                                                                                                     : ""}
 
@@ -2781,10 +2787,12 @@ export const Analisis = (userInfo) => {
                                                                                                                     : <button className="button-users-formatos button-users-formatos-cambiar">
                                                                                                                         <div className="loader-div-button "> </div>
                                                                                                                     </button>}
-
-                                                                                                                <button
-                                                                                                                    onClick={() => { confirmarEliminarFormato(value.id) }}
-                                                                                                                    className='button-users-formatos button-users-formatos-eliminar'>Eliminar</button>
+                                                                                                                {infoAnalisisUpdateAsignar[0].estado != 7 ?
+                                                                                                                    <button
+                                                                                                                        onClick={() => { confirmarEliminarFormato(value.id) }}
+                                                                                                                        className='button-users-formatos button-users-formatos-eliminar'>Eliminar
+                                                                                                                    </button>
+                                                                                                                    : ""}
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         :
@@ -2803,10 +2811,12 @@ export const Analisis = (userInfo) => {
                                                                                                                         onClick={() => { localStorage.setItem("formatos_id", value.id); localStorage.setItem("tipos_analisis_id", value.tipos_analisis_id), location.href = "/dashboard/formatos/registros" }}
                                                                                                                         className='button-users-formatos button-users-formatos-ver-resultados'>Ver resultado
                                                                                                                     </button>
-                                                                                                                    <button
-                                                                                                                        onClick={() => { confirmarEliminarFormato(value.id) }}
-                                                                                                                        className='button-users-formatos button-users-formatos-eliminar'>Eliminar
-                                                                                                                    </button>
+                                                                                                                    {infoAnalisisUpdateAsignar[0].estado != 7 ?
+                                                                                                                        <button
+                                                                                                                            onClick={() => { confirmarEliminarFormato(value.id) }}
+                                                                                                                            className='button-users-formatos button-users-formatos-eliminar'>Eliminar
+                                                                                                                        </button>
+                                                                                                                        : ""}
                                                                                                                 </div>
                                                                                                                 : ""}
 

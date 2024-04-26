@@ -380,7 +380,7 @@ export const Form = forwardRef((data, ref) => {
                                                                                 let value = ""
                                                                                 if (dataInputs[key]["values"]) {
                                                                                     dataInputs[key]["values"].map((nameSelect, nameIndexSelect) => {
-                                                                                        value += nameIndexSelect == 0 ? dataInputs[key]["opciones"][indexSelect][nameSelect] : ", " + dataInputs[key]["opciones"][indexSelect][nameSelect];
+                                                                                        value += nameIndexSelect == 0 ? (dataInputs[key]["opciones"][indexSelect][nameSelect] ? dataInputs[key]["opciones"][indexSelect][nameSelect] : dataInputs[key]["opciones"][indexSelect]["id"]) : ", " + dataInputs[key]["opciones"][indexSelect][nameSelect];
                                                                                     })
                                                                                 }
 

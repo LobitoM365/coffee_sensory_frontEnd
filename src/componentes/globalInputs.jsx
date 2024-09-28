@@ -2,6 +2,7 @@ import { object, string } from "prop-types";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import "../../public/css/globalInputs.css"
 import { type } from "jquery";
+import { isArray } from "chart.js/helpers";
 
 
 export const GlobalInputs = forwardRef((data, ref) => {
@@ -487,8 +488,9 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                                         clearOptionsSelect(key);
                                                     }} className='select-option'>Seleccione una opción...</h4>
 
+                                                    {console.log(dataInputs[key])}
                                                     {
-                                                        dataInputs[key]["opciones"] ? typeof dataInputs[key]["opciones"] == "object" ? dataInputs[key]["opciones"].map((select, indexSelect) => {
+                                                        dataInputs[key] ? dataInputs[key]["opciones"] ? isArray(dataInputs[key]["opciones"]) ? dataInputs[key]["opciones"].map((select, indexSelect) => {
 
                                                             let value = ""
                                                             if (dataInputs[key]["values"]) {
@@ -541,7 +543,7 @@ export const GlobalInputs = forwardRef((data, ref) => {
                                                             }} className={`select-option select-option-${key} ${typeof data.value == "object" ? data.value[key] == dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] ? 'option-focus' : "" : data.value == dataInputs[key]["opciones"][indexSelect][dataInputs[key]["key"]] ? 'option-focus' : ""}`} value="">
                                                                 {value}
                                                             </h4>
-                                                        }) : "" : ""
+                                                        }) : "" : "" : ""
                                                     }
                                                 </div>
                                                 <div className='input-select-estado input-select-search' name="" id="" onClick={(e) => {

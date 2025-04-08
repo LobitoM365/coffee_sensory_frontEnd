@@ -139,8 +139,8 @@ export const GenerateReporteAnalisis = (data) => {
                                 }
                             },
                             "limit": {
-                                "inicio": false,
-                                "fin": false
+                                "inicio": "4444",
+                                "fin": "4444"
                             }
                         },
                     }
@@ -174,8 +174,8 @@ export const GenerateReporteAnalisis = (data) => {
                                     }
                                 },
                                 "limit": {
-                                    "inicio": false,
-                                    "fin": false
+                                    "inicio": "4444",
+                                    "fin": "4444"
                                 }
                             }
                         }
@@ -229,8 +229,8 @@ export const GenerateReporteAnalisis = (data) => {
                                 }
                             },
                             "limit": {
-                                "inicio": false,
-                                "fin": false
+                                "inicio": "4444",
+                                "fin": "4444"
                             }
                         },
                     }
@@ -266,8 +266,8 @@ export const GenerateReporteAnalisis = (data) => {
                                     }
                                 },
                                 "limit": {
-                                    "inicio": false,
-                                    "fin": false
+                                    "inicio": "4444",
+                                    "fin": "4444"
                                 }
                             }
                         }

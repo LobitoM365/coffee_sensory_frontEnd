@@ -452,8 +452,8 @@ export const Inicio = () => {
                                                 }
                                             },
                                             "limit": {
-                                                "inicio": false,
-                                                "fin": false
+                                                "inicio": "4444",
+                                                "fin": "4444"
                                             }
                                         }
                                     }
@@ -524,15 +524,13 @@ export const Inicio = () => {
                                                     "group": 1
                                                 },
                                                 "limit": {
-                                                    "inicio": false,
-                                                    "fin": false
+                                                    "inicio": "4444",
+                                                    "fin": "4444"
                                                 }
                                             }
                                         }
                                     }
                                     const resultado = await Api.post("geolocalizacion/buscar/resultado", filterResultado);
-
-                                    console.log(resultado)
 
                                     if (resultado.data.status == true) {
 

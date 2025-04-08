@@ -819,7 +819,7 @@ export const Fincas = (userInfo) => {
                     },
                     "limit": {
                         inicio: 0,
-                        fin: "4444"
+                        fin: false
                     }
                 }
             }
